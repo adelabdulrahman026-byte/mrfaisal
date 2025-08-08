@@ -3,219 +3,201 @@
 <head>
   <meta charset="UTF-8">
   <title>روابط مستر فيصل</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
-      padding: 0;
       font-family: 'Cairo', sans-serif;
       background: black;
-      scroll-behavior: smooth;
+      overflow-x: hidden;
     }
-    .point-down {
-      display: inline-block;
-      animation: bounceDown 1.8s infinite;
+
+    .video-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      width: 100vw;
+      z-index: -1;
+      overflow: hidden;
     }
-    @keyframes bounceDown {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(5px); }
+
+    .video-bg video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
-    @keyframes slideUp {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(40px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    @keyframes clickedEffect {
-      0% { transform: scale(1); background-color: rgba(0, 255, 0, 0.2); }
-      50% { transform: scale(0.96); }
-      100% { transform: scale(1); background-color: transparent; }
-    }
-    .social-section {
-      padding: 100px 16px 60px;
+
+    .container {
       display: flex;
       flex-direction: column;
-      gap: 14px;
-      max-width: 340px;
-      margin: auto;
+      align-items: center;
+      padding: 100px 16px 60px;
     }
-    .social-card {
-      backdrop-filter: blur(10px);
-      border-radius: 16px;
-      padding: 16px;
-      text-align: center;
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
-      border: 1px solid #ccc;
-      opacity: 0;
-      animation: fadeInUp 0.8s forwards;
-      transition: all 0.3s ease;
+
+    .yt-card {
+      position: relative;
+      width: 320px;
+      height: 480px;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+      margin-bottom: 40px;
+      transition: transform 0.4s ease;
       cursor: pointer;
-      background: rgba(255, 255, 255, 0.9);
-      color: #111 !important;
     }
-    .social-card a {
-      color: #000 !important;
-      text-decoration: none;
+
+    .yt-card:hover {
+      transform: scale(1.03);
+    }
+
+    .yt-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
       display: block;
     }
-    .social-card img {
-      width: 60px;
-      height: 60px;
-      object-fit: contain;
-      margin-bottom: 10px;
-      border-radius: 50%;
-      background: white;
-      padding: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
-    .social-card h3 {
-      margin: 0;
-      font-size: 16px;
-      font-weight: bold;
-      color: #111;
-    }
-    .social-card p {
-      font-size: 13px;
-      margin-top: 6px;
-      color: #333;
-    }
-    .social-card.clicked {
-      animation: clickedEffect 0.5s;
-    }
-    .social-card:hover {
-      background-color: rgba(0, 255, 0, 0.1);
-      transform: scale(1.02);
-    }
-    .start-card {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px 16px 80px;
-    }
-    .start-card-inner {
-      background: linear-gradient(135deg, #00c9ff, #92fe9d);
-      color: #000;
-      border-radius: 16px;
-      padding: 20px 28px;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-      font-size: 20px;
-      font-weight: bold;
-      text-align: center;
-      animation: zoomRotate 1s ease forwards;
+
+    .yt-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
       display: flex;
       flex-direction: column;
+      justify-content: center;
       align-items: center;
-      transform: scale(0.5) rotate(-10deg);
-      opacity: 0;
-      font-family: 'Cairo', sans-serif;
-      cursor: pointer;
-      transition: background 0.3s ease, transform 0.3s ease;
+      padding: 20px;
+      color: white;
+      background: rgba(0, 0, 0, 0.5);
+      text-align: center;
     }
-    .start-card-inner:hover {
-      background: linear-gradient(135deg, #00e676, #66ffa6);
-      transform: scale(1.05);
+
+    .yt-overlay .title {
+      font-size: 60px;
+      font-weight: 900;
+      margin-bottom: 0px;
+      color: #fff;
+      text-shadow: 2px 2px 6px black;
     }
-    @keyframes zoomRotate {
-      to {
-        transform: scale(1) rotate(0deg);
-        opacity: 1;
-      }
+
+    .yt-overlay .subtitle {
+      font-size: 32px;
+      font-weight: 900;
+      margin-bottom: 16px;
+      color: #fff;
+      text-shadow: 2px 2px 6px black;
     }
-    @keyframes rocket {
+
+    .yt-overlay .stat {
+      font-size: 16px;
+      margin: 4px 0;
+      color: #fff;
+      background: rgba(255, 0, 0, 0.7);
+      padding: 6px 12px;
+      border-radius: 10px;
+      display: inline-block;
+      text-shadow: 0 1px 2px #000;
+    }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 14px;
+      max-width: 700px;
+    }
+
+    .button-link {
+      flex: 0 0 calc(44% - 10px);
+      padding: 8px;
+      border-radius: 10px;
+      color: white;
+      text-decoration: none;
+      text-align: center;
+      font-weight: bold;
+      font-size: 13px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+      transition: all 0.4s ease;
+    }
+
+    .button-link:hover {
+      transform: scale(1.06) rotate(-1deg);
+      filter: brightness(1.2);
+    }
+
+    .button-link:nth-child(1) { background: #7e57c2; animation: bounce 2s infinite; }
+    .button-link:nth-child(2) { background: #29b6f6; animation: pulse 2s infinite; }
+    .button-link:nth-child(3) { background: #66bb6a; animation: wiggle 2s infinite; }
+    .button-link:nth-child(4) { background: #ef5350; animation: bounce 2s infinite; }
+    .button-link:nth-child(5) { background: #ffa726; animation: pulse 2s infinite; }
+    .button-link:nth-child(6) { background: #26a69a; animation: wiggle 2s infinite; }
+    .button-link:nth-child(7) { background: #ab47bc; animation: bounce 2s infinite; }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 10px rgba(255,255,255,0.3); }
+      50% { box-shadow: 0 0 18px rgba(255,255,255,0.6); }
+    }
+
+    @keyframes bounce {
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-6px); }
+    }
+
+    @keyframes wiggle {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(1deg); }
+      75% { transform: rotate(-1deg); }
+    }
+
+    @media(max-width: 500px) {
+      .yt-card {
+        width: 90%;
+        height: 440px;
+      }
+
+      .buttons .button-link {
+        flex: 0 0 100%;
+      }
+
+      .yt-overlay .title {
+        font-size: 38px;
+      }
+
+      .yt-overlay .subtitle {
+        font-size: 26px;
+      }
     }
   </style>
 </head>
 <body>
-
-  <!-- فيديو الخلفية -->
-  <div style="position: relative; width: 100vw; height: 100vh; overflow: hidden;">
-    <video autoplay muted loop playsinline style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: -1;">
+  <div class="video-bg">
+    <video autoplay muted loop playsinline>
       <source src="https://files.catbox.moe/1dldfl.mp4" type="video/mp4">
     </video>
+  </div>
 
-    <!-- الكارت الرئيسي -->
-    <div style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 2; width: 90%; max-width: 320px;">
-      <div id="mainCard" style="
-        backdrop-filter: blur(10px);
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 18px;
-        padding: 18px 20px;
-        box-shadow: 0 6px 25px rgba(0,0,0,0.3);
-        color: white;
-        text-align: center;
-        opacity: 0;
-        transform: translateY(100px);
-        animation: slideUp 1.5s forwards ease-out;
-        cursor: default;
-      ">
-        <div style="font-size: 22px; font-weight: 800; margin-bottom: 6px;">
-          انضم لينا
-        </div>
-        <div style="font-size: 16px; font-weight: 600; display: flex; justify-content: center; align-items: center; gap: 4px; flex-wrap: wrap;">
-          <span class="point-down" style="font-size: 20px;">👇</span>
-          <span>في عالم مستر فيصل</span>
-          <span class="point-down" style="font-size: 20px;">👇</span>
-        </div>
+  <div class="container">
+    <div class="yt-card">
+      <img src="https://files.catbox.moe/4mdr3d.jpeg" alt="قناة مستر فيصل">
+      <div class="yt-overlay">
+        <div class="title">قناتنا</div>
+        <div class="subtitle">على اليوتيوب</div>
+        <div class="stat">📺 عدد المشتركين: 102,000</div>
+        <div class="stat">👁️‍🗨️ عدد المشاهدات: 4,300,000</div>
       </div>
     </div>
-  </div>
 
-  <!-- كروت التواصل -->
-  <div class="social-section">
-    <div class="social-card"><a href="https://www.whatsapp.com/channel/0029Vb5eotiHFxOvJuFpMI39" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"><h3>انضم لقناة الواتساب</h3><p>تابع آخر الأخبار والعروض</p></a></div>
-    <div class="social-card"><a href="https://www.facebook.com/groups/450656791778335/?locale=ar_AR" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg"><h3>انضم لجروب الفيسبوك</h3><p>محتوى خاص وتفاعل مباشر</p></a></div>
-    <div class="social-card"><a href="https://youtube.com/@mr.faisal.geography?si=5HQdYcyREdFSKiwp" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/4/42/YouTube_icon_%282013-2017%29.png"><h3>اشترك في قناة اليوتيوب</h3><p>شروحات جغرافيا ومراجعات قوية</p></a></div>
-    <div class="social-card"><a href="https://www.tiktok.com/@mr.faisal.geo?_t=ZS-8ySdp4xYApc&_r=1" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/en/a/a9/TikTok_logo.svg"><h3>تابعني على تيك توك</h3><p>فيديوهات تعليمية ومراجعات</p></a></div>
-    <div class="social-card"><a href="https://www.facebook.com/Mr.faisl" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg"><h3>تابع صفحتي على فيسبوك</h3><p>أحدث الأخبار والمحتوى الخاص</p></a></div>
-  </div>
-
-  <!-- كارت انضم إلينا -->
-  <div id="joinCard" class="start-card">
-    <div class="start-card-inner" onclick="startJourney()">
-      <div style="font-size: 50px; animation: rocket 1.5s infinite;">🚀</div>
-      <div style="margin-top: 12px;">ابدأ الرحلة الآن</div>
+    <div class="buttons">
+      <a href="https://www.mrfaisal.net/%D9%85%D9%86%D8%B5%D8%AA%D9%86%D8%A7" class="button-link">منصتنا التعليمية 🏫</a>
+      <a href="https://www.mrfaisal.net/%D8%A7%D9%84%D9%85%D8%AA%D8%A7%D8%A8%D8%B9%D9%87-%D8%A7%D9%84%D8%AE%D8%A7%D8%B5%D8%A9-%D8%A8%D9%86%D8%A7" class="button-link">المتابعة 📱</a>
+      <a href="https://www.mrfaisal.net/%D8%A7%D9%84%D9%85%D9%88%D8%A7%D8%B9%D9%8A%D8%AF" class="button-link">مواعيدنا ⏰</a>
+      <a href="https://www.mrfaisal.net/%D8%A7%D9%84%D8%A7%D9%85%D8%AA%D8%AD%D8%A7%D9%86%D8%A7%D8%AA-%D8%A7%D9%84%D8%AE%D8%A7%D8%B5%D8%A9-%D8%A8%D9%86%D8%A7" class="button-link">الامتحانات 📝</a>
+      <a href="https://www.mrfaisal.net/%D8%A7%D8%B4%D8%AA%D8%B1%D9%8A-%D9%85%D9%86-%D8%B9%D9%86%D8%AF%D9%86%D8%A7" class="button-link">اشتري من عندنا 🛒</a>
+      <a href="https://www.mrfaisal.net/%D8%AA%D9%88%D8%A7%D8%B5%D9%84" class="button-link">اسألنا سؤال 📞</a>
+      <a href="https://www.mrfaisal.net/%D8%A7%D9%84%D8%B4%D9%83%D8%A7%D9%88%D9%8A" class="button-link">الشكاوي 📣</a>
     </div>
   </div>
-
-  <!-- الصوت -->
-  <audio id="pageAudio" src="https://files.catbox.moe/ftvm82.ogg" style="display: none;"></audio>
-
-  <!-- سكريبت الصوت والتنقل -->
-  <script>
-    let audioPlayed = false;
-    function playSound() {
-      if (!audioPlayed) {
-        const audio = document.getElementById('pageAudio');
-        audio.play().catch(err => {
-          console.log("Autoplay blocked:", err);
-        });
-        audioPlayed = true;
-      }
-    }
-
-    function startJourney() {
-      playSound();
-      window.open("https://www.mrfaisal.net/%D8%A7%D9%84%D8%A8%D8%AF%D8%A7", "_blank");
-    }
-
-    document.querySelectorAll('.social-card').forEach(card => {
-      card.addEventListener('click', () => {
-        card.classList.add('clicked');
-        setTimeout(() => card.classList.remove('clicked'), 500);
-      });
-    });
-  </script>
 </body>
 </html>
