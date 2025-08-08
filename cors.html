@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>تحميل ميجا أكاديمي</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- تحسين العرض على الموبايل -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     * {
@@ -115,6 +116,7 @@
     .whatsapp-section {
       margin-top: 30px;
       text-align: center;
+      padding-bottom: 20px;
     }
 
     .whatsapp-button {
@@ -141,18 +143,43 @@
       font-weight: bold;
     }
 
+    /* تحسين العرض على الشاشات الصغيرة */
     @media (max-width: 600px) {
-      .card { width: 90%; }
-      .headline { font-size: 20px; }
-      .whatsapp-button { font-size: 24px; padding: 15px; }
-      .whatsapp-text { font-size: 16px; }
+      .headline {
+        font-size: 20px;
+        padding: 15px 5px;
+      }
+      .card {
+        width: 90%;
+        padding: 20px;
+      }
+      .card i {
+        font-size: 50px;
+      }
+      .card h3 {
+        font-size: 18px;
+      }
+      .card p {
+        font-size: 14px;
+      }
+      .content {
+        gap: 20px;
+        padding: 15px;
+      }
+      .whatsapp-button {
+        font-size: 24px;
+        padding: 15px;
+      }
+      .whatsapp-text {
+        font-size: 16px;
+      }
     }
   </style>
 </head>
 <body>
 
 <!-- خلفية الفيديو -->
-<video class="video-bg" autoplay loop muted>
+<video class="video-bg" autoplay loop muted playsinline>
   <source src="https://files.catbox.moe/1dldfl.mp4" type="video/mp4">
 </video>
 
