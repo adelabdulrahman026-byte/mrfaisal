@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>تحميل ميجا أكاديمي</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Cairo', sans-serif;
+    }
+
+    body, html {
+      height: 100%;
+      overflow-x: hidden;
+    }
+
+    .video-bg {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1;
+      opacity: 0.2;
+    }
+
+    .headline {
+      text-align: center;
+      font-size: 26px;
+      font-weight: bold;
+      color: #222;
+      padding: 25px 10px 10px;
+      animation: fadeInDown 2s ease-in-out;
+      background-color: rgba(255,255,255,0.5);
+      backdrop-filter: blur(5px);
+    }
+
+    @keyframes fadeInDown {
+      0% { opacity: 0; transform: translateY(-30px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    .content {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 30px;
+      padding: 20px;
+    }
+
+    .card {
+      width: 280px;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 20px;
+      padding: 25px;
+      text-align: center;
+      color: #333;
+      transition: 0.4s ease;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(8px);
+      cursor: pointer;
+    }
+
+    .card i {
+      font-size: 60px;
+      margin-bottom: 15px;
+      animation: bounce 2s infinite;
+    }
+
+    .card h3 {
+      margin-top: 10px;
+      font-size: 20px;
+    }
+
+    .card p {
+      margin-top: 10px;
+      font-size: 15px;
+    }
+
+    .card:hover {
+      background: linear-gradient(135deg, #4CAF50, #8BC34A);
+      color: white;
+      transform: scale(1.05);
+    }
+
+    .card:hover i {
+      animation: rotate 1s ease-in-out;
+      color: white;
+    }
+
+    .card:hover h3, .card:hover p {
+      color: white;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+
+    @keyframes rotate {
+      0% { transform: rotate(0); }
+      100% { transform: rotate(360deg); }
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* أيقونة واتساب */
+    .whatsapp-section {
+      margin-top: 30px;
+      text-align: center;
+    }
+
+    .whatsapp-button {
+      display: inline-block;
+      background-color: #25D366;
+      color: white;
+      border-radius: 50%;
+      padding: 20px;
+      font-size: 30px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+      transition: 0.3s ease;
+      animation: bounce 2s infinite;
+    }
+
+    .whatsapp-button:hover {
+      background-color: #1ebe5c;
+      transform: scale(1.1);
+    }
+
+    .whatsapp-text {
+      margin-top: 10px;
+      font-size: 18px;
+      color: #333;
+      font-weight: bold;
+    }
+
+    @media (max-width: 600px) {
+      .card { width: 90%; }
+      .headline { font-size: 20px; }
+      .whatsapp-button { font-size: 24px; padding: 15px; }
+      .whatsapp-text { font-size: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- خلفية الفيديو -->
+<video class="video-bg" autoplay loop muted>
+  <source src="https://files.catbox.moe/1dldfl.mp4" type="video/mp4">
+</video>
+
+<!-- الجملة الرئيسية -->
+<div class="headline">حمّل منصتنا التعليمية وابدأ معانا طريق النجاح ✨</div>
+
+<!-- كروت التحميل -->
+<div class="content">
+  <!-- Android -->
+  <a href="https://play.google.com/store/apps/details?id=com.mega.academy" target="_blank">
+    <div class="card">
+      <i class="fab fa-android" style="color: #3DDC84;"></i>
+      <h3>تحميل للأندرويد</h3>
+      <p>📱 اضغط لتحميل التطبيق من Google Play</p>
+    </div>
+  </a>
+
+  <!-- iPhone -->
+  <a href="https://apps.apple.com/us/app/%D9%85%D9%8A%D8%AC%D8%A7-%D8%A3%D9%83%D8%A7%D8%AF%D9%8A%D9%85%D9%89-mega-academy/id6443899757" target="_blank">
+    <div class="card">
+      <i class="fab fa-apple" style="color: #000;"></i>
+      <h3>تحميل للآيفون</h3>
+      <p>🍎 اضغط لتحميل التطبيق من App Store</p>
+    </div>
+  </a>
+</div>
+
+<!-- أيقونة واتساب -->
+<div class="whatsapp-section">
+  <a href="https://wa.me/201556618507" target="_blank" class="whatsapp-button">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+  <div class="whatsapp-text">للتواصل مع الدعم الفني واتساب</div>
+</div>
+
+</body>
+</html>
