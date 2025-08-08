@@ -34,7 +34,7 @@
       to { transform: scale(1); opacity: 1; }
     }
     .gif-box {
-      max-width: 200px;
+      max-width: 300px;
       margin: 0 auto 10px auto;
     }
     h2 { 
@@ -94,15 +94,17 @@
 </head>
 <body>
   <div class="container">
+    <!-- GIF الجديد في الواجهة -->
     <div class="gif-box">
       <dotlottie-wc
-        src="https://lottie.host/5094a892-ffb3-4075-b0eb-3434638a0404/ZLCk22UywK.lottie"
-        style="width: 100%;"
+        src="https://lottie.host/db4c93f0-3bd5-46a6-969e-4f3341a280ce/sL9d2g6HaX.lottie"
+        style="width: 300px; height: 300px;"
         speed="1"
         autoplay
         loop>
       </dotlottie-wc>
     </div>
+
     <h2>الحضور خاص بـ <strong>مستر فيصل</strong></h2>
     <form id="attendanceForm">
       <input type="text" id="studentId" placeholder="🔑 أدخل كود الطالب" required>
@@ -111,6 +113,7 @@
     <div id="result"></div>
   </div>
 
+  <!-- شاشة التحميل بالـ GIF القديم -->
   <div class="loading-screen" id="loadingScreen">
     <dotlottie-wc
       src="https://lottie.host/5094a892-ffb3-4075-b0eb-3434638a0404/ZLCk22UywK.lottie"
