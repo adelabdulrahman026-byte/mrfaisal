@@ -7,54 +7,71 @@
   <style>
     body {
       font-family: 'Cairo', sans-serif;
-      background-color: #e0f7fa; /* أزرق سماوي فاتح بدل الموف */
+      background: linear-gradient(135deg, #00bcd4, #009688); /* أزرق فيروزي متدرج */
       margin: 0;
       padding: 0;
       text-align: center;
+      color: white;
     }
     h1 {
-      color: #00796b;
+      margin-top: 40px;
+      font-size: 28px;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
     }
     .container {
-      margin-top: 50px;
+      margin-top: 30px;
     }
     input {
-      padding: 10px;
+      padding: 12px;
       font-size: 16px;
-      width: 200px;
+      width: 220px;
+      border-radius: 25px;
+      border: none;
+      outline: none;
+      margin-right: 5px;
     }
     button {
-      padding: 10px 20px;
+      padding: 12px 25px;
       font-size: 16px;
-      background-color: #00796b;
-      color: white;
+      background-color: #ffca28; /* لون أصفر ذهبي */
+      color: #333;
       border: none;
+      border-radius: 25px;
       cursor: pointer;
+      transition: 0.3s;
+      font-weight: bold;
     }
     button:hover {
-      background-color: #004d40;
+      background-color: #ffc107;
+      transform: scale(1.05);
     }
     .card {
-      margin: 20px auto;
+      margin: 25px auto;
       background: white;
       padding: 20px;
-      border-radius: 10px;
+      border-radius: 15px;
       width: 300px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.2);
       text-align: right;
+      color: #333;
+      animation: fadeIn 0.6s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
 <body>
+  <h1>🔍 بحث عن بيانات الطالب</h1>
   <div class="container">
-    <h1>بحث عن بيانات الطالب</h1>
     <input type="text" id="studentCode" placeholder="أدخل كود الطالب">
     <button onclick="fetchData()">بحث</button>
     <div id="result"></div>
   </div>
 
   <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbxhPWUbrmfn9WegSHCzWnEGUYZjW0AnLT69Nj_E1VfkgEEmTDnp7OKRH0io8H0fJK-SxA/exec" // Google Apps Script بعد النشر
+    const API_URL = "https://script.google.com/macros/s/AKfycbxhPWUbrmfn9WegSHCzWnEGUYZjW0AnLT69Nj_E1VfkgEEmTDnp7OKRH0io8H0fJK-SxA/exec";
 
     function fetchData() {
       const code = document.getElementById("studentCode").value.trim();
@@ -72,15 +89,14 @@
           if (data.found) {
             resultDiv.innerHTML = `
               <div class="card">
-                <p><strong>الاسم:</strong> ${data.name}</p>
-                <p><strong>المركز:</strong> ${data.center}</p>
-                <p><strong>الموقع الجغرافي:</strong> ${data.geo}</p>
-                <p><strong>أسبوع 1:</strong> ${data.week1}</p>
-                <p><strong>أسبوع 2:</strong> ${data.week2}</p>
+                <p><strong>اسم الطالب:</strong> ${data.name}</p>
+                <p><strong>اسم السنتر:</strong> ${data.geo}</p>
+                <p><strong>الحصة الأولى:</strong> ${data.week1}</p>
+                <p><strong>الحصة الثانية:</strong> ${data.week2}</p>
               </div>
             `;
           } else {
-            resultDiv.innerHTML = `<p style="color:red;">${data.error}</p>`;
+            resultDiv.innerHTML = `<p style="color:red; background:white; padding:10px; border-radius:8px;">${data.error}</p>`;
           }
         })
         .catch(err => {
