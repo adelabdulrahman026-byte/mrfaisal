@@ -25,7 +25,19 @@
       text-align: center;
     }
 
-    /* العنوان بحركة وشكل أشيك */
+    /* GIF Animation */
+    .gif-container {
+      margin-top: 15px;
+      opacity: 0;
+      animation: gifZoom 1.2s ease-out forwards;
+    }
+
+    @keyframes gifZoom {
+      0% { transform: scale(0.8); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    /* Title Animation */
     .title {
       font-size: 26px;
       font-weight: bold;
@@ -33,10 +45,11 @@
       color: #2c3e50;
       line-height: 1.6;
       position: relative;
+      opacity: 0;
       animation: fadeSlide 1.2s ease-out forwards;
+      animation-delay: 1.2s; /* بعد ظهور الـ GIF */
     }
 
-    /* حركة Fade + Slide */
     @keyframes fadeSlide {
       0% { opacity: 0; transform: translateY(20px); }
       100% { opacity: 1; transform: translateY(0); }
@@ -55,17 +68,7 @@
       border-radius: 2px;
     }
 
-    /* الأنيميشن للـ GIF */
-    .gif-container {
-      margin-top: 15px;
-      animation: fadeIn 1.5s ease-in forwards;
-    }
-
-    @keyframes fadeIn {
-      0% { opacity: 0; }
-      100% { opacity: 1; }
-    }
-
+    /* Cards Grid */
     .cards {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -84,10 +87,21 @@
       align-items: center;
       padding: 25px 15px;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
+      opacity: 0;
+      animation: cardPop 0.8s ease forwards;
+    }
+
+    /* حركة الكروت واحدة واحدة */
+    .cards .card:nth-child(1) { animation-delay: 2.5s; }
+    .cards .card:nth-child(2) { animation-delay: 3s; }
+
+    @keyframes cardPop {
+      0% { transform: translateY(30px) scale(0.95); opacity: 0; }
+      100% { transform: translateY(0) scale(1); opacity: 1; }
     }
 
     .card:hover {
-      transform: translateY(-5px);
+      transform: translateY(-5px) scale(1.03);
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
     }
 
@@ -120,9 +134,8 @@
 <body>
 
   <div class="container">
-    <div class="title">🎯 انت تهمنا في كل خطوة في نجاحك</div>
 
-    <!-- GIF تحت العنوان -->
+    <!-- GIF أولاً -->
     <div class="gif-container">
       <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.6.2/dist/dotlottie-wc.js" type="module"></script>
       <dotlottie-wc src="https://lottie.host/09b23849-0675-4a59-8f49-590782f530a3/S93AP3sPfV.lottie" 
@@ -130,8 +143,11 @@
       </dotlottie-wc>
     </div>
 
-    <div class="cards">
+    <!-- العنوان بعد الـ GIF -->
+    <div class="title">🎯 انت تهمنا في كل خطوة في نجاحك</div>
 
+    <!-- الكروت -->
+    <div class="cards">
       <a href="https://www.mrfaisal.net/المتابعه-الخاصة-بنا/متابعه-ولي-الامر" class="card" target="_blank">
         <div class="emoji">👨‍👩‍👧</div>
         <h3>متابعة ولي الأمر</h3>
@@ -141,8 +157,8 @@
         <div class="emoji">🧑‍🎓</div>
         <h3>متابعة الطالب</h3>
       </a>
-
     </div>
+
   </div>
 
 </body>
