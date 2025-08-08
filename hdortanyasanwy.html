@@ -1,131 +1,168 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html dir="rtl" lang="ar">
 <head>
   <meta charset="UTF-8">
+  <title>عرض الحضور</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>عرض بيانات الطالب</title>
+  <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.6.2/dist/dotlottie-wc.js" type="module"></script>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@600&display=swap');
     body {
-      font-family: 'Cairo', sans-serif;
-      background-color: #e0f7fa; /* أزرق سماوي فاتح */
       margin: 0;
       padding: 0;
-      text-align: center;
+      font-family: 'Cairo', sans-serif;
+      background: linear-gradient(145deg, #e0f7fa, #b2ebf2); /* أزرق سماوي */
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      overflow: hidden;
     }
-
-    header {
-      padding: 20px;
+    .top-lottie {
+      width: 90%;
+      max-width: 420px;
+      margin-bottom: -20px;
+      position: relative;
+      z-index: 3;
     }
-
-    header img {
-      width: 150px;
-      height: 150px;
-    }
-
-    header h1 {
-      margin-top: 10px;
-      font-size: 24px;
-      color: #00796b;
-    }
-
     .container {
-      margin-top: 20px;
+      background: #fff;
+      padding: 25px 20px;
+      border-radius: 20px;
+      box-shadow: 0 8px 24px rgba(0, 150, 136, 0.25); /* ظل أزرق مخضر */
+      text-align: center;
+      width: 90%;
+      max-width: 420px;
+      z-index: 2;
+      animation: popIn 1s ease;
     }
-
-    input {
-      padding: 10px;
-      font-size: 16px;
-      width: 200px;
-      border: 2px solid #00796b;
-      border-radius: 5px;
+    @keyframes popIn {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
     }
-
-    button {
-      padding: 10px 20px;
+    h2 { 
+      color: #00796b; /* أزرق مخضر */
+      margin-bottom: 15px; 
+      font-size: 22px;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      margin: 15px 0;
+      border-radius: 12px;
+      border: 2px solid #4dd0e1; /* سماوي فاتح */
       font-size: 16px;
-      background-color: #00796b;
+    }
+    input[type="submit"] {
+      background: #0097a7; /* أزرق سماوي داكن */
       color: white;
       border: none;
+      padding: 12px;
+      border-radius: 12px;
+      font-size: 17px;
       cursor: pointer;
-      border-radius: 5px;
-      transition: background-color 0.3s ease;
+      transition: background 0.3s ease;
     }
-
-    button:hover {
-      background-color: #004d40;
+    input[type="submit"]:hover { background: #00796b; }
+    .loading-screen {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: #ffffffee;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      flex-direction: column;
     }
-
-    .card {
-      margin: 20px auto;
-      background: white;
+    .loading-text {
+      font-size: 20px;
+      color: #00695c;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    .result-card {
+      background: #e0f2f1; /* أزرق مخضر فاتح */
       padding: 20px;
       border-radius: 15px;
-      width: 300px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-      text-align: right;
-      animation: fadeInUp 0.6s ease forwards;
+      margin-top: 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      animation: fadeIn 0.5s ease;
     }
-
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
 <body>
 
-  <header>
-    <img src="https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif" alt="GIF">
-    <h1>بحث عن بيانات الطالب</h1>
-  </header>
+  <div class="top-lottie">
+    <dotlottie-wc
+      src="https://lottie.host/db4c93f0-3bd5-46a6-969e-4f3341a280ce/sL9d2g6HaX.lottie"
+      style="width: 100%; height: auto;"
+      speed="1"
+      autoplay
+      loop>
+    </dotlottie-wc>
+  </div>
 
   <div class="container">
-    <input type="text" id="studentCode" placeholder="أدخل كود الطالب">
-    <button onclick="fetchData()">بحث</button>
+    <h2>الحضور خاص بـ <strong>مستر فيصل</strong></h2>
+    <form id="attendanceForm">
+      <input type="text" id="studentId" placeholder="🔑 أدخل كود الطالب" required>
+      <input type="submit" value="📊 عرض الحضور">
+    </form>
     <div id="result"></div>
   </div>
 
+  <div class="loading-screen" id="loadingScreen">
+    <dotlottie-wc
+      src="https://lottie.host/5094a892-ffb3-4075-b0eb-3434638a0404/ZLCk22UywK.lottie"
+      style="width: 100%; max-width: 300px; margin: 0 auto;"
+      speed="1"
+      autoplay
+      loop>
+    </dotlottie-wc>
+    <div class="loading-text">جاري تحميل الحضور... ✅</div>
+  </div>
+
   <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbxhPWUbrmfn9WegSHCzWnEGUYZjW0AnLT69Nj_E1VfkgEEmTDnp7OKRH0io8H0fJK-SxA/exec";
+    const API_URL = "https://script.google.com/macros/s/AKfycbym-mYSGrAK03b9Jc-Cghzp8PCJMBn0350-WYA8CooYODpcuMUOZiYnGz9pOaY2HIXP8w/exec";
+    const form = document.getElementById("attendanceForm");
+    const loadingScreen = document.getElementById("loadingScreen");
+    const resultDiv = document.getElementById("result");
 
-    function fetchData() {
-      const code = document.getElementById("studentCode").value.trim();
-      if (!code) {
-        alert("من فضلك أدخل كود الطالب");
-        return;
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      resultDiv.innerHTML = "";
+      loadingScreen.style.display = "flex";
+
+      const id = document.getElementById("studentId").value.trim();
+      try {
+        const res = await fetch(`${API_URL}?id=${encodeURIComponent(id)}`);
+        const data = await res.json();
+        loadingScreen.style.display = "none";
+
+        if (data.found) {
+          resultDiv.innerHTML = `
+            <div class="result-card">
+              <h3>📋 حضور الطالب</h3>
+              <p><strong>👦 اسم الطالب:</strong> ${data.name}</p>
+              <p><strong>🧭 السنتر:</strong> ${data.geo}</p>
+              <p><strong>📅الحصه الاولي:</strong> ${data.week1}</p>
+              <p><strong>📅 الحصه التانيه:</strong> ${data.week2}</p>
+            </div>
+          `;
+        } else {
+          resultDiv.innerHTML = `<div class="result-card" style="color:red;">❌ ${data.error}</div>`;
+        }
+      } catch (err) {
+        loadingScreen.style.display = "none";
+        resultDiv.innerHTML = `<div class="result-card" style="color:red;">⚠️ خطأ في الاتصال</div>`;
       }
-
-      fetch(`${API_URL}?id=${code}`)
-        .then(res => res.json())
-        .then(data => {
-          const resultDiv = document.getElementById("result");
-          resultDiv.innerHTML = "";
-
-          if (data.found) {
-            resultDiv.innerHTML = `
-              <div class="card">
-                <p><strong>اسم الطالب:</strong> ${data.name}</p>
-                <p><strong>اسم السنتر:</strong> ${data.geo}</p>
-                <p><strong>الحصة الأولى:</strong> ${data.week1}</p>
-                <p><strong>الحصة الثانية:</strong> ${data.week2}</p>
-              </div>
-            `;
-          } else {
-            resultDiv.innerHTML = `<p style="color:red;">${data.error}</p>`;
-          }
-        })
-        .catch(err => {
-          console.error(err);
-          alert("حدث خطأ في جلب البيانات");
-        });
-    }
+    });
   </script>
-
 </body>
 </html>
