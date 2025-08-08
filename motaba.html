@@ -25,38 +25,29 @@
       text-align: center;
     }
 
-    /* GIF Animation */
-    .gif-container {
+    /* GIF + Title مع بعض */
+    .gif-title-box {
       margin-top: 15px;
       opacity: 0;
       animation: gifZoom 1.2s ease-out forwards;
     }
 
     @keyframes gifZoom {
-      0% { transform: scale(0.8); opacity: 0; }
+      0% { transform: scale(0.85); opacity: 0; }
       100% { transform: scale(1); opacity: 1; }
     }
 
-    /* Title Animation */
-    .title {
+    .gif-title-box .title {
       font-size: 26px;
       font-weight: bold;
-      margin: 20px 0 10px;
+      margin-top: -15px; /* تخلي الكلمة لازقة تحت الـ GIF */
       color: #2c3e50;
-      line-height: 1.6;
+      line-height: 1.4;
       position: relative;
-      opacity: 0;
-      animation: fadeSlide 1.2s ease-out forwards;
-      animation-delay: 1.2s; /* بعد ظهور الـ GIF */
     }
 
-    @keyframes fadeSlide {
-      0% { opacity: 0; transform: translateY(20px); }
-      100% { opacity: 1; transform: translateY(0); }
-    }
-
-    /* خط تحت العنوان */
-    .title::after {
+    /* خط تحت الكلمة */
+    .gif-title-box .title::after {
       content: '';
       position: absolute;
       width: 60px;
@@ -68,7 +59,7 @@
       border-radius: 2px;
     }
 
-    /* Cards Grid */
+    /* Cards */
     .cards {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -91,9 +82,9 @@
       animation: cardPop 0.8s ease forwards;
     }
 
-    /* حركة الكروت واحدة واحدة */
-    .cards .card:nth-child(1) { animation-delay: 2.5s; }
-    .cards .card:nth-child(2) { animation-delay: 3s; }
+    /* Animation Delay للكروت */
+    .cards .card:nth-child(1) { animation-delay: 1.5s; }
+    .cards .card:nth-child(2) { animation-delay: 1.8s; }
 
     @keyframes cardPop {
       0% { transform: translateY(30px) scale(0.95); opacity: 0; }
@@ -122,7 +113,7 @@
     }
 
     @media (max-width: 400px) {
-      .title {
+      .gif-title-box .title {
         font-size: 20px;
       }
       .emoji {
@@ -135,16 +126,14 @@
 
   <div class="container">
 
-    <!-- GIF أولاً -->
-    <div class="gif-container">
+    <!-- GIF + الكلمة -->
+    <div class="gif-title-box">
       <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.6.2/dist/dotlottie-wc.js" type="module"></script>
       <dotlottie-wc src="https://lottie.host/09b23849-0675-4a59-8f49-590782f530a3/S93AP3sPfV.lottie" 
         style="width: 300px;height: 300px" speed="1" autoplay loop>
       </dotlottie-wc>
+      <div class="title">🎯 انت تهمنا في كل خطوة في نجاحك</div>
     </div>
-
-    <!-- العنوان بعد الـ GIF -->
-    <div class="title">🎯 انت تهمنا في كل خطوة في نجاحك</div>
 
     <!-- الكروت -->
     <div class="cards">
