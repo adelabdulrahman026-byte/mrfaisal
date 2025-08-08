@@ -136,6 +136,12 @@
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-6px); }
     }
+    /* سلاسة لانتقال الصفحة */
+    .fade-out {
+      opacity: 0;
+      transform: scale(0.98);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
   </style>
 </head>
 <body>
@@ -189,21 +195,14 @@
   <audio id="pageAudio" src="https://files.catbox.moe/ftvm82.ogg" style="display: none;"></audio>
 
   <script>
-    let audioPlayed = false;
-    function playSound() {
-      if (!audioPlayed) {
-        const audio = document.getElementById('pageAudio');
-        audio.play().catch(err => {
-          console.log("Autoplay blocked:", err);
-        });
-        audioPlayed = true;
-      }
-    }
-
     function startJourney() {
-      playSound();
-      // يفتح start.html في نفس الصفحة
-      window.location.href = "start.html";
+      const audio = document.getElementById('pageAudio');
+      audio.play().catch(err => console.log("Autoplay blocked:", err));
+
+      document.body.classList.add('fade-out');
+      setTimeout(() => {
+        window.location.href = "start.html";
+      }, 500); // بعد نصف ثانية من السلاسة
     }
 
     document.querySelectorAll('.social-card').forEach(card => {
