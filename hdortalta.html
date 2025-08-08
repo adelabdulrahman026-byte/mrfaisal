@@ -1,190 +1,55 @@
- <!DOCTYPE html>
-    <html dir="rtl" lang="ar">
-    <head>
-      <meta charset="UTF-8">
-      <title>عرض الحضور</title>
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.6.2/dist/dotlottie-wc.js" type="module"></script>
-      <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@600&display=swap');
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>الصفحة الأولى - عرض بيانات Google Sheets</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f0f0f0; padding: 20px; }
+    table { border-collapse: collapse; width: 100%; background: white; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+    th { background-color: #4CAF50; color: white; }
+  </style>
+</head>
+<body>
+  <h1>📊 بيانات من Google Sheets</h1>
+  <table id="data-table">
+    <thead>
+      <tr id="table-head"></tr>
+    </thead>
+    <tbody id="table-body"></tbody>
+  </table>
 
-        body {
-          margin: 0;
-          padding: 0;
-          font-family: 'Cairo', sans-serif;
-          background: linear-gradient(145deg, #fce4ec, #e1bee7);
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          min-height: 100vh;
-          overflow-x: hidden;
-        }
+  <script>
+    const sheetURL = "https://docs.google.com/spreadsheets/d/YOUR_SPREADSHEET_ID/gviz/tq?tqx=out:json";
 
-        .background-number {
-          position: absolute;
-          top: 30%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          font-size: clamp(100px, 25vw, 280px);
-          color: rgba(155, 39, 176, 0.07);
-          font-weight: bold;
-          animation: floatNumber 5s ease-in-out infinite;
-          z-index: 0;
-          text-align: center;
-        }
+    fetch(sheetURL)
+      .then(res => res.text())
+      .then(data => {
+        const json = JSON.parse(data.substr(47).slice(0, -2));
+        const tableHead = document.getElementById("table-head");
+        const tableBody = document.getElementById("table-body");
 
-        @keyframes floatNumber {
-          0%, 100% { transform: translate(-50%, -50%) translateY(0); }
-          50% { transform: translate(-50%, -50%) translateY(-20px); }
-        }
-
-        .container {
-          background: #fff;
-          padding: 20px;
-          border-radius: 20px;
-          box-shadow: 0 8px 24px rgba(123, 31, 162, 0.25);
-          text-align: center;
-          width: 90%;
-          max-width: 420px;
-          position: relative;
-          z-index: 2;
-          animation: popIn 1s ease;
-        }
-
-        @keyframes popIn {
-          from { transform: scale(0.9); opacity: 0; }
-          to { transform: scale(1); opacity: 1; }
-        }
-
-        h2 {
-          color: #8e24aa;
-          margin-bottom: 15px;
-          font-size: clamp(18px, 5vw, 22px);
-        }
-
-        .tagline {
-          background: #f3e5f5;
-          padding: 10px;
-          border-radius: 12px;
-          margin-bottom: 15px;
-          font-size: clamp(14px, 4vw, 16px);
-          color: #6a1b9a;
-          font-weight: bold;
-        }
-
-        input[type="text"] {
-          width: 100%;
-          padding: 12px;
-          margin: 15px 0;
-          border-radius: 12px;
-          border: 2px solid #ce93d8;
-          font-size: 16px;
-        }
-
-        input[type="submit"] {
-          background: #ab47bc;
-          color: white;
-          border: none;
-          padding: 12px;
-          border-radius: 12px;
-          font-size: 17px;
-          cursor: pointer;
-          transition: background 0.3s ease;
-          width: 100%;
-        }
-
-        input[type="submit"]:hover {
-          background: #8e24aa;
-        }
-
-        .emoji {
-          font-size: 30px;
-          margin-bottom: 10px;
-          animation: bounce 2s infinite;
-        }
-
-        @keyframes bounce {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-8px); }
-        }
-
-        /* شاشة التحميل */
-        .loading-screen {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100vw;
-          height: 100vh;
-          background: #ffffffee;
-          display: none;
-          justify-content: center;
-          align-items: center;
-          z-index: 9999;
-          flex-direction: column;
-          padding: 15px;
-        }
-
-        .loading-text {
-          font-size: 18px;
-          color: #6a1b9a;
-          font-weight: bold;
-          margin-top: 10px;
-          text-align: center;
-        }
-
-        @media (max-width: 480px) {
-          .container {
-            padding: 15px;
+        // إضافة العناوين
+        json.table.cols.forEach(col => {
+          if (col.label) {
+            let th = document.createElement("th");
+            th.textContent = col.label;
+            tableHead.appendChild(th);
           }
-          input[type="text"], input[type="submit"] {
-            font-size: 15px;
-            padding: 10px;
-          }
-        }
-      </style>
-    </head>
-    <body>
-      <div class="background-number">3</div>
-
-      <div class="container">
-        <div class="emoji">🎓✨</div>
-        <h2>الحضور خاص بـ <strong>مستر فيصل</strong></h2>
-        <div class="tagline">📚 خاص بطلاب الصف الثالث فقط</div>
-
-        <form id="attendanceForm">
-          <input type="text" name="id" placeholder="🔑 أدخل كود الطالب" required>
-          <input type="submit" value="📊 عرض الحضور">
-        </form>
-      </div>
-
-     <!-- شاشة التحميل -->
-<div class="loading-screen" id="loadingScreen">
-  <dotlottie-wc
-    src="https://lottie.host/5094a892-ffb3-4075-b0eb-3434638a0404/ZLCk22UywK.lottie"
-    style="width: 100%; max-width: 300px; margin: 0 auto;"
-    speed="1"
-    autoplay
-    loop
-  ></dotlottie-wc>
-  <div class="loading-text">جاري تحميل الحضور... ✅</div>
-</div>
-
-
-      <script>
-        const form = document.getElementById("attendanceForm");
-        const loadingScreen = document.getElementById("loadingScreen");
-
-        form.addEventListener("submit", function(e) {
-          e.preventDefault();
-          loadingScreen.style.display = "flex";
-
-          const id = form.id.value.trim();
-          const url = "ntigahdortalta.html" + encodeURIComponent(id);
-
-          setTimeout(() => {
-            window.location.href = url;
-          }, 2000);
         });
-      </script>
-    </body>
-    </html>
+
+        // إضافة الصفوف
+        json.table.rows.forEach(row => {
+          let tr = document.createElement("tr");
+          row.c.forEach(cell => {
+            let td = document.createElement("td");
+            td.textContent = cell ? cell.v : "";
+            tr.appendChild(td);
+          });
+          tableBody.appendChild(tr);
+        });
+      });
+  </script>
+</body>
+</html>
