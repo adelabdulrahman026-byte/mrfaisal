@@ -13,10 +13,16 @@
       font-family: 'Cairo', sans-serif;
       background: linear-gradient(145deg, #fce4ec, #e1bee7);
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
       overflow: hidden;
+    }
+    /* لوتي برا الكارت */
+    .top-lottie {
+      max-width: 200px;
+      margin-bottom: 10px;
     }
     .container {
       background: #fff;
@@ -32,10 +38,6 @@
     @keyframes popIn {
       from { transform: scale(0.9); opacity: 0; }
       to { transform: scale(1); opacity: 1; }
-    }
-    .gif-box {
-      max-width: 300px;
-      margin: 0 auto 10px auto;
     }
     h2 { 
       color: #8e24aa; 
@@ -93,18 +95,19 @@
   </style>
 </head>
 <body>
-  <div class="container">
-    <!-- GIF الجديد في الواجهة -->
-    <div class="gif-box">
-      <dotlottie-wc
-        src="https://lottie.host/db4c93f0-3bd5-46a6-969e-4f3341a280ce/sL9d2g6HaX.lottie"
-        style="width: 300px; height: 300px;"
-        speed="1"
-        autoplay
-        loop>
-      </dotlottie-wc>
-    </div>
 
+  <!-- لوتي برا الكارت -->
+  <div class="top-lottie">
+    <dotlottie-wc
+      src="https://lottie.host/db4c93f0-3bd5-46a6-969e-4f3341a280ce/sL9d2g6HaX.lottie"
+      style="width: 100%;"
+      speed="1"
+      autoplay
+      loop>
+    </dotlottie-wc>
+  </div>
+
+  <div class="container">
     <h2>الحضور خاص بـ <strong>مستر فيصل</strong></h2>
     <form id="attendanceForm">
       <input type="text" id="studentId" placeholder="🔑 أدخل كود الطالب" required>
