@@ -1,0 +1,194 @@
+function doGet(e) {
+  const sheetId = "1uyWjfPk8he_ysPeXPUoXeRD2Wu836OctE3WaqhtuCb4";
+  const sheetName = "الورقة1";
+  const ss = SpreadsheetApp.openById(sheetId);
+  const sheet = ss.getSheetByName(sheetName);
+  const data = sheet.getDataRange().getValues();
+
+  const studentCode = e.parameter.id;
+  if (!studentCode) {
+    return HtmlService.createHtmlOutput("<h3>⚠️ من فضلك أدخل كود الطالب</h3>");
+  }
+
+  let resultHtml = "";
+  let found = false;
+
+  for (let i = 1; i < data.length; i++) {
+    if (data[i][0] == studentCode) {
+      const name = data[i][1];
+      const center = data[i][2];
+      const geo = data[i][3];
+      const week1Attendance = data[i][4];
+      const week2Attendance = data[i][5];
+
+      resultHtml = `
+      <html dir="rtl" lang="ar">
+      <head>
+        <meta charset="UTF-8">
+        <title>نتيجة الطالب</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Readex+Pro:wght@600&display=swap');
+
+          body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Readex Pro', sans-serif;
+            background: radial-gradient(circle at center, #ffecb3, #ffe0b2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+          }
+
+          .card {
+            background: #fff8e1;
+            padding: 25px 20px;
+            border-radius: 25px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.1);
+            z-index: 1;
+            width: 90%;
+            max-width: 420px;
+            text-align: center;
+            animation: slideUp 1.2s ease;
+          }
+
+          @keyframes slideUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+          }
+
+          h2 {
+            color: #ff9800;
+            margin-bottom: 10px;
+            font-size: 26px;
+          }
+
+          .subtitle {
+            color: #fb8c00;
+            background-color: #ffe0b2;
+            padding: 12px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            font-size: 16px;
+            font-weight: bold;
+          }
+
+          table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+          }
+
+          th, td {
+            padding: 12px;
+            border: 1px solid #ffcc80;
+            font-size: 17px;
+          }
+
+          th {
+            background-color: #ffb74d;
+            color: white;
+          }
+
+          .svg-icon {
+            width: 120px;
+            margin: 10px auto;
+            animation: float 3s infinite ease-in-out;
+          }
+
+          @keyframes float {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0); }
+          }
+        </style>
+      </head>
+      <body>
+        <div class="card">
+          <svg class="svg-icon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="32" cy="32" r="30" fill="#FFF3E0"/>
+            <circle cx="22" cy="24" r="4" fill="#FFA000"/>
+            <circle cx="42" cy="24" r="4" fill="#FFA000"/>
+            <path d="M22 42C24.6667 38 39.3333 38 42 42" stroke="#FF9800" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+          <h2>📋 حضور الطالب</h2>
+          <div class="subtitle">خاص بطلاب الصف الثالث فقط</div>
+          <table>
+            <tr><th>👦 اسم الطالب</th><td>${name}</td></tr>
+            <tr><th>🧭 اسم السنتر</th><td>${geo}</td></tr>
+            <tr><th>📅 حضور الأسبوع 1</th><td>${week1Attendance}</td></tr>
+            <tr><th>📅 حضور الأسبوع 2</th><td>${week2Attendance}</td></tr>
+          </table>
+        </div>
+      </body>
+      </html>
+      `;
+      found = true;
+      break;
+    }
+  }
+
+  if (!found) {
+    resultHtml = `
+    <html dir="rtl" lang="ar">
+    <head>
+      <meta charset="UTF-8">
+      <style>
+        @import url('https://fonts.googleapis.com/css2?family=Readex+Pro:wght@600&display=swap');
+        body {
+          font-family: 'Readex Pro', sans-serif;
+          background: #fff3e0;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          min-height: 100vh;
+          text-align: center;
+          padding: 20px;
+        }
+        .container {
+          animation: shake 0.6s;
+        }
+        h3 {
+          color: #e53935;
+          font-size: 24px;
+        }
+        .svg-icon {
+          width: 100px;
+          margin: 20px auto;
+          animation: float 3s infinite ease-in-out;
+        }
+
+        @keyframes shake {
+          0%, 100% { transform: translateX(0); }
+          25% { transform: translateX(-4px); }
+          50% { transform: translateX(4px); }
+          75% { transform: translateX(-4px); }
+        }
+
+        @keyframes float {
+          0% { transform: translateY(0); }
+          50% { transform: translateY(-10px); }
+          100% { transform: translateY(0); }
+        }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <svg class="svg-icon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="32" cy="32" r="30" fill="#FFCDD2"/>
+          <circle cx="22" cy="24" r="4" fill="#D32F2F"/>
+          <circle cx="42" cy="24" r="4" fill="#D32F2F"/>
+          <path d="M22 44C25 40 39 40 42 44" stroke="#D32F2F" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+        <h3>❌ كود الطالب غير موجود</h3>
+      </div>
+    </body>
+    </html>
+    `;
+  }
+
+  return HtmlService.createHtmlOutput(resultHtml)
+    .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+}
