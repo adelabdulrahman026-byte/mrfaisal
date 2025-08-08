@@ -9,13 +9,16 @@
   <style>
     * {margin:0;padding:0;box-sizing:border-box;font-family:'Cairo',sans-serif;}
     body {background:#fff;color:#222;overflow-x:hidden;}
-    
+
+    /* الجملة الرئيسية */
     .headline {
       text-align:center;
-      font-size:26px;
+      font-size:28px;
       font-weight:800;
-      color:#2c3e50;
-      padding:25px 10px 10px;
+      background:linear-gradient(90deg,#4CAF50,#2e8bff);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      padding:30px 15px;
       animation:fadeInDown 1.5s ease-in-out;
     }
     @keyframes fadeInDown {
@@ -23,6 +26,7 @@
       100%{opacity:1;transform:translateY(0);}
     }
 
+    /* الكروت */
     .content {
       display:flex;
       justify-content:center;
@@ -60,41 +64,55 @@
     @keyframes rotate {0%{transform:rotate(0);}100%{transform:rotate(360deg);}}
     a {text-decoration:none;color:inherit;}
 
-    .whatsapp-section {
-      margin-top:30px;
-      text-align:center;
-      padding-bottom:20px;
-    }
-    .whatsapp-button {
-      display:inline-block;
-      background-color:#25D366;
+    /* رسالة واتساب جانبية */
+    .whatsapp-chat {
+      position:fixed;
+      bottom:20px;
+      left:20px;
+      background:#25D366;
       color:white;
-      border-radius:50%;
-      padding:20px;
-      font-size:30px;
-      box-shadow:0 6px 12px rgba(0,0,0,0.2);
-      transition:0.3s ease;
-      animation:bounce 2s infinite;
+      padding:10px 15px;
+      border-radius:25px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      box-shadow:0 4px 10px rgba(0,0,0,0.2);
+      font-weight:600;
+      cursor:pointer;
+      animation:slideIn 1.2s ease-out;
     }
-    .whatsapp-button:hover {background-color:#1ebe5c;transform:scale(1.1);}
-    .whatsapp-text {margin-top:10px;font-size:18px;color:#2c3e50;font-weight:bold;}
+    .whatsapp-chat i {
+      font-size:22px;
+      background:white;
+      color:#25D366;
+      border-radius:50%;
+      padding:8px;
+    }
+    @keyframes slideIn {
+      0% {transform:translateX(-150%);opacity:0;}
+      100% {transform:translateX(0);opacity:1;}
+    }
+    .whatsapp-chat:hover {
+      background:#1ebe5c;
+      transform:scale(1.05);
+    }
 
     @media(max-width:600px){
-      .headline {font-size:20px;padding:15px 5px;}
+      .headline {font-size:22px;padding:20px 10px;}
       .card {width:90%;padding:20px;}
       .card i {font-size:50px;}
       .card h3 {font-size:18px;}
       .card p {font-size:14px;}
       .content {gap:20px;padding:15px;}
-      .whatsapp-button {font-size:24px;padding:15px;}
-      .whatsapp-text {font-size:16px;}
     }
   </style>
 </head>
 <body>
 
-<div class="headline">حمّل منصتنا التعليمية وابدأ معانا طريق النجاح ✨</div>
+<!-- الجملة الرئيسية -->
+<div class="headline">✨ حمّل منصتنا التعليمية وابدأ رحلة النجاح معنا ✨</div>
 
+<!-- الكروت -->
 <div class="content">
   <a href="https://play.google.com/store/apps/details?id=com.mega.academy" target="_blank">
     <div class="card">
@@ -113,12 +131,11 @@
   </a>
 </div>
 
-<div class="whatsapp-section">
-  <a href="https://wa.me/201556618507" target="_blank" class="whatsapp-button">
-    <i class="fab fa-whatsapp"></i>
-  </a>
-  <div class="whatsapp-text">للتواصل مع الدعم الفني واتساب</div>
-</div>
+<!-- رسالة واتساب جانبية -->
+<a href="https://wa.me/201556618507" target="_blank" class="whatsapp-chat">
+  <i class="fab fa-whatsapp"></i>
+  <span>تواصل مع الدعم الفني</span>
+</a>
 
 </body>
 </html>
