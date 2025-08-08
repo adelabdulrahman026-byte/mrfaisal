@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>كروت المتابعة</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Cairo', sans-serif;
+      background-color: #f9f9f9;
+      color: #222;
+      padding: 15px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      text-align: center;
+    }
+
+    .title {
+      font-size: 22px;
+      font-weight: bold;
+      margin: 20px 0 30px;
+      color: #2c3e50;
+      line-height: 1.6;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+      text-decoration: none;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 25px 15px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+    }
+
+    .emoji {
+      font-size: 70px;
+      margin-bottom: 15px;
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover .emoji {
+      transform: scale(1.1) rotate(3deg);
+    }
+
+    .card h3 {
+      font-size: 18px;
+      margin: 0;
+      color: #2c3e50;
+    }
+
+    @media (max-width: 400px) {
+      .title {
+        font-size: 18px;
+      }
+      .emoji {
+        font-size: 55px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="title">🎯 انت تهمنا في كل خطوة في نجاحك</div>
+
+    <div class="cards">
+
+      <a href="https://www.mrfaisal.net/المتابعه-الخاصة-بنا/متابعه-ولي-الامر" class="card" target="_blank">
+        <div class="emoji">👨‍👩‍👧</div>
+        <h3>متابعة ولي الأمر</h3>
+      </a>
+
+      <a href="https://www.mrfaisal.net/المتابعه-الخاصة-بنا/متابعه-الطالب" class="card" target="_blank">
+        <div class="emoji">🧑‍🎓</div>
+        <h3>متابعة الطالب</h3>
+      </a>
+
+    </div>
+  </div>
+
+</body>
+</html>
