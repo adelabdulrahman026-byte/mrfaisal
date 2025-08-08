@@ -202,7 +202,8 @@
 
     function startJourney() {
       playSound();
-      window.open("https://www.mrfaisal.net/%D8%A7%D9%84%D8%A8%D8%AF%D8%A7", "_blank");
+      // يفتح start.html في نفس الصفحة
+      window.location.href = "start.html";
     }
 
     document.querySelectorAll('.social-card').forEach(card => {
@@ -214,4 +215,3 @@
   </script>
 </body>
 </html>
-"""
