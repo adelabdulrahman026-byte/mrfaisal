@@ -1,8 +1,13 @@
+from pathlib import Path
+
+# HTML content after mobile-optimized adjustments
+html_content = """
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <title>روابط مستر فيصل</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800;900&display=swap" rel="stylesheet">
   <style>
     body {
@@ -42,17 +47,17 @@
       100% { transform: scale(1); background-color: transparent; }
     }
     .social-section {
-      padding: 100px 16px 60px;
+      padding: 60px 12px 40px;
       display: flex;
       flex-direction: column;
       gap: 14px;
-      max-width: 340px;
+      max-width: 95%;
       margin: auto;
     }
     .social-card {
       backdrop-filter: blur(10px);
       border-radius: 16px;
-      padding: 16px;
+      padding: 14px;
       text-align: center;
       box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
       border: 1px solid #ccc;
@@ -69,24 +74,24 @@
       display: block;
     }
     .social-card img {
-      width: 60px;
-      height: 60px;
+      width: 50px;
+      height: 50px;
       object-fit: contain;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       border-radius: 50%;
       background: white;
-      padding: 8px;
+      padding: 6px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
     .social-card h3 {
       margin: 0;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: bold;
       color: #111;
     }
     .social-card p {
-      font-size: 13px;
-      margin-top: 6px;
+      font-size: 12px;
+      margin-top: 4px;
       color: #333;
     }
     .social-card.clicked {
@@ -100,15 +105,15 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 20px 16px 80px;
+      padding: 20px 16px 60px;
     }
     .start-card-inner {
       background: linear-gradient(135deg, #00c9ff, #92fe9d);
       color: #000;
       border-radius: 16px;
-      padding: 20px 28px;
+      padding: 18px 24px;
       box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-      font-size: 20px;
+      font-size: 18px;
       font-weight: bold;
       text-align: center;
       animation: zoomRotate 1s ease forwards;
@@ -139,13 +144,11 @@
 </head>
 <body>
 
-  <!-- فيديو الخلفية -->
   <div style="position: relative; width: 100vw; height: 100vh; overflow: hidden;">
     <video autoplay muted loop playsinline style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: -1;">
       <source src="https://files.catbox.moe/1dldfl.mp4" type="video/mp4">
     </video>
 
-    <!-- الكارت الرئيسي -->
     <div style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 2; width: 90%; max-width: 320px;">
       <div id="mainCard" style="
         backdrop-filter: blur(10px);
@@ -160,19 +163,18 @@
         animation: slideUp 1.5s forwards ease-out;
         cursor: default;
       ">
-        <div style="font-size: 22px; font-weight: 800; margin-bottom: 6px;">
+        <div style="font-size: 20px; font-weight: 800; margin-bottom: 6px;">
           انضم لينا
         </div>
-        <div style="font-size: 16px; font-weight: 600; display: flex; justify-content: center; align-items: center; gap: 4px; flex-wrap: wrap;">
-          <span class="point-down" style="font-size: 20px;">👇</span>
+        <div style="font-size: 14px; font-weight: 600; display: flex; justify-content: center; align-items: center; gap: 4px; flex-wrap: wrap;">
+          <span class="point-down" style="font-size: 18px;">👇</span>
           <span>في عالم مستر فيصل</span>
-          <span class="point-down" style="font-size: 20px;">👇</span>
+          <span class="point-down" style="font-size: 18px;">👇</span>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- كروت التواصل -->
   <div class="social-section">
     <div class="social-card"><a href="https://www.whatsapp.com/channel/0029Vb5eotiHFxOvJuFpMI39" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"><h3>انضم لقناة الواتساب</h3><p>تابع آخر الأخبار والعروض</p></a></div>
     <div class="social-card"><a href="https://www.facebook.com/groups/450656791778335/?locale=ar_AR" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg"><h3>انضم لجروب الفيسبوك</h3><p>محتوى خاص وتفاعل مباشر</p></a></div>
@@ -181,18 +183,15 @@
     <div class="social-card"><a href="https://www.facebook.com/Mr.faisl" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg"><h3>تابع صفحتي على فيسبوك</h3><p>أحدث الأخبار والمحتوى الخاص</p></a></div>
   </div>
 
-  <!-- كارت انضم إلينا -->
   <div id="joinCard" class="start-card">
     <div class="start-card-inner" onclick="startJourney()">
-      <div style="font-size: 50px; animation: rocket 1.5s infinite;">🚀</div>
-      <div style="margin-top: 12px;">ابدأ الرحلة الآن</div>
+      <div style="font-size: 40px; animation: rocket 1.5s infinite;">🚀</div>
+      <div style="margin-top: 10px;">ابدأ الرحلة الآن</div>
     </div>
   </div>
 
-  <!-- الصوت -->
   <audio id="pageAudio" src="https://files.catbox.moe/ftvm82.ogg" style="display: none;"></audio>
 
-  <!-- سكريبت الصوت والتنقل -->
   <script>
     let audioPlayed = false;
     function playSound() {
@@ -219,3 +218,9 @@
   </script>
 </body>
 </html>
+"""
+
+# Save HTML to file
+file_path = Path("/mnt/data/index_mobile_optimized.html")
+file_path.write_text(html_content, encoding="utf-8")
+file_path.name
