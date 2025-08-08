@@ -1,203 +1,117 @@
-function doGet(e) {
-  const sheetId = "1uyWjfPk8he_ysPeXPUoXeRD2Wu836OctE3WaqhtuCb4";
-  const sheetName = "الورقة1";
-  const ss = SpreadsheetApp.openById(sheetId);
-  const sheet = ss.getSheetByName(sheetName);
-  const data = sheet.getDataRange().getValues();
-
-  const studentCode = e.parameter.id;
-  if (!studentCode) {
-    return HtmlService.createHtmlOutput("<h3>⚠️ من فضلك أدخل كود الطالب</h3>");
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📋 حضور الطالب</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Readex+Pro:wght@600&display=swap');
+  body {
+    margin: 0;
+    font-family: 'Readex Pro', sans-serif;
+    background: radial-gradient(circle at center, #ffecb3, #ffe0b2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 10px;
   }
+  .card {
+    background: #fff8e1;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    width: 95%;
+    max-width: 420px;
+    text-align: center;
+    animation: fadeIn 1s ease;
+  }
+  h2 {
+    color: #ff9800;
+    margin-bottom: 10px;
+  }
+  .subtitle {
+    color: #fb8c00;
+    background-color: #ffe0b2;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    font-weight: bold;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  th, td {
+    padding: 10px;
+    border: 1px solid #ffcc80;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+  th {
+    background-color: #ffb74d;
+    color: white;
+  }
+  @keyframes fadeIn {
+    from {opacity: 0; transform: translateY(20px);}
+    to {opacity: 1; transform: translateY(0);}
+  }
+</style>
+</head>
+<body>
 
-  let resultHtml = "";
-  let found = false;
+<div class="card" id="result">
+  <h2>📋 حضور الطالب</h2>
+  <div class="subtitle">جارٍ التحميل...</div>
+</div>
 
-  for (let i = 1; i < data.length; i++) {
-    if (data[i][0] == studentCode) {
-      const name = data[i][1];
-      const center = data[i][2];
-      const geo = data[i][3];
-      const week1Attendance = data[i][4];
-      const week2Attendance = data[i][5];
+<script>
+const sheetUrl = "https://docs.google.com/spreadsheets/d/1uyWjfPk8he_ysPeXPUoXeRD2Wu836OctE3WaqhtuCb4/edit?usp=sharing"; // ضع رابط CSV هنا
+const urlParams = new URLSearchParams(window.location.search);
+const studentId = urlParams.get('id');
 
-      resultHtml = `
-      <html dir="rtl" lang="ar">
-      <head>
-        <meta charset="UTF-8">
-        <title>نتيجة الطالب</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <style>
-          @import url('https://fonts.googleapis.com/css2?family=Readex+Pro:wght@600&display=swap');
+if (!studentId) {
+  document.getElementById('result').innerHTML = "<h3>⚠️ من فضلك أدخل كود الطالب في الرابط مثل: ?id=123</h3>";
+} else {
+  fetch(sheetUrl)
+    .then(res => res.text())
+    .then(data => {
+      const rows = data.split("\n").map(r => r.split(","));
+      let found = false;
 
-          body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Readex Pro', sans-serif;
-            background: radial-gradient(circle at center, #ffecb3, #ffe0b2);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-          }
+      for (let i = 1; i < rows.length; i++) {
+        if (rows[i][0].trim() === studentId) {
+          found = true;
+          const name = rows[i][1];
+          const center = rows[i][2];
+          const geo = rows[i][3];
+          const week1 = rows[i][4];
+          const week2 = rows[i][5];
 
-          .card {
-            background: #fff8e1;
-            padding: 20px;
-            border-radius: 20px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-            width: 95%;
-            max-width: 420px;
-            text-align: center;
-            animation: slideUp 1s ease;
-          }
-
-          @keyframes slideUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-          }
-
-          h2 {
-            color: #ff9800;
-            margin-bottom: 10px;
-            font-size: 22px;
-          }
-
-          .subtitle {
-            color: #fb8c00;
-            background-color: #ffe0b2;
-            padding: 10px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            font-size: 14px;
-            font-weight: bold;
-          }
-
-          .table-container {
-            overflow-x: auto;
-          }
-
-          table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-          }
-
-          th, td {
-            padding: 10px;
-            border: 1px solid #ffcc80;
-            font-size: 14px;
-            white-space: nowrap;
-          }
-
-          th {
-            background-color: #ffb74d;
-            color: white;
-          }
-
-          .svg-icon {
-            width: 90px;
-            margin: 10px auto;
-            animation: float 3s infinite ease-in-out;
-          }
-
-          @keyframes float {
-            0% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
-            100% { transform: translateY(0); }
-          }
-
-          @media (min-width: 600px) {
-            h2 { font-size: 26px; }
-            th, td { font-size: 16px; }
-          }
-        </style>
-      </head>
-      <body>
-        <div class="card">
-          <svg class="svg-icon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="32" cy="32" r="30" fill="#FFF3E0"/>
-            <circle cx="22" cy="24" r="4" fill="#FFA000"/>
-            <circle cx="42" cy="24" r="4" fill="#FFA000"/>
-            <path d="M22 42C24.6667 38 39.3333 38 42 42" stroke="#FF9800" stroke-width="3" stroke-linecap="round"/>
-          </svg>
-          <h2>📋 حضور الطالب</h2>
-          <div class="subtitle">خاص بطلاب الصف الثالث فقط</div>
-          <div class="table-container">
+          document.getElementById('result').innerHTML = `
+            <h2>📋 حضور الطالب</h2>
+            <div class="subtitle">خاص بطلاب الصف الثالث فقط</div>
             <table>
               <tr><th>👦 اسم الطالب</th><td>${name}</td></tr>
-              <tr><th>🧭 اسم السنتر</th><td>${geo}</td></tr>
-              <tr><th>📅 الأسبوع 1</th><td>${week1Attendance}</td></tr>
-              <tr><th>📅 الأسبوع 2</th><td>${week2Attendance}</td></tr>
+              <tr><th>🏫 اسم السنتر</th><td>${geo}</td></tr>
+              <tr><th>📅 الأسبوع 1</th><td>${week1}</td></tr>
+              <tr><th>📅 الأسبوع 2</th><td>${week2}</td></tr>
             </table>
-          </div>
-        </div>
-      </body>
-      </html>
-      `;
-      found = true;
-      break;
-    }
-  }
+          `;
+          break;
+        }
+      }
 
-  if (!found) {
-    resultHtml = `
-    <html dir="rtl" lang="ar">
-    <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <style>
-        @import url('https://fonts.googleapis.com/css2?family=Readex+Pro:wght@600&display=swap');
-        body {
-          font-family: 'Readex Pro', sans-serif;
-          background: #fff3e0;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          min-height: 100vh;
-          padding: 20px;
-          text-align: center;
-        }
-        .container {
-          animation: shake 0.6s;
-        }
-        h3 {
-          color: #e53935;
-          font-size: 20px;
-        }
-        .svg-icon {
-          width: 80px;
-          margin: 10px auto;
-          animation: float 3s infinite ease-in-out;
-        }
-        @keyframes shake {
-          0%, 100% { transform: translateX(0); }
-          25% { transform: translateX(-4px); }
-          50% { transform: translateX(4px); }
-          75% { transform: translateX(-4px); }
-        }
-        @keyframes float {
-          0% { transform: translateY(0); }
-          50% { transform: translateY(-8px); }
-          100% { transform: translateY(0); }
-        }
-      </style>
-    </head>
-    <body>
-      <div class="container">
-        <svg class="svg-icon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="32" cy="32" r="30" fill="#FFCDD2"/>
-          <circle cx="22" cy="24" r="4" fill="#D32F2F"/>
-          <circle cx="42" cy="24" r="4" fill="#D32F2F"/>
-          <path d="M22 44C25 40 39 40 42 44" stroke="#D32F2F" stroke-width="3" stroke-linecap="round"/>
-        </svg>
-        <h3>❌ كود الطالب غير موجود</h3>
-      </div>
-    </body>
-    </html>
-    `;
-  }
-
-  return HtmlService.createHtmlOutput(resultHtml)
-    .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+      if (!found) {
+        document.getElementById('result').innerHTML = "<h3>❌ كود الطالب غير موجود</h3>";
+      }
+    })
+    .catch(err => {
+      document.getElementById('result').innerHTML = "<h3>⚠️ حدث خطأ أثناء تحميل البيانات</h3>";
+      console.error(err);
+    });
 }
+</script>
+
+</body>
+</html>
