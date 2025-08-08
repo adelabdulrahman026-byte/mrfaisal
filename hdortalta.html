@@ -19,7 +19,7 @@ function doGet() {
           justify-content: center;
           align-items: center;
           min-height: 100vh;
-          overflow: hidden;
+          overflow-x: hidden;
         }
 
         .background-number {
@@ -27,11 +27,12 @@ function doGet() {
           top: 30%;
           left: 50%;
           transform: translate(-50%, -50%);
-          font-size: 280px;
+          font-size: clamp(100px, 25vw, 280px);
           color: rgba(155, 39, 176, 0.07);
           font-weight: bold;
           animation: floatNumber 5s ease-in-out infinite;
           z-index: 0;
+          text-align: center;
         }
 
         @keyframes floatNumber {
@@ -41,7 +42,7 @@ function doGet() {
 
         .container {
           background: #fff;
-          padding: 30px;
+          padding: 20px;
           border-radius: 20px;
           box-shadow: 0 8px 24px rgba(123, 31, 162, 0.25);
           text-align: center;
@@ -60,7 +61,7 @@ function doGet() {
         h2 {
           color: #8e24aa;
           margin-bottom: 15px;
-          font-size: 22px;
+          font-size: clamp(18px, 5vw, 22px);
         }
 
         .tagline {
@@ -68,7 +69,7 @@ function doGet() {
           padding: 10px;
           border-radius: 12px;
           margin-bottom: 15px;
-          font-size: 16px;
+          font-size: clamp(14px, 4vw, 16px);
           color: #6a1b9a;
           font-weight: bold;
         }
@@ -91,6 +92,7 @@ function doGet() {
           font-size: 17px;
           cursor: pointer;
           transition: background 0.3s ease;
+          width: 100%;
         }
 
         input[type="submit"]:hover {
@@ -121,13 +123,25 @@ function doGet() {
           align-items: center;
           z-index: 9999;
           flex-direction: column;
+          padding: 15px;
         }
 
         .loading-text {
-          font-size: 20px;
+          font-size: 18px;
           color: #6a1b9a;
           font-weight: bold;
           margin-top: 10px;
+          text-align: center;
+        }
+
+        @media (max-width: 480px) {
+          .container {
+            padding: 15px;
+          }
+          input[type="text"], input[type="submit"] {
+            font-size: 15px;
+            padding: 10px;
+          }
         }
       </style>
     </head>
@@ -171,13 +185,13 @@ function doGet() {
 
           setTimeout(() => {
             window.location.href = url;
-          }, 2000); // تأخير 2 ثانية
+          }, 2000);
         });
       </script>
     </body>
     </html>
   `;
-
   return HtmlService.createHtmlOutput(html)
+    .setTitle("عرض الحضور")
     .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
 }
