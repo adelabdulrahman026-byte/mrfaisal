@@ -19,10 +19,13 @@
       min-height: 100vh;
       overflow: hidden;
     }
-    /* لوتي برا الكارت */
+    /* لوتي فوق الكارت بحجم متناسق */
     .top-lottie {
-      max-width: 200px;
-      margin-bottom: 10px;
+      width: 90%;
+      max-width: 420px;
+      margin-bottom: -20px; /* يدخلها على الكارت */
+      position: relative;
+      z-index: 3;
     }
     .container {
       background: #fff;
@@ -96,11 +99,11 @@
 </head>
 <body>
 
-  <!-- لوتي برا الكارت -->
+  <!-- لوتي فوق الكارت -->
   <div class="top-lottie">
     <dotlottie-wc
       src="https://lottie.host/db4c93f0-3bd5-46a6-969e-4f3341a280ce/sL9d2g6HaX.lottie"
-      style="width: 100%;"
+      style="width: 100%; height: auto;"
       speed="1"
       autoplay
       loop>
@@ -116,7 +119,7 @@
     <div id="result"></div>
   </div>
 
-  <!-- شاشة التحميل بالـ GIF القديم -->
+  <!-- شاشة التحميل -->
   <div class="loading-screen" id="loadingScreen">
     <dotlottie-wc
       src="https://lottie.host/5094a892-ffb3-4075-b0eb-3434638a0404/ZLCk22UywK.lottie"
