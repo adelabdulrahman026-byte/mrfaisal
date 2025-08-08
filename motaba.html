@@ -25,18 +25,52 @@
       text-align: center;
     }
 
+    /* العنوان بحركة وشكل أشيك */
     .title {
-      font-size: 22px;
+      font-size: 26px;
       font-weight: bold;
-      margin: 20px 0 30px;
+      margin: 20px 0 10px;
       color: #2c3e50;
       line-height: 1.6;
+      position: relative;
+      animation: fadeSlide 1.2s ease-out forwards;
+    }
+
+    /* حركة Fade + Slide */
+    @keyframes fadeSlide {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    /* خط تحت العنوان */
+    .title::after {
+      content: '';
+      position: absolute;
+      width: 60px;
+      height: 4px;
+      background-color: #ff6b6b;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: 2px;
+    }
+
+    /* الأنيميشن للـ GIF */
+    .gif-container {
+      margin-top: 15px;
+      animation: fadeIn 1.5s ease-in forwards;
+    }
+
+    @keyframes fadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
     }
 
     .cards {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 20px;
+      margin-top: 30px;
     }
 
     .card {
@@ -75,7 +109,7 @@
 
     @media (max-width: 400px) {
       .title {
-        font-size: 18px;
+        font-size: 20px;
       }
       .emoji {
         font-size: 55px;
@@ -87,6 +121,14 @@
 
   <div class="container">
     <div class="title">🎯 انت تهمنا في كل خطوة في نجاحك</div>
+
+    <!-- GIF تحت العنوان -->
+    <div class="gif-container">
+      <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.6.2/dist/dotlottie-wc.js" type="module"></script>
+      <dotlottie-wc src="https://lottie.host/09b23849-0675-4a59-8f49-590782f530a3/S93AP3sPfV.lottie" 
+        style="width: 300px;height: 300px" speed="1" autoplay loop>
+      </dotlottie-wc>
+    </div>
 
     <div class="cards">
 
