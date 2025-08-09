@@ -2,192 +2,177 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <title>منتجات شراء</title>
-  <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.6.2/dist/dotlottie-wc.js" type="module"></script>
+  <title>منتجات شراء مع فيديو داخل الكارت</title>
   <style>
-    /* Reset */
+    @import url('https://fonts.googleapis.com/css2?family=Cairo&display=swap');
+
     * {
       box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Cairo', sans-serif;
-      cursor: default;
     }
 
     body, html {
+      margin: 0;
+      padding: 0;
       height: 100%;
-      overflow: hidden;
-      background: #111;
-      position: relative;
+      font-family: 'Cairo', sans-serif;
+      background: url('https://media.giphy.com/media/26ufdipQqU2lhNA4g/giphy.gif') no-repeat center center fixed;
+      background-size: cover;
+      overflow-x: hidden;
       color: white;
-    }
-
-    /* خلفية الـ Lottie (تكبير وتوسيط) */
-    dotlottie-wc {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      width: 100vw;
-      height: 100vh;
-      transform: translate(-50%, -50%);
-      z-index: -1;
-      opacity: 0.15;
-      user-select: none;
-      pointer-events: none;
-    }
-
-    /* الحاوية الرئيسية */
-    .container {
-      height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 30px;
       padding: 20px;
     }
 
-    /* شكل الكارت */
+    .container {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+      max-width: 1200px;
+      width: 100%;
+    }
+
     .card {
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(0,0,0,0.6);
       border-radius: 20px;
-      box-shadow:
-        0 4px 15px rgba(255, 255, 255, 0.2),
-        inset 0 0 10px rgba(255, 255, 255, 0.1);
-      width: 280px;
-      height: 380px;
-      color: white;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.7);
+      width: 320px;
+      cursor: pointer;
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
-      padding: 30px 25px;
-      backdrop-filter: blur(15px);
-      transition: transform 0.4s ease, box-shadow 0.4s ease;
-      cursor: pointer;
-      position: relative;
-      overflow: hidden;
     }
 
-    /* ظل عند التحويم */
     .card:hover {
-      transform: translateY(-15px) scale(1.05);
-      box-shadow:
-        0 15px 25px rgba(255, 255, 255, 0.4),
-        inset 0 0 20px rgba(255, 255, 255, 0.2);
-      z-index: 2;
+      transform: scale(1.07);
+      box-shadow: 0 12px 30px rgba(255, 255, 255, 0.5);
     }
 
-    /* حركة بسيطة على الكارت */
-    .card::before {
-      content: "";
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: linear-gradient(270deg, #ff005a, #ff9a00, #00ffe7, #ff005a);
-      background-size: 600% 600%;
-      animation: gradientShift 8s ease infinite;
-      filter: blur(25px);
-      opacity: 0.5;
-      transition: opacity 0.4s ease;
-      border-radius: 20px;
-      z-index: 0;
+    .video-wrapper {
+      position: relative;
+      width: 100%;
+      height: 180px;
+      overflow: hidden;
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
     }
 
-    .card:hover::before {
-      opacity: 0.9;
+    .video-wrapper video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(0.9);
+      transition: filter 0.3s ease;
     }
 
-    @keyframes gradientShift {
-      0% {
-        background-position: 0% 50%;
-      }
-      50% {
-        background-position: 100% 50%;
-      }
-      100% {
-        background-position: 0% 50%;
-      }
+    .card:hover video {
+      filter: brightness(1);
     }
 
-    /* محتويات الكارت */
-    .card .title {
+    .info {
+      padding: 20px;
+      text-align: center;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .price {
       font-size: 1.8rem;
-      font-weight: 700;
-      text-align: center;
-      margin-bottom: 15px;
-      z-index: 1;
-      user-select: none;
-    }
-
-    .card .price {
-      font-size: 2.6rem;
       font-weight: 900;
-      text-align: center;
-      margin-bottom: 10px;
       color: #ffcc00;
-      z-index: 1;
-      user-select: none;
+      margin-bottom: 20px;
     }
 
-    /* شكل الزر أو رسالة الشراء */
-    .card .buy-btn {
+    .buy-btn {
       background: #ffcc00;
-      color: #111;
-      font-weight: 700;
+      color: #222;
       padding: 12px 0;
       border-radius: 12px;
-      text-align: center;
-      font-size: 1.3rem;
-      user-select: none;
-      box-shadow: 0 5px 15px rgba(255, 204, 0, 0.5);
+      font-weight: 700;
+      font-size: 1.2rem;
       transition: background 0.3s ease;
-      z-index: 1;
+      user-select: none;
     }
 
-    .card .buy-btn:hover {
+    .buy-btn:hover {
       background: #ffaa00;
     }
 
     /* Responsive */
-    @media (max-width: 960px) {
+    @media (max-width: 1000px) {
       .container {
-        flex-direction: column;
-        gap: 25px;
-        padding: 15px;
+        gap: 15px;
       }
       .card {
-        width: 85vw;
-        max-width: 320px;
+        width: 280px;
+      }
+      .video-wrapper {
+        height: 160px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 10px;
+      }
+      .container {
+        flex-direction: column;
+        align-items: center;
+      }
+      .card {
+        width: 90vw;
+      }
+      .video-wrapper {
+        height: 200px;
       }
     }
   </style>
 </head>
 <body>
 
-  <dotlottie-wc 
-    src="https://lottie.host/e8e21b3d-18f4-45ce-a24f-19a2a5be16e5/6PJt9ASQyK.lottie" 
-    style="width: 100vw; height: 100vh;" 
-    speed="1" 
-    autoplay 
-    loop>
-  </dotlottie-wc>
-
   <div class="container">
     <div class="card" onclick="goToLink()">
-      <div class="title">مذكرات الصف الثالث الثانوي</div>
-      <div class="price">100 جنيه</div>
-      <div class="buy-btn">شراء الآن</div>
+      <div class="video-wrapper">
+        <video src="https://files.catbox.moe/lgvvn8.mp4" autoplay muted loop playsinline></video>
+      </div>
+      <div class="info">
+        <div class="title">مذكرات الصف الثالث الثانوي</div>
+        <div class="price">100 جنيه</div>
+        <div class="buy-btn">شراء الآن</div>
+      </div>
     </div>
+
     <div class="card" onclick="goToLink()">
-      <div class="title">مذكرات الصف الثاني الثانوي</div>
-      <div class="price">80 جنيه</div>
-      <div class="buy-btn">شراء الآن</div>
+      <div class="video-wrapper">
+        <video src="https://files.catbox.moe/lgvvn8.mp4" autoplay muted loop playsinline></video>
+      </div>
+      <div class="info">
+        <div class="title">مذكرات الصف الثاني الثانوي</div>
+        <div class="price">80 جنيه</div>
+        <div class="buy-btn">شراء الآن</div>
+      </div>
     </div>
+
     <div class="card" onclick="goToLink()">
-      <div class="title">اكودنا</div>
-      <div class="price">120 جنيه</div>
-      <div class="buy-btn">شراء الآن</div>
+      <div class="video-wrapper">
+        <video src="https://files.catbox.moe/lgvvn8.mp4" autoplay muted loop playsinline></video>
+      </div>
+      <div class="info">
+        <div class="title">اكودنا</div>
+        <div class="price">120 جنيه</div>
+        <div class="buy-btn">شراء الآن</div>
+      </div>
     </div>
   </div>
 
