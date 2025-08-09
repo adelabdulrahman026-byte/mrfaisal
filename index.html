@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <title>روابط مستر فيصل</title>
+  <title>روابط مستر فيصل - حركة كوميدية</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" />
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800;900&display=swap" rel="stylesheet" />
   <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.6.2/dist/dotlottie-wc.js" type="module"></script>
@@ -16,6 +16,7 @@
       scroll-behavior: smooth;
       background: #000;
     }
+    /* شاشة التحميل */
     #preloader {
       position: fixed;
       top: 0; left: 0;
@@ -23,9 +24,13 @@
       height: 100%;
       background: white;
       z-index: 9999;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      overflow: hidden;
+    }
+    #funnyGif {
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      will-change: transform, left, top;
     }
     #videoBackground {
       position: relative;
@@ -57,21 +62,6 @@
     .content {
       background: white;
       padding: 40px 16px;
-      position: relative;
-    }
-    .funny-gif {
-      position: relative;
-      width: 100px;
-      height: 100px;
-      margin: 0 auto 20px;
-      animation: moveAround 5s infinite ease-in-out;
-    }
-    @keyframes moveAround {
-      0% { transform: translateY(0) rotate(0deg) scale(1); }
-      25% { transform: translateY(15px) rotate(10deg) scale(1.1); }
-      50% { transform: translateY(-15px) rotate(-10deg) scale(0.95); }
-      75% { transform: translateY(15px) rotate(10deg) scale(1.05); }
-      100% { transform: translateY(0) rotate(0deg) scale(1); }
     }
     .social-section {
       display: flex;
@@ -114,7 +104,6 @@
       box-shadow: 0 2px 6px rgba(0,0,0,0.12);
       flex-shrink: 0;
     }
-    /* زر ابدأ الرحلة */
     .start-journey {
       max-width: 480px;
       margin: 30px auto 0;
@@ -159,15 +148,14 @@
 </head>
 <body>
 
-  <!-- شاشة التحميل -->
+  <!-- شاشة التحميل مع الحركة الكوميدية -->
   <div id="preloader" aria-label="تحميل">
     <dotlottie-wc 
-      src="https://lottie.host/953639aa-133c-4c35-8508-c65811fe8898/jZylR2TITf.lottie" 
-      style="width: 300px; height: 300px;" 
-      speed="1" 
-      autoplay 
-      loop
-      aria-label="تحميل متحرك">
+      id="funnyGif"
+      src="https://lottie.host/8cf4da05-1e33-4e5b-83fa-6a36cb6d79d6/uSGNo9SQrn.lottie"
+      speed="1"
+      autoplay
+      loop>
     </dotlottie-wc>
   </div>
 
@@ -182,18 +170,6 @@
 
   <!-- محتوى الكروت -->
   <div class="content">
-
-    <!-- GIF الكوميدي -->
-    <div class="funny-gif">
-      <dotlottie-wc 
-        src="https://lottie.host/8cf4da05-1e33-4e5b-83fa-6a36cb6d79d6/uSGNo9SQrn.lottie" 
-        style="width: 100px; height: 100px;" 
-        speed="1" 
-        autoplay 
-        loop>
-      </dotlottie-wc>
-    </div>
-
     <section class="social-section" aria-label="روابط التواصل الاجتماعي">
       <div class="social-card">
         <a href="https://www.whatsapp.com/channel/0029Vb5eotiHFxOvJuFpMI39" target="_blank">
@@ -238,18 +214,41 @@
     </div>
   </div>
 
-  <!-- تذييل الحقوق -->
+  <!-- تذييل -->
   <footer>
     جميع الحقوق محفوظة لدى <span>abdulrahman adel</span> | نسخة الموقع لدفعه 2026 &copy;
   </footer>
 
   <script>
+    const gif = document.getElementById('funnyGif');
+    let angle = 0;
+    let radius = 120;
+    let centerX = window.innerWidth / 2;
+    let centerY = window.innerHeight / 2;
+
+    function moveFunny() {
+      angle += (Math.random() * 25 + 5) * Math.PI / 180;
+      radius = 50 + Math.random() * 200;
+      const x = centerX + Math.cos(angle) * radius;
+      const y = centerY + Math.sin(angle) * radius;
+      const wiggleX = Math.sin(Date.now() / 50) * 15;
+      const wiggleY = Math.cos(Date.now() / 60) * 15;
+      gif.style.left = `${x + wiggleX}px`;
+      gif.style.top = `${y + wiggleY}px`;
+      gif.style.transform = `rotate(${angle * 180 / Math.PI}deg) scale(${1 + Math.sin(Date.now() / 200) * 0.2})`;
+      requestAnimationFrame(moveFunny);
+    }
+    moveFunny();
+
     const preloader = document.getElementById('preloader');
     window.addEventListener('load', () => {
-      preloader.style.transition = 'opacity 0.8s ease';
-      preloader.style.opacity = 0;
-      setTimeout(() => preloader.style.display = 'none', 800);
+      setTimeout(() => {
+        preloader.style.transition = 'opacity 0.8s ease';
+        preloader.style.opacity = 0;
+        setTimeout(() => preloader.style.display = 'none', 800);
+      }, 2500);
     });
   </script>
+
 </body>
 </html>
