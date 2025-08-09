@@ -2,17 +2,15 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>نموذج طلب بدون صورة</title>
+  <title>طلب شراء</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       background: #f0f2f5;
-      padding: 20px;
-      margin: 0;
+      margin: 0; padding: 20px;
     }
     .container {
-      max-width: 500px;
+      max-width: 600px;
       background: white;
       margin: auto;
       padding: 20px;
@@ -64,30 +62,34 @@
 <body>
 
   <div class="container">
-    <h2>طلب شراء بدون رفع صورة</h2>
+    <h2>طلب شراء</h2>
     <form id="orderForm">
-      <label for="name">الاسم الكامل</label>
+      <label for="name">اسم العميل</label>
       <input type="text" id="name" name="name" required />
 
       <label for="phone">رقم الهاتف</label>
       <input type="tel" id="phone" name="phone" pattern="[0-9]+" required />
 
-      <label for="product">المنتج</label>
-      <select id="product" name="product" required>
-        <option value="مذكرة الصف الثالث الثانوي" selected>مذكرة الصف الثالث الثانوي</option>
-      </select>
+      <label for="governorate">المحافظة</label>
+      <input type="text" id="governorate" name="governorate" required />
 
-      <label for="price">السعر (جنيه)</label>
-      <input type="number" id="price" name="price" value="200" readonly />
+      <label for="phoneAlt">الهاتف البديل</label>
+      <input type="tel" id="phoneAlt" name="phoneAlt" pattern="[0-9]*" />
 
-      <label for="shipping">مصاريف الشحن (جنيه)</label>
+      <label for="address">العنوان</label>
+      <input type="text" id="address" name="address" required />
+
+      <label for="shipping">الشحن (جنيه)</label>
       <input type="number" id="shipping" name="shipping" value="30" readonly />
 
-      <label for="total">الإجمالي (جنيه)</label>
-      <input type="number" id="total" name="total" value="230" readonly />
+      <label for="price">السعر (جنيه)</label>
+      <input type="number" id="price" name="price" value="230" readonly />
 
-      <label for="vodafoneNumber">رقم فودافون كاش</label>
-      <input type="tel" id="vodafoneNumber" name="vodafoneNumber" pattern="[0-9]+" required />
+      <label for="transferNumber">رقم التحويل</label>
+      <input type="text" id="transferNumber" name="transferNumber" required />
+
+      <label for="transferImage">صورة التحويل</label>
+      <input type="file" id="transferImage" accept="image/*" />
 
       <button type="submit">إرسال الطلب</button>
     </form>
@@ -98,45 +100,65 @@
 <script>
   const form = document.getElementById('orderForm');
   const message = document.getElementById('message');
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwar6zYSrNuuqERQjaKFwREPEcVCn3KgdOyBOuicNmg7LRe6kr7JA5IL2VvgELNrP8uig/exec";
+  const transferImageInput = document.getElementById('transferImage');
 
-  form.addEventListener('submit', async (e) => {
+  form.addEventListener('submit', (e) => {
     e.preventDefault();
     message.style.color = "black";
     message.textContent = "جاري إرسال الطلب...";
 
+    const reader = new FileReader();
+    reader.onload = function(evt) {
+      const dataURL = evt.target.result;
+
+      sendData(dataURL);
+    };
+
+    if (transferImageInput.files.length > 0) {
+      reader.readAsDataURL(transferImageInput.files[0]);
+    } else {
+      sendData("");
+    }
+  });
+
+  function sendData(imageBase64) {
     const data = {
       name: form.name.value.trim(),
       phone: form.phone.value.trim(),
-      product: form.product.value,
-      price: Number(form.price.value),
+      governorate: form.governorate.value.trim(),
+      phoneAlt: form.phoneAlt.value.trim(),
+      address: form.address.value.trim(),
       shipping: Number(form.shipping.value),
-      total: Number(form.total.value),
-      vodafoneNumber: form.vodafoneNumber.value.trim()
+      price: Number(form.price.value),
+      transferNumber: form.transferNumber.value.trim(),
+      transferImageBase64: imageBase64
     };
 
-    try {
-      const response = await fetch(SCRIPT_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-      });
-
-      const result = await response.json();
-
-      if (result.status === "success") {
+    fetch("https://script.google.com/macros/s/AKfycbzRkgldZgdCcd8TryZsxOrQjOb-85lFKIAjVrdti5uZ-DC9czybQ35lOEEqtlkzsJz22A/exec", {
+      method: "POST",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(res => {
+      if(res.status === "success"){
         message.style.color = "green";
-        message.textContent = "تم إرسال الطلب بنجاح. كود التتبع: " + result.trackingCode;
+        message.textContent = "تم إرسال الطلب بنجاح";
         form.reset();
       } else {
         message.style.color = "red";
-        message.textContent = "خطأ: " + (result.message || "حدث خطأ أثناء إرسال الطلب.");
+        message.textContent = "حدث خطأ: " + res.message;
       }
-    } catch (error) {
+    })
+    .catch(err => {
       message.style.color = "red";
-      message.textContent = "حدث خطأ في الاتصال بالخادم. حاول مرة أخرى.";
-    }
-  });
+      message.textContent = "حدث خطأ في الاتصال بالخادم";
+      console.error(err);
+    });
+  }
 </script>
 
 </body>
