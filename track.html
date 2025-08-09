@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
 <title>طلب شحن المنتجات</title>
 
 <!-- خط جميل -->
@@ -17,6 +17,7 @@
   }
   h1 {
     color: white; margin-bottom: 20px; text-shadow: 1px 1px 4px #0006;
+    font-size: 1.8rem;
   }
 
   .cards-container {
@@ -24,6 +25,8 @@
     gap: 20px;
     justify-content: center;
     flex-wrap: wrap;
+    width: 100%;
+    max-width: 1080px;
   }
   .card {
     background: white;
@@ -85,56 +88,62 @@
     justify-content: center;
     align-items: center;
     z-index: 9999;
+    padding: 15px;
   }
   .modal {
     background: white;
     border-radius: 12px;
     max-width: 400px;
-    width: 95%;
+    width: 100%;
     max-height: 90vh;
     overflow-y: auto;
     padding: 20px 30px 30px 30px;
     box-shadow: 0 0 12px #0008;
     position: relative;
+    box-sizing: border-box;
   }
   .modal h2 {
     margin-top: 0;
     margin-bottom: 12px;
     font-weight: 700;
+    font-size: 1.5rem;
   }
   .close-btn {
     position: absolute;
     top: 15px; left: 15px;
-    font-size: 24px;
+    font-size: 28px;
     font-weight: bold;
     color: #333;
     cursor: pointer;
+    user-select: none;
   }
 
   label {
     display: block;
     margin: 8px 0 5px;
     font-weight: 600;
+    font-size: 1rem;
   }
   input, select {
     width: 100%;
-    padding: 8px 10px;
+    padding: 10px 12px;
     border-radius: 6px;
     border: 1px solid #aaa;
-    font-size: 15px;
+    font-size: 1rem;
+    box-sizing: border-box;
   }
   input[type="file"] {
-    padding: 5px;
+    padding: 6px 10px;
   }
   button {
     margin-top: 20px;
     width: 100%;
-    padding: 12px;
+    padding: 14px;
     background: #2196f3;
     border: none;
     border-radius: 10px;
     color: white;
-    font-size: 17px;
+    font-size: 18px;
     font-weight: 700;
     cursor: pointer;
     transition: background 0.3s ease;
@@ -190,6 +199,7 @@
     cursor: pointer;
     text-align: center;
     margin-bottom: 8px;
+    word-break: break-all;
   }
 
   /* زر تابع الشحن */
@@ -199,30 +209,35 @@
     border-radius: 15px;
     box-shadow: 0 6px 18px rgb(0 0 0 / 0.15);
     padding: 25px 30px;
-    width: 350px;
+    width: 100%;
+    max-width: 400px;
+    box-sizing: border-box;
   }
   #tracking-section h3 {
     margin-top: 0;
     margin-bottom: 15px;
+    font-size: 1.25rem;
   }
   #tracking-input {
-    padding: 10px;
+    padding: 12px;
     width: 100%;
     font-size: 16px;
     border-radius: 8px;
     border: 1px solid #888;
     margin-bottom: 15px;
+    box-sizing: border-box;
   }
   #tracking-btn {
     background: #2196f3;
     border: none;
     color: white;
     font-weight: 700;
-    padding: 12px;
+    padding: 14px;
     width: 100%;
     border-radius: 8px;
     cursor: pointer;
     transition: background 0.3s ease;
+    font-size: 1rem;
   }
   #tracking-btn:hover {
     background: #1976d2;
@@ -235,8 +250,35 @@
     background: #e3f2fd;
     border-radius: 8px;
     padding: 15px;
+    word-break: break-word;
   }
 
+  /* استجابة الموبايل */
+  @media (max-width: 768px) {
+    .cards-container {
+      gap: 15px;
+      justify-content: center;
+    }
+    .card {
+      width: 90vw;
+      max-width: 360px;
+    }
+    .modal {
+      max-width: 95vw;
+      padding: 15px 20px 20px 20px;
+    }
+    .modal h2 {
+      font-size: 1.3rem;
+    }
+    button {
+      font-size: 1.2rem;
+      padding: 12px;
+    }
+    #tracking-section {
+      width: 90vw;
+      padding: 20px 20px;
+    }
+  }
 </style>
 
 </head>
@@ -302,9 +344,9 @@
 </div>
 
 <!-- مودال التفاصيل -->
-<div class="modal-overlay" id="modalOverlay">
+<div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
   <div class="modal" id="modal">
-    <span class="close-btn" id="modalClose">&times;</span>
+    <span class="close-btn" id="modalClose" aria-label="إغلاق">&times;</span>
     <h2 id="modalTitle"></h2>
     <p id="modalDesc"></p>
     <p><strong>السعر: </strong><span id="modalPrice"></span> ج.م</p>
@@ -415,192 +457,164 @@
   const errorMessage = document.getElementById('errorMessage');
   const errorText = document.getElementById('errorText');
   const orderData = document.getElementById('orderData');
-  const trackingCodeEl = document.getElementById('trackingCode');
+  const trackingCodeElem = document.getElementById('trackingCode');
 
-  let currentProduct = null;
-
-  // فتح المودال بتفاصيل المنتج
+  // فتح المودال مع بيانات المنتج
   cards.forEach(card => {
     card.addEventListener('click', () => {
-      const product = JSON.parse(card.getAttribute('data-product'));
-      currentProduct = product;
-      modalTitle.textContent = product.name;
-      modalDesc.textContent = product.desc;
-      modalPrice.textContent = product.price;
-
-      // اظهار او اخفاء اختيار نوع الكود
-      if (product.type === 'code') {
-        codeTypeContainer.style.display = "block";
-      } else {
-        codeTypeContainer.style.display = "none";
-        codeTypeSelect.value = "";
-      }
-
-      // إفراغ الفورم واظهارها
-      orderForm.style.display = "block";
-      loadingAnimation.style.display = "none";
-      successMessage.style.display = "none";
-      errorMessage.style.display = "none";
-      buyBtn.disabled = false;
-
-      orderForm.reset();
-
-      modalOverlay.style.display = "flex";
+      const product = JSON.parse(card.dataset.product);
+      openModal(product);
     });
   });
 
-  // اغلاق المودال
-  modalClose.addEventListener('click', () => {
-    modalOverlay.style.display = "none";
-  });
+  modalClose.addEventListener('click', closeModal);
   modalOverlay.addEventListener('click', e => {
-    if(e.target === modalOverlay) modalOverlay.style.display = "none";
+    if(e.target === modalOverlay) closeModal();
   });
 
-  // نسخ كود التتبع عند الضغط
-  trackingCodeEl.addEventListener('click', () => {
-    const text = trackingCodeEl.textContent;
-    navigator.clipboard.writeText(text);
-    alert('تم نسخ كود التتبع');
-  });
+  function openModal(product) {
+    modalTitle.textContent = product.name;
+    modalDesc.textContent = product.desc;
+    modalPrice.textContent = product.price;
 
-  // تحويل صورة الى Base64
-  function getBase64(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = error => reject(error);
-      reader.readAsDataURL(file);
-    });
+    // عرض حقل نوع الكود فقط لو النوع code
+    if(product.type === "code") {
+      codeTypeContainer.style.display = "block";
+    } else {
+      codeTypeContainer.style.display = "none";
+      codeTypeSelect.value = "";
+    }
+
+    // إخفاء الأجزاء الأخرى
+    orderForm.style.display = "block";
+    loadingAnimation.style.display = "none";
+    successMessage.style.display = "none";
+    errorMessage.style.display = "none";
+
+    // إعادة تعيين الحقول
+    orderForm.reset();
+    modalOverlay.style.display = "flex";
+
+    // حفظ المنتج الحالي للطلب
+    orderForm.dataset.currentProduct = JSON.stringify(product);
+  }
+  function closeModal() {
+    modalOverlay.style.display = "none";
   }
 
-  // ارسال الطلب
+  // نسخ كود التتبع عند الضغط
+  trackingCodeElem.addEventListener('click', () => {
+    const text = trackingCodeElem.textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      alert("تم نسخ كود التتبع!");
+    }).catch(() => {
+      alert("فشل نسخ كود التتبع، حاول مرة أخرى.");
+    });
+  });
+
+  // معالجة إرسال الطلب
   orderForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-
-    buyBtn.disabled = true;
     errorMessage.style.display = "none";
 
     // تحقق من رفع صورة
-    const file = transferImageInput.files[0];
-    if (!file) {
-      showError("يجب رفع صورة التحويل");
-      buyBtn.disabled = false;
+    if(transferImageInput.files.length === 0) {
+      showError("يرجى رفع صورة تحويل الدفع.");
       return;
     }
 
-    const base64Image = await getBase64(file);
+    const product = JSON.parse(orderForm.dataset.currentProduct);
+    const formData = new FormData(orderForm);
 
-    // تحقق الحقول المطلوبة
-    const fullName = orderForm.fullName.value.trim();
-    const province = orderForm.province.value;
-    const address = orderForm.address.value.trim();
-    const phoneContact = orderForm.phoneContact.value.trim();
-    const phoneTransfer = orderForm.phoneTransfer.value.trim();
-    const codeType = codeTypeSelect.value;
-
-    if (!fullName || !province || !address || !phoneContact || !phoneTransfer) {
-      showError("يرجى تعبئة جميع الحقول المطلوبة");
-      buyBtn.disabled = false;
-      return;
-    }
-    if(currentProduct.type === "code" && !codeType) {
-      showError("يرجى اختيار نوع الكود");
-      buyBtn.disabled = false;
-      return;
-    }
-
-    // اظهار انيميشن جاري الشحن
-    orderForm.style.display = "none";
-    loadingAnimation.style.display = "block";
-
-    // بناء البيانات للإرسال
-    const payload = {
-      fullName,
-      province,
-      address,
-      phoneContact,
-      phoneTransfer,
-      productName: currentProduct.name,
-      productPrice: currentProduct.price,
-      transferImageBase64: base64Image,
-      codeType: codeType || ""
+    // بناء بيانات للإرسال
+    const dataToSend = {
+      name: formData.get("fullName"),
+      province: formData.get("province"),
+      address: formData.get("address"),
+      phoneContact: formData.get("phoneContact"),
+      phoneTransfer: formData.get("phoneTransfer"),
+      productName: product.name,
+      productPrice: product.price,
+      codeType: formData.get("codeType") || "",
+      // الصورة: سنحولها إلى base64
+      transferImage: ""
     };
 
-    try {
-      const res = await fetch(WEB_APP_URL, {
-        method: "POST",
-        body: JSON.stringify(payload),
-        headers: {"Content-Type": "application/json"}
-      });
-      const result = await res.json();
+    // قراءة ملف الصورة ك base64
+    const file = transferImageInput.files[0];
+    const reader = new FileReader();
 
-      if(result.status === "success"){
+    reader.onload = async () => {
+      dataToSend.transferImage = reader.result;
+
+      // إظهار أنيميشن التحميل
+      orderForm.style.display = "none";
+      loadingAnimation.style.display = "block";
+
+      try {
+        const response = await fetch(WEB_APP_URL, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(dataToSend),
+        });
+        const result = await response.json();
+
         loadingAnimation.style.display = "none";
-        successMessage.style.display = "block";
-        displayOrderData(result);
-      } else {
+
+        if(result.status === "success") {
+          successMessage.style.display = "block";
+          // عرض بيانات الطلب
+          orderData.innerHTML = `
+            <p><strong>الاسم:</strong> ${dataToSend.name}</p>
+            <p><strong>المحافظة:</strong> ${dataToSend.province}</p>
+            <p><strong>العنوان:</strong> ${dataToSend.address}</p>
+            <p><strong>رقم الهاتف:</strong> ${dataToSend.phoneContact}</p>
+            <p><strong>المنتج:</strong> ${dataToSend.productName}</p>
+            <p><strong>السعر:</strong> ${dataToSend.productPrice} ج.م</p>
+          `;
+          trackingCodeElem.textContent = result.trackingCode || "لا يوجد كود تتبع";
+
+        } else {
+          showError(result.message || "حدث خطأ أثناء عملية الشحن، حاول مرة أخرى.");
+          orderForm.style.display = "block";
+        }
+      } catch(err) {
         loadingAnimation.style.display = "none";
+        showError("خطأ في الاتصال بالخادم، يرجى المحاولة لاحقًا.");
         orderForm.style.display = "block";
-        showError(result.message || "حدث خطأ أثناء معالجة الطلب");
       }
-    } catch(err){
-      loadingAnimation.style.display = "none";
-      orderForm.style.display = "block";
-      showError("حدث خطأ في الاتصال بالخادم");
-    } finally {
-      buyBtn.disabled = false;
-    }
+    };
+
+    reader.readAsDataURL(file);
   });
 
-  function showError(msg){
+  function showError(msg) {
     errorText.textContent = msg;
     errorMessage.style.display = "block";
   }
 
-  function displayOrderData(result) {
-    const data = result.data;
-    orderData.innerHTML = `
-      <p>الاسم: ${data.fullName}</p>
-      <p>المحافظة: ${data.province}</p>
-      <p>العنوان: ${data.address}</p>
-      <p>رقم التواصل: ${data.phoneContact}</p>
-      <p>رقم التحويل: ${data.phoneTransfer}</p>
-    `;
-    trackingCodeEl.textContent = result.trackingCode;
-  }
-
-  // تابع الشحن - البحث بالكود
+  // متابعة الشحن بالكود
   const trackingInput = document.getElementById('tracking-input');
   const trackingBtn = document.getElementById('tracking-btn');
   const trackingResult = document.getElementById('tracking-result');
 
   trackingBtn.addEventListener('click', async () => {
-    const code = trackingInput.value.trim().toUpperCase();
-    if (!code) {
-      alert('يرجى إدخال كود التتبع');
+    const code = trackingInput.value.trim();
+    if(!code) {
+      alert("من فضلك أدخل كود التتبع.");
       return;
     }
     trackingResult.textContent = "جاري البحث...";
     try {
-      const res = await fetch(WEB_APP_URL + "?code=" + encodeURIComponent(code));
-      const result = await res.json();
-      if(result.status === "success") {
-        trackingResult.innerHTML = `
-          <p><strong>حالة الطلب:</strong> ${result.orderStatus}</p>
-          <p><strong>الاسم:</strong> ${result.fullName}</p>
-          <p><strong>المحافظة:</strong> ${result.province}</p>
-          <p><strong>العنوان:</strong> ${result.address}</p>
-          <p><strong>رقم التواصل:</strong> ${result.phoneContact}</p>
-          <p><strong>رقم التحويل:</strong> ${result.phoneTransfer}</p>
-          <p><img src="${result.transferImageUrl}" alt="صورة التحويل" style="width: 100%; max-height: 200px; object-fit: contain; border-radius: 10px;"></p>
-          <p><strong>تاريخ الطلب:</strong> ${new Date(result.date).toLocaleString()}</p>
-        `;
+      const response = await fetch(`${WEB_APP_URL}?action=track&code=${encodeURIComponent(code)}`);
+      const data = await response.json();
+      if(data.status === "success" && data.details) {
+        trackingResult.innerHTML = `<strong>حالة الطلب:</strong><br>${data.details.replace(/\n/g, '<br>')}`;
       } else {
-        trackingResult.textContent = result.message || "لم يتم العثور على طلب بهذا الكود";
+        trackingResult.textContent = data.message || "لم يتم العثور على طلب بهذا الكود.";
       }
-    } catch (error) {
-      trackingResult.textContent = "حدث خطأ في الاتصال بالخادم";
+    } catch {
+      trackingResult.textContent = "حدث خطأ أثناء البحث، حاول مرة أخرى.";
     }
   });
 
