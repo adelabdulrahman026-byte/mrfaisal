@@ -3,21 +3,21 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>تسجيل دخول Admin</title>
+<title>لوحة تحكم Admin</title>
 <style>
   body {
     font-family: 'Cairo', sans-serif;
     background: linear-gradient(135deg, #e0f7fa, #ffffff);
     margin: 0; padding: 0;
-    display: flex; justify-content: center; align-items: center; height: 100vh;
+    display: flex; justify-content: center; align-items: center; min-height: 100vh;
   }
   #loginForm, #dashboard {
     background: white;
     padding: 20px 30px;
     border-radius: 10px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    max-width: 400px;
-    width: 90%;
+    max-width: 420px;
+    width: 95%;
   }
   h2 {
     margin-bottom: 15px;
@@ -53,8 +53,9 @@
   }
   th, td {
     border: 1px solid #b2dfdb;
-    padding: 10px;
+    padding: 8px;
     text-align: center;
+    font-size: 14px;
   }
   th {
     background-color: #00796b;
@@ -64,9 +65,10 @@
     cursor: pointer;
     border: none;
     border-radius: 5px;
-    padding: 8px 12px;
+    padding: 6px 10px;
     color: white;
     font-weight: bold;
+    font-size: 13px;
     transition: background-color 0.3s ease;
   }
   .btn-update {
@@ -80,12 +82,16 @@
     display: flex;
     align-items: center;
     gap: 5px;
-    font-size: 14px;
   }
   .btn-whatsapp svg {
     fill: white;
     width: 18px;
     height: 18px;
+  }
+  a.img-link {
+    color: #0288d1;
+    text-decoration: none;
+    font-weight: bold;
   }
 </style>
 </head>
@@ -93,8 +99,8 @@
 
 <div id="loginForm">
   <h2>تسجيل دخول Admin</h2>
-  <input id="username" type="text" placeholder="اسم المستخدم" />
-  <input id="password" type="password" placeholder="كلمة المرور" />
+  <input id="username" type="text" placeholder="اسم المستخدم" autocomplete="off" />
+  <input id="password" type="password" placeholder="كلمة المرور" autocomplete="off" />
   <button onclick="login()">تسجيل دخول</button>
   <p id="errorMsg" style="color:red; text-align:center;"></p>
 </div>
@@ -106,8 +112,8 @@
 </div>
 
 <script>
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwWEAxoEucQ1Sk2Kc_buGqTJeuMYHOCgsGjbuAqUomB7QXPwn__sYh1azK3yQsoRypXfQ/exec'; // عدلها لرابط السكريبت
-  const whatsappNumber = '201093139047'; // رقم واتساب دولي (مصر +20)
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyD3Nmip6bYotklGiGoxXE9NaYusdQIMD94OQ8FaKeJedjbsXFJG4mWZwXKLCN_1cDD-w/exec'; // عوّض هذا بالرابط الصحيح
+  const whatsappNumber = '201093139047'; // رقم واتساب (مصر +20 بدون +)
 
   function login() {
     const user = document.getElementById('username').value.trim();
@@ -127,15 +133,17 @@
     document.getElementById('username').value = '';
     document.getElementById('password').value = '';
     document.getElementById('errorMsg').textContent = '';
+    document.getElementById('tableContainer').innerHTML = '';
   }
 
   async function loadData() {
     try {
-      const res = await fetch(SCRIPT_URL);
+      const res = await fetch(SCRIPT_URL, { method: 'GET', mode: 'cors' });
+      if(!res.ok) throw new Error('خطأ في تحميل البيانات');
       const data = await res.json();
       renderTable(data);
     } catch (e) {
-      alert('خطأ في تحميل البيانات');
+      alert('خطأ في تحميل البيانات: ' + e.message);
     }
   }
 
@@ -145,7 +153,6 @@
       return;
     }
 
-    // بناء الجدول
     let html = `<table><thead><tr>`;
     const headers = Object.keys(data[0]);
     headers.push('تحديث الحالة', 'واتساب');
@@ -168,9 +175,14 @@
             </button>
           </td>`;
         } else if(h === 'صورة التحويل') {
-          html += `<td><a href="${row[h]}" target="_blank" style="color:#0288d1;">عرض الصورة</a></td>`;
+          const url = row[h];
+          if(url && url.startsWith('http')) {
+            html += `<td><a href="${url}" target="_blank" class="img-link">عرض الصورة</a></td>`;
+          } else {
+            html += `<td>لا يوجد</td>`;
+          }
         } else {
-          html += `<td>${row[h]}</td>`;
+          html += `<td>${row[h] ?? ''}</td>`;
         }
       });
       html += `</tr>`;
@@ -187,8 +199,9 @@
 
     fetch(SCRIPT_URL, {
       method: 'POST',
-      body: JSON.stringify({code: code, newStatus: newStatus}),
-      headers: {'Content-Type': 'application/json'}
+      mode: 'cors',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({code: code, newStatus: newStatus})
     }).then(res => res.json())
       .then(data => {
         if(data.result === "success") {
@@ -197,7 +210,7 @@
         } else {
           alert('تعذر تحديث الحالة');
         }
-      }).catch(e => alert('خطأ في الاتصال'));
+      }).catch(() => alert('خطأ في الاتصال'));
   }
 
   function sendWhatsapp(code) {
