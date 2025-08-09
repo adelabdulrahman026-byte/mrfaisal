@@ -626,7 +626,7 @@
       trackingResult.textContent = "جاري البحث...";
 
       try {
-        const googleScriptURL = "https://script.google.com/macros/s/AKfycby4Xpnau5GkQfeaW1-izwuqVIs9NM-pBcOk8eVJ6LWKLf81LYDUG87sbg43TCJIL3bT8g/exec";
+        const googleScriptURL = "https://script.google.com/macros/s/AKfycbwuKAHSk0ZcHAy32OAKNrfAEPLlClO6ZhGIp6bmd5_v1a5TufgWKobnpWP5W9h-_LXVnw/exec";
 
         const response = await fetch(`${googleScriptURL}?trackingCode=${encodeURIComponent(code)}`);
         const data = await response.json();
