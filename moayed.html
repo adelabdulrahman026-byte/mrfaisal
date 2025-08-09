@@ -72,11 +72,16 @@
       font-weight: bold;
     }
 
-    /* لوتي داخل الكارت */
-    .lottie-box {
-      flex-shrink: 0;
-      width: 80px;
-      height: 80px;
+    /* الباندا فوق الكارت */
+    .lottie-top {
+      position: absolute;
+      top: -80px; /* يطلع الباندا فوق */
+      left: 50%;
+      transform: translateX(-50%);
+      width: 200px;
+      height: 200px;
+      z-index: 5;
+      pointer-events: none;
     }
 
     @keyframes floatEmoji {
@@ -119,9 +124,10 @@
         left: 10px;
       }
 
-      .lottie-box {
-        width: 60px;
-        height: 60px;
+      .lottie-top {
+        top: -60px;
+        width: 150px;
+        height: 150px;
       }
     }
   </style>
@@ -142,15 +148,16 @@
     <div class="text">مواعيد تالتة ثانوي</div>
   </a>
 
+  <!-- كارت وقتك مهم + باندا -->
   <div class="special-card" style="animation-delay: 0.6s; background: linear-gradient(135deg, #16a085, #1abc9c);">
     <div class="big-number">⏳</div>
 
-    <!-- لوتي -->
-    <div class="lottie-box">
+    <!-- باندا فوق الكارت -->
+    <div class="lottie-top">
       <dotlottie-wc src="https://lottie.host/9b40cc03-92c6-4143-be12-fdfc71bdf879/1pdWMkUkBH.lottie" speed="1" autoplay loop></dotlottie-wc>
     </div>
 
-    <div>
+    <div style="margin-top: 80px;"> <!-- عشان نسيب مساحة للباندا -->
       <div class="text" style="font-size: 16px;">وقتك مهم</div>
       <div id="time-now" style="font-size: 14px; margin-top: 5px;">00:00</div>
       <div id="date-now" style="font-size: 13px; opacity: 0.8;">---</div>
