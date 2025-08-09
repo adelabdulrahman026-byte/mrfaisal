@@ -47,15 +47,16 @@
     }
     /* كارت الفيديو الوجهي */
     #videoCard {
-      margin-top: 40px;
-      width: 320px;
-      max-width: 90vw;
+      margin-top: 30px;
+      width: 90vw;
+      max-width: 700px;
       background: #f0f0f0;
       border-radius: 20px;
       box-shadow: 0 8px 26px rgba(0,0,0,0.1);
       overflow: hidden;
       position: relative;
       animation: fadeInUp 1s ease forwards;
+      user-select: none;
     }
     #videoCard video {
       width: 100%;
@@ -68,12 +69,12 @@
       padding: 18px 20px;
       text-align: center;
       font-weight: 800;
-      font-size: 22px;
+      font-size: 24px;
       color: #222;
       user-select: none;
     }
     #mainCard {
-      margin: 30px auto 15px;
+      margin: 35px auto 20px;
       max-width: 320px;
       text-align: center;
       font-size: 22px;
@@ -298,7 +299,14 @@
 
   <!-- زر بدء الرحلة -->
   <div id="joinCard" class="start-card">
-    <div class="start-card-inner" role="button" tabindex="0" onclick="startJourney()" onkeypress="if(event.key==='Enter'){startJourney();}">
+    <div 
+      class="start-card-inner" 
+      role="button" 
+      tabindex="0" 
+      onclick="startJourney()" 
+      onkeypress="if(event.key==='Enter'){startJourney();}"
+      aria-label="ابدأ الرحلة الآن"
+      >
       <div>🚀</div>
       <div style="margin-top: 10px;">ابدأ الرحلة الآن</div>
     </div>
@@ -344,17 +352,20 @@
 
     function startJourney() {
       const audio = document.getElementById('pageAudio');
+      // تشغل الصوت عند الضغط (تأكد من استجابة المتصفح)
+      audio.currentTime = 0; // ترجع الصوت للبداية
       audio.play().then(() => {
         document.body.classList.add('fade-out');
         setTimeout(() => {
           window.location.href = "start.html";
-        }, 500);
+        }, 600);
       }).catch(err => {
-        console.log("Autoplay blocked or error:", err);
+        console.warn("Autoplay blocked or error:", err);
+        // حتى لو لم يتم تشغيل الصوت، نكمل الانتقال
         document.body.classList.add('fade-out');
         setTimeout(() => {
           window.location.href = "start.html";
-        }, 500);
+        }, 600);
       });
     }
 
