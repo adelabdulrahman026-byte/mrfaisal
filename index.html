@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>روابط مستر فيصل</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800;900&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800;900&display=swap" rel="stylesheet" />
   <style>
     body {
       margin: 0;
@@ -12,6 +12,11 @@
       font-family: 'Cairo', sans-serif;
       background: black;
       scroll-behavior: smooth;
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
     .point-down {
       display: inline-block;
@@ -43,88 +48,103 @@
       100% { transform: scale(1); background-color: transparent; }
     }
     .social-section {
-      padding: 60px 12px 40px;
+      padding: 40px 16px 40px;
       display: flex;
       flex-direction: column;
-      gap: 14px;
-      max-width: 95%;
-      margin: auto;
+      gap: 18px;
+      max-width: 480px;
+      margin: 0 auto 60px;
+      width: 90%;
+      box-sizing: border-box;
     }
     .social-card {
-      backdrop-filter: blur(10px);
-      border-radius: 16px;
-      padding: 14px;
+      backdrop-filter: blur(12px);
+      border-radius: 18px;
+      padding: 20px 14px;
       text-align: center;
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
-      border: 1px solid #ccc;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+      border: 1.5px solid #ccc;
       opacity: 0;
       animation: fadeInUp 0.8s forwards;
       transition: all 0.3s ease;
       cursor: pointer;
-      background: rgba(255, 255, 255, 0.9);
+      background: rgba(255, 255, 255, 0.95);
       color: #111 !important;
+      display: flex;
+      align-items: center;
+      gap: 16px;
     }
     .social-card a {
       color: #000 !important;
       text-decoration: none;
+      flex: 1;
+      text-align: right;
       display: block;
     }
     .social-card img {
-      width: 50px;
-      height: 50px;
+      width: 60px;
+      height: 60px;
       object-fit: contain;
-      margin-bottom: 8px;
       border-radius: 50%;
       background: white;
-      padding: 6px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      padding: 8px;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+      flex-shrink: 0;
     }
     .social-card h3 {
       margin: 0;
-      font-size: 15px;
-      font-weight: bold;
+      font-size: 18px;
+      font-weight: 800;
       color: #111;
     }
     .social-card p {
-      font-size: 12px;
+      font-size: 13px;
       margin-top: 4px;
       color: #333;
+      line-height: 1.3;
     }
     .social-card.clicked {
       animation: clickedEffect 0.5s;
     }
     .social-card:hover {
-      background-color: rgba(0, 255, 0, 0.1);
-      transform: scale(1.02);
+      background-color: rgba(0, 255, 0, 0.15);
+      transform: scale(1.04);
+      box-shadow: 0 10px 30px rgba(0, 255, 0, 0.4);
     }
     .start-card {
       display: flex;
       justify-content: center;
       align-items: center;
       padding: 20px 16px 60px;
+      max-width: 480px;
+      margin: 0 auto 20px;
+      width: 90%;
+      box-sizing: border-box;
     }
     .start-card-inner {
       background: linear-gradient(135deg, #00c9ff, #92fe9d);
       color: #000;
-      border-radius: 16px;
-      padding: 18px 24px;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-      font-size: 18px;
-      font-weight: bold;
+      border-radius: 20px;
+      padding: 22px 30px;
+      box-shadow: 0 8px 26px rgba(0, 0, 0, 0.35);
+      font-size: 22px;
+      font-weight: 900;
       text-align: center;
       animation: zoomRotate 1s ease forwards;
       display: flex;
       flex-direction: column;
       align-items: center;
-      transform: scale(0.5) rotate(-10deg);
+      transform: scale(0.7) rotate(-10deg);
       opacity: 0;
       font-family: 'Cairo', sans-serif;
       cursor: pointer;
       transition: background 0.3s ease, transform 0.3s ease;
+      user-select: none;
     }
     .start-card-inner:hover {
       background: linear-gradient(135deg, #00e676, #66ffa6);
-      transform: scale(1.05);
+      transform: scale(1.1);
+      box-shadow: 0 12px 40px rgba(0, 230, 118, 0.6);
     }
     @keyframes zoomRotate {
       to {
@@ -142,57 +162,164 @@
       transform: scale(0.98);
       transition: opacity 0.5s ease, transform 0.5s ease;
     }
+    /* تعديل الفيديو ليكون خلفية متجاوبة */
+    video {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      width: auto;
+      height: 100vh;
+      min-width: 100vw;
+      min-height: 100vh;
+      object-fit: cover;
+      transform: translate(-50%, -50%);
+      z-index: -1;
+      background: black;
+    }
+    /* البطاقة الرئيسية */
+    #mainCard {
+      backdrop-filter: blur(16px);
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 22px;
+      padding: 20px 24px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      color: white;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(100px);
+      animation: slideUp 1.5s forwards ease-out;
+      cursor: default;
+      max-width: 320px;
+      margin: 0 auto 12px;
+      font-size: 22px;
+      font-weight: 900;
+      user-select: none;
+    }
+    #mainCard > div:last-child {
+      font-size: 16px;
+      font-weight: 700;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      color: #e0ffe0;
+    }
+    /* توقيع الحقوق في الأسفل */
+    footer {
+      width: 100%;
+      padding: 12px 8px;
+      text-align: center;
+      font-size: 11px;
+      color: #aaa;
+      background: rgba(0,0,0,0.6);
+      user-select: none;
+      font-weight: 500;
+      font-family: 'Cairo', sans-serif;
+      box-shadow: inset 0 1px 2px rgba(255,255,255,0.05);
+      position: relative;
+      z-index: 10;
+    }
+    footer span {
+      font-style: italic;
+      font-weight: 600;
+      color: #6cff87;
+    }
+    /* Responsive tweaks */
+    @media (min-width: 480px) {
+      .social-card {
+        padding: 22px 20px;
+        border-radius: 24px;
+        gap: 24px;
+      }
+      .social-card img {
+        width: 70px;
+        height: 70px;
+        padding: 10px;
+      }
+      .social-card h3 {
+        font-size: 20px;
+      }
+      .social-card p {
+        font-size: 14px;
+      }
+      .start-card-inner {
+        font-size: 26px;
+        padding: 26px 40px;
+      }
+      #mainCard {
+        max-width: 360px;
+        font-size: 26px;
+        padding: 28px 32px;
+      }
+    }
   </style>
 </head>
 <body>
 
-  <div style="position: relative; width: 100vw; height: 100vh; overflow: hidden;">
-    <video autoplay muted loop playsinline style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: -1;">
-      <source src="https://files.catbox.moe/1dldfl.mp4" type="video/mp4">
-    </video>
+  <video autoplay muted loop playsinline>
+    <source src="https://files.catbox.moe/1dldfl.mp4" type="video/mp4" />
+  </video>
 
-    <div style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 2; width: 90%; max-width: 320px;">
-      <div id="mainCard" style="
-        backdrop-filter: blur(10px);
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 18px;
-        padding: 18px 20px;
-        box-shadow: 0 6px 25px rgba(0,0,0,0.3);
-        color: white;
-        text-align: center;
-        opacity: 0;
-        transform: translateY(100px);
-        animation: slideUp 1.5s forwards ease-out;
-        cursor: default;
-      ">
-        <div style="font-size: 20px; font-weight: 800; margin-bottom: 6px;">
-          انضم لينا
-        </div>
-        <div style="font-size: 14px; font-weight: 600; display: flex; justify-content: center; align-items: center; gap: 4px; flex-wrap: wrap;">
-          <span class="point-down" style="font-size: 18px;">👇</span>
-          <span>في عالم مستر فيصل</span>
-          <span class="point-down" style="font-size: 18px;">👇</span>
-        </div>
-      </div>
+  <div id="mainCard">
+    <div>انضم لينا</div>
+    <div>
+      <span class="point-down" style="font-size: 20px;">👇</span>
+      <span>في عالم مستر فيصل</span>
+      <span class="point-down" style="font-size: 20px;">👇</span>
     </div>
   </div>
 
-  <div class="social-section">
-    <div class="social-card"><a href="https://www.whatsapp.com/channel/0029Vb5eotiHFxOvJuFpMI39" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"><h3>انضم لقناة الواتساب</h3><p>تابع آخر الأخبار والعروض</p></a></div>
-    <div class="social-card"><a href="https://www.facebook.com/groups/450656791778335/?locale=ar_AR" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg"><h3>انضم لجروب الفيسبوك</h3><p>محتوى خاص وتفاعل مباشر</p></a></div>
-    <div class="social-card"><a href="https://youtube.com/@mr.faisal.geography?si=5HQdYcyREdFSKiwp" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/4/42/YouTube_icon_%282013-2017%29.png"><h3>اشترك في قناة اليوتيوب</h3><p>شروحات جغرافيا ومراجعات قوية</p></a></div>
-    <div class="social-card"><a href="https://www.tiktok.com/@mr.faisal.geo?_t=ZS-8ySdp4xYApc&_r=1" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/en/a/a9/TikTok_logo.svg"><h3>تابعني على تيك توك</h3><p>فيديوهات تعليمية ومراجعات</p></a></div>
-    <div class="social-card"><a href="https://www.facebook.com/Mr.faisl" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg"><h3>تابع صفحتي على فيسبوك</h3><p>أحدث الأخبار والمحتوى الخاص</p></a></div>
-  </div>
+  <section class="social-section" aria-label="روابط التواصل الاجتماعي">
+    <div class="social-card" tabindex="0">
+      <a href="https://www.whatsapp.com/channel/0029Vb5eotiHFxOvJuFpMI39" target="_blank" rel="noopener noreferrer">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="واتساب" />
+        <h3>انضم لقناة الواتساب</h3>
+        <p>تابع آخر الأخبار والعروض</p>
+      </a>
+    </div>
+    <div class="social-card" tabindex="0">
+      <a href="https://www.facebook.com/groups/450656791778335/?locale=ar_AR" target="_blank" rel="noopener noreferrer">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="فيسبوك جروب" />
+        <h3>انضم لجروب الفيسبوك</h3>
+        <p>محتوى خاص وتفاعل مباشر</p>
+      </a>
+    </div>
+    <div class="social-card" tabindex="0">
+      <a href="https://youtube.com/@mr.faisal.geography?si=5HQdYcyREdFSKiwp" target="_blank" rel="noopener noreferrer">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/4/42/YouTube_icon_%282013-2017%29.png" alt="يوتيوب" />
+        <h3>اشترك في قناة اليوتيوب</h3>
+        <p>شروحات جغرافيا ومراجعات قوية</p>
+      </a>
+    </div>
+    <div class="social-card" tabindex="0">
+      <a href="https://www.tiktok.com/@mr.faisal.geo?_t=ZS-8ySdp4xYApc&_r=1" target="_blank" rel="noopener noreferrer">
+        <img src="https://upload.wikimedia.org/wikipedia/en/a/a9/TikTok_logo.svg" alt="تيك توك" />
+        <h3>تابعني على تيك توك</h3>
+        <p>فيديوهات تعليمية ومراجعات</p>
+      </a>
+    </div>
+    <div class="social-card" tabindex="0">
+      <a href="https://www.facebook.com/Mr.faisl" target="_blank" rel="noopener noreferrer">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="صفحة فيسبوك" />
+        <h3>تابع صفحتي على فيسبوك</h3>
+        <p>أحدث الأخبار والمحتوى الخاص</p>
+      </a>
+    </div>
+  </section>
 
   <div id="joinCard" class="start-card">
-    <div class="start-card-inner" onclick="startJourney()">
+    <div class="start-card-inner" role="button" tabindex="0" onclick="startJourney()" onkeypress="if(event.key==='Enter'){startJourney();}">
       <div style="font-size: 40px; animation: rocket 1.5s infinite;">🚀</div>
       <div style="margin-top: 10px;">ابدأ الرحلة الآن</div>
     </div>
   </div>
 
-  <audio id="pageAudio" src="https://files.catbox.moe/ftvm82.ogg" style="display: none;"></audio>
+  <footer>
+    جميع الحقوق محفوظة لدى <span>abdulrahman adel</span> | نسخة الموقع لدفعه 2026 &copy;
+  </footer>
+
+  <audio id="pageAudio" src="https://files.catbox.moe/ftvm82.ogg" preload="auto" style="display: none;"></audio>
 
   <script>
     function startJourney() {
@@ -202,13 +329,19 @@
       document.body.classList.add('fade-out');
       setTimeout(() => {
         window.location.href = "start.html";
-      }, 500); // بعد نصف ثانية من السلاسة
+      }, 500);
     }
 
     document.querySelectorAll('.social-card').forEach(card => {
       card.addEventListener('click', () => {
         card.classList.add('clicked');
         setTimeout(() => card.classList.remove('clicked'), 500);
+      });
+      // دعم الضغط على لوحة المفاتيح (Enter)
+      card.addEventListener('keypress', e => {
+        if (e.key === 'Enter') {
+          card.click();
+        }
       });
     });
   </script>
