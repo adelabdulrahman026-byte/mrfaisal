@@ -12,11 +12,49 @@
       margin: 0;
     }
 
-    h2 {
-      text-align: center;
-      color: #6a1b9a;
+    /* العنوان المعدل */
+    .header-title {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: linear-gradient(45deg, #6a1b9a, #9c27b0);
+      color: white;
+      padding: 12px 20px;
+      border-radius: 50px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      animation: slideUp 1s ease forwards, pulseHeader 2s infinite;
+      opacity: 0;
+      transform: translateY(30px);
+      font-size: 20px;
+      margin: 0 auto 20px;
+    }
+
+    .header-title img {
+      width: 26px;
+      height: 26px;
+      animation: pulseIcon 1.5s infinite;
+    }
+
+    .header-wrapper {
+      display: flex;
+      justify-content: center;
       margin-bottom: 15px;
-      font-size: 22px;
+    }
+
+    @keyframes slideUp {
+      0% { opacity: 0; transform: translateY(30px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulseHeader {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.03); }
+    }
+
+    @keyframes pulseIcon {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
     }
 
     /* حاوية الـ GIF */
@@ -119,15 +157,21 @@
       .contact-card {
         width: 90%;
       }
-      h2 {
-        font-size: 20px;
+      .header-title {
+        font-size: 18px;
       }
     }
   </style>
 </head>
 <body>
 
-<h2>تواصل مع فريقنا</h2>
+<!-- عنوان متحرك مع أيقونة -->
+<div class="header-wrapper">
+  <div class="header-title">
+    <img src="https://img.icons8.com/ios-filled/50/ffffff/chat--v1.png" alt="دردشة">
+    تواصل مع فريقنا
+  </div>
+</div>
 
 <!-- GIF -->
 <div class="gif-container">
