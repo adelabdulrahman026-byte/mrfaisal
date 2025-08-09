@@ -5,48 +5,100 @@
   <title>روابط مستر فيصل</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" />
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800;900&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.6.2/dist/dotlottie-wc.js" type="module"></script>
   <style>
-    body {
+    /* إعدادات عامة */
+    body, html {
       margin: 0;
       padding: 0;
       font-family: 'Cairo', sans-serif;
       background: black;
-      scroll-behavior: smooth;
       color: white;
       min-height: 100vh;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
     }
-    .point-down {
-      display: inline-block;
-      animation: bounceDown 1.8s infinite;
+
+    /* حاوية العرض الأولي (الـ GIF) */
+    #preloader {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: black;
+      z-index: 9999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
-    @keyframes bounceDown {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(5px); }
+
+    /* الفيديو الخلفية */
+    video {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      width: auto;
+      height: 100vh;
+      min-width: 100vw;
+      min-height: 100vh;
+      object-fit: cover;
+      transform: translate(-50%, -50%);
+      z-index: -1;
+      background: black;
     }
+
+    /* البطاقة الرئيسية */
+    #mainCard {
+      backdrop-filter: blur(16px);
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 22px;
+      padding: 20px 24px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      color: white;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(100px);
+      animation: slideUp 1.5s forwards ease-out;
+      cursor: default;
+      max-width: 320px;
+      margin: 70px auto 12px;
+      font-size: 22px;
+      font-weight: 900;
+      user-select: none;
+      position: relative;
+      z-index: 10;
+    }
+    #mainCard > div:last-child {
+      font-size: 16px;
+      font-weight: 700;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      color: #e0ffe0;
+    }
+
+    /* تأثيرات */
     @keyframes slideUp {
       to {
         opacity: 1;
         transform: translateY(0);
       }
     }
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(40px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    @keyframes bounceDown {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(5px); }
     }
-    @keyframes clickedEffect {
-      0% { transform: scale(1); background-color: rgba(0, 255, 0, 0.2); }
-      50% { transform: scale(0.96); }
-      100% { transform: scale(1); background-color: transparent; }
+    .point-down {
+      display: inline-block;
+      animation: bounceDown 1.8s infinite;
     }
+
+    /* القسم الاجتماعي */
     .social-section {
       padding: 40px 16px 40px;
       display: flex;
@@ -56,6 +108,8 @@
       margin: 0 auto 60px;
       width: 90%;
       box-sizing: border-box;
+      position: relative;
+      z-index: 10;
     }
     .social-card {
       backdrop-filter: blur(12px);
@@ -111,6 +165,8 @@
       transform: scale(1.04);
       box-shadow: 0 10px 30px rgba(0, 255, 0, 0.4);
     }
+
+    /* بطاقة البداية */
     .start-card {
       display: flex;
       justify-content: center;
@@ -120,6 +176,8 @@
       margin: 0 auto 20px;
       width: 90%;
       box-sizing: border-box;
+      position: relative;
+      z-index: 10;
     }
     .start-card-inner {
       background: linear-gradient(135deg, #00c9ff, #92fe9d);
@@ -156,55 +214,38 @@
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-6px); }
     }
+    /* حركة الصاروخ */
+    .start-card-inner > div:first-child {
+      font-size: 40px;
+      animation: rocket 1.5s infinite;
+    }
+
+    /* تأثير النقر */
+    @keyframes clickedEffect {
+      0% { transform: scale(1); background-color: rgba(0, 255, 0, 0.2); }
+      50% { transform: scale(0.96); }
+      100% { transform: scale(1); background-color: transparent; }
+    }
+
+    /* تأثيرات الظهور */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
     /* سلاسة لانتقال الصفحة */
     .fade-out {
       opacity: 0;
       transform: scale(0.98);
       transition: opacity 0.5s ease, transform 0.5s ease;
     }
-    /* تعديل الفيديو ليكون خلفية متجاوبة */
-    video {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      width: auto;
-      height: 100vh;
-      min-width: 100vw;
-      min-height: 100vh;
-      object-fit: cover;
-      transform: translate(-50%, -50%);
-      z-index: -1;
-      background: black;
-    }
-    /* البطاقة الرئيسية */
-    #mainCard {
-      backdrop-filter: blur(16px);
-      background: rgba(255, 255, 255, 0.15);
-      border-radius: 22px;
-      padding: 20px 24px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-      color: white;
-      text-align: center;
-      opacity: 0;
-      transform: translateY(100px);
-      animation: slideUp 1.5s forwards ease-out;
-      cursor: default;
-      max-width: 320px;
-      margin: 0 auto 12px;
-      font-size: 22px;
-      font-weight: 900;
-      user-select: none;
-    }
-    #mainCard > div:last-child {
-      font-size: 16px;
-      font-weight: 700;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 6px;
-      flex-wrap: wrap;
-      color: #e0ffe0;
-    }
+
     /* توقيع الحقوق في الأسفل */
     footer {
       width: 100%;
@@ -225,6 +266,7 @@
       font-weight: 600;
       color: #6cff87;
     }
+
     /* Responsive tweaks */
     @media (min-width: 480px) {
       .social-card {
@@ -257,19 +299,33 @@
 </head>
 <body>
 
+  <!-- عرض اللوتي المتحرك -->
+  <div id="preloader">
+    <dotlottie-wc 
+      src="https://lottie.host/953639aa-133c-4c35-8508-c65811fe8898/jZylR2TITf.lottie" 
+      style="width: 300px; height: 300px;" 
+      speed="1" 
+      autoplay 
+      loop>
+    </dotlottie-wc>
+  </div>
+
+  <!-- فيديو الخلفية -->
   <video autoplay muted loop playsinline>
     <source src="https://files.catbox.moe/1dldfl.mp4" type="video/mp4" />
   </video>
 
+  <!-- البطاقة الرئيسية -->
   <div id="mainCard">
     <div>انضم لينا</div>
     <div>
-      <span class="point-down" style="font-size: 20px;">👇</span>
+      <span class="point-down">👇</span>
       <span>في عالم مستر فيصل</span>
-      <span class="point-down" style="font-size: 20px;">👇</span>
+      <span class="point-down">👇</span>
     </div>
   </div>
 
+  <!-- روابط التواصل -->
   <section class="social-section" aria-label="روابط التواصل الاجتماعي">
     <div class="social-card" tabindex="0">
       <a href="https://www.whatsapp.com/channel/0029Vb5eotiHFxOvJuFpMI39" target="_blank" rel="noopener noreferrer">
@@ -308,13 +364,15 @@
     </div>
   </section>
 
+  <!-- زر بدء الرحلة -->
   <div id="joinCard" class="start-card">
     <div class="start-card-inner" role="button" tabindex="0" onclick="startJourney()" onkeypress="if(event.key==='Enter'){startJourney();}">
-      <div style="font-size: 40px; animation: rocket 1.5s infinite;">🚀</div>
+      <div>🚀</div>
       <div style="margin-top: 10px;">ابدأ الرحلة الآن</div>
     </div>
   </div>
 
+  <!-- تذييل الحقوق -->
   <footer>
     جميع الحقوق محفوظة لدى <span>abdulrahman adel</span> | نسخة الموقع لدفعه 2026 &copy;
   </footer>
@@ -322,14 +380,55 @@
   <audio id="pageAudio" src="https://files.catbox.moe/ftvm82.ogg" preload="auto" style="display: none;"></audio>
 
   <script>
+    // بعد تحميل الصفحة، نعرض اللوتي 3.5 ثانية تقريباً، ثم نخفيه ونظهر المحتوى
+    window.addEventListener('load', () => {
+      const preloader = document.getElementById('preloader');
+      const mainCard = document.getElementById('mainCard');
+      const startCard = document.querySelector('.start-card');
+      const socialCards = document.querySelectorAll('.social-card');
+
+      // نخفي المحتوى الأساسي حتى بعد انتهاء اللوتي
+      mainCard.style.opacity = 0;
+      startCard.style.opacity = 0;
+      socialCards.forEach(card => card.style.opacity = 0);
+
+      setTimeout(() => {
+        // اخفاء شاشة التحميل
+        preloader.style.transition = 'opacity 0.6s ease';
+        preloader.style.opacity = 0;
+        setTimeout(() => {
+          preloader.style.display = 'none';
+
+          // عرض المحتوى
+          mainCard.style.animationPlayState = 'running';
+          mainCard.style.opacity = 1;
+          startCard.querySelector('.start-card-inner').style.animationPlayState = 'running';
+          startCard.style.opacity = 1;
+          socialCards.forEach((card, i) => {
+            card.style.animationPlayState = 'running';
+            card.style.animationDelay = (0.15 * i) + 's';
+            card.style.opacity = 1;
+          });
+        }, 600);
+      }, 3500); // مدة العرض حوالي 3.5 ثانية، تقدر تزيد لـ 5 لو حبيت
+    });
+
     function startJourney() {
       const audio = document.getElementById('pageAudio');
-      audio.play().catch(err => console.log("Autoplay blocked:", err));
-
-      document.body.classList.add('fade-out');
-      setTimeout(() => {
-        window.location.href = "start.html";
-      }, 500);
+      audio.play().then(() => {
+        // الصوت شغال، نعمل الانتقال
+        document.body.classList.add('fade-out');
+        setTimeout(() => {
+          window.location.href = "start.html";
+        }, 500);
+      }).catch(err => {
+        // لو الصوت اتمنع أو حصل مشكلة، ننقل الصفحة بدون صوت
+        console.log("Autoplay blocked or error:", err);
+        document.body.classList.add('fade-out');
+        setTimeout(() => {
+          window.location.href = "start.html";
+        }, 500);
+      });
     }
 
     document.querySelectorAll('.social-card').forEach(card => {
