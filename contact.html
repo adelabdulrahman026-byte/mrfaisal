@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>تواصل معنا</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- مهم للموبايل -->
+  <style>
+    body {
+      background-color: #f4f0f8;
+      font-family: 'Cairo', sans-serif;
+      padding: 15px;
+      margin: 0;
+    }
+
+    h2 {
+      text-align: center;
+      color: #6a1b9a;
+      margin-bottom: 15px;
+      font-size: 22px;
+    }
+
+    /* حاوية الـ GIF */
+    .gif-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+    }
+
+    .contact-card {
+      background: white;
+      border-radius: 15px;
+      width: 230px;
+      padding: 15px 15px 10px;
+      text-align: center;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+      position: relative;
+      animation: fadeInSlide 0.8s ease forwards;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: transform 0.3s ease;
+    }
+
+    .contact-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .icon {
+      width: 60px;
+      height: 60px;
+      margin: 10px auto;
+      animation: floatIcon 2.5s ease-in-out infinite;
+      border-radius: 50%;
+    }
+
+    .name {
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .subject {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 10px;
+    }
+
+    .whatsapp-button {
+      display: inline-flex;
+      align-items: center;
+      background-color: #25D366;
+      color: white;
+      padding: 6px 10px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 14px;
+      animation: pulseBtn 2.5s ease-in-out infinite;
+    }
+
+    .whatsapp-button img {
+      margin-left: 6px;
+    }
+
+    .note-top {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      background-color: #e91e63;
+      color: white;
+      font-size: 12px;
+      padding: 3px 8px;
+      border-radius: 8px;
+    }
+
+    @keyframes floatIcon {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    @keyframes fadeInSlide {
+      0% { opacity: 0; transform: translateY(30px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulseBtn {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    /* موبايل */
+    @media (max-width: 500px) {
+      .contact-card {
+        width: 90%;
+      }
+      h2 {
+        font-size: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<h2>تواصل مع فريقنا</h2>
+
+<!-- GIF -->
+<div class="gif-container">
+  <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.6.2/dist/dotlottie-wc.js" type="module"></script>
+  <dotlottie-wc src="https://lottie.host/06e99f44-ec18-4512-ad5a-0e81ffcaa640/paKTlRDkFS.lottie" style="width: 250px; height: 250px" speed="1" autoplay loop></dotlottie-wc>
+</div>
+
+<div class="container">
+
+  <!-- مستر عارف -->
+  <div class="contact-card">
+    <img src="https://img.icons8.com/color/96/administrator-male.png" class="icon" alt="مستر عارف">
+    <div class="name">مستر عارف</div>
+    <div class="subject">مادة علمية</div>
+    <a href="https://wa.me/201276814042?text=ازيك%20يا%20مستر%20عارف" target="_blank" class="whatsapp-button">
+      <img src="https://img.icons8.com/ios-filled/20/ffffff/whatsapp.png"/> تواصل واتساب
+    </a>
+  </div>
+
+  <!-- مستر عبدالله -->
+  <div class="contact-card">
+    <img src="https://img.icons8.com/color/96/businessman.png" class="icon" alt="مستر عبدالله">
+    <div class="name">مستر عبدالله</div>
+    <div class="subject">مادة علمية</div>
+    <a href="https://wa.me/201276814042?text=ازيك%20يا%20مستر%20عبدالله" target="_blank" class="whatsapp-button">
+      <img src="https://img.icons8.com/ios-filled/20/ffffff/whatsapp.png"/> تواصل واتساب
+    </a>
+  </div>
+
+  <!-- ميس نهي -->
+  <div class="contact-card">
+    <img src="https://img.icons8.com/color/96/user-female-circle--v1.png" class="icon" alt="ميس نهي">
+    <div class="name">ميس نهي</div>
+    <div class="subject">مادة علمية</div>
+    <a href="https://wa.me/201276814042?text=ازيك%20يا%20ميس%20نهي" target="_blank" class="whatsapp-button">
+      <img src="https://img.icons8.com/ios-filled/20/ffffff/whatsapp.png"/> تواصل واتساب
+    </a>
+  </div>
+
+  <!-- ميس أمنية -->
+  <div class="contact-card">
+    <img src="https://img.icons8.com/color/96/student-female.png" class="icon" alt="ميس أمنية">
+    <div class="name">ميس أمنية</div>
+    <div class="subject">مادة علمية</div>
+    <a href="https://wa.me/201276814042?text=ازيك%20يا%20ميس%20امنيه" target="_blank" class="whatsapp-button">
+      <img src="https://img.icons8.com/ios-filled/20/ffffff/whatsapp.png"/> تواصل واتساب
+    </a>
+  </div>
+
+  <!-- ميس منار -->
+  <div class="contact-card">
+    <img src="https://img.icons8.com/color/96/user-female-circle--v2.png" class="icon" alt="ميس منار">
+    <div class="name">ميس منار</div>
+    <div class="subject">مادة علمية</div>
+    <a href="https://wa.me/201276814042?text=ازيك%20يا%20ميس%20منار" target="_blank" class="whatsapp-button">
+      <img src="https://img.icons8.com/ios-filled/20/ffffff/whatsapp.png"/> تواصل واتساب
+    </a>
+  </div>
+
+  <!-- ميس سجدة -->
+  <div class="contact-card">
+    <div class="note-top">خاص بطلاب الأونلاين فقط</div>
+    <img src="https://img.icons8.com/color/96/technical-support--v2.png" class="icon" alt="ميس سجدة">
+    <div class="name">ميس سجدة</div>
+    <div class="subject">مادة علمية</div>
+    <a href="https://wa.me/201556618507?text=ازيك%20يا%20ميس%20سجدة" target="_blank" class="whatsapp-button">
+      <img src="https://img.icons8.com/ios-filled/20/ffffff/whatsapp.png"/> تواصل واتساب
+    </a>
+  </div>
+
+  <!-- استفسار -->
+  <div class="contact-card">
+    <img src="https://img.icons8.com/color/96/help.png" class="icon" alt="استفسار">
+    <div class="name">لدي استفسار</div>
+    <a href="https://wa.me/201276504341?text=لدي%20استفسار" target="_blank" class="whatsapp-button">
+      <img src="https://img.icons8.com/ios-filled/20/ffffff/whatsapp.png"/> تواصل واتساب
+    </a>
+  </div>
+
+  <!-- فطومة -->
+  <div class="contact-card">
+    <img src="https://img.icons8.com/color/96/businesswoman.png" class="icon" alt="فطومة">
+    <div class="name">فطومة</div>
+    <div class="subject">علاقات عامة</div>
+    <a href="https://wa.me/201556611570?text=ازيك%20يا%20فطومه" target="_blank" class="whatsapp-button">
+      <img src="https://img.icons8.com/ios-filled/20/ffffff/whatsapp.png"/> تواصل واتساب
+    </a>
+  </div>
+
+</div>
+
+</body>
+</html>
