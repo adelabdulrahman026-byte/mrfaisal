@@ -3,94 +3,147 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>نموذج الطلب</title>
+  <title>نموذج طلب المذكرة</title>
   <style>
-    body { font-family: Arial, sans-serif; background:#f5f5f5; padding: 20px; }
-    form { background: white; padding:20px; border-radius:10px; max-width:500px; margin:auto; }
-    label { display:block; margin-top:15px; font-weight:bold; }
-    input, select { width:100%; padding:10px; margin-top:5px; border:1px solid #ccc; border-radius:5px; }
-    button { margin-top:20px; padding:15px; width:100%; background:#28a745; color:#fff; font-size:18px; border:none; border-radius:8px; cursor:pointer; }
-    button:hover { background:#218838; }
-    #message { margin-top:15px; text-align:center; font-weight:bold; }
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f2f5;
+      margin: 0; padding: 20px;
+    }
+    .container {
+      max-width: 500px;
+      background: white;
+      margin: auto;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+      color: #444;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-sizing: border-box;
+      font-size: 16px;
+    }
+    button {
+      width: 100%;
+      margin-top: 25px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      font-size: 18px;
+      padding: 15px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #218838;
+    }
+    #message {
+      margin-top: 20px;
+      font-weight: bold;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
 
-<form id="orderForm">
-  <label for="name">الاسم الكامل</label>
-  <input type="text" id="name" required />
+  <div class="container">
+    <h2>طلب شراء المذكرة</h2>
+    <form id="orderForm">
+      <label for="name">الاسم الكامل</label>
+      <input type="text" id="name" name="name" required />
 
-  <label for="phone">رقم الهاتف</label>
-  <input type="tel" id="phone" pattern="[0-9]+" required />
+      <label for="phone">رقم الهاتف</label>
+      <input type="tel" id="phone" name="phone" pattern="[0-9]+" required />
 
-  <label for="product">المنتج</label>
-  <select id="product" required>
-    <option value="مذكرة الصف الثالث الثانوي">مذكرة الصف الثالث الثانوي</option>
-  </select>
+      <label for="product">المنتج</label>
+      <select id="product" name="product" required>
+        <option value="مذكرة الصف الثالث الثانوي" selected>مذكرة الصف الثالث الثانوي</option>
+      </select>
 
-  <label for="price">السعر</label>
-  <input type="number" id="price" value="200" readonly />
+      <label for="price">السعر (جنيه)</label>
+      <input type="number" id="price" name="price" value="200" readonly />
 
-  <label for="shipping">الشحن</label>
-  <input type="number" id="shipping" value="30" readonly />
+      <label for="shipping">مصاريف الشحن (جنيه)</label>
+      <input type="number" id="shipping" name="shipping" value="30" readonly />
 
-  <label for="total">الإجمالي</label>
-  <input type="number" id="total" value="230" readonly />
+      <label for="total">الإجمالي (جنيه)</label>
+      <input type="number" id="total" name="total" value="230" readonly />
 
-  <label for="vodafoneNumber">رقم فودافون كاش</label>
-  <input type="tel" id="vodafoneNumber" pattern="[0-9]+" required />
+      <label for="vodafoneNumber">رقم فودافون كاش</label>
+      <input type="tel" id="vodafoneNumber" name="vodafoneNumber" pattern="[0-9]+" required />
 
-  <label for="image">رفع صورة تحويل فودافون كاش</label>
-  <input type="file" id="image" accept="image/*" required />
+      <label for="image">رفع صورة تحويل فودافون كاش</label>
+      <input type="file" id="image" name="image" accept="image/*" required />
 
-  <button type="submit">إرسال الطلب</button>
+      <button type="submit">إرسال الطلب</button>
+    </form>
 
-  <div id="message"></div>
-</form>
+    <div id="message"></div>
+  </div>
 
 <script>
   const form = document.getElementById('orderForm');
-  const messageDiv = document.getElementById('message');
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyRkLmFu0DQlNASGA0DTD5bgoJdjtxOMAIatcDWR0pXxdI3bL9bfJ-d2yc_zFokFvmHwQ/exec";
+  const message = document.getElementById('message');
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyu3ugXdZUI7i7dMUqERjjqv1x9bBdlN_ZSu9E7lIF2_K2N9SF2OzCt4r0nMhcLvOOB5Q/exec";
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    messageDiv.textContent = "جاري إرسال الطلب...";
+    message.style.color = "black";
+    message.textContent = "جاري إرسال الطلب...";
 
-    // تحقق من وجود ملف صورة
-    const imageInput = document.getElementById('image');
-    if (!imageInput.files.length) {
-      messageDiv.textContent = "من فضلك ارفع صورة تحويل فودافون كاش.";
+    const fileInput = document.getElementById('image');
+    if (!fileInput.files.length) {
+      message.style.color = "red";
+      message.textContent = "من فضلك ارفع صورة التحويل.";
       return;
     }
-    const file = imageInput.files[0];
+    const file = fileInput.files[0];
 
-    // دالة لتحويل الملف إلى Base64
-    const toBase64 = file => new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = error => reject(error);
-    });
+    // تحويل الصورة إلى Base64
+    function toBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+      });
+    }
 
-    let imageBase64;
+    let base64Image;
     try {
-      imageBase64 = await toBase64(file);
-    } catch (err) {
-      messageDiv.textContent = "فشل في قراءة صورة التحويل.";
+      base64Image = await toBase64(file);
+    } catch {
+      message.style.color = "red";
+      message.textContent = "خطأ في قراءة صورة التحويل.";
       return;
     }
 
     // جهز البيانات للإرسال
     const data = {
-      name: document.getElementById('name').value.trim(),
-      phone: document.getElementById('phone').value.trim(),
-      product: document.getElementById('product').value,
-      price: Number(document.getElementById('price').value),
-      shipping: Number(document.getElementById('shipping').value),
-      total: Number(document.getElementById('total').value),
-      vodafoneNumber: document.getElementById('vodafoneNumber').value.trim(),
-      imageBase64: imageBase64
+      name: form.name.value.trim(),
+      phone: form.phone.value.trim(),
+      product: form.product.value,
+      price: Number(form.price.value),
+      shipping: Number(form.shipping.value),
+      total: Number(form.total.value),
+      vodafoneNumber: form.vodafoneNumber.value.trim(),
+      imageBase64: base64Image
     };
 
     try {
@@ -103,16 +156,16 @@
       const result = await response.json();
 
       if (result.status === "success") {
-        messageDiv.style.color = "green";
-        messageDiv.textContent = "تم إرسال الطلب بنجاح. كود التتبع: " + result.trackingCode;
+        message.style.color = "green";
+        message.textContent = "تم إرسال الطلب بنجاح. كود التتبع: " + result.trackingCode;
         form.reset();
       } else {
-        messageDiv.style.color = "red";
-        messageDiv.textContent = "خطأ: " + (result.message || "حدث خطأ أثناء إرسال الطلب.");
+        message.style.color = "red";
+        message.textContent = "خطأ: " + (result.message || "حدث خطأ أثناء إرسال الطلب.");
       }
-    } catch (err) {
-      messageDiv.style.color = "red";
-      messageDiv.textContent = "حدث خطأ في الاتصال بالخادم. حاول مرة أخرى.";
+    } catch (error) {
+      message.style.color = "red";
+      message.textContent = "حدث خطأ في الاتصال بالخادم. حاول مرة أخرى.";
     }
   });
 </script>
