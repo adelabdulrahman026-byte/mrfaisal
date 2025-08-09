@@ -91,7 +91,7 @@
     font-size: 16px;
     font-weight: 600;
     color: #222;
-    table-layout: fixed;
+    table-layout: auto;
   }
 
   thead th {
@@ -125,9 +125,8 @@
     vertical-align: middle;
     border-radius: 0 0 14px 14px;
     word-break: break-word;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    white-space: normal;
+    overflow-wrap: break-word;
   }
 
   a.img-link {
@@ -232,7 +231,7 @@
 </div>
 
 <script>
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyEWigtNobp361E1gFlrp64jxU9AnZHuYEfpJ4vbbtGXndea1GxEKchrHGfBUbzRBvQug/exec'; // عدل هنا برابطك
+  const SCRIPT_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec'; // عدل هنا برابطك
   const whatsappNumber = '201093139047';
 
   const displayedFields = [
@@ -244,7 +243,7 @@
     'كود التبع',
     'حاله الطلب',
     'نوع الطلب',
-    'نو الطلب'  // هذا العمود رقم 12 (اسم الحقل حسب جوجل شيت)
+    'نو الطلب'
   ];
 
   function login() {
@@ -291,7 +290,6 @@
     let html = `<table>
       <thead><tr>`;
 
-    // رؤوس الأعمدة حسب الحقول المطلوبة + واتساب
     displayedFields.forEach(field => {
       html += `<th>${field}</th>`;
     });
@@ -304,7 +302,6 @@
         html += `<td data-label="${field}">${val}</td>`;
       });
 
-      // زر واتساب يرسل رسالة بالتفاصيل المطلوبة
       html += `<td data-label="واتساب">
         <button class="btn-whatsapp" onclick="sendWhatsappMessage(${JSON.stringify(row)})" title="أرسل عبر واتساب">
           <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -322,7 +319,6 @@
   }
 
   function sendWhatsappMessage(row) {
-    // رسالة واتساب تشمل الحقول المطلوبة:
     const msg = `
 طلب جديد:
 الاسم: ${row['name'] || ''}
@@ -339,7 +335,6 @@
     const encodedMsg = encodeURIComponent(msg);
     const whatsappNumber = '201093139047';
 
-    // فتح نافذة صغيرة popup
     const width = 600;
     const height = 700;
     const left = (screen.width / 2) - (width / 2);
