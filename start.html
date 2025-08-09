@@ -34,94 +34,134 @@
       flex-direction: column;
       align-items: center;
       padding: 100px 16px 60px;
+      gap: 40px;
     }
 
-    /* السلايد شو */
-    .slider-container {
+    /* ===== كارت السلايد شو ===== */
+    .slideshow-card {
       position: relative;
-      width: 320px;
-      height: 480px;
-      border-radius: 24px;
+      width: 90%;
+      max-width: 800px;
+      height: 300px;
+      border-radius: 20px;
       overflow: hidden;
       box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
-      margin-bottom: 40px;
     }
 
-    .slide {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      opacity: 0;
-      transition: opacity 0.8s ease-in-out;
-    }
-
-    .slide.active {
-      opacity: 1;
-    }
-
-    .slide img {
+    .slideshow-card img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
     }
 
-    .slide-overlay {
+    .slideshow-overlay {
       position: absolute;
-      bottom: 0;
+      top: 0;
+      left: 0;
+      height: 100%;
       width: 100%;
-      padding: 16px;
-      background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+      background: rgba(0,0,0,0.4);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
       color: white;
-      font-size: 20px;
-      font-weight: 900;
       text-align: center;
+      padding: 20px;
+    }
+
+    .slideshow-overlay h2 {
+      font-size: 32px;
+      font-weight: 900;
+      margin-bottom: 16px;
       text-shadow: 2px 2px 6px black;
     }
 
-    .slide-overlay a {
-      display: inline-block;
-      margin-top: 10px;
-      padding: 8px 14px;
-      background: rgba(255, 0, 0, 0.85);
+    .watch-btn {
+      padding: 12px 20px;
+      background: red;
       color: white;
-      font-weight: bold;
-      border-radius: 10px;
+      border-radius: 8px;
       text-decoration: none;
-      transition: background 0.3s;
+      font-weight: bold;
+      font-size: 16px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      transition: transform 0.3s ease, background 0.3s ease;
     }
 
-    .slide-overlay a:hover {
-      background: rgba(255, 0, 0, 1);
+    .watch-btn:hover {
+      transform: scale(1.05);
+      background: darkred;
     }
 
-    /* أزرار التحكم */
-    .controls {
+    /* ===== كارت اليوتيوب ===== */
+    .yt-card {
+      position: relative;
+      width: 320px;
+      height: 480px;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+      transition: transform 0.4s ease;
+      cursor: pointer;
+    }
+
+    .yt-card:hover {
+      transform: scale(1.03);
+    }
+
+    .yt-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .yt-overlay {
       position: absolute;
-      top: 50%;
+      top: 0;
+      left: 0;
+      height: 100%;
       width: 100%;
       display: flex;
-      justify-content: space-between;
-      transform: translateY(-50%);
-      padding: 0 10px;
-    }
-
-    .control-btn {
-      background: rgba(0,0,0,0.5);
-      border: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
       color: white;
-      font-size: 24px;
-      padding: 6px 10px;
-      border-radius: 50%;
-      cursor: pointer;
-      transition: background 0.3s;
+      background: rgba(0, 0, 0, 0.5);
+      text-align: center;
     }
 
-    .control-btn:hover {
-      background: rgba(0,0,0,0.8);
+    .yt-overlay .title {
+      font-size: 60px;
+      font-weight: 900;
+      margin-bottom: 0px;
+      color: #fff;
+      text-shadow: 2px 2px 6px black;
     }
 
-    /* الأزرار السفلية */
+    .yt-overlay .subtitle {
+      font-size: 32px;
+      font-weight: 900;
+      margin-bottom: 16px;
+      color: #fff;
+      text-shadow: 2px 2px 6px black;
+    }
+
+    .yt-overlay .stat {
+      font-size: 16px;
+      margin: 4px 0;
+      color: #fff;
+      background: rgba(255, 0, 0, 0.7);
+      padding: 6px 12px;
+      border-radius: 10px;
+      display: inline-block;
+      text-shadow: 0 1px 2px #000;
+    }
+
+    /* ===== الأزرار ===== */
     .buttons {
       display: flex;
       flex-wrap: wrap;
@@ -173,12 +213,25 @@
     }
 
     @media(max-width: 500px) {
-      .slider-container {
+      .yt-card {
         width: 90%;
         height: 440px;
       }
+
       .buttons .button-link {
         flex: 0 0 100%;
+      }
+
+      .yt-overlay .title {
+        font-size: 38px;
+      }
+
+      .yt-overlay .subtitle {
+        font-size: 26px;
+      }
+
+      .yt-overlay .stat {
+        font-size: 14px;
       }
     }
   </style>
@@ -191,33 +244,28 @@
   </div>
 
   <div class="container">
-    <!-- سلايد شو -->
-    <div class="slider-container">
-      <!-- السلايد 1 -->
-      <div class="slide active">
-        <img src="https://files.catbox.moe/s5u250.png" alt="المحاضرة التعريفية">
-        <div class="slide-overlay">
-          📢 الآن المحاضرة التعريفية لدفعة 26
-          <a href="https://youtu.be/Qvgq0KsjhGY" target="_blank">شاهد الآن ▶</a>
-        </div>
-      </div>
 
-      <!-- سلايد إضافية -->
-      <div class="slide">
-        <img src="https://via.placeholder.com/320x480.png?text=Slide+2" alt="Slide 2">
-        <div class="slide-overlay">
-          عنوان الفيديو الثاني
-          <a href="#" target="_blank">شاهد الآن ▶</a>
-        </div>
-      </div>
-
-      <div class="controls">
-        <button class="control-btn" id="prev">❮</button>
-        <button class="control-btn" id="next">❯</button>
+    <!-- كارت السلايد شو -->
+    <div class="slideshow-card">
+      <img src="https://files.catbox.moe/k7l5vg.jpg" alt="عرض الفيديو">
+      <div class="slideshow-overlay">
+        <h2>أحدث فيديو على قناتنا</h2>
+        <a href="https://youtu.be/Qvgq0KsjhGY" target="_blank" class="watch-btn">شاهد الآن ▶</a>
       </div>
     </div>
 
-    <!-- باقي الأزرار -->
+    <!-- كارت اليوتيوب -->
+    <div class="yt-card">
+      <img src="https://files.catbox.moe/4mdr3d.jpeg" alt="قناة مستر فيصل">
+      <div class="yt-overlay">
+        <div class="title">قناتنا</div>
+        <div class="subtitle">على اليوتيوب</div>
+        <div class="stat">📺 عدد المشتركين: 102,000</div>
+        <div class="stat">👁️‍🗨️ عدد المشاهدات: 4,300,000</div>
+      </div>
+    </div>
+
+    <!-- الأزرار -->
     <div class="buttons">
       <a href="cors.html" class="button-link">منصتنا التعليمية 🏫</a>
       <a href="motaba.html" class="button-link">المتابعة 📱</a>
@@ -227,27 +275,7 @@
       <a href="contact.html" class="button-link">اسألنا سؤال 📞</a>
       <a href="shakwy.html" class="button-link">الشكاوي 📣</a>
     </div>
+
   </div>
-
-  <script>
-    let slides = document.querySelectorAll(".slide");
-    let currentIndex = 0;
-
-    document.getElementById("next").addEventListener("click", () => {
-      slides[currentIndex].classList.remove("active");
-      currentIndex = (currentIndex + 1) % slides.length;
-      slides[currentIndex].classList.add("active");
-    });
-
-    document.getElementById("prev").addEventListener("click", () => {
-      slides[currentIndex].classList.remove("active");
-      currentIndex = (currentIndex - 1 + slides.length) % slides.length;
-      slides[currentIndex].classList.add("active");
-    });
-
-    setInterval(() => {
-      document.getElementById("next").click();
-    }, 5000);
-  </script>
 </body>
 </html>
