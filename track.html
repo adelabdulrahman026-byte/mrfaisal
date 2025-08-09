@@ -1,0 +1,105 @@
+<script>
+  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxNhAfhsY_FRU9UsoK61HzMr_ATVn02xtmrb8hFEny06RlpmGxcdKYWXl5sQwyoOVoD/exec"
+  const formData = {
+    total: "230",
+    orderType: ""
+  };
+
+  function hideAll() {
+    ["third", "second", "akodna"].forEach(type => {
+      document.getElementById("video_" + type).style.display = "none";
+      document.getElementById("note_" + type).style.display = "none";
+    });
+    document.getElementById("orderForm").style.display = "none";
+  }
+
+  function startOrder(type) {
+    hideAll();
+    formData.orderType = {
+      "third": "مذكرة الصف الثالث الثانوي",
+      "second": "مذكرة الصف الثاني الثانوي",
+      "akodna": "أكوادنا"
+    }[type];
+
+    document.getElementById("video_" + type).style.display = "block";
+    document.getElementById("note_" + type).style.display = "block";
+    document.getElementById("orderForm").style.display = "block";
+
+    const codeSelect = document.getElementById("codeType");
+    const addressField = document.getElementById("address");
+
+    if (type === "akodna") {
+      codeSelect.style.display = "block";
+      codeSelect.required = true;
+      addressField.style.display = "none";
+      addressField.required = false;
+    } else {
+      codeSelect.style.display = "none";
+      codeSelect.required = false;
+      addressField.style.display = "block";
+      addressField.required = true;
+    }
+  }
+
+  function submitOrder() {
+    const name = document.getElementById("name").value;
+    const gov = document.getElementById("gov").value;
+    const phone1 = document.getElementById("phone1").value;
+    const address = document.getElementById("address").value;
+    const paymentNumber = document.getElementById("paymentNumber").value;
+    const codeType = document.getElementById("codeType").value;
+    const file = document.getElementById("paymentProof").files[0];
+
+    if (!paymentNumber || !file) return;
+
+    const popup = document.getElementById("successPopup");
+    const msg = document.getElementById("popupMessage");
+
+    msg.innerHTML = `<div class="loading-msg">📦 جاري الشحن...<br><span style="display:inline-block; animation: bounce 1s infinite;">⏳</span></div>`;
+    popup.classList.add("show");
+
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      const proofImage = e.target.result.split(",")[1];
+
+      const payload = {
+        ...formData,
+        name,
+        gov,
+        phone1,
+        address: formData.orderType === "أكوادنا" ? codeType : address,
+        paymentNumber,
+        proofImage
+      };
+
+      fetch(WEB_APP_URL, {
+        method: "POST",
+        body: JSON.stringify(payload),
+        headers: { "Content-Type": "application/json" }
+      })
+      .then(res => res.json())
+      .then(showPopup)
+      .catch(() => showPopup({ success: false, error: "فشل في الإرسال" }));
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function showPopup(res) {
+    const popup = document.getElementById("successPopup");
+    const msg = document.getElementById("popupMessage");
+
+    if (res.success) {
+      msg.innerHTML = `
+        ✅ <strong>تم الشحن بنجاح</strong><br><br>
+        كود التتبع: <strong>${res.trackingCode}</strong><br>
+        الاسم: ${document.getElementById("name").value}<br>
+        المحافظة: ${document.getElementById("gov").value}<br>
+        الهاتف: ${document.getElementById("phone1").value}
+      `;
+    } else {
+      msg.innerHTML = `❌ حصلت مشكلة: ${res.error || "حاول تاني"}`;
+    }
+
+    popup.classList.add("show");
+  }
+</script>
