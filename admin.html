@@ -1,324 +1,159 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>لوحة تحكم Admin</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Cairo&display=swap');
-
-  body {
-    font-family: 'Cairo', sans-serif;
-    background: #f0f4f8;
-    margin: 0; padding: 20px;
-    color: #333;
-  }
-
-  #loginForm, #dashboard {
-    max-width: 1000px;
-    margin: auto;
-    background: white;
-    padding: 30px 40px;
-    border-radius: 15px;
-    box-shadow: 0 4px 18px rgba(0,0,0,0.1);
-  }
-
-  h2 {
-    text-align: center;
-    margin-bottom: 30px;
-    color: #1976d2;
-  }
-
-  input[type=text], input[type=password] {
-    width: 100%;
-    padding: 12px 15px;
-    margin-bottom: 20px;
-    border: 2px solid #90caf9;
-    border-radius: 10px;
-    font-size: 16px;
-    transition: border-color 0.3s;
-  }
-
-  input[type=text]:focus, input[type=password]:focus {
-    border-color: #1976d2;
-    outline: none;
-  }
-
-  button {
-    width: 100%;
-    padding: 14px;
-    background-color: #1976d2;
-    border: none;
-    border-radius: 12px;
-    color: white;
-    font-size: 18px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-
-  button:hover {
-    background-color: #115293;
-  }
-
-  #errorMsg {
-    color: red;
-    font-weight: 700;
-    text-align: center;
-    margin-bottom: 15px;
-  }
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    table-layout: fixed;
-  }
-
-  thead th {
-    background-color: #1976d2;
-    color: white;
-    padding: 12px 8px;
-    font-weight: 700;
-    font-size: 14px;
-    border: 1px solid #ddd;
-    white-space: nowrap;
-  }
-
-  tbody td {
-    border: 1px solid #ddd;
-    padding: 10px 8px;
-    font-size: 14px;
-    word-wrap: break-word;
-    vertical-align: middle;
-    text-align: center;
-  }
-
-  tbody tr:nth-child(even) {
-    background-color: #f5faff;
-  }
-
-  .whatsapp-btn {
-    background-color: #25d366;
-    border: none;
-    border-radius: 50%;
-    width: 36px;
-    height: 36px;
-    cursor: pointer;
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    transition: background-color 0.3s ease;
-  }
-
-  .whatsapp-btn:hover {
-    background-color: #128c4a;
-  }
-
-  .whatsapp-icon {
-    fill: white;
-    width: 20px;
-    height: 20px;
-  }
-
-  #logoutBtn {
-    margin-bottom: 25px;
-    background-color: #d32f2f;
-  }
-
-  #logoutBtn:hover {
-    background-color: #9a0007;
-  }
-
-  /* Responsive */
-  @media (max-width: 768px) {
-    table, thead, tbody, th, td, tr {
-      display: block;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>تسجيل دخول مسؤول</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cairo&display=swap');
+    
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Cairo', sans-serif;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: #fff;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      overflow: hidden;
     }
-    thead {
-      display: none;
-    }
-    tbody tr {
-      margin-bottom: 20px;
-      background: #f0f4fa;
-      border-radius: 12px;
-      padding: 15px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-    tbody td {
-      text-align: right;
-      padding-left: 50%;
+
+    .container {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 30px 25px;
+      border-radius: 20px;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+      text-align: center;
       position: relative;
-      border: none;
-      border-bottom: 1px solid #ddd;
-      white-space: normal;
-      word-wrap: break-word;
     }
-    tbody td::before {
-      position: absolute;
-      top: 12px;
-      right: 12px;
-      width: 45%;
-      padding-left: 10px;
-      white-space: nowrap;
+
+    h1 {
+      margin-bottom: 25px;
       font-weight: 700;
-      color: #1976d2;
-      content: attr(data-label);
-      text-align: left;
+      font-size: 28px;
+      letter-spacing: 1px;
+      text-shadow: 0 2px 5px rgba(0,0,0,0.3);
     }
-    tbody td:last-child {
-      border-bottom: none;
-      padding-bottom: 0;
+
+    input[type="text"], input[type="password"] {
+      width: 100%;
+      padding: 14px 15px;
+      margin-bottom: 20px;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      box-sizing: border-box;
+      outline: none;
+      transition: box-shadow 0.3s ease;
     }
-  }
-</style>
+    input[type="text"]:focus, input[type="password"]:focus {
+      box-shadow: 0 0 10px #a78bfa;
+    }
+
+    button {
+      width: 100%;
+      padding: 15px;
+      font-size: 18px;
+      border: none;
+      border-radius: 12px;
+      background: #a78bfa;
+      color: #fff;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      box-shadow: 0 6px 15px rgba(167,139,250,0.6);
+    }
+    button:hover {
+      background: #8158ff;
+    }
+
+    /* شاشة الأنيميشن تظهر وتغطي الشاشة */
+    .loading-screen {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: #1c1c3c;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      z-index: 9999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+    }
+
+    .loading-screen.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .loading-text {
+      margin-top: 20px;
+      font-size: 22px;
+      font-weight: 600;
+      color: #ddd;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+  </style>
 </head>
 <body>
 
-<div id="loginForm">
-  <h2>تسجيل دخول Admin</h2>
-  <input id="username" type="text" placeholder="اسم المستخدم" autocomplete="off" />
-  <input id="password" type="password" placeholder="كلمة المرور" autocomplete="off" />
-  <button onclick="login()">تسجيل دخول</button>
-  <p id="errorMsg"></p>
-</div>
+  <div class="container" id="login-container">
+    <h1>تسجيل دخول المسؤول</h1>
+    <input type="text" id="username" placeholder="اسم المستخدم" autocomplete="off" />
+    <input type="password" id="password" placeholder="كلمة المرور" autocomplete="off" />
+    <button id="login-btn">مسؤول تسجيل دخول</button>
+  </div>
 
-<div id="dashboard" style="display:none;">
-  <h2>لوحة التحكم</h2>
-  <button id="logoutBtn" onclick="logout()">تسجيل خروج</button>
-  <div id="tableContainer"></div>
-</div>
+  <!-- شاشة التحميل والأنيميشن -->
+  <div class="loading-screen" id="loading-screen">
+    <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.6.2/dist/dotlottie-wc.js" type="module"></script>
+    <dotlottie-wc 
+      src="https://lottie.host/a13c9760-800d-4a24-9a6b-bb084ffa6085/Vaslh8cLLr.lottie" 
+      style="width: 300px; height: 300px;" 
+      speed="1" 
+      autoplay 
+      loop>
+    </dotlottie-wc>
+    <div class="loading-text">جاري تسجيل الدخول ...</div>
+  </div>
 
-<script>
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw5qBlL5DlVEYSL3BF4__6QhTJHx2uEckP3n7jh1pyavxmdQdMaoNdpXqQRk84l2cIFzw/exec'; // عدل هنا برابطك
-  const whatsappNumber = '201093139047';
+  <script>
+    const loginBtn = document.getElementById('login-btn');
+    const loadingScreen = document.getElementById('loading-screen');
+    const loginContainer = document.getElementById('login-container');
 
-  const displayedFields = [
-    { key: 'name', label: 'الاسم' },
-    { key: 'phone', label: 'الهاتف' },
-    { key: 'المحافظة', label: 'المحافظة' },
-    { key: 'الهاتف', label: 'الهاتف الثاني' },
-    { key: 'العنوان', label: 'العنوان' },
-    { key: 'كود التبع', label: 'كود التبع' },
-    { key: 'حاله الطلب', label: 'حالة الطلب' },
-    { key: 'نوع الطلب', label: 'نوع الطلب' },
-    { key: 'نو الطلب', label: 'رقم الطلب' }
-  ];
+    loginBtn.addEventListener('click', () => {
+      // اختياري: تحقق من الإدخال
+      const user = document.getElementById('username').value.trim();
+      const pass = document.getElementById('password').value.trim();
 
-  function login() {
-    const user = document.getElementById('username').value.trim();
-    const pass = document.getElementById('password').value.trim();
-    const errorMsg = document.getElementById('errorMsg');
+      if(user === '' || pass === '') {
+        alert('يرجى ملء اسم المستخدم وكلمة المرور');
+        return;
+      }
 
-    if (user === 'admin' && pass === '0000') {
-      errorMsg.textContent = '';
-      document.getElementById('loginForm').style.display = 'none';
-      document.getElementById('dashboard').style.display = 'block';
-      loadData();
-    } else {
-      errorMsg.textContent = 'اسم المستخدم أو كلمة المرور خاطئة';
-    }
-  }
+      // إظهار شاشة التحميل
+      loadingScreen.classList.add('active');
 
-  function logout() {
-    document.getElementById('dashboard').style.display = 'none';
-    document.getElementById('loginForm').style.display = 'block';
-    document.getElementById('username').value = '';
-    document.getElementById('password').value = '';
-    document.getElementById('errorMsg').textContent = '';
-    document.getElementById('tableContainer').innerHTML = '';
-  }
+      // إخفاء شاشة تسجيل الدخول
+      loginContainer.style.display = 'none';
 
-  async function loadData() {
-    try {
-      const res = await fetch(SCRIPT_URL, { method: 'GET', mode: 'cors' });
-      if (!res.ok) throw new Error('خطأ في تحميل البيانات');
-      const data = await res.json();
-      if(data.error) throw new Error(data.error);
-      renderTable(data);
-    } catch (e) {
-      alert('خطأ في تحميل البيانات: ' + e.message);
-    }
-  }
-
-  function renderTable(data) {
-    if (!data.length) {
-      document.getElementById('tableContainer').innerHTML =
-        '<p style="text-align:center; font-weight:700; font-size:18px;">لا توجد بيانات</p>';
-      return;
-    }
-
-    let html = '<table><thead><tr>';
-    displayedFields.forEach((field) => {
-      html += `<th>${field.label}</th>`;
+      // بعد 3 ثواني تحويل للرابط المطلوب
+      setTimeout(() => {
+        window.location.href = 'https://script.google.com/macros/s/AKfycbyXH06EgM-jMPk98oqdvwvAT_m7aHqwaanwB1dfYAYe3tc79Rmzs_hgz1wFqqtArXJ0FA/exec';
+      }, 3000);
     });
-    html += '<th>واتساب</th></tr></thead><tbody>';
-
-    data.forEach((row) => {
-      html += '<tr>';
-      displayedFields.forEach((field) => {
-        let val = row[field.key] ?? '';
-        html += `<td data-label="${field.label}">${escapeHtml(val)}</td>`;
-      });
-
-      html += `<td data-label="واتساب">
-        <button class="whatsapp-btn" onclick='sendWhatsappMessage(${JSON.stringify(row)})' title="أرسل عبر واتساب" aria-label="إرسال عبر واتساب">
-          <svg class="whatsapp-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-            <path d="M20.52 3.48A11.867 11.867 0 0 0 12 0C5.37 0 .02 5.34 0 12c0 2.11.56 4.08 1.55 5.79L0 24l6.37-1.65A11.9 11.9 0 0 0 12 24c6.63 0 12-5.37 12-12a11.88 11.88 0 0 0-3.48-8.52zM12 21.5c-1.86 0-3.61-.54-5.07-1.46l-.36-.22-3.78.97.96-3.69-.24-.38A9.431 9.431 0 0 1 2.5 12C2.5 6.8 6.8 2.5 12 2.5S21.5 6.8 21.5 12 17.2 21.5 12 21.5zm1.71-6.11c-.07-.11-.27-.17-.56-.29s-1.1-.51-1.28-.57-.3-.1-.43.11-.49.57-.6.68-.22.16-.41.06a4.25 4.25 0 0 1-1.25-.73-4.77 4.77 0 0 1-1.78-2.2c-.18-.38 0-.58.13-.76.06-.07.15-.17.22-.26a.57.57 0 0 0 .08-.1.33.33 0 0 0 0-.3c0-.1-.43-1.04-.6-1.42s-.3-.33-.43-.34h-.37a.77.77 0 0 0-.56.27 2.37 2.37 0 0 0-.7 1.7 3.95 3.95 0 0 0 1.44 3.08 6.79 6.79 0 0 0 3.15 2.08c.44.18.76.15 1.05.09a2.36 2.36 0 0 0 1.07-.66 3.1 3.1 0 0 0 .9-1.05c.06-.11.03-.2-.05-.31z"/>
-          </svg>
-        </button>
-      </td>`;
-
-      html += '</tr>';
-    });
-
-    html += '</tbody></table>';
-    document.getElementById('tableContainer').innerHTML = html;
-  }
-
-  function sendWhatsappMessage(row) {
-    const msg = `
-طلب جديد:
-الاسم: ${row['name'] || ''}
-الهاتف: ${row['phone'] || ''}
-المحافظة: ${row['المحافظة'] || ''}
-الهاتف الثاني: ${row['الهاتف'] || ''}
-العنوان: ${row['العنوان'] || ''}
-كود التبع: ${row['كود التبع'] || ''}
-حالة الطلب: ${row['حاله الطلب'] || ''}
-نوع الطلب: ${row['نوع الطلب'] || ''}
-رقم الطلب: ${row['نو الطلب'] || ''}
-`.trim();
-
-    const encodedMsg = encodeURIComponent(msg);
-    const whatsappNumber = '201093139047';
-
-    // فتح نافذة popup
-    const width = 600;
-    const height = 700;
-    const left = (screen.width / 2) - (width / 2);
-    const top = (screen.height / 2) - (height / 2);
-
-    window.open(
-      `https://wa.me/${whatsappNumber}?text=${encodedMsg}`,
-      'whatsappPopup',
-      `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes,status=yes`
-    );
-  }
-
-  // حماية من XSS
-  function escapeHtml(text) {
-    if (!text) return '';
-    return text.replace(/[&<>"']/g, function(m) {
-      return {
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#39;'
-      }[m];
-    });
-  }
-</script>
-
+  </script>
 </body>
 </html>
