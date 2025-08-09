@@ -7,7 +7,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800;900&display=swap" rel="stylesheet" />
   <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.6.2/dist/dotlottie-wc.js" type="module"></script>
   <style>
-    /* عام */
     body, html {
       margin: 0; padding: 0;
       font-family: 'Cairo', sans-serif;
@@ -18,10 +17,8 @@
       scroll-behavior: smooth;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
+      justify-content: flex-start; /* فوق */
     }
-
-    /* خلفية بيضاء لللودر */
     #preloader {
       position: fixed;
       top: 0; left: 0;
@@ -33,25 +30,21 @@
       justify-content: center;
       align-items: center;
     }
-
-    /* فيديو الخلفية */
     video {
       position: fixed;
-      top: 55%; /* زيادة النزول لاظهار الشخص */
+      top: 50%; /* مركّز على الشخص في المنتصف */
       left: 50%;
       width: auto;
-      height: 110vh; /* زيادة الطول */
+      height: 110vh; 
       min-width: 100vw;
       min-height: 100vh;
       object-fit: cover;
       transform: translate(-50%, -50%);
       z-index: -1;
       background: black;
-      opacity: 0; /* نبدأ مخفيين الفيديو */
+      opacity: 0;
       transition: opacity 1s ease;
     }
-
-    /* البطاقة الرئيسية */
     #mainCard {
       backdrop-filter: blur(16px);
       background: rgba(255, 255, 255, 0.15);
@@ -65,7 +58,7 @@
       animation: slideUp 1.5s forwards ease-out;
       cursor: default;
       max-width: 320px;
-      margin: 90px auto 12px; /* نزّل شويه من فوق */
+      margin: 220px auto 20px; /* نزلت البطاقة تحت عشان الشخص يبان فوق */
       font-size: 22px;
       font-weight: 900;
       user-select: none;
@@ -82,8 +75,6 @@
       flex-wrap: wrap;
       color: #e0ffe0;
     }
-
-    /* تأثيرات */
     @keyframes slideUp {
       to {
         opacity: 1;
@@ -98,15 +89,13 @@
       display: inline-block;
       animation: bounceDown 1.8s infinite;
     }
-
-    /* القسم الاجتماعي */
     .social-section {
       padding: 40px 16px 40px;
       display: flex;
       flex-direction: column;
       gap: 18px;
       max-width: 480px;
-      margin: 0 auto 70px; /* نزّل شويه للكروت */
+      margin: 0 auto 70px;
       width: 90%;
       box-sizing: border-box;
       position: relative;
@@ -166,8 +155,6 @@
       transform: scale(1.04);
       box-shadow: 0 10px 30px rgba(0, 255, 0, 0.4);
     }
-
-    /* بطاقة البداية */
     .start-card {
       display: flex;
       justify-content: center;
@@ -215,20 +202,15 @@
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-6px); }
     }
-    /* حركة الصاروخ */
     .start-card-inner > div:first-child {
       font-size: 40px;
       animation: rocket 1.5s infinite;
     }
-
-    /* تأثير النقر */
     @keyframes clickedEffect {
       0% { transform: scale(1); background-color: rgba(0, 255, 0, 0.2); }
       50% { transform: scale(0.96); }
       100% { transform: scale(1); background-color: transparent; }
     }
-
-    /* تأثيرات الظهور */
     @keyframes fadeInUp {
       from {
         opacity: 0;
@@ -239,15 +221,11 @@
         transform: translateY(0);
       }
     }
-
-    /* سلاسة لانتقال الصفحة */
     .fade-out {
       opacity: 0;
       transform: scale(0.98);
       transition: opacity 0.5s ease, transform 0.5s ease;
     }
-
-    /* توقيع الحقوق في الأسفل */
     footer {
       width: 100%;
       padding: 12px 8px;
@@ -267,8 +245,6 @@
       font-weight: 600;
       color: #6cff87;
     }
-
-    /* Responsive tweaks */
     @media (min-width: 480px) {
       .social-card {
         padding: 22px 20px;
@@ -389,25 +365,17 @@
     const startCard = document.querySelector('.start-card');
     const socialCards = document.querySelectorAll('.social-card');
 
-    // عند تحميل الصفحة - ننتظر تشغيل الفيديو ثم نزيل اللودر
     window.addEventListener('load', () => {
-      // نمنع ظهور المحتوى الأساسي في البداية
       mainCard.style.opacity = 0;
       startCard.style.opacity = 0;
       socialCards.forEach(card => card.style.opacity = 0);
 
-      // لما الفيديو يبدأ يلعب (loadeddata أو canplay)
       video.addEventListener('canplay', () => {
-        // نجعل الفيديو يظهر
         video.style.opacity = 1;
-
-        // نخفي شاشة التحميل واللودر تدريجياً
         preloader.style.transition = 'opacity 0.8s ease';
         preloader.style.opacity = 0;
-
         setTimeout(() => {
           preloader.style.display = 'none';
-          // نعرض المحتوى مع تحريك
           mainCard.style.animationPlayState = 'running';
           mainCard.style.opacity = 1;
           startCard.querySelector('.start-card-inner').style.animationPlayState = 'running';
@@ -424,13 +392,11 @@
     function startJourney() {
       const audio = document.getElementById('pageAudio');
       audio.play().then(() => {
-        // الصوت شغال، نعمل الانتقال
         document.body.classList.add('fade-out');
         setTimeout(() => {
           window.location.href = "start.html";
         }, 500);
       }).catch(err => {
-        // لو الصوت اتمنع أو حصل مشكلة، ننقل الصفحة بدون صوت
         console.log("Autoplay blocked or error:", err);
         document.body.classList.add('fade-out');
         setTimeout(() => {
@@ -439,17 +405,13 @@
       });
     }
 
-    // تأثير النقر على الكروت
     document.querySelectorAll('.social-card').forEach(card => {
       card.addEventListener('click', () => {
         card.classList.add('clicked');
         setTimeout(() => card.classList.remove('clicked'), 500);
       });
-      // دعم ضغط Enter للـ keyboard
       card.addEventListener('keypress', e => {
-        if (e.key === 'Enter') {
-          card.click();
-        }
+        if (e.key === 'Enter') card.click();
       });
     });
   </script>
