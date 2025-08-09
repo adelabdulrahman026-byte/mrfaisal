@@ -233,9 +233,10 @@
       const res = await fetch(SCRIPT_URL, { method: 'GET', mode: 'cors' });
       if (!res.ok) throw new Error('خطأ في تحميل البيانات');
       const data = await res.json();
+      if(data.error) throw new Error(data.error);
       renderTable(data);
     } catch (e) {
-      alert('خطأ في تحميل البيانات');
+      alert('خطأ في تحميل البيانات: ' + e.message);
     }
   }
 
@@ -291,6 +292,7 @@
     const encodedMsg = encodeURIComponent(msg);
     const whatsappNumber = '201093139047';
 
+    // فتح نافذة popup
     const width = 600;
     const height = 700;
     const left = (screen.width / 2) - (width / 2);
