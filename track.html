@@ -1,129 +1,610 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>شراء المذكرة</title>
-  <style>
-    body {
-      font-family: 'Cairo', sans-serif;
-      background: linear-gradient(135deg, #4facfe, #00f2fe);
-      margin: 0;
-      padding: 20px;
-      color: #fff;
-    }
-    h1 {
-      text-align: center;
-      margin-bottom: 15px;
-    }
-    form {
-      background: rgba(255, 255, 255, 0.1);
-      padding: 15px;
-      border-radius: 10px;
-      max-width: 500px;
-      margin: auto;
-      box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
-    }
-    input, select {
-      width: 100%;
-      padding: 10px;
-      margin: 8px 0;
-      border-radius: 6px;
-      border: none;
-      font-size: 16px;
-    }
-    button {
-      background: #28a745;
-      color: #fff;
-      padding: 12px;
-      width: 100%;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: background 0.3s ease;
-    }
-    button:hover {
-      background: #218838;
-    }
-    #result {
-      margin-top: 20px;
-      text-align: center;
-      font-weight: bold;
-      font-size: 18px;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>طلب شحن المنتجات</title>
+
+<!-- خط جميل -->
+<link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet" />
+
+<style>
+  body {
+    font-family: 'Cairo', sans-serif;
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
+    margin: 0; padding: 20px; min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center;
+  }
+  h1 {
+    color: white; margin-bottom: 20px; text-shadow: 1px 1px 4px #0006;
+  }
+
+  .cards-container {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .card {
+    background: white;
+    border-radius: 15px;
+    width: 320px;
+    box-shadow: 0 8px 16px rgb(0 0 0 / 0.2);
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+  }
+  .card:hover {
+    transform: scale(1.05);
+  }
+  video {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+  }
+  .card-header {
+    position: absolute;
+    top: 10px; right: 10px;
+    background: #2196f3;
+    color: white;
+    padding: 5px 12px;
+    font-weight: bold;
+    border-radius: 10px;
+    font-size: 14px;
+    box-shadow: 0 2px 6px rgb(0 0 0 / 0.3);
+    user-select: none;
+  }
+  .card-body {
+    padding: 15px;
+  }
+  .product-name {
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: 8px;
+  }
+  .product-desc {
+    font-size: 14px;
+    color: #555;
+    height: 40px;
+    overflow: hidden;
+  }
+  .product-price {
+    font-weight: bold;
+    color: #0b8043;
+    margin-top: 10px;
+    font-size: 16px;
+  }
+
+  /* مودال */
+  .modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.7);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
+  .modal {
+    background: white;
+    border-radius: 12px;
+    max-width: 400px;
+    width: 95%;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 20px 30px 30px 30px;
+    box-shadow: 0 0 12px #0008;
+    position: relative;
+  }
+  .modal h2 {
+    margin-top: 0;
+    margin-bottom: 12px;
+    font-weight: 700;
+  }
+  .close-btn {
+    position: absolute;
+    top: 15px; left: 15px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    cursor: pointer;
+  }
+
+  label {
+    display: block;
+    margin: 8px 0 5px;
+    font-weight: 600;
+  }
+  input, select {
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 6px;
+    border: 1px solid #aaa;
+    font-size: 15px;
+  }
+  input[type="file"] {
+    padding: 5px;
+  }
+  button {
+    margin-top: 20px;
+    width: 100%;
+    padding: 12px;
+    background: #2196f3;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-size: 17px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  button:disabled {
+    background: #a3c0f7;
+    cursor: not-allowed;
+  }
+  button:hover:not(:disabled) {
+    background: #1976d2;
+  }
+  
+  /* انيميشن تحميل جاري الشحن */
+  .loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .loading-text {
+    margin-top: 10px;
+    font-weight: 700;
+    color: #2196f3;
+    font-size: 20px;
+  }
+
+  /* علامة صح و غلط انيميشن */
+  .status-icon {
+    font-size: 80px;
+    margin: 20px auto 15px;
+    text-align: center;
+    animation: bounce 1.5s ease infinite;
+  }
+  .status-icon.success {
+    color: #4caf50;
+  }
+  .status-icon.error {
+    color: #e53935;
+  }
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0);}
+    50% { transform: translateY(-20px);}
+  }
+
+  /* كود التتبع */
+  .tracking-code {
+    font-size: 20px;
+    font-weight: 700;
+    color: #333;
+    background: #e3f2fd;
+    padding: 10px 15px;
+    border-radius: 10px;
+    user-select: all;
+    cursor: pointer;
+    text-align: center;
+    margin-bottom: 8px;
+  }
+
+  /* زر تابع الشحن */
+  #tracking-section {
+    margin-top: 40px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 6px 18px rgb(0 0 0 / 0.15);
+    padding: 25px 30px;
+    width: 350px;
+  }
+  #tracking-section h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+  }
+  #tracking-input {
+    padding: 10px;
+    width: 100%;
+    font-size: 16px;
+    border-radius: 8px;
+    border: 1px solid #888;
+    margin-bottom: 15px;
+  }
+  #tracking-btn {
+    background: #2196f3;
+    border: none;
+    color: white;
+    font-weight: 700;
+    padding: 12px;
+    width: 100%;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  #tracking-btn:hover {
+    background: #1976d2;
+  }
+
+  /* بيانات الطلب المعروضة بعد التتبع */
+  #tracking-result {
+    margin-top: 15px;
+    font-size: 14px;
+    background: #e3f2fd;
+    border-radius: 8px;
+    padding: 15px;
+  }
+
+</style>
+
 </head>
 <body>
 
-  <h1>شراء المذكرة</h1>
-  <form id="orderForm">
-    <input type="text" name="name" placeholder="الاسم" required>
-    <input type="tel" name="phone1" placeholder="رقم الهاتف" required>
-    <input type="text" name="gov" placeholder="المحافظة" required>
-    <input type="text" name="address" placeholder="العنوان" required>
-    <input type="text" name="paymentNumber" placeholder="رقم التحويل" required>
-    <input type="number" name="total" value="230" readonly>
-    <input type="text" name="orderType" value="مذكرة الصف الثالث الثانوي" readonly>
-    <label>صورة التحويل:</label>
-    <input type="file" id="proofImage" accept="image/*" required>
-    <button type="submit">يلا اشتري</button>
-  </form>
+<h1>طلب شحن المنتجات</h1>
 
-  <div id="result"></div>
+<div class="cards-container">
+  <!-- كارت 1: مذكرات الصف الثالث الثانوي -->
+  <div class="card" data-product='{
+    "name":"مذكرات الصف الثالث الثانوي",
+    "desc":"مذكرة شاملة للصف الثالث الثانوي بأفضل الشروحات.",
+    "price":"230",
+    "video":"https://files.catbox.moe/lgvvn8.mp4",
+    "type":"product"
+  }'>
+    <video autoplay muted loop playsinline src="https://files.catbox.moe/lgvvn8.mp4"></video>
+    <div class="card-header">مذكرات 3ث</div>
+    <div class="card-body">
+      <div class="product-name">مذكرات الصف الثالث الثانوي</div>
+      <div class="product-desc">مذكرة شاملة للصف الثالث الثانوي بأفضل الشروحات.</div>
+      <div class="product-price">السعر: 230 ج.م (شحن شامل)</div>
+    </div>
+  </div>
 
-  <script>
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzIojxeknU2gc0JZgXEwX-DZSpzL3q3PFUHkF26LppHiBDHkKlfejO0leQu0dTYkwY/exec"; // رابط Google Apps Script
+  <!-- كارت 2: مذكرات الصف الثاني الثانوي -->
+  <div class="card" data-product='{
+    "name":"مذكرات الصف الثاني الثانوي",
+    "desc":"مذكرة شاملة للصف الثاني الثانوي مع أسئلة هامة.",
+    "price":"210",
+    "video":"",
+    "type":"product"
+  }'>
+    <div style="height:180px; background:#ddd; display:flex;align-items:center;justify-content:center; color:#666; font-weight:bold;">
+      لا يوجد فيديو
+    </div>
+    <div class="card-header">مذكرات 2ث</div>
+    <div class="card-body">
+      <div class="product-name">مذكرات الصف الثاني الثانوي</div>
+      <div class="product-desc">مذكرة شاملة للصف الثاني الثانوي مع أسئلة هامة.</div>
+      <div class="product-price">السعر: 210 ج.م (شحن شامل)</div>
+    </div>
+  </div>
 
-    document.getElementById("orderForm").addEventListener("submit", async function(e) {
-      e.preventDefault();
+  <!-- كارت 3: اشتري كود أونلاين -->
+  <div class="card" data-product='{
+    "name":"اشتري كود أونلاين",
+    "desc":"اشتري كود للدخول للمنصة أو خدمات الكود.",
+    "price":"100",
+    "video":"",
+    "type":"code"
+  }'>
+    <div style="height:180px; background:#f9f9f9; display:flex;align-items:center;justify-content:center; color:#444; font-weight:bold; border: 2px dashed #2196f3;">
+      كود أونلاين
+    </div>
+    <div class="card-header">كود أونلاين</div>
+    <div class="card-body">
+      <div class="product-name">اشتري كود أونلاين</div>
+      <div class="product-desc">اشتري كود للدخول للمنصة أو خدمات الكود.</div>
+      <div class="product-price">السعر: 100 ج.م</div>
+    </div>
+  </div>
+</div>
 
-      const form = e.target;
-      const file = document.getElementById("proofImage").files[0];
+<!-- مودال التفاصيل -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modal">
+    <span class="close-btn" id="modalClose">&times;</span>
+    <h2 id="modalTitle"></h2>
+    <p id="modalDesc"></p>
+    <p><strong>السعر: </strong><span id="modalPrice"></span> ج.م</p>
 
-      if (!file) {
-        alert("من فضلك ارفع صورة التحويل");
-        return;
+    <form id="orderForm">
+      <label for="fullName">الاسم الثلاثي:</label>
+      <input type="text" id="fullName" name="fullName" required placeholder="أدخل اسمك بالكامل" />
+
+      <label for="province">المحافظة:</label>
+      <select id="province" name="province" required>
+        <option value="">اختر المحافظة</option>
+        <option>القاهرة</option>
+        <option>الجيزة</option>
+        <option>الإسكندرية</option>
+        <option>الشرقية</option>
+        <option>الدقهلية</option>
+        <option>المنيا</option>
+        <option>سوهاج</option>
+        <option>أسيوط</option>
+        <!-- أضف محافظات أخرى حسب الحاجة -->
+      </select>
+
+      <label for="address">العنوان بالتفصيل:</label>
+      <input type="text" id="address" name="address" required placeholder="مثال: شارع النيل، برج 5، شقة 7" />
+
+      <label for="phoneContact">رقم الهاتف للتواصل:</label>
+      <input type="tel" id="phoneContact" name="phoneContact" required pattern="[0-9]{10,15}" placeholder="مثال: 01012345678" />
+
+      <label for="phoneTransfer">رقم الهاتف المحول منه المبلغ:</label>
+      <input type="tel" id="phoneTransfer" name="phoneTransfer" required pattern="[0-9]{10,15}" placeholder="رقم الهاتف الذي تم التحويل منه" />
+
+      <!-- في حالة كود: اختيار نوع الكود -->
+      <div id="codeTypeContainer" style="display:none;">
+        <label for="codeType">نوع الكود:</label>
+        <select id="codeType" name="codeType">
+          <option value="">اختر نوع الكود</option>
+          <option value="ثانوي">ثانوي</option>
+          <option value="ثالثة">ثالثة</option>
+          <option value="اخر">آخر</option>
+        </select>
+      </div>
+
+      <label for="transferImage">رفع صورة تحويل الدفع:</label>
+      <input type="file" id="transferImage" name="transferImage" accept="image/*" required />
+
+      <button type="submit" id="buyBtn">يلا اشتري</button>
+    </form>
+
+    <!-- منطقة عرض الأنيميشن -->
+    <div id="loadingAnimation" style="display:none; text-align:center; margin-top:15px;">
+      <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.6.2/dist/dotlottie-wc.js" type="module"></script>
+      <dotlottie-wc id="lottieLoading" src="https://lottie.host/1d706623-ba9d-4493-b516-a89415725aab/5xTwGriKjM.lottie" style="width: 150px;height: 150px;" speed="1" autoplay loop></dotlottie-wc>
+      <div class="loading-text">جاري الشحن...</div>
+    </div>
+
+    <!-- رسالة النجاح -->
+    <div id="successMessage" style="display:none; text-align:center;">
+      <div class="status-icon success">✔️</div>
+      <p style="font-weight: bold; font-size: 18px; color: #4caf50;">تم الشحن بنجاح!</p>
+      <p><strong>بيانات الطلب:</strong></p>
+      <div id="orderData"></div>
+      <p>كود التتبع:</p>
+      <div class="tracking-code" id="trackingCode" title="اضغط للنسخ"></div>
+      <p style="font-size: 14px; color: #555;">خد اسكرين أو احفظ كود التتبع كويس عشان تعرف طلبك وصل لفين.</p>
+    </div>
+
+    <!-- رسالة الخطأ -->
+    <div id="errorMessage" style="display:none; text-align:center;">
+      <div class="status-icon error">❌</div>
+      <p id="errorText" style="color: #e53935; font-weight: bold;"></p>
+    </div>
+
+  </div>
+</div>
+
+<!-- قسم تتبع الشحن -->
+<div id="tracking-section">
+  <h3>تابع شحنك وصل لفين</h3>
+  <input type="text" id="tracking-input" placeholder="أدخل كود التتبع" />
+  <button id="tracking-btn">متابعة</button>
+  <div id="tracking-result"></div>
+</div>
+
+<script>
+  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyFQkT_r67diGTbZiyPjttLkzC2ia29gsq_76H89LiE220cfKP-R0gHkaOS16hvrYXS/exec"; 
+  // عوض الـ YOUR_DEPLOYED_WEB_APP_ID برابط نشر السكريبت الخاص بك
+
+  // عناصر الصفحة
+  const cards = document.querySelectorAll('.card');
+  const modalOverlay = document.getElementById('modalOverlay');
+  const modal = document.getElementById('modal');
+  const modalClose = document.getElementById('modalClose');
+
+  const modalTitle = document.getElementById('modalTitle');
+  const modalDesc = document.getElementById('modalDesc');
+  const modalPrice = document.getElementById('modalPrice');
+
+  const orderForm = document.getElementById('orderForm');
+  const buyBtn = document.getElementById('buyBtn');
+
+  const codeTypeContainer = document.getElementById('codeTypeContainer');
+  const codeTypeSelect = document.getElementById('codeType');
+
+  const transferImageInput = document.getElementById('transferImage');
+
+  const loadingAnimation = document.getElementById('loadingAnimation');
+  const successMessage = document.getElementById('successMessage');
+  const errorMessage = document.getElementById('errorMessage');
+  const errorText = document.getElementById('errorText');
+  const orderData = document.getElementById('orderData');
+  const trackingCodeEl = document.getElementById('trackingCode');
+
+  let currentProduct = null;
+
+  // فتح المودال بتفاصيل المنتج
+  cards.forEach(card => {
+    card.addEventListener('click', () => {
+      const product = JSON.parse(card.getAttribute('data-product'));
+      currentProduct = product;
+      modalTitle.textContent = product.name;
+      modalDesc.textContent = product.desc;
+      modalPrice.textContent = product.price;
+
+      // اظهار او اخفاء اختيار نوع الكود
+      if (product.type === 'code') {
+        codeTypeContainer.style.display = "block";
+      } else {
+        codeTypeContainer.style.display = "none";
+        codeTypeSelect.value = "";
       }
 
+      // إفراغ الفورم واظهارها
+      orderForm.style.display = "block";
+      loadingAnimation.style.display = "none";
+      successMessage.style.display = "none";
+      errorMessage.style.display = "none";
+      buyBtn.disabled = false;
+
+      orderForm.reset();
+
+      modalOverlay.style.display = "flex";
+    });
+  });
+
+  // اغلاق المودال
+  modalClose.addEventListener('click', () => {
+    modalOverlay.style.display = "none";
+  });
+  modalOverlay.addEventListener('click', e => {
+    if(e.target === modalOverlay) modalOverlay.style.display = "none";
+  });
+
+  // نسخ كود التتبع عند الضغط
+  trackingCodeEl.addEventListener('click', () => {
+    const text = trackingCodeEl.textContent;
+    navigator.clipboard.writeText(text);
+    alert('تم نسخ كود التتبع');
+  });
+
+  // تحويل صورة الى Base64
+  function getBase64(file) {
+    return new Promise((resolve, reject) => {
       const reader = new FileReader();
-      reader.onloadend = async function() {
-        const base64Image = reader.result.split(",")[1];
-
-        const data = {
-          name: form.name.value,
-          phone1: form.phone1.value,
-          gov: form.gov.value,
-          address: form.address.value,
-          paymentNumber: form.paymentNumber.value,
-          proofImage: base64Image,
-          total: form.total.value,
-          orderType: form.orderType.value
-        };
-
-        try {
-          const res = await fetch(WEB_APP_URL, {
-            method: "POST",
-            body: JSON.stringify(data),
-            headers: { "Content-Type": "application/json" }
-          });
-
-          const json = await res.json();
-          if (json.success) {
-            document.getElementById("result").innerHTML =
-              `✅ تم تسجيل طلبك!<br>📦 كود التتبع: <strong>${json.trackingCode}</strong>`;
-          } else {
-            document.getElementById("result").innerHTML =
-              `❌ حصل خطأ: ${json.error}`;
-          }
-        } catch (err) {
-          document.getElementById("result").innerHTML =
-            `❌ حصل خطأ في الاتصال بالسيرفر`;
-        }
-      };
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = error => reject(error);
       reader.readAsDataURL(file);
     });
-  </script>
+  }
+
+  // ارسال الطلب
+  orderForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    buyBtn.disabled = true;
+    errorMessage.style.display = "none";
+
+    // تحقق من رفع صورة
+    const file = transferImageInput.files[0];
+    if (!file) {
+      showError("يجب رفع صورة التحويل");
+      buyBtn.disabled = false;
+      return;
+    }
+
+    const base64Image = await getBase64(file);
+
+    // تحقق الحقول المطلوبة
+    const fullName = orderForm.fullName.value.trim();
+    const province = orderForm.province.value;
+    const address = orderForm.address.value.trim();
+    const phoneContact = orderForm.phoneContact.value.trim();
+    const phoneTransfer = orderForm.phoneTransfer.value.trim();
+    const codeType = codeTypeSelect.value;
+
+    if (!fullName || !province || !address || !phoneContact || !phoneTransfer) {
+      showError("يرجى تعبئة جميع الحقول المطلوبة");
+      buyBtn.disabled = false;
+      return;
+    }
+    if(currentProduct.type === "code" && !codeType) {
+      showError("يرجى اختيار نوع الكود");
+      buyBtn.disabled = false;
+      return;
+    }
+
+    // اظهار انيميشن جاري الشحن
+    orderForm.style.display = "none";
+    loadingAnimation.style.display = "block";
+
+    // بناء البيانات للإرسال
+    const payload = {
+      fullName,
+      province,
+      address,
+      phoneContact,
+      phoneTransfer,
+      productName: currentProduct.name,
+      productPrice: currentProduct.price,
+      transferImageBase64: base64Image,
+      codeType: codeType || ""
+    };
+
+    try {
+      const res = await fetch(WEB_APP_URL, {
+        method: "POST",
+        body: JSON.stringify(payload),
+        headers: {"Content-Type": "application/json"}
+      });
+      const result = await res.json();
+
+      if(result.status === "success"){
+        loadingAnimation.style.display = "none";
+        successMessage.style.display = "block";
+        displayOrderData(result);
+      } else {
+        loadingAnimation.style.display = "none";
+        orderForm.style.display = "block";
+        showError(result.message || "حدث خطأ أثناء معالجة الطلب");
+      }
+    } catch(err){
+      loadingAnimation.style.display = "none";
+      orderForm.style.display = "block";
+      showError("حدث خطأ في الاتصال بالخادم");
+    } finally {
+      buyBtn.disabled = false;
+    }
+  });
+
+  function showError(msg){
+    errorText.textContent = msg;
+    errorMessage.style.display = "block";
+  }
+
+  function displayOrderData(result) {
+    const data = result.data;
+    orderData.innerHTML = `
+      <p>الاسم: ${data.fullName}</p>
+      <p>المحافظة: ${data.province}</p>
+      <p>العنوان: ${data.address}</p>
+      <p>رقم التواصل: ${data.phoneContact}</p>
+      <p>رقم التحويل: ${data.phoneTransfer}</p>
+    `;
+    trackingCodeEl.textContent = result.trackingCode;
+  }
+
+  // تابع الشحن - البحث بالكود
+  const trackingInput = document.getElementById('tracking-input');
+  const trackingBtn = document.getElementById('tracking-btn');
+  const trackingResult = document.getElementById('tracking-result');
+
+  trackingBtn.addEventListener('click', async () => {
+    const code = trackingInput.value.trim().toUpperCase();
+    if (!code) {
+      alert('يرجى إدخال كود التتبع');
+      return;
+    }
+    trackingResult.textContent = "جاري البحث...";
+    try {
+      const res = await fetch(WEB_APP_URL + "?code=" + encodeURIComponent(code));
+      const result = await res.json();
+      if(result.status === "success") {
+        trackingResult.innerHTML = `
+          <p><strong>حالة الطلب:</strong> ${result.orderStatus}</p>
+          <p><strong>الاسم:</strong> ${result.fullName}</p>
+          <p><strong>المحافظة:</strong> ${result.province}</p>
+          <p><strong>العنوان:</strong> ${result.address}</p>
+          <p><strong>رقم التواصل:</strong> ${result.phoneContact}</p>
+          <p><strong>رقم التحويل:</strong> ${result.phoneTransfer}</p>
+          <p><img src="${result.transferImageUrl}" alt="صورة التحويل" style="width: 100%; max-height: 200px; object-fit: contain; border-radius: 10px;"></p>
+          <p><strong>تاريخ الطلب:</strong> ${new Date(result.date).toLocaleString()}</p>
+        `;
+      } else {
+        trackingResult.textContent = result.message || "لم يتم العثور على طلب بهذا الكود";
+      }
+    } catch (error) {
+      trackingResult.textContent = "حدث خطأ في الاتصال بالخادم";
+    }
+  });
+
+</script>
 
 </body>
 </html>
