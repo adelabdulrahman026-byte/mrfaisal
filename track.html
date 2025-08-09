@@ -5,18 +5,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>طلب شراء المنتجات</title>
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=Cairo&display=swap');
   body {
     font-family: 'Cairo', sans-serif;
-    background: #f0f4f8;
+    background: #f7f9fc;
     margin: 0; padding: 20px;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
+    color: #222;
   }
   h1 {
     color: #0077cc;
     margin-bottom: 25px;
     text-align: center;
+    font-weight: 700;
   }
   .cards {
     display: flex;
@@ -27,18 +31,20 @@
     width: 100%;
   }
   .card {
-    background: #fff;
-    border-radius: 12px;
+    background: white;
+    border-radius: 14px;
     width: 320px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
     cursor: pointer;
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
   }
   .card:hover {
-    transform: translateY(-6px);
+    transform: translateY(-8px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
   }
   .card video {
     width: 100%;
@@ -47,80 +53,102 @@
   }
   .card .title {
     position: absolute;
+    top: 12px;
+    left: 12px;
     background: #0077cc;
-    color: #fff;
-    padding: 7px 15px;
-    border-radius: 20px;
-    font-weight: bold;
+    color: white;
+    padding: 7px 16px;
+    border-radius: 25px;
+    font-weight: 700;
     font-size: 16px;
-    margin: 10px;
     z-index: 10;
+    box-shadow: 0 3px 8px rgba(0,119,204,0.5);
   }
   .card .desc {
     padding: 15px 18px 5px;
-    color: #333;
-    font-size: 14px;
+    color: #444;
+    font-size: 15px;
     flex-grow: 1;
   }
   .card .price {
     padding: 0 18px 15px;
-    font-weight: bold;
-    font-size: 18px;
+    font-weight: 700;
+    font-size: 19px;
     color: #009688;
   }
 
+  /* زر تتبع الطلب */
+  #trackOrderBtn {
+    margin: 30px auto 10px;
+    background: #009688;
+    color: white;
+    font-weight: 700;
+    font-size: 18px;
+    border: none;
+    border-radius: 12px;
+    padding: 14px 30px;
+    cursor: pointer;
+    box-shadow: 0 6px 15px rgba(0,150,136,0.3);
+    transition: background 0.3s ease;
+  }
+  #trackOrderBtn:hover {
+    background: #007962;
+  }
+
   /* مودال */
-  #modalOverlay {
+  .modalOverlay {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.65);
+    background: rgba(0,0,0,0.6);
     display: none;
     justify-content: center;
     align-items: center;
     z-index: 9999;
     padding: 15px;
   }
-  #modal {
+  .modal {
     background: white;
     border-radius: 15px;
     max-width: 480px;
     width: 100%;
     padding: 25px 30px;
-    box-shadow: 0 0 30px rgba(0,0,0,0.3);
+    box-shadow: 0 0 40px rgba(0,0,0,0.3);
     position: relative;
+    text-align: center;
   }
-  #modalClose {
+  .modalClose {
     position: absolute;
     top: 15px; left: 15px;
-    font-size: 26px;
-    font-weight: bold;
+    font-size: 28px;
+    font-weight: 700;
     cursor: pointer;
-    color: #999;
+    color: #777;
     user-select: none;
+    transition: color 0.3s ease;
   }
-  #modalClose:hover {
+  .modalClose:hover {
     color: #0077cc;
   }
-  #modal h2 {
+  .modal h2 {
     margin-top: 0;
     margin-bottom: 15px;
     color: #0077cc;
-    text-align: center;
   }
-  #modal p {
-    font-size: 14px;
+  .modal p {
+    font-size: 15px;
     margin-bottom: 15px;
     color: #444;
   }
-  #modal form label {
+  form label {
     display: block;
     margin: 10px 0 6px;
     font-weight: 600;
+    text-align: right;
   }
-  #modal form input[type=text],
-  #modal form input[type=tel],
-  #modal form select,
-  #modal form input[type=file] {
+  form input[type=text],
+  form input[type=tel],
+  form select,
+  form input[type=file] {
     width: 100%;
     padding: 10px 12px;
     font-size: 14px;
@@ -128,51 +156,64 @@
     border: 1px solid #ccc;
     box-sizing: border-box;
   }
-  #modal form button {
+  form button {
     margin-top: 20px;
     width: 100%;
     background: #0077cc;
     border: none;
     color: white;
-    font-weight: bold;
+    font-weight: 700;
     font-size: 17px;
     padding: 12px 0;
-    border-radius: 12px;
+    border-radius: 14px;
     cursor: pointer;
     transition: background 0.3s ease;
   }
-  #modal form button:disabled {
+  form button:disabled {
     background: #aaa;
     cursor: not-allowed;
   }
-  #modal form button:hover:not(:disabled) {
+  form button:hover:not(:disabled) {
     background: #005fa3;
   }
   #loading, #successMsg, #errorMsg {
     margin-top: 15px;
-    text-align: center;
-    font-weight: bold;
+    font-weight: 700;
   }
   #loading {
     color: #0077cc;
   }
   #successMsg {
     color: #4caf50;
-    font-size: 18px;
+    font-size: 19px;
   }
   #errorMsg {
     color: #e53935;
-    font-size: 16px;
+    font-size: 17px;
   }
   .tracking-code {
-    margin-top: 10px;
+    margin-top: 12px;
     padding: 10px 15px;
     background: #e0f7f1;
     font-family: monospace;
     cursor: pointer;
     user-select: all;
-    border-radius: 10px;
+    border-radius: 12px;
     display: inline-block;
+    font-size: 18px;
+  }
+  .tracking-code:hover {
+    background: #b2dfdb;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0);}
+    50% { transform: translateY(-15px);}
+  }
+  .bounceIcon {
+    font-size: 80px;
+    color: #4caf50;
+    animation: bounce 1.5s infinite;
   }
 
   @media(max-width: 700px){
@@ -209,9 +250,12 @@
   </div>
 </div>
 
-<div id="modalOverlay" style="display:none; align-items:center; justify-content:center;">
-  <div id="modal">
-    <div id="modalClose">&times;</div>
+<button id="trackOrderBtn">تابع شحنك وصل لفين</button>
+
+<!-- مودال الطلب -->
+<div id="modalOverlay" class="modalOverlay">
+  <div id="modal" class="modal">
+    <div id="modalClose" class="modalClose">&times;</div>
     <h2 id="modalTitle"></h2>
     <p id="modalDesc"></p>
     <p><strong>السعر: </strong><span id="modalPrice"></span> جنيه</p>
@@ -253,7 +297,7 @@
     </div>
 
     <div id="successMsg" style="display:none;">
-      <div style="font-size: 80px; color: #4caf50; animation: bounce 1.5s infinite;">✔️</div>
+      <div class="bounceIcon">✔️</div>
       <p>تم الشحن بنجاح!</p>
       <div id="orderDetails"></div>
       <p>كود التتبع:</p>
@@ -262,6 +306,20 @@
     </div>
 
     <div id="errorMsg" style="color:#e53935; font-weight:bold; display:none; margin-top:15px;"></div>
+  </div>
+</div>
+
+<!-- مودال تتبع الطلب -->
+<div id="trackModalOverlay" class="modalOverlay">
+  <div class="modal" style="max-width: 400px;">
+    <div id="trackModalClose" class="modalClose">&times;</div>
+    <h2>تابع طلبك</h2>
+    <form id="trackForm">
+      <label for="trackingInput">ادخل كود التتبع:</label>
+      <input type="text" id="trackingInput" name="trackingInput" required autocomplete="off" />
+      <button type="submit">تتبع</button>
+    </form>
+    <div id="trackResult" style="margin-top: 15px; font-weight: 600;"></div>
   </div>
 </div>
 
@@ -290,7 +348,6 @@
 
   let currentProduct = null;
 
-  // فتح المودال عند الضغط على كارت
   cards.forEach(card => {
     card.addEventListener('click', () => {
       currentProduct = {
@@ -303,10 +360,13 @@
       modalDesc.textContent = currentProduct.desc;
       modalPrice.textContent = currentProduct.price;
 
+      // اظهار اختيار نوع الكود فقط للكارت "اشتري كود اونلاين"
       if(currentProduct.type === "code"){
         codeTypeDiv.style.display = "block";
+        codeTypeSelect.required = true;
       } else {
         codeTypeDiv.style.display = "none";
+        codeTypeSelect.required = false;
         codeTypeSelect.value = "";
       }
 
@@ -337,7 +397,6 @@
   orderForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    // تحقق من المدخلات
     if(!orderForm.checkValidity()){
       errorMsg.textContent = "يرجى تعبئة جميع الحقول بشكل صحيح.";
       errorMsg.style.display = "block";
@@ -359,14 +418,12 @@
     loading.style.display = "block";
     buyBtn.disabled = true;
 
-    // قراءة صورة التحويل كـ Base64
     const file = transferImageInput.files[0];
     const reader = new FileReader();
 
     reader.onload = async function() {
       const transferImageBase64 = reader.result;
 
-      // تجهيز بيانات الطلب
       const dataToSend = {
         fullName: orderForm.fullName.value.trim(),
         province: orderForm.province.value.trim(),
@@ -421,6 +478,54 @@
     errorMsg.textContent = msg;
     errorMsg.style.display = "block";
   }
+
+  // تتبع الطلب
+
+  const trackOrderBtn = document.getElementById('trackOrderBtn');
+  const trackModalOverlay = document.getElementById('trackModalOverlay');
+  const trackModalClose = document.getElementById('trackModalClose');
+  const trackForm = document.getElementById('trackForm');
+  const trackResult = document.getElementById('trackResult');
+
+  trackOrderBtn.onclick = () => {
+    trackResult.textContent = "";
+    trackForm.reset();
+    trackModalOverlay.style.display = "flex";
+  };
+  trackModalClose.onclick = () => {
+    trackModalOverlay.style.display = "none";
+  };
+
+  trackForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const code = trackForm.trackingInput.value.trim();
+    if(code.length === 0){
+      trackResult.textContent = "ادخل كود التتبع!";
+      return;
+    }
+    trackResult.textContent = "جاري البحث...";
+    try {
+      // طلب GET لجلب بيانات الطلب من جوجل شيت عبر السكريبت
+      const response = await fetch(WEB_APP_URL + "?action=track&code=" + encodeURIComponent(code));
+      const data = await response.json();
+      if(data.status === "success" && data.data){
+        trackResult.innerHTML = `
+          <p><strong>الاسم:</strong> ${data.data.fullName}</p>
+          <p><strong>المحافظة:</strong> ${data.data.province}</p>
+          <p><strong>العنوان:</strong> ${data.data.address}</p>
+          <p><strong>رقم التواصل:</strong> ${data.data.phoneContact}</p>
+          <p><strong>رقم المحول:</strong> ${data.data.phoneTransfer}</p>
+          <p><strong>حالة الشحن:</strong> ${data.data.shippingStatus}</p>
+          <p><strong>السعر:</strong> ${data.data.price} جنيه</p>
+          <p><strong>تاريخ الطلب:</strong> ${new Date(data.data.date).toLocaleString()}</p>
+        `;
+      } else {
+        trackResult.textContent = data.message || "كود التتبع غير موجود.";
+      }
+    } catch(err) {
+      trackResult.textContent = "خطأ في الاتصال بالخادم، حاول مرة أخرى.";
+    }
+  });
 </script>
 
 </body>
