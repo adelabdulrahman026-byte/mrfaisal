@@ -2,200 +2,99 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <title>روابط مستر فيصل</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" />
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800;900&display=swap" rel="stylesheet" />
-  <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.6.2/dist/dotlottie-wc.js" type="module"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>رحلتك تبدأ هنا</title>
   <style>
     body, html {
-      margin: 0; padding: 0;
-      font-family: 'Cairo', sans-serif;
-      color: #111;
-      min-height: 100vh;
-      overflow-x: hidden;
-      scroll-behavior: smooth;
-      background: #000;
-    }
-    /* شاشة التحميل */
-    #preloader {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%;
+      margin: 0;
+      padding: 0;
       height: 100%;
-      background: white;
-      z-index: 9999;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    /* خلفية الفيديو */
-    #videoBackground {
-      position: relative;
-      height: 100vh;
       overflow: hidden;
+      font-family: 'Cairo', sans-serif;
+      color: white;
+      text-align: center;
     }
-    #videoBackground video {
-      position: absolute;
-      top: 50%;
-      left: 50%;
+
+    /* خلفية الفيديو */
+    .video-background {
+      position: fixed;
+      top: 0;
+      left: 0;
       width: 100%;
       height: 100%;
+      overflow: hidden;
+      z-index: -1;
+    }
+
+    .video-background video {
+      min-width: 100%;
+      min-height: 100%;
       object-fit: cover;
-      transform: translate(-50%, -50%);
-      z-index: 0;
-      background: #000;
     }
-    #videoOverlay {
-      position: relative;
-      z-index: 1;
-      text-align: center;
-      color: white;
-      font-size: 28px;
-      font-weight: 900;
-      top: 45%;
-      transform: translateY(-50%);
-      text-shadow: 0 4px 8px rgba(0,0,0,0.5);
-    }
-    /* باقي الصفحة */
+
+    /* المحتوى فوق الفيديو */
     .content {
-      background: white;
-      padding: 40px 16px;
-    }
-    .social-section {
+      position: relative;
+      z-index: 2;
       display: flex;
       flex-direction: column;
-      gap: 16px;
-      max-width: 480px;
-      margin: 0 auto;
-    }
-    .social-card {
-      background: white;
-      border-radius: 18px;
-      padding: 16px 14px;
-      text-align: right;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-      border: 1.5px solid #ddd;
-      cursor: pointer;
-      display: flex;
+      justify-content: center;
       align-items: center;
-      gap: 16px;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 20px;
     }
-    .social-card:hover {
-      transform: scale(1.04);
-      box-shadow: 0 10px 30px rgba(76,175,80,0.3);
-      border-color: #4caf50;
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
     }
-    .social-card a {
-      color: #111;
+
+    p {
+      font-size: 1.2rem;
+      max-width: 600px;
+    }
+
+    /* زر الرحلة */
+    .start-btn {
+      margin-top: 30px;
+      padding: 15px 30px;
+      font-size: 1.2rem;
+      color: white;
+      background-color: #ff5722;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
       text-decoration: none;
-      flex: 1;
-      display: block;
     }
-    .social-card img {
-      width: 56px;
-      height: 56px;
-      object-fit: contain;
-      border-radius: 50%;
-      background: white;
-      padding: 6px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.12);
-      flex-shrink: 0;
+
+    .start-btn:hover {
+      background-color: #e64a19;
     }
-    footer {
-      width: 100%;
-      padding: 12px 8px;
-      text-align: center;
-      font-size: 11px;
-      color: #999;
-      background: #f9f9f9;
-      font-weight: 600;
-      font-family: 'Cairo', sans-serif;
-      box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
-    }
-    footer span {
-      font-style: italic;
-      color: #4caf50;
-      font-weight: 700;
+
+    @media (max-width: 768px) {
+      h1 { font-size: 1.8rem; }
+      p { font-size: 1rem; }
     }
   </style>
 </head>
 <body>
 
-  <!-- شاشة التحميل -->
-  <div id="preloader" aria-label="تحميل">
-    <dotlottie-wc 
-      src="https://lottie.host/953639aa-133c-4c35-8508-c65811fe8898/jZylR2TITf.lottie" 
-      style="width: 300px; height: 300px;" 
-      speed="1" 
-      autoplay 
-      loop
-      aria-label="تحميل متحرك">
-    </dotlottie-wc>
-  </div>
-
   <!-- خلفية الفيديو -->
-  <section id="videoBackground">
+  <div class="video-background">
     <video autoplay muted loop playsinline>
-      <source src="https://files.catbox.moe/1dldfl.mp4" type="video/mp4" />
-      متصفحك لا يدعم عرض الفيديو.
+      <source src="your-video.mp4" type="video/mp4">
+      متصفحك لا يدعم تشغيل الفيديو.
     </video>
-    <div id="videoOverlay">مرحباً بك في عالم مستر فيصل</div>
-  </section>
-
-  <!-- محتوى الكروت -->
-  <div class="content">
-    <section class="social-section" aria-label="روابط التواصل الاجتماعي">
-      <div class="social-card">
-        <a href="https://www.whatsapp.com/channel/0029Vb5eotiHFxOvJuFpMI39" target="_blank">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="واتساب" />
-          <h3>انضم لقناة الواتساب</h3>
-          <p>تابع آخر الأخبار والعروض</p>
-        </a>
-      </div>
-      <div class="social-card">
-        <a href="https://www.facebook.com/groups/450656791778335/?locale=ar_AR" target="_blank">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="فيسبوك جروب" />
-          <h3>انضم لجروب الفيسبوك</h3>
-          <p>محتوى خاص وتفاعل مباشر</p>
-        </a>
-      </div>
-      <div class="social-card">
-        <a href="https://youtube.com/@mr.faisal.geography?si=5HQdYcyREdFSKiwp" target="_blank">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/4/42/YouTube_icon_%282013-2017%29.png" alt="يوتيوب" />
-          <h3>اشترك في قناة اليوتيوب</h3>
-          <p>شروحات جغرافيا ومراجعات قوية</p>
-        </a>
-      </div>
-      <div class="social-card">
-        <a href="https://www.tiktok.com/@mr.faisal.geo?_t=ZS-8ySdp4xYApc&_r=1" target="_blank">
-          <img src="https://upload.wikimedia.org/wikipedia/en/a/a9/TikTok_logo.svg" alt="تيك توك" />
-          <h3>تابعني على تيك توك</h3>
-          <p>فيديوهات تعليمية ومراجعات</p>
-        </a>
-      </div>
-      <div class="social-card">
-        <a href="https://www.facebook.com/Mr.faisl" target="_blank">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="صفحة فيسبوك" />
-          <h3>تابع صفحتي على فيسبوك</h3>
-          <p>أحدث الأخبار والمحتوى الخاص</p>
-        </a>
-      </div>
-    </section>
   </div>
 
-  <!-- تذييل الحقوق -->
-  <footer>
-    جميع الحقوق محفوظة لدى <span>abdulrahman adel</span> | نسخة الموقع لدفعه 2026 &copy;
-  </footer>
+  <!-- المحتوى -->
+  <div class="content">
+    <h1>مرحباً بك في رحلتك</h1>
+    <p>استعد لخوض تجربة مميزة تبدأ بخطوة واحدة فقط.</p>
+    <a href="start.html" class="start-btn">ابدأ الرحلة الآن</a>
+  </div>
 
-  <script>
-    const preloader = document.getElementById('preloader');
-    window.addEventListener('load', () => {
-      preloader.style.transition = 'opacity 0.8s ease';
-      preloader.style.opacity = 0;
-      setTimeout(() => preloader.style.display = 'none', 800);
-    });
-  </script>
 </body>
 </html>
