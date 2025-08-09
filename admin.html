@@ -13,37 +13,38 @@
 
   body {
     font-family: 'Cairo', sans-serif;
-    background: linear-gradient(135deg, #2193b0, #6dd5ed);
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
     margin: 0; padding: 0;
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    color: #333;
+    color: #f0f0f0;
   }
 
   #loginForm, #dashboard {
     background: #fff;
-    border-radius: 15px;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
-    padding: 30px 40px;
-    max-width: 700px;
-    width: 95%;
+    border-radius: 16px;
+    box-shadow: 0 18px 60px rgba(0,0,0,0.25);
+    padding: 35px 45px;
+    max-width: 900px;
+    width: 96%;
+    color: #222;
   }
 
   h2 {
     text-align: center;
     color: #0d47a1;
-    margin-bottom: 30px;
+    margin-bottom: 35px;
     font-weight: 700;
-    letter-spacing: 1.2px;
+    letter-spacing: 1.4px;
   }
 
   input[type=text], input[type=password] {
     width: 100%;
-    padding: 14px 20px;
-    margin: 12px 0 24px 0;
-    border-radius: 8px;
+    padding: 14px 18px;
+    margin: 14px 0 28px 0;
+    border-radius: 10px;
     border: 2px solid #90caf9;
     font-size: 18px;
     transition: border-color 0.3s ease;
@@ -58,13 +59,14 @@
     width: 100%;
     background: #1976d2;
     border: none;
-    border-radius: 12px;
-    padding: 15px 0;
-    font-size: 20px;
+    border-radius: 14px;
+    padding: 16px 0;
+    font-size: 21px;
     font-weight: 700;
     color: #fff;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    box-shadow: 0 5px 15px rgba(25, 118, 210, 0.6);
   }
 
   button:hover {
@@ -75,52 +77,60 @@
     color: #d32f2f;
     text-align: center;
     margin-top: -16px;
-    margin-bottom: 20px;
-    font-weight: 600;
+    margin-bottom: 28px;
+    font-weight: 700;
+    font-size: 16px;
   }
 
   /* جدول أنيق */
   table {
     width: 100%;
     border-collapse: separate;
-    border-spacing: 0 10px;
+    border-spacing: 0 14px;
     font-size: 16px;
+    font-weight: 600;
+    color: #222;
   }
 
   thead th {
     background: #1976d2;
     color: white;
-    padding: 12px 15px;
+    padding: 16px 18px;
     text-align: center;
     font-weight: 700;
-    border-radius: 10px 10px 0 0;
+    border-radius: 12px 12px 0 0;
+    letter-spacing: 0.6px;
   }
 
   tbody tr {
-    background: #f5f5f5;
-    box-shadow: 0 3px 5px rgba(0,0,0,0.1);
-    transition: transform 0.2s ease;
-    border-radius: 0 0 10px 10px;
+    background: #e3f2fd;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    transition: transform 0.25s ease;
+    border-radius: 0 0 14px 14px;
   }
 
   tbody tr:hover {
-    background: #e3f2fd;
-    transform: translateY(-4px);
+    background: #bbdefb;
+    transform: translateY(-6px);
   }
 
   tbody td {
-    padding: 12px 15px;
+    padding: 14px 18px;
     text-align: center;
     vertical-align: middle;
+    border-radius: 0 0 14px 14px;
+    word-break: break-word;
   }
 
   a.img-link {
     color: #1565c0;
-    font-weight: 600;
+    font-weight: 700;
     text-decoration: none;
+    transition: color 0.3s ease;
   }
 
   a.img-link:hover {
+    color: #0d47a1;
     text-decoration: underline;
   }
 
@@ -128,13 +138,14 @@
     background-color: #25D366;
     border: none;
     border-radius: 50%;
-    width: 38px;
-    height: 38px;
+    width: 40px;
+    height: 40px;
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    box-shadow: 0 3px 8px rgba(37, 211, 102, 0.5);
   }
 
   .btn-whatsapp:hover {
@@ -143,14 +154,14 @@
 
   .btn-whatsapp svg {
     fill: white;
-    width: 22px;
-    height: 22px;
+    width: 24px;
+    height: 24px;
   }
 
-  /* زر تسجيل خروج */
   #logoutBtn {
     background-color: #d32f2f;
-    margin-bottom: 20px;
+    margin-bottom: 28px;
+    box-shadow: 0 5px 15px rgba(211, 47, 47, 0.6);
   }
 
   #logoutBtn:hover {
@@ -175,7 +186,7 @@
 </div>
 
 <script>
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyEWigtNobp361E1gFlrp64jxU9AnZHuYEfpJ4vbbtGXndea1GxEKchrHGfBUbzRBvQug/exec'; // عدل هنا
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyEWigtNobp361E1gFlrp64jxU9AnZHuYEfpJ4vbbtGXndea1GxEKchrHGfBUbzRBvQug/exec'; // عدل هنا برابطك
   const whatsappNumber = '201093139047';
 
   function login() {
@@ -215,7 +226,7 @@
 
   function renderTable(data) {
     if(!data.length) {
-      document.getElementById('tableContainer').innerHTML = '<p style="text-align:center;">لا توجد بيانات</p>';
+      document.getElementById('tableContainer').innerHTML = '<p style="text-align:center; font-weight:700; font-size:18px;">لا توجد بيانات</p>';
       return;
     }
 
@@ -245,7 +256,7 @@
         } else if(h === 'صورة التحويل') {
           const url = row[h];
           if(url && url.startsWith('http')) {
-            html += `<td><a href="${url}" target="_blank" class="img-link" title="عرض صورة التحويل">عرض</a></td>`;
+            html += `<td><a href="${url}" target="_blank" rel="noopener" class="img-link" title="عرض صورة التحويل">عرض</a></td>`;
           } else {
             html += `<td>لا يوجد</td>`;
           }
@@ -263,15 +274,14 @@
 
   function sendWhatsapp(code) {
     const text = encodeURIComponent(`يوجد طلب جديد برمز التتبع: ${code}`);
-    // فتح نافذة صغيرة بدلاً من التبويب الجديد
     const width = 600;
     const height = 700;
-    const left = (screen.width/2) - (width/2);
-    const top = (screen.height/2) - (height/2);
+    const left = (screen.width / 2) - (width / 2);
+    const top = (screen.height / 2) - (height / 2);
 
     window.open(
       `https://wa.me/${whatsappNumber}?text=${text}`,
-      'whatsapp',
+      'whatsappPopup',
       `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes,status=yes`
     );
   }
