@@ -134,7 +134,6 @@
     const loginContainer = document.getElementById('login-container');
 
     loginBtn.addEventListener('click', () => {
-      // اختياري: تحقق من الإدخال
       const user = document.getElementById('username').value.trim();
       const pass = document.getElementById('password').value.trim();
 
@@ -143,17 +142,32 @@
         return;
       }
 
-      // إظهار شاشة التحميل
-      loadingScreen.classList.add('active');
+      // تحقق من الحسابات
+      if(
+        (user === 'abdulah' && pass === '123456') || 
+        (user === 'sagda' && pass === '123456')
+      ) {
+        // الحسابات الأولى تروح للرابط الأصلي
+        showLoadingAndRedirect('https://script.google.com/macros/s/AKfycbyXH06EgM-jMPk98oqdvwvAT_m7aHqwaanwB1dfYAYe3tc79Rmzs_hgz1wFqqtArXJ0FA/exec');
+      }
+      else if(user === 'faisal' && pass === '123456789') {
+        // حساب فيصل يروح لصفحة ثانية
+        // عدل الرابط هنا لما تحب تضيف الصفحة الثانية
+        showLoadingAndRedirect('https://example.com/your-second-page.html'); // <-- عدل هنا رابط الصفحة الثانية
+      }
+      else {
+        alert('اسم المستخدم أو كلمة المرور غير صحيحة');
+      }
+    });
 
-      // إخفاء شاشة تسجيل الدخول
+    function showLoadingAndRedirect(url) {
+      loadingScreen.classList.add('active');
       loginContainer.style.display = 'none';
 
-      // بعد 3 ثواني تحويل للرابط المطلوب
       setTimeout(() => {
-        window.location.href = 'https://script.google.com/macros/s/AKfycbyXH06EgM-jMPk98oqdvwvAT_m7aHqwaanwB1dfYAYe3tc79Rmzs_hgz1wFqqtArXJ0FA/exec';
+        window.location.href = url;
       }, 3000);
-    });
+    }
   </script>
 </body>
 </html>
