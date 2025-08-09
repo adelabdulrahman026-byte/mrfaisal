@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- مهم للموبايل -->
+  <title>مواعيد السناتر</title>
+  <style>
+    body {
+      background-color: #f5f2fc;
+      font-family: 'Cairo', sans-serif;
+      margin: 0;
+      padding-top: 60px;
+    }
+
+    .top-bar {
+      position: fixed;
+      top: 0;
+      right: 0;
+      left: 0;
+      background: linear-gradient(90deg, #8e44ad, #9b59b6);
+      color: white;
+      padding: 12px;
+      font-size: 18px;
+      font-weight: bold;
+      text-align: center;
+      z-index: 999;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    h2 {
+      text-align: center;
+      color: #6a1b9a;
+      margin-bottom: 30px;
+      padding: 0 10px;
+    }
+
+    .cards-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+      padding: 0 10px;
+    }
+
+    .card {
+      background: linear-gradient(135deg, #8e44ad, #9b59b6);
+      color: white;
+      border-radius: 15px;
+      padding: 20px;
+      width: 230px;
+      height: 200px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
+      text-align: right;
+      animation: fadeSlideIn 0.6s ease forwards;
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    .card.active {
+      background: linear-gradient(135deg, #2ecc71, #27ae60);
+    }
+
+    .card.active::after {
+      content: "احنا النهارده هنا 🎯";
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      background: rgba(255,255,255,0.2);
+      padding: 5px 10px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: bold;
+      animation: pulse 1.5s infinite;
+    }
+
+    .emoji {
+      font-size: 36px;
+      margin-bottom: 10px;
+      animation: bounce 2s infinite;
+    }
+
+    .card h3 {
+      margin: 0 0 8px 0;
+      font-size: 20px;
+    }
+
+    .card p {
+      margin: 4px 0;
+      font-size: 15px;
+    }
+
+    .time-card {
+      background: linear-gradient(135deg, #34495e, #2c3e50);
+      color: white;
+      border-radius: 15px;
+      padding: 20px;
+      width: 260px;
+      margin: 40px auto 0 auto;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+      text-align: center;
+      animation: fadeSlideIn 0.6s ease forwards;
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    .time-card .emoji {
+      font-size: 50px;
+      animation: bounce 2s infinite;
+      margin-bottom: 10px;
+    }
+
+    .time-card h3 {
+      margin: 0;
+      font-size: 22px;
+      color: #ecf0f1;
+    }
+
+    .time-card p {
+      margin: 5px 0;
+      font-size: 16px;
+      font-weight: bold;
+      color: #bdc3c7;
+    }
+
+    @keyframes fadeSlideIn {
+      0% { opacity: 0; transform: translateY(30px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 0.8; }
+      100% { transform: scale(1.1); opacity: 1; }
+    }
+
+    /* تحسين عرض الموبايل */
+    @media (max-width: 500px) {
+      .card, .time-card {
+        width: 100%;
+        height: auto;
+      }
+      .top-bar {
+        font-size: 15px;
+        padding: 10px;
+      }
+      h2 {
+        font-size: 18px;
+        margin-bottom: 20px;
+      }
+      .card h3 {
+        font-size: 18px;
+      }
+      .card p {
+        font-size: 14px;
+      }
+      .emoji {
+        font-size: 30px;
+      }
+      .time-card h3 {
+        font-size: 18px;
+      }
+      .time-card p {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- الشريط العلوي -->
+<div class="top-bar" id="nextSessionBar">جاري التحميل...</div>
+
+<h2>مواعيدنا في السناتر</h2>
+
+<!-- كروت المواعيد -->
+<div class="cards-container" id="cards"></div>
+
+<!-- كارت الساعة -->
+<div class="time-card">
+  <div class="emoji">⏰</div>
+  <div>
+    <h3>الساعة الآن</h3>
+    <p id="current-time">--:--</p>
+    <p id="current-day">---</p>
+  </div>
+</div>
+
+<script>
+  const schedule = [
+    {name: "يونايتد", day: "السبت", hour: 12, address: "الحضرة", emoji: "🏫"},
+    {name: "ستارز", day: "الأحد", hour: 10, address: "المندره", emoji: "⭐"},
+    {name: "رويال", day: "الأحد", hour: 13, address: "سيدي بشر", emoji: "👑"},
+    {name: "الزهراوي", day: "الاثنين", hour: 9, address: "فيكتوريا", emoji: "🌸"},
+    {name: "نيوكمبريدج", day: "الاثنين", hour: 12, address: "سيدي بشر", emoji: "📘"},
+    {name: "نوبل", day: "الثلاثاء", hour: 9, address: "الساعه", emoji: "📖"},
+    {name: "العلا", day: "الثلاثاء", hour: 12, address: "ابوسليمان", emoji: "📚"},
+    {name: "القمه", day: "الأربعاء", hour: 9, address: "السيوف", emoji: "⛰️"},
+    {name: "أكاديمية القدس", day: "الأربعاء", hour: 12, address: "العوايد", emoji: "🎓"},
+    {name: "الأندلس", day: "الأربعاء", hour: 14, address: "الزوايدة", emoji: "🏰"},
+    {name: "كامبردج", day: "الجمعة", hour: 9, address: "سيدي بشر", emoji: "🎒"},
+    {name: "ميامي", day: "الجمعة", hour: 12, address: "ميامي", emoji: "🌊"},
+  ];
+
+  const daysMap = {
+    "Saturday": "السبت",
+    "Sunday": "الأحد",
+    "Monday": "الاثنين",
+    "Tuesday": "الثلاثاء",
+    "Wednesday": "الأربعاء",
+    "Thursday": "الخميس",
+    "Friday": "الجمعة",
+  };
+
+  const container = document.getElementById('cards');
+
+  // عرض الكروت
+  schedule.forEach((item, index) => {
+    const today = daysMap[new Date().toLocaleDateString('en-US', { weekday: 'long' })];
+    const isNow = (item.day === today);
+
+    let hour12 = item.hour % 12;
+    hour12 = hour12 === 0 ? 12 : hour12;
+    const period = item.hour >= 12 ? 'م' : 'ص';
+
+    const card = document.createElement('div');
+    card.className = 'card' + (isNow ? ' active' : '');
+    card.style.animationDelay = `${0.1 * index}s`;
+    card.innerHTML = `
+      <div class="emoji">${item.emoji}</div>
+      <h3>${item.name}</h3>
+      <p><strong>اليوم:</strong> ${item.day}</p>
+      <p><strong>الساعة:</strong> ${hour12}:00 ${period}</p>
+      <p><strong>العنوان:</strong> ${item.address}</p>
+    `;
+    container.appendChild(card);
+  });
+
+  // عد تنازلي لأقرب حصة
+  const nextSessionBar = document.getElementById('nextSessionBar');
+
+  function updateCountdownBar() {
+    const now = new Date();
+    const today = daysMap[now.toLocaleDateString('en-US', { weekday: 'long' })];
+
+    const upcoming = schedule
+      .filter(s => s.day === today && (s.hour > now.getHours() || (s.hour === now.getHours() && now.getMinutes() < 59)))
+      .sort((a, b) => a.hour - b.hour)[0];
+
+    if (!upcoming) {
+      nextSessionBar.textContent = "لا توجد حصص قادمة اليوم";
+      return;
+    }
+
+    const target = new Date();
+    target.setHours(upcoming.hour, 0, 0, 0);
+
+    const diff = target - now;
+    if (diff <= 0) {
+      nextSessionBar.textContent = `الآن حصة ${upcoming.name}`;
+      return;
+    }
+
+    const hours = Math.floor(diff / 1000 / 60 / 60);
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+    nextSessionBar.textContent = `الحصة القادمة: سنتر ${upcoming.name} - باقي ${String(hours).padStart(2,'0')}:${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
+  }
+
+  setInterval(updateCountdownBar, 1000);
+  updateCountdownBar();
+
+  function updateClockCard() {
+    const now = new Date();
+    let hours = now.getHours();
+    const minutes = now.getMinutes().toString().padStart(2,'0');
+    const day = daysMap[now.toLocaleDateString('en-US', { weekday: 'long' })];
+
+    const period = hours >= 12 ? 'م' : 'ص';
+    hours = hours % 12;
+    hours = hours === 0 ? 12 : hours;
+
+    document.getElementById('current-time').textContent = `${hours}:${minutes} ${period}`;
+    document.getElementById('current-day').textContent = day;
+  }
+
+  setInterval(updateClockCard, 1000);
+  updateClockCard();
+</script>
+
+</body>
+</html>
