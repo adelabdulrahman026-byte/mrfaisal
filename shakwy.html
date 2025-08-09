@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>اكتب شكوتك</title>
+
+<script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.6.2/dist/dotlottie-wc.js" type="module"></script>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cairo&display=swap');
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Cairo', sans-serif;
+    background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);
+    margin: 0;
+    padding: 0 15px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    animation: bgPulse 8s ease-in-out infinite;
+  }
+
+  @keyframes bgPulse {
+    0%, 100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+
+  h1 {
+    color: #fff;
+    text-align: center;
+    margin-bottom: 20px;
+    text-shadow: 0 0 8px rgba(0,0,0,0.3);
+  }
+
+  form {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 20px;
+    padding: 25px 30px;
+    max-width: 400px;
+    width: 100%;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    animation: formEntrance 1s ease forwards;
+  }
+
+  @keyframes formEntrance {
+    from {opacity: 0; transform: translateY(50px);}
+    to {opacity: 1; transform: translateY(0);}
+  }
+
+  label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: #333;
+  }
+
+  input[type="text"],
+  input[type="tel"],
+  textarea {
+    width: 100%;
+    padding: 10px 12px;
+    margin-bottom: 18px;
+    border: 2px solid #66a6ff;
+    border-radius: 12px;
+    font-size: 16px;
+    resize: vertical;
+    transition: border-color 0.3s ease;
+  }
+
+  input[type="text"]:focus,
+  input[type="tel"]:focus,
+  textarea:focus {
+    border-color: #3380ff;
+    outline: none;
+    box-shadow: 0 0 6px #3380ff;
+  }
+
+  textarea {
+    min-height: 100px;
+  }
+
+  button {
+    width: 100%;
+    background: #3380ff;
+    color: white;
+    font-size: 18px;
+    padding: 14px 0;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    font-weight: 700;
+    box-shadow: 0 5px 15px rgba(51, 128, 255, 0.6);
+    transition: background 0.3s ease;
+  }
+
+  button:hover {
+    background: #1a5dcc;
+    box-shadow: 0 7px 20px rgba(26, 93, 204, 0.8);
+  }
+
+  /* Lottie container */
+  .lottie-container {
+    margin: 15px auto 25px;
+    text-align: center;
+  }
+
+  /* Responsive */
+  @media (max-width: 450px) {
+    form {
+      padding: 20px;
+      max-width: 100%;
+      border-radius: 15px;
+    }
+    .lottie-container {
+      width: 250px;
+    }
+  }
+</style>
+
+</head>
+<body>
+
+<h1>اكتب شكوتك</h1>
+
+<div class="lottie-container">
+  <dotlottie-wc 
+    src="https://lottie.host/b143ba10-6b7d-492f-8b04-add51d46f7da/X19j28P5Od.lottie" 
+    style="width: 300px; height: 300px;" 
+    speed="1" autoplay loop>
+  </dotlottie-wc>
+</div>
+
+<form id="complaintForm">
+  <label for="name">اسمك</label>
+  <input type="text" id="name" name="name" placeholder="اكتب اسمك" required />
+
+  <label for="phone">رقم التليفون</label>
+  <input type="tel" id="phone" name="phone" placeholder="مثال: 01012345678" pattern="0[0-9]{9}" required />
+
+  <label for="complaint">نص الشكوى</label>
+  <textarea id="complaint" name="complaint" placeholder="اكتب شكوتك هنا..." required></textarea>
+
+  <button type="submit">قدم الشكوى</button>
+</form>
+
+<script>
+  document.getElementById('complaintForm').addEventListener('submit', function(e){
+    e.preventDefault();
+
+    const name = document.getElementById('name').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const complaint = document.getElementById('complaint').value.trim();
+
+    if(!name || !phone || !complaint){
+      alert('من فضلك أكمل جميع الحقول');
+      return;
+    }
+
+    // رقم واتساب
+    const whatsappNumber = '201093139047';
+
+    // تكوين رسالة واتساب
+    const message = 
+      `السلام عليكم،%0A` + 
+      `لدي شكوى من:%0A` + 
+      `الاسم: ${encodeURIComponent(name)}%0A` + 
+      `رقم التليفون: ${encodeURIComponent(phone)}%0A` + 
+      `الشكوى:%0A${encodeURIComponent(complaint)}`;
+
+    // فتح واتساب ويب مع الرسالة والرقم
+    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${message}`;
+
+    window.open(whatsappUrl, '_blank');
+  });
+</script>
+
+</body>
+</html>
