@@ -3,12 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>نموذج طلب المذكرة</title>
+  <title>نموذج طلب بدون صورة</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       background: #f0f2f5;
-      margin: 0; padding: 20px;
+      padding: 20px;
+      margin: 0;
     }
     .container {
       max-width: 500px;
@@ -63,7 +64,7 @@
 <body>
 
   <div class="container">
-    <h2>طلب شراء المذكرة</h2>
+    <h2>طلب شراء بدون رفع صورة</h2>
     <form id="orderForm">
       <label for="name">الاسم الكامل</label>
       <input type="text" id="name" name="name" required />
@@ -88,9 +89,6 @@
       <label for="vodafoneNumber">رقم فودافون كاش</label>
       <input type="tel" id="vodafoneNumber" name="vodafoneNumber" pattern="[0-9]+" required />
 
-      <label for="image">رفع صورة تحويل فودافون كاش</label>
-      <input type="file" id="image" name="image" accept="image/*" required />
-
       <button type="submit">إرسال الطلب</button>
     </form>
 
@@ -100,41 +98,13 @@
 <script>
   const form = document.getElementById('orderForm');
   const message = document.getElementById('message');
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyu3ugXdZUI7i7dMUqERjjqv1x9bBdlN_ZSu9E7lIF2_K2N9SF2OzCt4r0nMhcLvOOB5Q/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwar6zYSrNuuqERQjaKFwREPEcVCn3KgdOyBOuicNmg7LRe6kr7JA5IL2VvgELNrP8uig/exec";
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     message.style.color = "black";
     message.textContent = "جاري إرسال الطلب...";
 
-    const fileInput = document.getElementById('image');
-    if (!fileInput.files.length) {
-      message.style.color = "red";
-      message.textContent = "من فضلك ارفع صورة التحويل.";
-      return;
-    }
-    const file = fileInput.files[0];
-
-    // تحويل الصورة إلى Base64
-    function toBase64(file) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = error => reject(error);
-      });
-    }
-
-    let base64Image;
-    try {
-      base64Image = await toBase64(file);
-    } catch {
-      message.style.color = "red";
-      message.textContent = "خطأ في قراءة صورة التحويل.";
-      return;
-    }
-
-    // جهز البيانات للإرسال
     const data = {
       name: form.name.value.trim(),
       phone: form.phone.value.trim(),
@@ -142,8 +112,7 @@
       price: Number(form.price.value),
       shipping: Number(form.shipping.value),
       total: Number(form.total.value),
-      vodafoneNumber: form.vodafoneNumber.value.trim(),
-      imageBase64: base64Image
+      vodafoneNumber: form.vodafoneNumber.value.trim()
     };
 
     try {
