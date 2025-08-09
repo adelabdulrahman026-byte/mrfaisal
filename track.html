@@ -594,7 +594,7 @@
     trackingResult.textContent = "جار البحث...";
 
     // جلب بيانات الشحن من Google Sheets عبر Google Apps Script API (اعتمدت رابط السكريبت أدناه)
-    const googleScriptURL = "https://script.google.com/macros/s/AKfycbw8bgnUQ4g_ngKpfFfaal5Zp-2J_mTOMbJJ1dQxnBCiY9zHaWLY-NU_C6jVAryq3MiL/exec";
+    const googleScriptURL = "https://script.google.com/macros/s/AKfycby4Xpnau5GkQfeaW1-izwuqVIs9NM-pBcOk8eVJ6LWKLf81LYDUG87sbg43TCJIL3bT8g/exec";
 
     try {
       const res = await fetch(`${googleScriptURL}?action=search&trackingCode=${encodeURIComponent(code)}`);
