@@ -2,53 +2,41 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>لوحة تحكم Admin</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Cairo&display=swap');
 
-  * {
-    box-sizing: border-box;
-  }
-
   body {
     font-family: 'Cairo', sans-serif;
-    background: linear-gradient(135deg, #1e3c72, #2a5298);
-    margin: 0; padding: 0;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    padding: 30px 10px;
-    color: #f0f0f0;
+    background: #f0f4f8;
+    margin: 0; padding: 20px;
+    color: #333;
   }
 
   #loginForm, #dashboard {
-    background: #fff;
-    border-radius: 16px;
-    box-shadow: 0 18px 60px rgba(0,0,0,0.25);
-    padding: 35px 45px;
     max-width: 1000px;
-    width: 100%;
-    color: #222;
+    margin: auto;
+    background: white;
+    padding: 30px 40px;
+    border-radius: 15px;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.1);
   }
 
   h2 {
     text-align: center;
-    color: #0d47a1;
-    margin-bottom: 35px;
-    font-weight: 700;
-    letter-spacing: 1.4px;
+    margin-bottom: 30px;
+    color: #1976d2;
   }
 
   input[type=text], input[type=password] {
     width: 100%;
-    padding: 14px 18px;
-    margin: 14px 0 28px 0;
-    border-radius: 10px;
+    padding: 12px 15px;
+    margin-bottom: 20px;
     border: 2px solid #90caf9;
-    font-size: 18px;
-    transition: border-color 0.3s ease;
+    border-radius: 10px;
+    font-size: 16px;
+    transition: border-color 0.3s;
   }
 
   input[type=text]:focus, input[type=password]:focus {
@@ -58,158 +46,128 @@
 
   button {
     width: 100%;
-    background: #1976d2;
+    padding: 14px;
+    background-color: #1976d2;
     border: none;
-    border-radius: 14px;
-    padding: 16px 0;
-    font-size: 21px;
+    border-radius: 12px;
+    color: white;
+    font-size: 18px;
     font-weight: 700;
-    color: #fff;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    box-shadow: 0 5px 15px rgba(25, 118, 210, 0.6);
   }
 
   button:hover {
-    background: #0d47a1;
+    background-color: #115293;
   }
 
   #errorMsg {
-    color: #d32f2f;
-    text-align: center;
-    margin-top: -16px;
-    margin-bottom: 28px;
+    color: red;
     font-weight: 700;
-    font-size: 16px;
+    text-align: center;
+    margin-bottom: 15px;
   }
 
-  /* جدول أنيق ومتجاوب */
   table {
     width: 100%;
-    border-collapse: separate;
-    border-spacing: 0 14px;
-    font-size: 16px;
-    font-weight: 600;
-    color: #222;
-    table-layout: auto;
+    border-collapse: collapse;
+    table-layout: fixed;
   }
 
   thead th {
-    background: #1976d2;
+    background-color: #1976d2;
     color: white;
-    padding: 16px 10px;
-    text-align: center;
+    padding: 12px 8px;
     font-weight: 700;
-    border-radius: 12px 12px 0 0;
-    letter-spacing: 0.6px;
+    font-size: 14px;
+    border: 1px solid #ddd;
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  tbody tr {
-    background: #e3f2fd;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    transition: transform 0.25s ease;
-    border-radius: 0 0 14px 14px;
-  }
-
-  tbody tr:hover {
-    background: #bbdefb;
-    transform: translateY(-6px);
   }
 
   tbody td {
-    padding: 14px 10px;
-    text-align: center;
+    border: 1px solid #ddd;
+    padding: 10px 8px;
+    font-size: 14px;
+    word-wrap: break-word;
     vertical-align: middle;
-    border-radius: 0 0 14px 14px;
-    word-break: break-word;
-    white-space: normal;
-    overflow-wrap: break-word;
+    text-align: center;
   }
 
-  a.img-link {
-    color: #1565c0;
-    font-weight: 700;
-    text-decoration: none;
-    transition: color 0.3s ease;
+  tbody tr:nth-child(even) {
+    background-color: #f5faff;
   }
 
-  a.img-link:hover {
-    color: #0d47a1;
-    text-decoration: underline;
-  }
-
-  .btn-whatsapp {
-    background-color: #25D366;
+  .whatsapp-btn {
+    background-color: #25d366;
     border: none;
     border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    display: flex;
+    width: 36px;
+    height: 36px;
+    cursor: pointer;
+    display: inline-flex;
     justify-content: center;
     align-items: center;
-    cursor: pointer;
     transition: background-color 0.3s ease;
-    box-shadow: 0 3px 8px rgba(37, 211, 102, 0.5);
   }
 
-  .btn-whatsapp:hover {
+  .whatsapp-btn:hover {
     background-color: #128c4a;
   }
 
-  .btn-whatsapp svg {
+  .whatsapp-icon {
     fill: white;
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
   }
 
   #logoutBtn {
+    margin-bottom: 25px;
     background-color: #d32f2f;
-    margin-bottom: 28px;
-    box-shadow: 0 5px 15px rgba(211, 47, 47, 0.6);
   }
 
   #logoutBtn:hover {
     background-color: #9a0007;
   }
 
-  /* تجاوب الجدول مع الموبايل */
-  @media (max-width: 900px) {
+  /* Responsive */
+  @media (max-width: 768px) {
     table, thead, tbody, th, td, tr {
       display: block;
     }
-    thead tr {
+    thead {
       display: none;
     }
     tbody tr {
       margin-bottom: 20px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-      border-radius: 16px;
-      background: #e3f2fd;
-      padding: 20px 15px;
+      background: #f0f4fa;
+      border-radius: 12px;
+      padding: 15px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
     tbody td {
       text-align: right;
       padding-left: 50%;
       position: relative;
+      border: none;
+      border-bottom: 1px solid #ddd;
       white-space: normal;
-      overflow: visible;
+      word-wrap: break-word;
     }
     tbody td::before {
       position: absolute;
-      top: 14px;
-      right: 15px;
+      top: 12px;
+      right: 12px;
       width: 45%;
+      padding-left: 10px;
       white-space: nowrap;
       font-weight: 700;
-      color: #0d47a1;
+      color: #1976d2;
       content: attr(data-label);
       text-align: left;
     }
-    .btn-whatsapp {
-      margin-top: 10px;
+    tbody td:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
     }
   }
 </style>
@@ -235,15 +193,15 @@
   const whatsappNumber = '201093139047';
 
   const displayedFields = [
-    'name',
-    'phone',
-    'المحافظة',
-    'الهاتف',
-    'العنوان',
-    'كود التبع',
-    'حاله الطلب',
-    'نوع الطلب',
-    'نو الطلب'
+    { key: 'name', label: 'الاسم' },
+    { key: 'phone', label: 'الهاتف' },
+    { key: 'المحافظة', label: 'المحافظة' },
+    { key: 'الهاتف', label: 'الهاتف الثاني' },
+    { key: 'العنوان', label: 'العنوان' },
+    { key: 'كود التبع', label: 'كود التبع' },
+    { key: 'حاله الطلب', label: 'حالة الطلب' },
+    { key: 'نوع الطلب', label: 'نوع الطلب' },
+    { key: 'نو الطلب', label: 'رقم الطلب' }
   ];
 
   function login() {
@@ -251,7 +209,7 @@
     const pass = document.getElementById('password').value.trim();
     const errorMsg = document.getElementById('errorMsg');
 
-    if(user === 'admin' && pass === '0000') {
+    if (user === 'admin' && pass === '0000') {
       errorMsg.textContent = '';
       document.getElementById('loginForm').style.display = 'none';
       document.getElementById('dashboard').style.display = 'block';
@@ -272,49 +230,47 @@
 
   async function loadData() {
     try {
-      const res = await fetch(SCRIPT_URL, {method:'GET', mode:'cors'});
-      if(!res.ok) throw new Error('خطأ في تحميل البيانات');
+      const res = await fetch(SCRIPT_URL, { method: 'GET', mode: 'cors' });
+      if (!res.ok) throw new Error('خطأ في تحميل البيانات');
       const data = await res.json();
       renderTable(data);
-    } catch(e) {
+    } catch (e) {
       alert('خطأ في تحميل البيانات');
     }
   }
 
   function renderTable(data) {
-    if(!data.length) {
-      document.getElementById('tableContainer').innerHTML = '<p style="text-align:center; font-weight:700; font-size:18px;">لا توجد بيانات</p>';
+    if (!data.length) {
+      document.getElementById('tableContainer').innerHTML =
+        '<p style="text-align:center; font-weight:700; font-size:18px;">لا توجد بيانات</p>';
       return;
     }
 
-    let html = `<table>
-      <thead><tr>`;
-
-    displayedFields.forEach(field => {
-      html += `<th>${field}</th>`;
+    let html = '<table><thead><tr>';
+    displayedFields.forEach((field) => {
+      html += `<th>${field.label}</th>`;
     });
-    html += `<th>واتساب</th></tr></thead><tbody>`;
+    html += '<th>واتساب</th></tr></thead><tbody>';
 
-    data.forEach(row => {
-      html += `<tr>`;
-      displayedFields.forEach(field => {
-        let val = row[field] ?? '';
-        html += `<td data-label="${field}">${val}</td>`;
+    data.forEach((row) => {
+      html += '<tr>';
+      displayedFields.forEach((field) => {
+        let val = row[field.key] ?? '';
+        html += `<td data-label="${field.label}">${escapeHtml(val)}</td>`;
       });
 
       html += `<td data-label="واتساب">
-        <button class="btn-whatsapp" onclick="sendWhatsappMessage(${JSON.stringify(row)})" title="أرسل عبر واتساب">
-          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <button class="whatsapp-btn" onclick='sendWhatsappMessage(${JSON.stringify(row)})' title="أرسل عبر واتساب" aria-label="إرسال عبر واتساب">
+          <svg class="whatsapp-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
             <path d="M20.52 3.48A11.867 11.867 0 0 0 12 0C5.37 0 .02 5.34 0 12c0 2.11.56 4.08 1.55 5.79L0 24l6.37-1.65A11.9 11.9 0 0 0 12 24c6.63 0 12-5.37 12-12a11.88 11.88 0 0 0-3.48-8.52zM12 21.5c-1.86 0-3.61-.54-5.07-1.46l-.36-.22-3.78.97.96-3.69-.24-.38A9.431 9.431 0 0 1 2.5 12C2.5 6.8 6.8 2.5 12 2.5S21.5 6.8 21.5 12 17.2 21.5 12 21.5zm1.71-6.11c-.07-.11-.27-.17-.56-.29s-1.1-.51-1.28-.57-.3-.1-.43.11-.49.57-.6.68-.22.16-.41.06a4.25 4.25 0 0 1-1.25-.73-4.77 4.77 0 0 1-1.78-2.2c-.18-.38 0-.58.13-.76.06-.07.15-.17.22-.26a.57.57 0 0 0 .08-.1.33.33 0 0 0 0-.3c0-.1-.43-1.04-.6-1.42s-.3-.33-.43-.34h-.37a.77.77 0 0 0-.56.27 2.37 2.37 0 0 0-.7 1.7 3.95 3.95 0 0 0 1.44 3.08 6.79 6.79 0 0 0 3.15 2.08c.44.18.76.15 1.05.09a2.36 2.36 0 0 0 1.07-.66 3.1 3.1 0 0 0 .9-1.05c.06-.11.03-.2-.05-.31z"/>
           </svg>
         </button>
       </td>`;
 
-      html += `</tr>`;
+      html += '</tr>';
     });
 
-    html += `</tbody></table>`;
-
+    html += '</tbody></table>';
     document.getElementById('tableContainer').innerHTML = html;
   }
 
@@ -345,6 +301,20 @@
       'whatsappPopup',
       `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes,status=yes`
     );
+  }
+
+  // حماية من XSS
+  function escapeHtml(text) {
+    if (!text) return '';
+    return text.replace(/[&<>"']/g, function(m) {
+      return {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      }[m];
+    });
   }
 </script>
 
