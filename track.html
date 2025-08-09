@@ -1,230 +1,124 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>شراء المنتج</title>
-<style>
-  body {
-    font-family: 'Cairo', sans-serif;
-    margin: 0;
-    padding: 0;
-    text-align: center;
-    background: #fff;
-  }
-  video {
-    max-width: 100%;
-    height: auto;
-    margin: 10px 0;
-  }
-  form {
-    max-width: 500px;
-    margin: auto;
-    background: #f9f9f9;
-    padding: 15px;
-    border-radius: 10px;
-  }
-  input, select, button {
-    width: 100%;
-    padding: 8px;
-    margin: 5px 0;
-    font-size: 16px;
-  }
-  #successPopup {
-    position: fixed;
-    bottom: -100%;
-    left: 50%;
-    transform: translateX(-50%);
-    background: white;
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0px 0px 10px #aaa;
-    transition: bottom 0.3s ease;
-    width: 90%;
-    max-width: 350px;
-    text-align: center;
-    z-index: 9999;
-  }
-  #successPopup.show {
-    bottom: 20px;
-  }
-  .loading-msg {
-    font-size: 18px;
-  }
-  @keyframes bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-5px); }
-  }
-  /* توافق الموبايل */
-  @media (max-width: 768px) {
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>شراء المذكرة</title>
+  <style>
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: linear-gradient(135deg, #4facfe, #00f2fe);
+      margin: 0;
+      padding: 20px;
+      color: #fff;
+    }
+    h1 {
+      text-align: center;
+    }
     form {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 15px;
+      border-radius: 10px;
+      max-width: 500px;
+      margin: auto;
+    }
+    input, select {
+      width: 100%;
       padding: 10px;
+      margin: 8px 0;
+      border-radius: 6px;
+      border: none;
     }
-    input, select, button {
-      font-size: 14px;
-      padding: 7px;
-    }
-    .loading-msg {
+    button {
+      background: #28a745;
+      color: #fff;
+      padding: 12px;
+      width: 100%;
+      border: none;
+      border-radius: 8px;
       font-size: 16px;
+      cursor: pointer;
     }
-  }
-</style>
+    button:hover {
+      background: #218838;
+    }
+    #result {
+      margin-top: 20px;
+      text-align: center;
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
 
-<!-- أزرار اختيار المنتج -->
-<button onclick="startOrder('third')">📘 مذكرة الصف الثالث الثانوي</button>
-<button onclick="startOrder('second')">📙 مذكرة الصف الثاني الثانوي</button>
-<button onclick="startOrder('akodna')">💻 أكوادنا</button>
+  <h1>شراء المذكرة</h1>
+  <form id="orderForm">
+    <input type="text" name="name" placeholder="الاسم" required>
+    <input type="tel" name="phone1" placeholder="رقم الهاتف" required>
+    <input type="text" name="gov" placeholder="المحافظة" required>
+    <input type="text" name="address" placeholder="العنوان" required>
+    <input type="text" name="paymentNumber" placeholder="رقم التحويل" required>
+    <input type="number" name="total" value="230" readonly>
+    <input type="text" name="orderType" value="مذكرة الصف الثالث الثانوي" readonly>
+    <label>صورة التحويل:</label>
+    <input type="file" id="proofImage" accept="image/*" required>
+    <button type="submit">يلا اشتري</button>
+  </form>
 
-<!-- الفيديوهات والملاحظات -->
-<div id="video_third" style="display:none;">
-  <video controls>
-    <source src="https://files.catbox.moe/lgvvn8.mp4" type="video/mp4">
-  </video>
-</div>
-<div id="note_third" style="display:none;">ملاحظات مذكرة الصف الثالث الثانوي</div>
+  <div id="result"></div>
 
-<div id="video_second" style="display:none;">
-  <video controls>
-    <source src="https://files.catbox.moe/lgvvn8.mp4" type="video/mp4">
-  </video>
-</div>
-<div id="note_second" style="display:none;">ملاحظات مذكرة الصف الثاني الثانوي</div>
+  <script>
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzIojxeknU2gc0JZgXEwX-DZSpzL3q3PFUHkF26LppHiBDHkKlfejO0leQu0dTYkwY/exec";
 
-<div id="video_akodna" style="display:none;">
-  <video controls>
-    <source src="https://files.catbox.moe/lgvvn8.mp4" type="video/mp4">
-  </video>
-</div>
-<div id="note_akodna" style="display:none;">ملاحظات الأكواد</div>
+    document.getElementById("orderForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
 
-<!-- نموذج الطلب -->
-<form id="orderForm" style="display:none;">
-  <input type="text" id="name" placeholder="الاسم" required>
-  <input type="text" id="gov" placeholder="المحافظة" required>
-  <input type="tel" id="phone1" placeholder="رقم الهاتف" required>
-  <input type="text" id="address" placeholder="العنوان">
-  <select id="codeType" style="display:none;">
-    <option value="">اختر نوع الكود</option>
-    <option value="كود 1">كود 1</option>
-    <option value="كود 2">كود 2</option>
-  </select>
-  <input type="text" id="paymentNumber" placeholder="رقم التحويل عبر فودافون كاش" required>
-  <input type="file" id="paymentProof" accept="image/*" required>
-  <button type="button" onclick="submitOrder()">يلا اشتري</button>
-</form>
+      const form = e.target;
+      const file = document.getElementById("proofImage").files[0];
 
-<!-- البوب أب -->
-<div id="successPopup">
-  <div id="popupMessage"></div>
-</div>
+      if (!file) {
+        alert("من فضلك ارفع صورة التحويل");
+        return;
+      }
 
-<script>
-  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxNhAfhsY_FRU9UsoK61HzMr_ATVn02xtmrb8hFEny06RlpmGxcdKYWXl5sQwyoOVoD/exec"
-  const formData = {
-    total: "230",
-    orderType: ""
-  };
+      const reader = new FileReader();
+      reader.onloadend = async function() {
+        const base64Image = reader.result.split(",")[1];
 
-  function hideAll() {
-    ["third", "second", "akodna"].forEach(type => {
-      document.getElementById("video_" + type).style.display = "none";
-      document.getElementById("note_" + type).style.display = "none";
-    });
-    document.getElementById("orderForm").style.display = "none";
-  }
+        const data = {
+          name: form.name.value,
+          phone1: form.phone1.value,
+          gov: form.gov.value,
+          address: form.address.value,
+          paymentNumber: form.paymentNumber.value,
+          proofImage: base64Image,
+          total: form.total.value,
+          orderType: form.orderType.value
+        };
 
-  function startOrder(type) {
-    hideAll();
-    formData.orderType = {
-      "third": "مذكرة الصف الثالث الثانوي",
-      "second": "مذكرة الصف الثاني الثانوي",
-      "akodna": "أكوادنا"
-    }[type];
+        try {
+          const res = await fetch(WEB_APP_URL, {
+            method: "POST",
+            body: JSON.stringify(data),
+            headers: { "Content-Type": "application/json" }
+          });
 
-    document.getElementById("video_" + type).style.display = "block";
-    document.getElementById("note_" + type).style.display = "block";
-    document.getElementById("orderForm").style.display = "block";
-
-    const codeSelect = document.getElementById("codeType");
-    const addressField = document.getElementById("address");
-
-    if (type === "akodna") {
-      codeSelect.style.display = "block";
-      codeSelect.required = true;
-      addressField.style.display = "none";
-      addressField.required = false;
-    } else {
-      codeSelect.style.display = "none";
-      codeSelect.required = false;
-      addressField.style.display = "block";
-      addressField.required = true;
-    }
-  }
-
-  function submitOrder() {
-    const name = document.getElementById("name").value;
-    const gov = document.getElementById("gov").value;
-    const phone1 = document.getElementById("phone1").value;
-    const address = document.getElementById("address").value;
-    const paymentNumber = document.getElementById("paymentNumber").value;
-    const codeType = document.getElementById("codeType").value;
-    const file = document.getElementById("paymentProof").files[0];
-
-    if (!paymentNumber || !file) return;
-
-    const popup = document.getElementById("successPopup");
-    const msg = document.getElementById("popupMessage");
-
-    msg.innerHTML = `<div class="loading-msg">📦 جاري الشحن...<br><span style="display:inline-block; animation: bounce 1s infinite;">⏳</span></div>`;
-    popup.classList.add("show");
-
-    const reader = new FileReader();
-    reader.onload = function (e) {
-      const proofImage = e.target.result.split(",")[1];
-
-      const payload = {
-        ...formData,
-        name,
-        gov,
-        phone1,
-        address: formData.orderType === "أكوادنا" ? codeType : address,
-        paymentNumber,
-        proofImage
+          const json = await res.json();
+          if (json.success) {
+            document.getElementById("result").innerHTML =
+              `✅ تم تسجيل طلبك! كود التتبع: <strong>${json.trackingCode}</strong>`;
+          } else {
+            document.getElementById("result").innerHTML =
+              `❌ حصل خطأ: ${json.error}`;
+          }
+        } catch (err) {
+          document.getElementById("result").innerHTML =
+            `❌ حصل خطأ في الاتصال بالسيرفر`;
+        }
       };
-
-      fetch(WEB_APP_URL, {
-        method: "POST",
-        body: JSON.stringify(payload),
-        headers: { "Content-Type": "application/json" }
-      })
-      .then(res => res.json())
-      .then(showPopup)
-      .catch(() => showPopup({ success: false, error: "فشل في الإرسال" }));
-    };
-    reader.readAsDataURL(file);
-  }
-
-  function showPopup(res) {
-    const popup = document.getElementById("successPopup");
-    const msg = document.getElementById("popupMessage");
-
-    if (res.success) {
-      msg.innerHTML = `
-        ✅ <strong>تم الشحن بنجاح</strong><br><br>
-        كود التتبع: <strong>${res.trackingCode}</strong><br>
-        الاسم: ${document.getElementById("name").value}<br>
-        المحافظة: ${document.getElementById("gov").value}<br>
-        الهاتف: ${document.getElementById("phone1").value}
-      `;
-    } else {
-      msg.innerHTML = `❌ حصلت مشكلة: ${res.error || "حاول تاني"}`;
-    }
-
-    popup.classList.add("show");
-  }
-</script>
+      reader.readAsDataURL(file);
+    });
+  </script>
 
 </body>
 </html>
