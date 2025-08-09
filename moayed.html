@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>مواعيد مستر فيصل</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Cairo', sans-serif;
+      background-color: #f8f8f8;
+    }
+
+    .cards-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      padding: 20px;
+      direction: rtl;
+    }
+
+    .special-card {
+      position: relative;
+      color: white;
+      border-radius: 20px;
+      width: 280px;
+      min-height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 15px;
+      gap: 15px;
+      text-decoration: none;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      animation: fadeUp 0.7s ease forwards;
+      opacity: 0;
+      transform: translateY(30px);
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .special-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.25);
+    }
+
+    .special-card .emoji {
+      font-size: 40px;
+      animation: floatEmoji 2.2s ease-in-out infinite;
+      z-index: 2;
+    }
+
+    .special-card .text {
+      font-size: 18px;
+      font-weight: bold;
+      text-shadow: 1px 1px 2px #000;
+      z-index: 2;
+      flex: 1;
+    }
+
+    .special-card .big-number {
+      position: absolute;
+      font-size: 100px;
+      color: rgba(255, 255, 255, 0.08);
+      top: -10px;
+      left: 15px;
+      z-index: 1;
+      pointer-events: none;
+      font-weight: bold;
+    }
+
+    /* لوتي داخل الكارت */
+    .lottie-box {
+      flex-shrink: 0;
+      width: 80px;
+      height: 80px;
+    }
+
+    @keyframes floatEmoji {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    @keyframes fadeUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* 📱 موبايل */
+    @media (max-width: 500px) {
+      .cards-container {
+        gap: 15px;
+        padding: 15px;
+      }
+
+      .special-card {
+        width: 100%;
+        min-height: 100px;
+        padding: 12px;
+        gap: 10px;
+      }
+
+      .special-card .emoji {
+        font-size: 32px;
+      }
+
+      .special-card .text {
+        font-size: 16px;
+      }
+
+      .special-card .big-number {
+        font-size: 70px;
+        top: -5px;
+        left: 10px;
+      }
+
+      .lottie-box {
+        width: 60px;
+        height: 60px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="cards-container">
+
+  <a href="https://www.mrfaisal.net/المواعيد/مواعيد-تانيه-ثانوي" target="_blank" class="special-card" style="animation-delay: 0.2s; background: linear-gradient(135deg, #8e44ad, #9b59b6);">
+    <div class="big-number">2</div>
+    <div class="emoji">📆</div>
+    <div class="text">مواعيد تانية ثانوي</div>
+  </a>
+
+  <a href="https://www.mrfaisal.net/%D8%A7%D9%84%D9%85%D9%88%D8%A7%D8%B9%D9%8A%D8%AF/%D9%85%D9%88%D8%A7%D8%B9%D9%8A%D8%AF-%D8%AA%D8%A7%D9%84%D8%AA%D9%87-%D8%AB%D8%A7%D9%86%D9%88%D9%8A" target="_blank" class="special-card" style="animation-delay: 0.4s; background: linear-gradient(135deg, #2980b9, #3498db);">
+    <div class="big-number">3</div>
+    <div class="emoji">🗓️</div>
+    <div class="text">مواعيد تالتة ثانوي</div>
+  </a>
+
+  <div class="special-card" style="animation-delay: 0.6s; background: linear-gradient(135deg, #16a085, #1abc9c);">
+    <div class="big-number">⏳</div>
+
+    <!-- لوتي -->
+    <div class="lottie-box">
+      <dotlottie-wc src="https://lottie.host/9b40cc03-92c6-4143-be12-fdfc71bdf879/1pdWMkUkBH.lottie" speed="1" autoplay loop></dotlottie-wc>
+    </div>
+
+    <div>
+      <div class="text" style="font-size: 16px;">وقتك مهم</div>
+      <div id="time-now" style="font-size: 14px; margin-top: 5px;">00:00</div>
+      <div id="date-now" style="font-size: 13px; opacity: 0.8;">---</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- سكريبت لوتي -->
+<script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.6.2/dist/dotlottie-wc.js" type="module"></script>
+
+<!-- سكريبت الوقت -->
+<script>
+function updateTimeCard() {
+  const now = new Date();
+  const time = now.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
+  const date = now.toLocaleDateString('ar-EG', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+  document.getElementById('time-now').textContent = time;
+  document.getElementById('date-now').textContent = date;
+}
+setInterval(updateTimeCard, 1000);
+updateTimeCard();
+</script>
+
+</body>
+</html>
