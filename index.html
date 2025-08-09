@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <title>روابط مستر فيصل - حركة كوميدية</title>
+  <title>روابط مستر فيصل</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" />
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800;900&display=swap" rel="stylesheet" />
   <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.6.2/dist/dotlottie-wc.js" type="module"></script>
@@ -16,7 +16,6 @@
       scroll-behavior: smooth;
       background: #000;
     }
-    /* شاشة التحميل */
     #preloader {
       position: fixed;
       top: 0; left: 0;
@@ -24,13 +23,9 @@
       height: 100%;
       background: white;
       z-index: 9999;
-      overflow: hidden;
-    }
-    #funnyGif {
-      position: absolute;
-      width: 300px;
-      height: 300px;
-      will-change: transform, left, top;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
     #videoBackground {
       position: relative;
@@ -104,6 +99,7 @@
       box-shadow: 0 2px 6px rgba(0,0,0,0.12);
       flex-shrink: 0;
     }
+    /* زر ابدأ الرحلة */
     .start-journey {
       max-width: 480px;
       margin: 30px auto 0;
@@ -148,14 +144,15 @@
 </head>
 <body>
 
-  <!-- شاشة التحميل مع الحركة الكوميدية -->
+  <!-- شاشة التحميل -->
   <div id="preloader" aria-label="تحميل">
     <dotlottie-wc 
-      id="funnyGif"
-      src="https://lottie.host/8cf4da05-1e33-4e5b-83fa-6a36cb6d79d6/uSGNo9SQrn.lottie"
-      speed="1"
-      autoplay
-      loop>
+      src="https://lottie.host/953639aa-133c-4c35-8508-c65811fe8898/jZylR2TITf.lottie" 
+      style="width: 300px; height: 300px;" 
+      speed="1" 
+      autoplay 
+      loop
+      aria-label="تحميل متحرك">
     </dotlottie-wc>
   </div>
 
@@ -214,41 +211,18 @@
     </div>
   </div>
 
-  <!-- تذييل -->
+  <!-- تذييل الحقوق -->
   <footer>
     جميع الحقوق محفوظة لدى <span>abdulrahman adel</span> | نسخة الموقع لدفعه 2026 &copy;
   </footer>
 
   <script>
-    const gif = document.getElementById('funnyGif');
-    let angle = 0;
-    let radius = 120;
-    let centerX = window.innerWidth / 2;
-    let centerY = window.innerHeight / 2;
-
-    function moveFunny() {
-      angle += (Math.random() * 25 + 5) * Math.PI / 180;
-      radius = 50 + Math.random() * 200;
-      const x = centerX + Math.cos(angle) * radius;
-      const y = centerY + Math.sin(angle) * radius;
-      const wiggleX = Math.sin(Date.now() / 50) * 15;
-      const wiggleY = Math.cos(Date.now() / 60) * 15;
-      gif.style.left = `${x + wiggleX}px`;
-      gif.style.top = `${y + wiggleY}px`;
-      gif.style.transform = `rotate(${angle * 180 / Math.PI}deg) scale(${1 + Math.sin(Date.now() / 200) * 0.2})`;
-      requestAnimationFrame(moveFunny);
-    }
-    moveFunny();
-
     const preloader = document.getElementById('preloader');
     window.addEventListener('load', () => {
-      setTimeout(() => {
-        preloader.style.transition = 'opacity 0.8s ease';
-        preloader.style.opacity = 0;
-        setTimeout(() => preloader.style.display = 'none', 800);
-      }, 2500);
+      preloader.style.transition = 'opacity 0.8s ease';
+      preloader.style.opacity = 0;
+      setTimeout(() => preloader.style.display = 'none', 800);
     });
   </script>
-
 </body>
 </html>
