@@ -7,14 +7,13 @@
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800;900&display=swap" rel="stylesheet" />
   <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.6.2/dist/dotlottie-wc.js" type="module"></script>
   <style>
-    /* إعدادات عامة */
+    /* عام */
     body, html {
-      margin: 0;
-      padding: 0;
+      margin: 0; padding: 0;
       font-family: 'Cairo', sans-serif;
       background: black;
       color: white;
-      min-height: 100vh;
+      height: 100vh;
       overflow-x: hidden;
       scroll-behavior: smooth;
       display: flex;
@@ -22,32 +21,34 @@
       justify-content: space-between;
     }
 
-    /* حاوية العرض الأولي (الـ GIF) */
+    /* خلفية بيضاء لللودر */
     #preloader {
       position: fixed;
       top: 0; left: 0;
       width: 100vw;
       height: 100vh;
-      background: black;
+      background: white;
       z-index: 9999;
       display: flex;
       justify-content: center;
       align-items: center;
     }
 
-    /* الفيديو الخلفية */
+    /* فيديو الخلفية */
     video {
       position: fixed;
-      top: 50%;
+      top: 55%; /* زيادة النزول لاظهار الشخص */
       left: 50%;
       width: auto;
-      height: 100vh;
+      height: 110vh; /* زيادة الطول */
       min-width: 100vw;
       min-height: 100vh;
       object-fit: cover;
       transform: translate(-50%, -50%);
       z-index: -1;
       background: black;
+      opacity: 0; /* نبدأ مخفيين الفيديو */
+      transition: opacity 1s ease;
     }
 
     /* البطاقة الرئيسية */
@@ -64,7 +65,7 @@
       animation: slideUp 1.5s forwards ease-out;
       cursor: default;
       max-width: 320px;
-      margin: 70px auto 12px;
+      margin: 90px auto 12px; /* نزّل شويه من فوق */
       font-size: 22px;
       font-weight: 900;
       user-select: none;
@@ -105,7 +106,7 @@
       flex-direction: column;
       gap: 18px;
       max-width: 480px;
-      margin: 0 auto 60px;
+      margin: 0 auto 70px; /* نزّل شويه للكروت */
       width: 90%;
       box-sizing: border-box;
       position: relative;
@@ -299,29 +300,30 @@
 </head>
 <body>
 
-  <!-- عرض اللوتي المتحرك -->
-  <div id="preloader">
+  <!-- شاشة التحميل -->
+  <div id="preloader" aria-label="تحميل">
     <dotlottie-wc 
       src="https://lottie.host/953639aa-133c-4c35-8508-c65811fe8898/jZylR2TITf.lottie" 
       style="width: 300px; height: 300px;" 
       speed="1" 
       autoplay 
-      loop>
+      loop
+      aria-label="تحميل متحرك">
     </dotlottie-wc>
   </div>
 
   <!-- فيديو الخلفية -->
-  <video autoplay muted loop playsinline>
+  <video id="bgVideo" autoplay muted loop playsinline>
     <source src="https://files.catbox.moe/1dldfl.mp4" type="video/mp4" />
   </video>
 
   <!-- البطاقة الرئيسية -->
-  <div id="mainCard">
+  <div id="mainCard" role="region" aria-label="انضم لينا">
     <div>انضم لينا</div>
     <div>
-      <span class="point-down">👇</span>
+      <span class="point-down" aria-hidden="true">👇</span>
       <span>في عالم مستر فيصل</span>
-      <span class="point-down">👇</span>
+      <span class="point-down" aria-hidden="true">👇</span>
     </div>
   </div>
 
@@ -377,29 +379,35 @@
     جميع الحقوق محفوظة لدى <span>abdulrahman adel</span> | نسخة الموقع لدفعه 2026 &copy;
   </footer>
 
+  <!-- صوت الصفحة -->
   <audio id="pageAudio" src="https://files.catbox.moe/ftvm82.ogg" preload="auto" style="display: none;"></audio>
 
   <script>
-    // بعد تحميل الصفحة، نعرض اللوتي 3.5 ثانية تقريباً، ثم نخفيه ونظهر المحتوى
-    window.addEventListener('load', () => {
-      const preloader = document.getElementById('preloader');
-      const mainCard = document.getElementById('mainCard');
-      const startCard = document.querySelector('.start-card');
-      const socialCards = document.querySelectorAll('.social-card');
+    const preloader = document.getElementById('preloader');
+    const video = document.getElementById('bgVideo');
+    const mainCard = document.getElementById('mainCard');
+    const startCard = document.querySelector('.start-card');
+    const socialCards = document.querySelectorAll('.social-card');
 
-      // نخفي المحتوى الأساسي حتى بعد انتهاء اللوتي
+    // عند تحميل الصفحة - ننتظر تشغيل الفيديو ثم نزيل اللودر
+    window.addEventListener('load', () => {
+      // نمنع ظهور المحتوى الأساسي في البداية
       mainCard.style.opacity = 0;
       startCard.style.opacity = 0;
       socialCards.forEach(card => card.style.opacity = 0);
 
-      setTimeout(() => {
-        // اخفاء شاشة التحميل
-        preloader.style.transition = 'opacity 0.6s ease';
+      // لما الفيديو يبدأ يلعب (loadeddata أو canplay)
+      video.addEventListener('canplay', () => {
+        // نجعل الفيديو يظهر
+        video.style.opacity = 1;
+
+        // نخفي شاشة التحميل واللودر تدريجياً
+        preloader.style.transition = 'opacity 0.8s ease';
         preloader.style.opacity = 0;
+
         setTimeout(() => {
           preloader.style.display = 'none';
-
-          // عرض المحتوى
+          // نعرض المحتوى مع تحريك
           mainCard.style.animationPlayState = 'running';
           mainCard.style.opacity = 1;
           startCard.querySelector('.start-card-inner').style.animationPlayState = 'running';
@@ -409,8 +417,8 @@
             card.style.animationDelay = (0.15 * i) + 's';
             card.style.opacity = 1;
           });
-        }, 600);
-      }, 3500); // مدة العرض حوالي 3.5 ثانية، تقدر تزيد لـ 5 لو حبيت
+        }, 800);
+      });
     });
 
     function startJourney() {
@@ -431,12 +439,13 @@
       });
     }
 
+    // تأثير النقر على الكروت
     document.querySelectorAll('.social-card').forEach(card => {
       card.addEventListener('click', () => {
         card.classList.add('clicked');
         setTimeout(() => card.classList.remove('clicked'), 500);
       });
-      // دعم الضغط على لوحة المفاتيح (Enter)
+      // دعم ضغط Enter للـ keyboard
       card.addEventListener('keypress', e => {
         if (e.key === 'Enter') {
           card.click();
