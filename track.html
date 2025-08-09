@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>منتجات مع خلفية Lottie وكروت فيديو</title>
   <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.6.2/dist/dotlottie-wc.js" type="module"></script>
   <style>
@@ -15,58 +15,49 @@
     body, html {
       margin: 0;
       padding: 0;
-      height: 100%;
       font-family: 'Cairo', sans-serif;
       background: #fff;
       color: #222;
       overflow-x: hidden;
     }
 
-    /* الحاوية اللي بتعمل scroll snap عمودي */
-    .container-wrapper {
-      height: 100vh;
-      max-width: 480px;
-      margin: 0 auto;
-      overflow-y: scroll;
-      scroll-snap-type: y mandatory;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    /* اللوتي فوق العنوان بشكل متوسط */
+    /* اللوتي فوق العنوان بحجم كبير */
     .lottie-wrapper {
       width: 100%;
       display: flex;
       justify-content: center;
-      margin-top: 15px;
+      margin-top: 20px;
+      margin-bottom: 10px;
     }
     .lottie-wrapper dotlottie-wc {
-      width: 150px !important;
-      height: 150px !important;
-      opacity: 0.3;
+      width: 350px !important;
+      height: 350px !important;
+      opacity: 0.4;
     }
 
     h2 {
       text-align: center;
-      font-size: 2rem;
+      font-size: 2.2rem;
       font-weight: 800;
-      margin: 10px 0 20px;
+      margin: 0 0 25px;
       color: #222;
       letter-spacing: 1px;
       text-shadow: 0 1px 2px rgba(0,0,0,0.1);
     }
 
+    .container-wrapper {
+      max-width: 480px;
+      margin: 0 auto 40px;
+      padding: 0 15px;
+    }
+
     .container {
       display: flex;
       flex-direction: column;
-      gap: 25px;
-      padding-bottom: 40px;
+      gap: 30px;
     }
 
-    /* كل كارت ياخد شاشة كاملة */
     .card {
-      scroll-snap-align: start;
-      width: 100%;
-      height: 90vh;
       background: #f9f9f9;
       border-radius: 20px;
       box-shadow: 0 6px 20px rgba(0,0,0,0.1);
@@ -75,10 +66,12 @@
       display: flex;
       flex-direction: column;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
+      width: 100%;
+      min-height: 350px;
     }
 
     .card:hover {
-      transform: scale(1.02);
+      transform: scale(1.03);
       box-shadow: 0 14px 45px rgba(0, 0, 0, 0.15);
       z-index: 10;
     }
@@ -89,6 +82,7 @@
       border-top-right-radius: 20px;
       overflow: hidden;
       position: relative;
+      height: 220px;
     }
 
     .video-wrapper video {
@@ -117,13 +111,13 @@
     }
 
     .title {
-      font-size: 1.8rem;
+      font-size: 1.7rem;
       font-weight: 700;
       color: #222;
     }
 
     .price {
-      font-size: 2.4rem;
+      font-size: 2.2rem;
       font-weight: 900;
       color: #ff9900;
     }
@@ -134,7 +128,7 @@
       padding: 16px 0;
       border-radius: 20px;
       font-weight: 700;
-      font-size: 1.4rem;
+      font-size: 1.3rem;
       transition: background 0.3s ease;
       user-select: none;
       box-shadow: 0 4px 12px rgba(255,153,0,0.6);
@@ -145,6 +139,33 @@
       background: #e68a00;
     }
 
+    @media (max-width: 480px) {
+      .lottie-wrapper dotlottie-wc {
+        width: 280px !important;
+        height: 280px !important;
+        opacity: 0.35;
+      }
+      h2 {
+        font-size: 1.8rem;
+        margin-bottom: 20px;
+      }
+      .video-wrapper {
+        height: 180px;
+      }
+      .title {
+        font-size: 1.5rem;
+      }
+      .price {
+        font-size: 1.8rem;
+      }
+      .buy-btn {
+        font-size: 1.1rem;
+        padding: 14px 0;
+      }
+      .card {
+        min-height: 320px;
+      }
+    }
   </style>
 </head>
 <body>
