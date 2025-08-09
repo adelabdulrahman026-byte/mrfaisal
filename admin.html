@@ -5,93 +5,156 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>لوحة تحكم Admin</title>
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=Cairo&display=swap');
+
+  * {
+    box-sizing: border-box;
+  }
+
   body {
     font-family: 'Cairo', sans-serif;
-    background: linear-gradient(135deg, #e0f7fa, #ffffff);
+    background: linear-gradient(135deg, #2193b0, #6dd5ed);
     margin: 0; padding: 0;
-    display: flex; justify-content: center; align-items: center; min-height: 100vh;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #333;
   }
+
   #loginForm, #dashboard {
-    background: white;
-    padding: 20px 30px;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    max-width: 420px;
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+    padding: 30px 40px;
+    max-width: 700px;
     width: 95%;
   }
+
   h2 {
-    margin-bottom: 15px;
     text-align: center;
-    color: #00796b;
+    color: #0d47a1;
+    margin-bottom: 30px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
   }
+
   input[type=text], input[type=password] {
     width: 100%;
-    padding: 10px;
-    margin: 10px 0 20px 0;
-    border: 1px solid #b2dfdb;
-    border-radius: 6px;
-    font-size: 16px;
+    padding: 14px 20px;
+    margin: 12px 0 24px 0;
+    border-radius: 8px;
+    border: 2px solid #90caf9;
+    font-size: 18px;
+    transition: border-color 0.3s ease;
   }
+
+  input[type=text]:focus, input[type=password]:focus {
+    border-color: #1976d2;
+    outline: none;
+  }
+
   button {
     width: 100%;
-    background-color: #00796b;
-    color: white;
-    padding: 12px;
+    background: #1976d2;
     border: none;
-    border-radius: 6px;
-    font-size: 18px;
+    border-radius: 12px;
+    padding: 15px 0;
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
     cursor: pointer;
     transition: background-color 0.3s ease;
   }
+
   button:hover {
-    background-color: #004d40;
+    background: #0d47a1;
   }
+
+  #errorMsg {
+    color: #d32f2f;
+    text-align: center;
+    margin-top: -16px;
+    margin-bottom: 20px;
+    font-weight: 600;
+  }
+
+  /* جدول أنيق */
   table {
     width: 100%;
-    border-collapse: collapse;
-    margin-top: 15px;
+    border-collapse: separate;
+    border-spacing: 0 10px;
+    font-size: 16px;
   }
-  th, td {
-    border: 1px solid #b2dfdb;
-    padding: 8px;
+
+  thead th {
+    background: #1976d2;
+    color: white;
+    padding: 12px 15px;
     text-align: center;
-    font-size: 14px;
+    font-weight: 700;
+    border-radius: 10px 10px 0 0;
   }
-  th {
-    background-color: #00796b;
-    color: white;
+
+  tbody tr {
+    background: #f5f5f5;
+    box-shadow: 0 3px 5px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease;
+    border-radius: 0 0 10px 10px;
   }
-  .btn-update, .btn-whatsapp {
-    cursor: pointer;
-    border: none;
-    border-radius: 5px;
-    padding: 6px 10px;
-    color: white;
-    font-weight: bold;
-    font-size: 13px;
-    transition: background-color 0.3s ease;
+
+  tbody tr:hover {
+    background: #e3f2fd;
+    transform: translateY(-4px);
   }
-  .btn-update {
-    background-color: #0288d1;
+
+  tbody td {
+    padding: 12px 15px;
+    text-align: center;
+    vertical-align: middle;
   }
-  .btn-update:hover {
-    background-color: #01579b;
+
+  a.img-link {
+    color: #1565c0;
+    font-weight: 600;
+    text-decoration: none;
   }
+
+  a.img-link:hover {
+    text-decoration: underline;
+  }
+
   .btn-whatsapp {
     background-color: #25D366;
+    border: none;
+    border-radius: 50%;
+    width: 38px;
+    height: 38px;
     display: flex;
+    justify-content: center;
     align-items: center;
-    gap: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
   }
+
+  .btn-whatsapp:hover {
+    background-color: #128c4a;
+  }
+
   .btn-whatsapp svg {
     fill: white;
-    width: 18px;
-    height: 18px;
+    width: 22px;
+    height: 22px;
   }
-  a.img-link {
-    color: #0288d1;
-    text-decoration: none;
-    font-weight: bold;
+
+  /* زر تسجيل خروج */
+  #logoutBtn {
+    background-color: #d32f2f;
+    margin-bottom: 20px;
+  }
+
+  #logoutBtn:hover {
+    background-color: #9a0007;
   }
 </style>
 </head>
@@ -102,28 +165,31 @@
   <input id="username" type="text" placeholder="اسم المستخدم" autocomplete="off" />
   <input id="password" type="password" placeholder="كلمة المرور" autocomplete="off" />
   <button onclick="login()">تسجيل دخول</button>
-  <p id="errorMsg" style="color:red; text-align:center;"></p>
+  <p id="errorMsg"></p>
 </div>
 
 <div id="dashboard" style="display:none;">
   <h2>لوحة التحكم</h2>
-  <button onclick="logout()" style="margin-bottom: 15px; background:#c62828;">تسجيل خروج</button>
+  <button id="logoutBtn" onclick="logout()">تسجيل خروج</button>
   <div id="tableContainer"></div>
 </div>
 
 <script>
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyD3Nmip6bYotklGiGoxXE9NaYusdQIMD94OQ8FaKeJedjbsXFJG4mWZwXKLCN_1cDD-w/exec'; // عوّض هذا بالرابط الصحيح
-  const whatsappNumber = '201093139047'; // رقم واتساب (مصر +20 بدون +)
+  const SCRIPT_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec'; // عدل هنا
+  const whatsappNumber = '201093139047';
 
   function login() {
     const user = document.getElementById('username').value.trim();
     const pass = document.getElementById('password').value.trim();
+    const errorMsg = document.getElementById('errorMsg');
+
     if(user === 'admin' && pass === '0000') {
+      errorMsg.textContent = '';
       document.getElementById('loginForm').style.display = 'none';
       document.getElementById('dashboard').style.display = 'block';
       loadData();
     } else {
-      document.getElementById('errorMsg').textContent = 'اسم المستخدم أو كلمة المرور خاطئة';
+      errorMsg.textContent = 'اسم المستخدم أو كلمة المرور خاطئة';
     }
   }
 
@@ -138,46 +204,48 @@
 
   async function loadData() {
     try {
-      const res = await fetch(SCRIPT_URL, { method: 'GET', mode: 'cors' });
+      const res = await fetch(SCRIPT_URL, {method:'GET', mode:'cors'});
       if(!res.ok) throw new Error('خطأ في تحميل البيانات');
       const data = await res.json();
       renderTable(data);
-    } catch (e) {
-      alert('خطأ في تحميل البيانات: ' + e.message);
+    } catch(e) {
+      alert('خطأ في تحميل البيانات');
     }
   }
 
   function renderTable(data) {
     if(!data.length) {
-      document.getElementById('tableContainer').innerHTML = '<p>لا توجد بيانات</p>';
+      document.getElementById('tableContainer').innerHTML = '<p style="text-align:center;">لا توجد بيانات</p>';
       return;
     }
 
-    let html = `<table><thead><tr>`;
+    let html = `<table>
+      <thead><tr>`;
+
     const headers = Object.keys(data[0]);
-    headers.push('تحديث الحالة', 'واتساب');
+    headers.push('واتساب');
 
     headers.forEach(h => {
       html += `<th>${h}</th>`;
     });
+
     html += `</tr></thead><tbody>`;
 
     data.forEach(row => {
       html += `<tr>`;
       headers.forEach(h => {
-        if(h === 'تحديث الحالة') {
-          html += `<td><button class="btn-update" onclick="updateStatus('${row['كود التبع']}')">تحديث</button></td>`;
-        } else if(h === 'واتساب') {
+        if(h === 'واتساب') {
           html += `<td>
-            <button class="btn-whatsapp" onclick="sendWhatsapp('${row['كود التبع']}')">
-              <svg viewBox="0 0 24 24"><path d="M20.52 3.48A11.867 11.867 0 0 0 12 0C5.37 0 .02 5.34 0 12c0 2.11.56 4.08 1.55 5.79L0 24l6.37-1.65A11.9 11.9 0 0 0 12 24c6.63 0 12-5.37 12-12a11.88 11.88 0 0 0-3.48-8.52zM12 21.5c-1.86 0-3.61-.54-5.07-1.46l-.36-.22-3.78.97.96-3.69-.24-.38A9.431 9.431 0 0 1 2.5 12C2.5 6.8 6.8 2.5 12 2.5S21.5 6.8 21.5 12 17.2 21.5 12 21.5zm1.71-6.11c-.07-.11-.27-.17-.56-.29s-1.1-.51-1.28-.57-.3-.1-.43.11-.49.57-.6.68-.22.16-.41.06a4.25 4.25 0 0 1-1.25-.73-4.77 4.77 0 0 1-1.78-2.2c-.18-.38 0-.58.13-.76.06-.07.15-.17.22-.26a.57.57 0 0 0 .08-.1.33.33 0 0 0 0-.3c0-.1-.43-1.04-.6-1.42s-.3-.33-.43-.34h-.37a.77.77 0 0 0-.56.27 2.37 2.37 0 0 0-.7 1.7 3.95 3.95 0 0 0 1.44 3.08 6.79 6.79 0 0 0 3.15 2.08c.44.18.76.15 1.05.09a2.36 2.36 0 0 0 1.07-.66 3.1 3.1 0 0 0 .9-1.05c.06-.11.03-.2-.05-.31z"/></svg>
-              واتساب
+            <button class="btn-whatsapp" onclick="sendWhatsapp('${row['كود التبع']}')" title="أرسل عبر واتساب">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M20.52 3.48A11.867 11.867 0 0 0 12 0C5.37 0 .02 5.34 0 12c0 2.11.56 4.08 1.55 5.79L0 24l6.37-1.65A11.9 11.9 0 0 0 12 24c6.63 0 12-5.37 12-12a11.88 11.88 0 0 0-3.48-8.52zM12 21.5c-1.86 0-3.61-.54-5.07-1.46l-.36-.22-3.78.97.96-3.69-.24-.38A9.431 9.431 0 0 1 2.5 12C2.5 6.8 6.8 2.5 12 2.5S21.5 6.8 21.5 12 17.2 21.5 12 21.5zm1.71-6.11c-.07-.11-.27-.17-.56-.29s-1.1-.51-1.28-.57-.3-.1-.43.11-.49.57-.6.68-.22.16-.41.06a4.25 4.25 0 0 1-1.25-.73-4.77 4.77 0 0 1-1.78-2.2c-.18-.38 0-.58.13-.76.06-.07.15-.17.22-.26a.57.57 0 0 0 .08-.1.33.33 0 0 0 0-.3c0-.1-.43-1.04-.6-1.42s-.3-.33-.43-.34h-.37a.77.77 0 0 0-.56.27 2.37 2.37 0 0 0-.7 1.7 3.95 3.95 0 0 0 1.44 3.08 6.79 6.79 0 0 0 3.15 2.08c.44.18.76.15 1.05.09a2.36 2.36 0 0 0 1.07-.66 3.1 3.1 0 0 0 .9-1.05c.06-.11.03-.2-.05-.31z"/>
+              </svg>
             </button>
           </td>`;
         } else if(h === 'صورة التحويل') {
           const url = row[h];
           if(url && url.startsWith('http')) {
-            html += `<td><a href="${url}" target="_blank" class="img-link">عرض الصورة</a></td>`;
+            html += `<td><a href="${url}" target="_blank" class="img-link" title="عرض صورة التحويل">عرض</a></td>`;
           } else {
             html += `<td>لا يوجد</td>`;
           }
@@ -193,29 +261,19 @@
     document.getElementById('tableContainer').innerHTML = html;
   }
 
-  function updateStatus(code) {
-    const newStatus = prompt("اكتب الحالة الجديدة للطلب (مثلاً: تم الشحن، قيد الانتظار):");
-    if(!newStatus) return;
-
-    fetch(SCRIPT_URL, {
-      method: 'POST',
-      mode: 'cors',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({code: code, newStatus: newStatus})
-    }).then(res => res.json())
-      .then(data => {
-        if(data.result === "success") {
-          alert('تم تحديث الحالة بنجاح');
-          loadData();
-        } else {
-          alert('تعذر تحديث الحالة');
-        }
-      }).catch(() => alert('خطأ في الاتصال'));
-  }
-
   function sendWhatsapp(code) {
     const text = encodeURIComponent(`يوجد طلب جديد برمز التتبع: ${code}`);
-    window.open(`https://wa.me/${whatsappNumber}?text=${text}`, '_blank');
+    // فتح نافذة صغيرة بدلاً من التبويب الجديد
+    const width = 600;
+    const height = 700;
+    const left = (screen.width/2) - (width/2);
+    const top = (screen.height/2) - (height/2);
+
+    window.open(
+      `https://wa.me/${whatsappNumber}?text=${text}`,
+      'whatsapp',
+      `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes,status=yes`
+    );
   }
 </script>
 
