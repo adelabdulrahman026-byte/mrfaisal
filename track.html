@@ -1,150 +1,121 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>نموذج الطلب</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f9;
-      margin: 0;
-      padding: 0;
-    }
-    .container {
-      width: 100%;
-      max-width: 600px;
-      margin: 50px auto;
-      background-color: #fff;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    }
-    h1 {
-      text-align: center;
-      color: #333;
-    }
-    label {
-      font-size: 14px;
-      color: #555;
-      margin-bottom: 5px;
-      display: block;
-    }
-    input, textarea {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 15px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      box-sizing: border-box;
-    }
-    button {
-      width: 100%;
-      padding: 10px;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #45a049;
-    }
-    .error {
-      color: red;
-      font-size: 12px;
-      margin-bottom: 15px;
-    }
+    body { font-family: Arial, sans-serif; background:#f5f5f5; padding: 20px; }
+    form { background: white; padding:20px; border-radius:10px; max-width:500px; margin:auto; }
+    label { display:block; margin-top:15px; font-weight:bold; }
+    input, select { width:100%; padding:10px; margin-top:5px; border:1px solid #ccc; border-radius:5px; }
+    button { margin-top:20px; padding:15px; width:100%; background:#28a745; color:#fff; font-size:18px; border:none; border-radius:8px; cursor:pointer; }
+    button:hover { background:#218838; }
+    #message { margin-top:15px; text-align:center; font-weight:bold; }
   </style>
 </head>
 <body>
 
-  <div class="container">
-    <h1>نموذج الطلب</h1>
-    <div class="error" id="error-message"></div>
-    <form id="order-form">
-      <label for="name">الاسم الكامل</label>
-      <input type="text" id="name" name="name" required>
+<form id="orderForm">
+  <label for="name">الاسم الكامل</label>
+  <input type="text" id="name" required />
 
-      <label for="phone">رقم الهاتف</label>
-      <input type="text" id="phone" name="phone" required>
+  <label for="phone">رقم الهاتف</label>
+  <input type="tel" id="phone" pattern="[0-9]+" required />
 
-      <label for="product">المنتج المطلوب</label>
-      <input type="text" id="product" name="product" required>
+  <label for="product">المنتج</label>
+  <select id="product" required>
+    <option value="مذكرة الصف الثالث الثانوي">مذكرة الصف الثالث الثانوي</option>
+  </select>
 
-      <label for="price">السعر</label>
-      <input type="number" id="price" name="price" required>
+  <label for="price">السعر</label>
+  <input type="number" id="price" value="200" readonly />
 
-      <label for="shipping">الشحن</label>
-      <input type="number" id="shipping" name="shipping" required>
+  <label for="shipping">الشحن</label>
+  <input type="number" id="shipping" value="30" readonly />
 
-      <label for="total">الإجمالي</label>
-      <input type="number" id="total" name="total" required>
+  <label for="total">الإجمالي</label>
+  <input type="number" id="total" value="230" readonly />
 
-      <label for="vodafoneNumber">رقم فودافون كاش</label>
-      <input type="text" id="vodafoneNumber" name="vodafoneNumber" required>
+  <label for="vodafoneNumber">رقم فودافون كاش</label>
+  <input type="tel" id="vodafoneNumber" pattern="[0-9]+" required />
 
-      <label for="image">صورة التحويل (اختياري)</label>
-      <input type="file" id="image" name="image">
+  <label for="image">رفع صورة تحويل فودافون كاش</label>
+  <input type="file" id="image" accept="image/*" required />
 
-      <button type="submit">إرسال الطلب</button>
-    </form>
-  </div>
+  <button type="submit">إرسال الطلب</button>
 
-  <script>
-    const form = document.getElementById('order-form');
-    const errorMessage = document.getElementById('error-message');
-    const scriptUrl = 'https://script.google.com/macros/s/AKfycbyRkLmFu0DQlNASGA0DTD5bgoJdjtxOMAIatcDWR0pXxdI3bL9bfJ-d2yc_zFokFvmHwQ/exec';
+  <div id="message"></div>
+</form>
 
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      errorMessage.textContent = ''; // Reset error message
+<script>
+  const form = document.getElementById('orderForm');
+  const messageDiv = document.getElementById('message');
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyRkLmFu0DQlNASGA0DTD5bgoJdjtxOMAIatcDWR0pXxdI3bL9bfJ-d2yc_zFokFvmHwQ/exec";
 
-      const formData = new FormData(form);
-      const data = {
-        name: formData.get('name'),
-        phone: formData.get('phone'),
-        product: formData.get('product'),
-        price: formData.get('price'),
-        shipping: formData.get('shipping'),
-        total: formData.get('total'),
-        vodafoneNumber: formData.get('vodafoneNumber'),
-        imageBase64: await getBase64Image(formData.get('image'))
-      };
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    messageDiv.textContent = "جاري إرسال الطلب...";
 
-      try {
-        const response = await fetch(scriptUrl, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(data)
-        });
+    // تحقق من وجود ملف صورة
+    const imageInput = document.getElementById('image');
+    if (!imageInput.files.length) {
+      messageDiv.textContent = "من فضلك ارفع صورة تحويل فودافون كاش.";
+      return;
+    }
+    const file = imageInput.files[0];
 
-        const result = await response.json();
-        if (result.status === 'success') {
-          alert('تم إرسال الطلب بنجاح. كود التتبع: ' + result.trackingCode);
-          form.reset();
-        } else {
-          throw new Error(result.message || 'حدث خطأ غير متوقع.');
-        }
-      } catch (error) {
-        errorMessage.textContent = 'خطأ: ' + error.message;
-      }
+    // دالة لتحويل الملف إلى Base64
+    const toBase64 = file => new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = error => reject(error);
     });
 
-    async function getBase64Image(fileInput) {
-      if (!fileInput || !fileInput.files.length) return '';
-      const file = fileInput.files[0];
-      const reader = new FileReader();
-      return new Promise((resolve, reject) => {
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-      });
+    let imageBase64;
+    try {
+      imageBase64 = await toBase64(file);
+    } catch (err) {
+      messageDiv.textContent = "فشل في قراءة صورة التحويل.";
+      return;
     }
-  </script>
+
+    // جهز البيانات للإرسال
+    const data = {
+      name: document.getElementById('name').value.trim(),
+      phone: document.getElementById('phone').value.trim(),
+      product: document.getElementById('product').value,
+      price: Number(document.getElementById('price').value),
+      shipping: Number(document.getElementById('shipping').value),
+      total: Number(document.getElementById('total').value),
+      vodafoneNumber: document.getElementById('vodafoneNumber').value.trim(),
+      imageBase64: imageBase64
+    };
+
+    try {
+      const response = await fetch(SCRIPT_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+
+      const result = await response.json();
+
+      if (result.status === "success") {
+        messageDiv.style.color = "green";
+        messageDiv.textContent = "تم إرسال الطلب بنجاح. كود التتبع: " + result.trackingCode;
+        form.reset();
+      } else {
+        messageDiv.style.color = "red";
+        messageDiv.textContent = "خطأ: " + (result.message || "حدث خطأ أثناء إرسال الطلب.");
+      }
+    } catch (err) {
+      messageDiv.style.color = "red";
+      messageDiv.textContent = "حدث خطأ في الاتصال بالخادم. حاول مرة أخرى.";
+    }
+  });
+</script>
 
 </body>
 </html>
