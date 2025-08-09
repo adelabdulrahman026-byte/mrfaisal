@@ -10,17 +10,18 @@
     body, html {
       margin: 0; padding: 0;
       font-family: 'Cairo', sans-serif;
-      background: white;
       color: #111;
       min-height: 100vh;
       overflow-x: hidden;
       scroll-behavior: smooth;
+      background: #000;
     }
+    /* شاشة التحميل */
     #preloader {
       position: fixed;
       top: 0; left: 0;
-      width: 100vw;
-      height: 100vh;
+      width: 100%;
+      height: 100%;
       background: white;
       z-index: 9999;
       display: flex;
@@ -35,14 +36,14 @@
     }
     #videoBackground video {
       position: absolute;
-      top: 50%; left: 50%;
-      min-width: 100%;
-      min-height: 100%;
-      width: auto;
-      height: auto;
-      z-index: -1;
-      transform: translate(-50%, -50%);
+      top: 50%;
+      left: 50%;
+      width: 100%;
+      height: 100%;
       object-fit: cover;
+      transform: translate(-50%, -50%);
+      z-index: 0;
+      background: #000;
     }
     #videoOverlay {
       position: relative;
@@ -108,7 +109,6 @@
       font-size: 11px;
       color: #999;
       background: #f9f9f9;
-      user-select: none;
       font-weight: 600;
       font-family: 'Cairo', sans-serif;
       box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
@@ -146,35 +146,35 @@
   <!-- محتوى الكروت -->
   <div class="content">
     <section class="social-section" aria-label="روابط التواصل الاجتماعي">
-      <div class="social-card" tabindex="0">
+      <div class="social-card">
         <a href="https://www.whatsapp.com/channel/0029Vb5eotiHFxOvJuFpMI39" target="_blank">
           <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="واتساب" />
           <h3>انضم لقناة الواتساب</h3>
           <p>تابع آخر الأخبار والعروض</p>
         </a>
       </div>
-      <div class="social-card" tabindex="0">
+      <div class="social-card">
         <a href="https://www.facebook.com/groups/450656791778335/?locale=ar_AR" target="_blank">
           <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="فيسبوك جروب" />
           <h3>انضم لجروب الفيسبوك</h3>
           <p>محتوى خاص وتفاعل مباشر</p>
         </a>
       </div>
-      <div class="social-card" tabindex="0">
+      <div class="social-card">
         <a href="https://youtube.com/@mr.faisal.geography?si=5HQdYcyREdFSKiwp" target="_blank">
           <img src="https://upload.wikimedia.org/wikipedia/commons/4/42/YouTube_icon_%282013-2017%29.png" alt="يوتيوب" />
           <h3>اشترك في قناة اليوتيوب</h3>
           <p>شروحات جغرافيا ومراجعات قوية</p>
         </a>
       </div>
-      <div class="social-card" tabindex="0">
+      <div class="social-card">
         <a href="https://www.tiktok.com/@mr.faisal.geo?_t=ZS-8ySdp4xYApc&_r=1" target="_blank">
           <img src="https://upload.wikimedia.org/wikipedia/en/a/a9/TikTok_logo.svg" alt="تيك توك" />
           <h3>تابعني على تيك توك</h3>
           <p>فيديوهات تعليمية ومراجعات</p>
         </a>
       </div>
-      <div class="social-card" tabindex="0">
+      <div class="social-card">
         <a href="https://www.facebook.com/Mr.faisl" target="_blank">
           <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="صفحة فيسبوك" />
           <h3>تابع صفحتي على فيسبوك</h3>
