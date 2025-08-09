@@ -1,383 +1,128 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <title>روابط مستر فيصل</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" />
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800;900&display=swap" rel="stylesheet" />
-  <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.6.2/dist/dotlottie-wc.js" type="module"></script>
-  <style>
-    body, html {
-      margin: 0; padding: 0;
-      font-family: 'Cairo', sans-serif;
-      background: white;
-      color: #111;
-      min-height: 100vh;
-      overflow-x: hidden;
-      scroll-behavior: smooth;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    #preloader {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: white;
-      z-index: 9999;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(40px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    .fade-out {
-      opacity: 0;
-      transform: scale(0.98);
-      transition: opacity 0.5s ease, transform 0.5s ease;
-    }
-    /* كارت الفيديو الوجهي */
-    #videoCard {
-      margin-top: 30px;
-      width: 90vw;
-      max-width: 700px;
-      background: #f0f0f0;
-      border-radius: 20px;
-      box-shadow: 0 8px 26px rgba(0,0,0,0.1);
-      overflow: hidden;
-      position: relative;
-      animation: fadeInUp 1s ease forwards;
-      user-select: none;
-    }
-    #videoCard video {
-      width: 100%;
-      height: auto;
-      display: block;
-      border-radius: 20px 20px 0 0;
-      background: black;
-    }
-    #videoCard .card-content {
-      padding: 18px 20px;
-      text-align: center;
-      font-weight: 800;
-      font-size: 24px;
-      color: #222;
-      user-select: none;
-    }
-    #mainCard {
-      margin: 35px auto 20px;
-      max-width: 320px;
-      text-align: center;
-      font-size: 22px;
-      font-weight: 900;
-      color: #222;
-      user-select: none;
-      animation: fadeInUp 1.2s ease forwards;
-    }
-    #mainCard > div:last-child {
-      font-size: 16px;
-      font-weight: 700;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 6px;
-      flex-wrap: wrap;
-      color: #4caf50;
-    }
-    .point-down {
-      display: inline-block;
-      animation: bounceDown 1.8s infinite;
-      color: #4caf50;
-      font-size: 18px;
-    }
-    @keyframes bounceDown {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(5px); }
-    }
-    .social-section {
-      padding: 20px 16px 40px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      max-width: 480px;
-      margin: 0 auto 40px;
-      width: 90%;
-      box-sizing: border-box;
-    }
-    .social-card {
-      background: white;
-      border-radius: 18px;
-      padding: 16px 14px;
-      text-align: right;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-      border: 1.5px solid #ddd;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .social-card:hover {
-      transform: scale(1.04);
-      box-shadow: 0 10px 30px rgba(76,175,80,0.3);
-      border-color: #4caf50;
-    }
-    .social-card a {
-      color: #111;
-      text-decoration: none;
-      flex: 1;
-      display: block;
-    }
-    .social-card img {
-      width: 56px;
-      height: 56px;
-      object-fit: contain;
-      border-radius: 50%;
-      background: white;
-      padding: 6px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.12);
-      flex-shrink: 0;
-    }
-    .social-card h3 {
-      margin: 0;
-      font-size: 17px;
-      font-weight: 700;
-      color: #333;
-    }
-    .social-card p {
-      margin: 2px 0 0 0;
-      font-size: 13px;
-      color: #666;
-      line-height: 1.3;
-    }
-    .start-card {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-bottom: 50px;
-      max-width: 320px;
-      width: 90%;
-    }
-    .start-card-inner {
-      background: linear-gradient(135deg, #4caf50, #81c784);
-      color: white;
-      border-radius: 22px;
-      padding: 20px 28px;
-      box-shadow: 0 8px 24px rgba(76,175,80,0.5);
-      font-size: 22px;
-      font-weight: 900;
-      text-align: center;
-      cursor: pointer;
-      user-select: none;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      transition: background 0.3s ease, transform 0.3s ease;
-    }
-    .start-card-inner:hover {
-      background: linear-gradient(135deg, #66bb6a, #a5d6a7);
-      transform: scale(1.07);
-      box-shadow: 0 12px 40px rgba(76,175,80,0.7);
-    }
-    .start-card-inner > div:first-child {
-      font-size: 40px;
-      animation: rocket 1.5s infinite;
-      margin-bottom: 6px;
-    }
-    @keyframes rocket {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-6px); }
-    }
-    footer {
-      width: 100%;
-      padding: 12px 8px;
-      text-align: center;
-      font-size: 11px;
-      color: #999;
-      background: #f9f9f9;
-      user-select: none;
-      font-weight: 600;
-      font-family: 'Cairo', sans-serif;
-      box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
-    }
-    footer span {
-      font-style: italic;
-      color: #4caf50;
-      font-weight: 700;
-    }
-    /* Accessibility focus */
-    .social-card:focus {
-      outline: 3px solid #4caf50;
-      outline-offset: 2px;
-    }
-    .start-card-inner:focus {
-      outline: 3px solid #4caf50;
-      outline-offset: 3px;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>واجهة الموقع</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Cairo', sans-serif;
+    overflow-x: hidden;
+    color: #fff;
+  }
+
+  /* خلفية الفيديو */
+  .video-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: -1;
+  }
+
+  .video-background video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* زر البداية */
+  .start-btn {
+    display: inline-block;
+    padding: 15px 30px;
+    background-color: #ff9800;
+    color: #fff;
+    border-radius: 30px;
+    font-size: 20px;
+    text-decoration: none;
+    transition: background 0.3s;
+    cursor: pointer;
+  }
+
+  .start-btn:hover {
+    background-color: #e68900;
+  }
+
+  /* مساحة فارغة علشان الشخص في الفيديو يبان */
+  .top-space {
+    height: 300px;
+  }
+
+  /* الكروت */
+  .cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding: 40px 20px;
+    background: rgba(0, 0, 0, 0.5);
+  }
+
+  .card {
+    background: #fff;
+    color: #000;
+    border-radius: 15px;
+    padding: 20px;
+    width: 300px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    transition: transform 0.3s;
+  }
+
+  .card:hover {
+    transform: translateY(-5px);
+  }
+
+</style>
 </head>
 <body>
 
-  <!-- شاشة التحميل -->
-  <div id="preloader" aria-label="تحميل">
-    <dotlottie-wc 
-      src="https://lottie.host/953639aa-133c-4c35-8508-c65811fe8898/jZylR2TITf.lottie" 
-      style="width: 300px; height: 300px;" 
-      speed="1" 
-      autoplay 
-      loop
-      aria-label="تحميل متحرك">
-    </dotlottie-wc>
-  </div>
+<!-- خلفية الفيديو -->
+<div class="video-background">
+  <video autoplay muted loop playsinline id="bgVideo">
+    <source src="video.mp4" type="video/mp4">
+    متصفحك لا يدعم تشغيل الفيديو.
+  </video>
+</div>
 
-  <!-- كارت الفيديو -->
-  <section id="videoCard" aria-label="فيديو تعريفي">
-    <video id="introVideo" autoplay muted loop playsinline>
-      <source src="https://files.catbox.moe/1dldfl.mp4" type="video/mp4" />
-      متصفحك لا يدعم عرض الفيديو.
-    </video>
-    <div class="card-content">مرحباً بك في عالم مستر فيصل</div>
-  </section>
+<!-- مساحة فارغة لظهور الشخص -->
+<div class="top-space"></div>
 
-  <!-- بطاقة انضم لينا -->
-  <div id="mainCard" role="region" aria-label="انضم لينا">
-    <div>انضم لينا</div>
-    <div>
-      <span class="point-down" aria-hidden="true">👇</span>
-      <span>في عالم مستر فيصل</span>
-      <span class="point-down" aria-hidden="true">👇</span>
-    </div>
-  </div>
+<!-- زر ابدأ الرحلة -->
+<div style="text-align:center; margin-bottom:40px;">
+  <button class="start-btn" onclick="startJourney()">ابدأ الرحلة الآن</button>
+</div>
 
-  <!-- روابط التواصل -->
-  <section class="social-section" aria-label="روابط التواصل الاجتماعي">
-    <div class="social-card" tabindex="0">
-      <a href="https://www.whatsapp.com/channel/0029Vb5eotiHFxOvJuFpMI39" target="_blank" rel="noopener noreferrer">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="واتساب" />
-        <h3>انضم لقناة الواتساب</h3>
-        <p>تابع آخر الأخبار والعروض</p>
-      </a>
-    </div>
-    <div class="social-card" tabindex="0">
-      <a href="https://www.facebook.com/groups/450656791778335/?locale=ar_AR" target="_blank" rel="noopener noreferrer">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="فيسبوك جروب" />
-        <h3>انضم لجروب الفيسبوك</h3>
-        <p>محتوى خاص وتفاعل مباشر</p>
-      </a>
-    </div>
-    <div class="social-card" tabindex="0">
-      <a href="https://youtube.com/@mr.faisal.geography?si=5HQdYcyREdFSKiwp" target="_blank" rel="noopener noreferrer">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/4/42/YouTube_icon_%282013-2017%29.png" alt="يوتيوب" />
-        <h3>اشترك في قناة اليوتيوب</h3>
-        <p>شروحات جغرافيا ومراجعات قوية</p>
-      </a>
-    </div>
-    <div class="social-card" tabindex="0">
-      <a href="https://www.tiktok.com/@mr.faisal.geo?_t=ZS-8ySdp4xYApc&_r=1" target="_blank" rel="noopener noreferrer">
-        <img src="https://upload.wikimedia.org/wikipedia/en/a/a9/TikTok_logo.svg" alt="تيك توك" />
-        <h3>تابعني على تيك توك</h3>
-        <p>فيديوهات تعليمية ومراجعات</p>
-      </a>
-    </div>
-    <div class="social-card" tabindex="0">
-      <a href="https://www.facebook.com/Mr.faisl" target="_blank" rel="noopener noreferrer">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="صفحة فيسبوك" />
-        <h3>تابع صفحتي على فيسبوك</h3>
-        <p>أحدث الأخبار والمحتوى الخاص</p>
-      </a>
-    </div>
-  </section>
+<!-- الكروت -->
+<div class="cards">
+  <div class="card">كارت 1</div>
+  <div class="card">كارت 2</div>
+  <div class="card">كارت 3</div>
+  <div class="card">كارت 4</div>
+</div>
 
-  <!-- زر بدء الرحلة -->
-  <div id="joinCard" class="start-card">
-    <div 
-      class="start-card-inner" 
-      role="button" 
-      tabindex="0" 
-      onclick="startJourney()" 
-      onkeypress="if(event.key==='Enter'){startJourney();}"
-      aria-label="ابدأ الرحلة الآن"
-      >
-      <div>🚀</div>
-      <div style="margin-top: 10px;">ابدأ الرحلة الآن</div>
-    </div>
-  </div>
+<!-- الصوت -->
+<audio id="pageAudio" src="audio.mp3"></audio>
 
-  <!-- تذييل الحقوق -->
-  <footer>
-    جميع الحقوق محفوظة لدى <span>abdulrahman adel</span> | نسخة الموقع لدفعه 2026 &copy;
-  </footer>
-
-  <!-- صوت الصفحة -->
-  <audio id="pageAudio" src="https://files.catbox.moe/ftvm82.ogg" preload="auto" style="display: none;"></audio>
-
-  <script>
-    const preloader = document.getElementById('preloader');
-    const introVideo = document.getElementById('introVideo');
-    const mainCard = document.getElementById('mainCard');
-    const startCard = document.querySelector('.start-card');
-    const socialCards = document.querySelectorAll('.social-card');
-
-    window.addEventListener('load', () => {
-      mainCard.style.opacity = 0;
-      startCard.style.opacity = 0;
-      socialCards.forEach(card => card.style.opacity = 0);
-
-      introVideo.addEventListener('canplay', () => {
-        preloader.style.transition = 'opacity 0.8s ease';
-        preloader.style.opacity = 0;
-        setTimeout(() => {
-          preloader.style.display = 'none';
-          mainCard.style.animationPlayState = 'running';
-          mainCard.style.opacity = 1;
-          startCard.querySelector('.start-card-inner').style.animationPlayState = 'running';
-          startCard.style.opacity = 1;
-          socialCards.forEach((card, i) => {
-            card.style.animationPlayState = 'running';
-            card.style.animationDelay = (0.15 * i) + 's';
-            card.style.opacity = 1;
-          });
-        }, 800);
-      });
+<script>
+  function startJourney() {
+    const audio = document.getElementById('pageAudio');
+    audio.play().then(() => {
+      console.log("الصوت شغال ✅");
+      // ممكن هنا تحط كود الانتقال للصفحة التالية لو محتاج
+    }).catch(err => {
+      console.log("في مشكلة في تشغيل الصوت:", err);
     });
+  }
+</script>
 
-    function startJourney() {
-      const audio = document.getElementById('pageAudio');
-      // تشغل الصوت عند الضغط (تأكد من استجابة المتصفح)
-      audio.currentTime = 0; // ترجع الصوت للبداية
-      audio.play().then(() => {
-        document.body.classList.add('fade-out');
-        setTimeout(() => {
-          window.location.href = "start.html";
-        }, 600);
-      }).catch(err => {
-        console.warn("Autoplay blocked or error:", err);
-        // حتى لو لم يتم تشغيل الصوت، نكمل الانتقال
-        document.body.classList.add('fade-out');
-        setTimeout(() => {
-          window.location.href = "start.html";
-        }, 600);
-      });
-    }
-
-    document.querySelectorAll('.social-card').forEach(card => {
-      card.addEventListener('click', () => {
-        card.classList.add('clicked');
-        setTimeout(() => card.classList.remove('clicked'), 500);
-      });
-      card.addEventListener('keypress', e => {
-        if (e.key === 'Enter') card.click();
-      });
-    });
-  </script>
 </body>
 </html>
