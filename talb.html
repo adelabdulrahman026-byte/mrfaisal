@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>متابعة الدروس</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- مهم للموبايل -->
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      font-family: 'Cairo', sans-serif;
+      min-height: 100vh;
+      overflow-y: auto;
+      background: #000;
+    }
+
+    video.bg-video {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      object-fit: cover;
+      filter: brightness(0.5);
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      color: white;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: clamp(1.5em, 5vw, 2.5em);
+      margin-bottom: 20px;
+      animation: pulse 2s infinite;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.9);
+      color: #333;
+      display: inline-block;
+      padding: 15px 25px;
+      border-radius: 15px;
+      cursor: pointer;
+      font-size: clamp(1.2em, 4vw, 1.5em);
+      box-shadow: 0 0 15px rgba(0,0,0,0.3);
+      transition: transform 0.3s ease;
+      max-width: 90%;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+    }
+
+    .options {
+      margin-top: 20px;
+      display: none;
+      animation: fadeIn 1s forwards;
+    }
+
+    .option-btn {
+      background-color: #6a5acd;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      margin: 8px;
+      font-size: clamp(1em, 3.5vw, 1.2em);
+      cursor: pointer;
+      transition: background-color 0.3s;
+      width: 90%;
+      max-width: 250px;
+    }
+
+    .option-btn:hover {
+      background-color: #5941c1;
+    }
+
+    table {
+      width: 95%;
+      margin: 30px auto 0;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      overflow: hidden;
+      display: none;
+      animation: slideInUp 1s ease-in-out;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: center;
+      font-size: clamp(0.9em, 3vw, 1.2em);
+      word-wrap: break-word;
+    }
+
+    th {
+      background-color: #6a5acd;
+      color: white;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f0f0f0;
+    }
+
+    tr:nth-child(odd) {
+      background-color: #ffffff;
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0;}
+      to {opacity: 1;}
+    }
+
+    @keyframes slideInUp {
+      0% { opacity: 0; transform: translateY(40px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    /* تحسين عرض الجدول على الشاشات الصغيرة */
+    @media (max-width: 600px) {
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+
+      thead tr {
+        display: none;
+      }
+
+      tr {
+        background: white;
+        margin-bottom: 10px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      }
+
+      td {
+        padding: 10px;
+        text-align: right;
+        position: relative;
+        padding-right: 50%;
+      }
+
+      td:before {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        font-weight: bold;
+        color: #6a5acd;
+      }
+
+      #secondTable td:nth-of-type(1):before { content: "الحصة"; }
+      #secondTable td:nth-of-type(2):before { content: "الدرس"; }
+      #secondTable td:nth-of-type(3):before { content: "الواجب"; }
+
+      #thirdTable td:nth-of-type(1):before { content: "الحصة"; }
+      #thirdTable td:nth-of-type(2):before { content: "الدرس"; }
+      #thirdTable td:nth-of-type(3):before { content: "الواجب"; }
+    }
+  </style>
+</head>
+<body>
+
+  <video class="bg-video" autoplay muted loop>
+    <source src="https://files.catbox.moe/1dldfl.mp4" type="video/mp4">
+  </video>
+
+  <div class="container">
+    <h1>اعرف وصلنا لفين واللحقنا</h1>
+
+    <div class="card" onclick="showOptions()">اضغط لاختيار الصف الدراسي</div>
+
+    <div class="options" id="classOptions">
+      <button class="option-btn" onclick="showTable('second')">تانية ثانوي</button>
+      <button class="option-btn" onclick="showTable('third')">تالتة ثانوي</button>
+    </div>
+
+    <table id="secondTable">
+      <thead>
+        <tr>
+          <th>الحصة</th>
+          <th>الدرس</th>
+          <th>الواجب</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>الأولى</td>
+          <td>المقومات</td>
+          <td>من صفحة 5 إلى 6</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <table id="thirdTable">
+      <thead>
+        <tr>
+          <th>الحصة</th>
+          <th>الدرس</th>
+          <th>الواجب</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>الأولى</td>
+          <td>الأحلاف</td>
+          <td>من صفحة 8 إلى 11</td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+
+  <script>
+    function showOptions() {
+      document.getElementById('classOptions').style.display = 'block';
+    }
+
+    function showTable(type) {
+      document.getElementById('secondTable').style.display = 'none';
+      document.getElementById('thirdTable').style.display = 'none';
+
+      const table = (type === 'second') ? document.getElementById('secondTable') : document.getElementById('thirdTable');
+      table.style.display = 'table';
+
+      setTimeout(() => {
+        table.scrollIntoView({ behavior: 'smooth' });
+      }, 300);
+    }
+  </script>
+
+</body>
+</html>
