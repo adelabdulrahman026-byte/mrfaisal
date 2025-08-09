@@ -2,483 +2,632 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
+  <title>طلب شحن منتج</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>طلب شراء المنتجات</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Cairo&display=swap');
+    /* تصميم بسيط وجذاب للكروت */
     body {
-      font-family: 'Cairo', sans-serif;
-      background: #f0f4f8;
+      font-family: "Cairo", sans-serif;
+      background: #f2f2f2;
       margin: 0; padding: 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      color: #222;
+      display: flex; flex-direction: column; align-items: center;
+      min-height: 100vh;
     }
     h1 {
-      color: #0066cc;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
+      color: #222;
     }
-    .cards {
+    .cards-container {
       display: flex;
+      gap: 20px;
       flex-wrap: wrap;
-      gap: 15px;
       justify-content: center;
-      max-width: 1000px;
+      max-width: 1200px;
       width: 100%;
     }
     .card {
-      background: white;
-      border-radius: 15px;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.1);
-      width: 300px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+      width: 320px;
       cursor: pointer;
-      transition: transform 0.3s ease;
-      position: relative;
-      overflow: hidden;
       display: flex;
       flex-direction: column;
+      overflow: hidden;
+      transition: transform 0.3s ease;
+      position: relative;
     }
     .card:hover {
       transform: translateY(-10px);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
     }
     .card video {
       width: 100%;
       height: 180px;
       object-fit: cover;
     }
-    .title {
+    .card .icon {
       position: absolute;
-      top: 12px;
-      left: 12px;
-      background: #0066cc;
-      color: white;
-      padding: 8px 20px;
-      border-radius: 25px;
+      top: 10px; left: 10px;
+      background: rgba(0,0,0,0.7);
+      color: #fff;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-weight: bold;
+      font-size: 14px;
+      user-select: none;
+    }
+    .card-content {
+      padding: 15px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .product-name {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .product-desc {
+      font-size: 14px;
+      color: #555;
+      flex-grow: 1;
+      margin-bottom: 12px;
+      min-height: 50px;
+    }
+    .product-price {
+      font-weight: 600;
+      color: #e94e1b;
+      font-size: 18px;
+      margin-bottom: 12px;
+    }
+    .btn-open {
+      background: #e94e1b;
+      color: #fff;
+      border: none;
+      padding: 10px 0;
+      border-radius: 6px;
+      cursor: pointer;
       font-weight: 700;
       font-size: 16px;
-      box-shadow: 0 3px 10px rgba(0,102,204,0.5);
-      z-index: 10;
+      transition: background-color 0.3s ease;
+      width: 100%;
     }
-    .desc {
-      padding: 15px 18px 5px;
-      font-size: 15px;
-      color: #444;
-      flex-grow: 1;
+    .btn-open:hover {
+      background: #bf3e17;
     }
-    .price {
-      padding: 0 18px 15px;
-      font-weight: 700;
-      font-size: 18px;
-      color: #009688;
-    }
-    button {
-      background: #0066cc;
-      border: none;
-      border-radius: 12px;
-      color: white;
-      font-weight: 700;
-      padding: 12px 0;
-      cursor: pointer;
-      font-size: 17px;
-      margin-top: 10px;
-      transition: background 0.3s ease;
-    }
-    button:hover:not(:disabled) {
-      background: #004999;
-    }
-    button:disabled {
-      background: #aaa;
-      cursor: not-allowed;
-    }
+
     /* المودال */
-    .modalOverlay {
+    #modal-bg {
       position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.5);
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.6);
       display: none;
       justify-content: center;
       align-items: center;
       z-index: 9999;
-      padding: 15px;
+      padding: 20px;
     }
-    .modal {
-      background: white;
-      border-radius: 15px;
-      max-width: 460px;
+    #modal-bg.active {
+      display: flex;
+    }
+    #modal-content {
+      background: #fff;
+      border-radius: 12px;
+      max-width: 500px;
       width: 100%;
-      padding: 25px 30px;
-      box-shadow: 0 0 30px rgba(0,0,0,0.25);
+      padding: 20px 30px;
       position: relative;
-      text-align: center;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
     }
-    .modalClose {
+    #modal-content h2 {
+      margin-top: 0;
+      margin-bottom: 20px;
+      font-size: 24px;
+      font-weight: 700;
+      color: #222;
+    }
+    #modal-content label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: #333;
+      margin-top: 12px;
+    }
+    #modal-content input[type="text"],
+    #modal-content input[type="tel"],
+    #modal-content select,
+    #modal-content input[type="file"] {
+      width: 100%;
+      padding: 8px 12px;
+      font-size: 16px;
+      border: 1.5px solid #ccc;
+      border-radius: 6px;
+      outline: none;
+      box-sizing: border-box;
+      transition: border-color 0.3s ease;
+    }
+    #modal-content input[type="file"] {
+      padding: 3px 6px;
+    }
+    #modal-content input:focus,
+    #modal-content select:focus {
+      border-color: #e94e1b;
+    }
+    #modal-content .error-msg {
+      color: #c0392b;
+      margin-top: 8px;
+      font-weight: 600;
+    }
+    #modal-content button[type="submit"] {
+      margin-top: 20px;
+      width: 100%;
+      background: #e94e1b;
+      color: #fff;
+      border: none;
+      padding: 12px;
+      font-size: 18px;
+      font-weight: 700;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    #modal-content button[type="submit"]:hover {
+      background: #bf3e17;
+    }
+    #modal-content button.close-btn {
       position: absolute;
-      top: 12px;
-      left: 12px;
-      font-size: 28px;
+      top: 10px;
+      left: 10px;
+      background: transparent;
+      border: none;
+      font-size: 24px;
       font-weight: 700;
       cursor: pointer;
       color: #777;
       user-select: none;
-      transition: color 0.3s ease;
     }
-    .modalClose:hover {
-      color: #0066cc;
+    #modal-content button.close-btn:hover {
+      color: #e94e1b;
     }
-    form label {
-      display: block;
-      margin: 12px 0 6px;
-      font-weight: 600;
+
+    /* شاشة جاري الشحن */
+    #loading-screen {
+      display: none;
+      text-align: center;
+    }
+
+    /* شاشة نجاح الشحن */
+    #success-screen {
+      display: none;
+      text-align: center;
+    }
+    #success-screen pre {
       text-align: right;
-    }
-    form input[type=text], form input[type=tel], form select, form input[type=file] {
-      width: 100%;
-      padding: 10px 12px;
+      background: #f0f0f0;
+      padding: 10px;
+      border-radius: 8px;
       font-size: 14px;
-      border-radius: 7px;
-      border: 1px solid #ccc;
-      box-sizing: border-box;
+      white-space: pre-wrap;
+      user-select: all;
     }
-    #loading, #successMsg, #errorMsg {
-      margin-top: 15px;
-      font-weight: 700;
-    }
-    #loading {
-      color: #0066cc;
-    }
-    #successMsg {
-      color: #4caf50;
-      font-size: 19px;
-    }
-    #errorMsg {
-      color: #e53935;
-      font-size: 17px;
-    }
-    .tracking-code {
-      margin-top: 12px;
-      padding: 10px 15px;
-      background: #e0f7f1;
-      font-family: monospace;
+    #tracking-code {
+      font-weight: 900;
+      font-size: 20px;
+      background: #e94e1b;
+      color: white;
+      padding: 6px 14px;
+      border-radius: 8px;
       cursor: pointer;
       user-select: all;
-      border-radius: 12px;
       display: inline-block;
+      margin-top: 12px;
+      letter-spacing: 3px;
+    }
+
+    /* تتبع الشحن */
+    #tracking-section {
+      margin-top: 40px;
+      max-width: 500px;
+      width: 100%;
+      background: white;
+      border-radius: 10px;
+      padding: 20px 25px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    #tracking-section h3 {
+      margin: 0 0 12px 0;
+      color: #222;
+      font-weight: 700;
+    }
+    #tracking-section input[type="text"] {
+      width: 100%;
+      padding: 10px 14px;
       font-size: 18px;
+      border-radius: 8px;
+      border: 1.5px solid #ccc;
+      outline: none;
+      box-sizing: border-box;
+      transition: border-color 0.3s ease;
     }
-    .tracking-code:hover {
-      background: #b2dfdb;
+    #tracking-section input[type="text"]:focus {
+      border-color: #e94e1b;
     }
-    @media (max-width: 720px) {
-      .cards {
-        flex-direction: column;
-        align-items: center;
-      }
+    #tracking-section button {
+      margin-top: 14px;
+      background: #e94e1b;
+      color: white;
+      font-size: 18px;
+      font-weight: 700;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 0;
+      width: 100%;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
     }
+    #tracking-section button:hover {
+      background: #bf3e17;
+    }
+    #tracking-result {
+      margin-top: 16px;
+      font-size: 16px;
+      min-height: 60px;
+    }
+
   </style>
   <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.6.2/dist/dotlottie-wc.js" type="module"></script>
 </head>
 <body>
 
-<h1>اختر منتجك واطلب الآن</h1>
+<h1>طلب شحن منتج</h1>
 
-<div class="cards">
-  <div class="card" data-name="مذكرات الصف الثالث الثانوي" data-desc="مذكرة كاملة للصف الثالث الثانوي" data-price="230" data-type="product">
-    <video src="https://files.catbox.moe/lgvvn8.mp4" autoplay muted loop playsinline></video>
-    <div class="title">مذكرات الصف الثالث الثانوي</div>
-    <div class="desc">مذكرة كاملة للصف الثالث الثانوي</div>
-    <div class="price">السعر: 230 جنيه</div>
+<div class="cards-container">
+  <div tabindex="0" role="button" class="card" data-id="product1" aria-label="مذكرات الصف الثالث الثانوي">
+    <video src="https://files.catbox.moe/lgvvn8.mp4" autoplay loop muted playsinline></video>
+    <div class="icon">مذكرات الصف الثالث الثانوي</div>
+    <div class="card-content">
+      <div class="product-name">مذكرات الصف الثالث الثانوي</div>
+      <div class="product-desc">شرح مبسط ومميز لمذكرات الصف الثالث الثانوي.</div>
+      <div class="product-price">السعر: 150 جنيه</div>
+      <button class="btn-open">اطلب المنتج</button>
+    </div>
   </div>
-  <div class="card" data-name="مذكرات الصف الثاني الثانوي" data-desc="مذكرة كاملة للصف الثاني الثانوي" data-price="200" data-type="product">
-    <video src="https://files.catbox.moe/lgvvn8.mp4" autoplay muted loop playsinline></video>
-    <div class="title">مذكرات الصف الثاني الثانوي</div>
-    <div class="desc">مذكرة كاملة للصف الثاني الثانوي</div>
-    <div class="price">السعر: 200 جنيه</div>
+
+  <div tabindex="0" role="button" class="card" data-id="product2" aria-label="مذكرات الصف الثاني الثانوي">
+    <video src="https://files.catbox.moe/lgvvn8.mp4" autoplay loop muted playsinline></video>
+    <div class="icon">مذكرات الصف الثاني الثانوي</div>
+    <div class="card-content">
+      <div class="product-name">مذكرات الصف الثاني الثانوي</div>
+      <div class="product-desc">مذكرة شاملة ومفصلة للصف الثاني الثانوي.</div>
+      <div class="product-price">السعر: 120 جنيه</div>
+      <button class="btn-open">اطلب المنتج</button>
+    </div>
   </div>
-  <div class="card" data-name="اشتري كود اونلاين" data-desc="كود تفعيل للدروس الأونلاين" data-price="150" data-type="code">
-    <video src="https://files.catbox.moe/lgvvn8.mp4" autoplay muted loop playsinline></video>
-    <div class="title">اشتري كود اونلاين</div>
-    <div class="desc">كود تفعيل للدروس الأونلاين</div>
-    <div class="price">السعر: 150 جنيه</div>
+
+  <div tabindex="0" role="button" class="card" data-id="product3" aria-label="اشتري كود اونلاين">
+    <video src="https://files.catbox.moe/lgvvn8.mp4" autoplay loop muted playsinline></video>
+    <div class="icon">اشتري كود اونلاين</div>
+    <div class="card-content">
+      <div class="product-name">اشتري كود اونلاين</div>
+      <div class="product-desc">اختر نوع الكود واطلبه بسهولة.</div>
+      <div class="product-price">السعر: 100 جنيه</div>
+      <button class="btn-open">اطلب المنتج</button>
+    </div>
   </div>
 </div>
-
-<button id="trackOrderBtn" style="margin-top:30px; padding:12px 25px; font-weight:bold; background:#009688; color:#fff; border:none; border-radius:10px; cursor:pointer; box-shadow:0 5px 15px rgba(0,150,136,0.3);">تابع شحنك وصل لفين</button>
 
 <!-- مودال الطلب -->
-<div id="modalOverlay" class="modalOverlay">
-  <div class="modal">
-    <div id="modalClose" class="modalClose">&times;</div>
-    <h2 id="modalTitle"></h2>
-    <p id="modalDesc"></p>
-    <p><strong>السعر: </strong><span id="modalPrice"></span> جنيه</p>
-    <form id="orderForm">
-      <label for="fullName">الاسم ثنائي:</label>
-      <input type="text" id="fullName" name="fullName" required autocomplete="off" />
-
-      <label for="province">المحافظة:</label>
-      <input type="text" id="province" name="province" required autocomplete="off" />
-
-      <label for="address">العنوان بالتفاصيل:</label>
-      <input type="text" id="address" name="address" required autocomplete="off" />
-
-      <label for="phoneContact">رقم الهاتف للتواصل:</label>
-      <input type="tel" id="phoneContact" name="phoneContact" required pattern="[0-9]{10,15}" autocomplete="off" />
-
-      <label for="phoneTransfer">رقم الهاتف المحول منه المبلغ:</label>
-      <input type="tel" id="phoneTransfer" name="phoneTransfer" required pattern="[0-9]{10,15}" autocomplete="off" />
-
-      <div id="codeTypeDiv" style="display:none;">
-        <label for="codeType">نوع الكود:</label>
-        <select id="codeType" name="codeType">
-          <option value="">اختر نوع الكود</option>
-          <option value="ثانوي">ثانوي</option>
-          <option value="ثالثة">ثالثة</option>
-          <option value="آخر">آخر</option>
-        </select>
-      </div>
-
-      <label for="transferImage">رفع صورة التحويل:</label>
-      <input type="file" id="transferImage" name="transferImage" accept="image/*" required />
-
-      <button type="submit" id="buyBtn">يلا اشتري</button>
+<div id="modal-bg" aria-hidden="true" role="dialog" aria-modal="true">
+  <div id="modal-content">
+    <button class="close-btn" aria-label="إغلاق">&times;</button>
+    <h2 id="modal-title">طلب المنتج</h2>
+    <form id="order-form">
+      <div id="form-content"></div>
+      <div class="error-msg" id="error-msg"></div>
+      <button type="submit">يلا اشتري</button>
     </form>
 
-    <div id="loading" style="display:none; margin-top: 20px;">
-      <dotlottie-wc src="https://lottie.host/1d706623-ba9d-4493-b516-a89415725aab/5xTwGriKjM.lottie" style="width:150px;height:150px;" autoplay loop></dotlottie-wc>
-      <p>جاري الشحن ...</p>
+    <div id="loading-screen" aria-live="polite" role="status">
+      <dotlottie-wc src="https://lottie.host/1d706623-ba9d-4493-b516-a89415725aab/5xTwGriKjM.lottie" style="width: 200px; height: 200px; margin: 20px auto;" speed="1" autoplay loop></dotlottie-wc>
+      <p style="text-align:center; font-weight:bold; font-size:18px; color:#e94e1b;">جاري الشحن...</p>
     </div>
 
-    <div id="successMsg" style="display:none; margin-top: 20px;">
-      <div style="font-size: 80px; color: #4caf50; animation: bounce 1.5s infinite;">✔️</div>
-      <p>تم الشحن بنجاح!</p>
-      <div id="orderDetails" style="text-align:right;"></div>
-      <p>كود التتبع:</p>
-      <div class="tracking-code" id="trackingCode" title="اضغط للنسخ"></div>
-      <p style="font-size: 14px; color: #555;">خد اسكرين أو احفظ كود التتبع كويس عشان تعرف طلبك وصل لفين.</p>
+    <div id="success-screen" aria-live="polite" role="alert">
+      <h3>تم الشحن بنجاح!</h3>
+      <pre id="user-data"></pre>
+      <p>كود التتبع: <span id="tracking-code" title="اضغط لنسخ كود التتبع"></span></p>
+      <p style="color:#444; font-weight:bold;">خد اسكرين أو احفظ كود التتبع كويس علشان تعرف طلبك وصل لفين</p>
+      <button id="close-success-btn">إغلاق</button>
     </div>
-
-    <div id="errorMsg" style="color:#e53935; font-weight:bold; display:none; margin-top:15px;"></div>
   </div>
 </div>
 
-<!-- مودال تتبع الطلب -->
-<div id="trackModalOverlay" class="modalOverlay">
-  <div class="modal" style="max-width: 400px;">
-    <div id="trackModalClose" class="modalClose">&times;</div>
-    <h2>تابع طلبك</h2>
-    <form id="trackForm">
-      <label for="trackingInput">ادخل كود التتبع:</label>
-      <input type="text" id="trackingInput" name="trackingInput" required autocomplete="off" />
-      <button type="submit" style="margin-top: 12px;">ابحث</button>
-    </form>
-    <div id="trackResult" style="margin-top: 15px; text-align:right;"></div>
-  </div>
+<!-- تتبع الشحن -->
+<div id="tracking-section" aria-label="تابع شحنك وصل لفين">
+  <h3>تابع شحنك وصل لفين</h3>
+  <input type="text" id="tracking-input" placeholder="أدخل كود التتبع هنا" aria-label="كود التتبع" />
+  <button id="search-tracking-btn">ابحث</button>
+  <div id="tracking-result" role="region" aria-live="polite"></div>
 </div>
 
 <script>
-  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxYY77Tqhw8Bn4pW8Tl31e_y0fITgwd58Ear_r9OD7eGKmGPnYzkTvl83imyfsIG3oY/exec";
+  const products = {
+    product1: {
+      name: "مذكرات الصف الثالث الثانوي",
+      desc: "شرح مبسط ومميز لمذكرات الصف الثالث الثانوي.",
+      price: "150 جنيه",
+      fields: [
+        { label: "الاسم ثنائي", name: "fullName", type: "text" },
+        { label: "المحافظة", name: "governorate", type: "text" },
+        { label: "العنوان بالتفاصيل", name: "address", type: "text" },
+        { label: "رقم الهاتف للتواصل", name: "phone", type: "tel" },
+        { label: "رقم الهاتف المحول منه المبلغ", name: "transferPhone", type: "tel" },
+        { label: "اسكرين التحويل (رفع صورة)", name: "transferScreenshot", type: "file", accept: "image/*" }
+      ]
+    },
+    product2: {
+      name: "مذكرات الصف الثاني الثانوي",
+      desc: "مذكرة شاملة ومفصلة للصف الثاني الثانوي.",
+      price: "120 جنيه",
+      fields: [
+        { label: "الاسم ثنائي", name: "fullName", type: "text" },
+        { label: "المحافظة", name: "governorate", type: "text" },
+        { label: "العنوان بالتفاصيل", name: "address", type: "text" },
+        { label: "رقم الهاتف للتواصل", name: "phone", type: "tel" },
+        { label: "رقم الهاتف المحول منه المبلغ", name: "transferPhone", type: "tel" },
+        { label: "اسكرين التحويل (رفع صورة)", name: "transferScreenshot", type: "file", accept: "image/*" }
+      ]
+    },
+    product3: {
+      name: "اشتري كود اونلاين",
+      desc: "اختر نوع الكود واطلبه بسهولة.",
+      price: "100 جنيه",
+      fields: [
+        { label: "الاسم ثنائي", name: "fullName", type: "text" },
+        { label: "رقم الهاتف", name: "phone", type: "tel" },
+        { label: "نوع الكود", name: "codeType", type: "select", options: ["ثانوي", "ثالثة"] },
+        { label: "رقم الهاتف المحول منه المبلغ", name: "transferPhone", type: "tel" },
+        { label: "اسكرين التحويل (رفع صورة)", name: "transferScreenshot", type: "file", accept: "image/*" }
+      ]
+    }
+  };
 
-  const cards = document.querySelectorAll('.card');
-  const modalOverlay = document.getElementById('modalOverlay');
-  const modalClose = document.getElementById('modalClose');
-  const modalTitle = document.getElementById('modalTitle');
-  const modalDesc = document.getElementById('modalDesc');
-  const modalPrice = document.getElementById('modalPrice');
-  const orderForm = document.getElementById('orderForm');
-  const errorMsg = document.getElementById('errorMsg');
-  const successMsg = document.getElementById('successMsg');
-  const loading = document.getElementById('loading');
-  const orderDetails = document.getElementById('orderDetails');
-  const trackingCodeEl = document.getElementById('trackingCode');
-  const buyBtn = document.getElementById('buyBtn');
+  const modalBg = document.getElementById("modal-bg");
+  const modalTitle = document.getElementById("modal-title");
+  const formContent = document.getElementById("form-content");
+  const orderForm = document.getElementById("order-form");
+  const errorMessage = document.getElementById("error-msg");
+  const loadingScreen = document.getElementById("loading-screen");
+  const successScreen = document.getElementById("success-screen");
+  const userDataPre = document.getElementById("user-data");
+  const trackingCodeDiv = document.getElementById("tracking-code");
+  const closeSuccessBtn = document.getElementById("close-success-btn");
 
-  const codeTypeDiv = document.getElementById('codeTypeDiv');
-  const codeTypeSelect = document.getElementById('codeType');
+  let currentProductId = null;
 
-  let currentProduct = null;
+  // افتح مودال مع توليد الفورم حسب المنتج
+  function openModal(productId) {
+    currentProductId = productId;
+    const product = products[productId];
+    modalTitle.textContent = product.name;
+    errorMessage.textContent = "";
+    formContent.innerHTML = "";
 
-  cards.forEach(card => {
-    card.addEventListener('click', () => {
-      currentProduct = {
-        name: card.dataset.name,
-        desc: card.dataset.desc,
-        price: card.dataset.price,
-        type: card.dataset.type
-      };
-      modalTitle.textContent = currentProduct.name;
-      modalDesc.textContent = currentProduct.desc;
-      modalPrice.textContent = currentProduct.price;
+    product.fields.forEach(f => {
+      const label = document.createElement("label");
+      label.textContent = f.label;
+      label.setAttribute("for", f.name);
+      formContent.appendChild(label);
 
-      if(currentProduct.type === "code"){
-        codeTypeDiv.style.display = "block";
-        codeTypeSelect.required = true;
+      let input;
+      if (f.type === "select") {
+        input = document.createElement("select");
+        input.name = f.name;
+        input.id = f.name;
+        f.options.forEach(opt => {
+          const option = document.createElement("option");
+          option.value = opt;
+          option.textContent = opt;
+          input.appendChild(option);
+        });
       } else {
-        codeTypeDiv.style.display = "none";
-        codeTypeSelect.required = false;
-        codeTypeSelect.value = "";
+        input = document.createElement("input");
+        input.type = f.type;
+        input.name = f.name;
+        input.id = f.name;
+        if(f.accept) input.accept = f.accept;
       }
+      input.required = true;
+      formContent.appendChild(input);
+    });
 
-      orderForm.reset();
-      errorMsg.style.display = "none";
-      successMsg.style.display = "none";
-      loading.style.display = "none";
+    orderForm.style.display = "block";
+    loadingScreen.style.display = "none";
+    successScreen.style.display = "none";
+    modalBg.classList.add("active");
+    modalBg.setAttribute("aria-hidden", "false");
+  }
+
+  // اغلاق المودال
+  function closeModal() {
+    modalBg.classList.remove("active");
+    modalBg.setAttribute("aria-hidden", "true");
+  }
+
+  // انشاء كود تتبع عشوائي
+  function generateTrackingCode() {
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    let code = "";
+    for (let i = 0; i < 8; i++) {
+      code += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return code;
+  }
+
+  // رفع صورة على Google Drive (عن طريق Google Apps Script API) -- لاحقاً يتم إرسال صورة بالـ base64
+  // هنا مجرد تمثيل للرفع (ممكن تعدل على Google Script لرفع الصورة الحقيقية)
+  async function uploadImage(file) {
+    return new Promise((resolve, reject) => {
+      // تحويل الصورة إلى base64
+      const reader = new FileReader();
+      reader.onload = () => {
+        resolve(reader.result);
+      };
+      reader.onerror = () => {
+        reject("فشل في قراءة الصورة");
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // ارسال الطلب
+  orderForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    errorMessage.textContent = "";
+
+    const formData = new FormData(orderForm);
+    const data = {};
+    for (let [key, value] of formData.entries()) {
+      data[key] = value;
+    }
+
+    // تحقق من رفع صورة التحويل
+    const fileInput = orderForm.querySelector('input[type="file"]');
+    if (!fileInput || !fileInput.files.length) {
+      errorMessage.textContent = "يجب رفع صورة اسكرين التحويل.";
+      return;
+    }
+    // تحقق من رقم الهاتف المحول منه
+    if (!data.transferPhone) {
+      errorMessage.textContent = "يجب كتابة رقم الهاتف المحول منه المبلغ.";
+      return;
+    }
+
+    loadingScreen.style.display = "block";
+    orderForm.style.display = "none";
+
+    try {
+      // رفع الصورة (حاليا فقط ترسل base64 كنص - ممكن تغيرها في Google Script)
+      const base64Image = await uploadImage(fileInput.files[0]);
+
+      // تجهيز البيانات للإرسال لجوجل سكريبت
+      const payload = {
+        productName: products[currentProductId].name,
+        price: products[currentProductId].price,
+        fullName: data.fullName,
+        governorate: data.governorate || "",
+        address: data.address || "",
+        phone: data.phone,
+        transferPhone: data.transferPhone,
+        transferScreenshot: base64Image,
+      };
+
+      // إرسال البيانات لجوجل سكريبت (استبدل الرابط بالرابط الخاص بك)
+      const googleScriptURL = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
+
+      const response = await fetch(googleScriptURL, {
+        method: "POST",
+        mode: "cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) throw new Error("فشل في إرسال البيانات");
+
+      // نجاح الشحن
+      const trackingCode = generateTrackingCode();
+
+      loadingScreen.style.display = "none";
+      successScreen.style.display = "block";
+
+      // عرض البيانات + كود التتبع
+      userDataPre.textContent =
+        `الاسم: ${payload.fullName}\n` +
+        `رقم الهاتف: ${payload.phone}\n` +
+        `المحافظة: ${payload.governorate}\n` +
+        `الهاتف: ${payload.transferPhone}\n` +
+        `العنوان: ${payload.address}\n` +
+        `المنتج: ${payload.productName}\n` +
+        `السعر: ${payload.price}\n`;
+
+      trackingCodeDiv.textContent = trackingCode;
+
+      // نسخ كود التتبع عند الضغط عليه
+      trackingCodeDiv.onclick = () => {
+        navigator.clipboard.writeText(trackingCode);
+        alert("تم نسخ كود التتبع!");
+      };
+
+    } catch (error) {
+      loadingScreen.style.display = "none";
       orderForm.style.display = "block";
-      buyBtn.disabled = false;
+      errorMessage.textContent = "حدث خطأ أثناء الإرسال، حاول مرة أخرى.";
+      console.error(error);
+    }
+  });
 
-      modalOverlay.style.display = "flex";
+  // زر الإغلاق في المودال
+  document.querySelector("#modal-content .close-btn").addEventListener("click", closeModal);
+
+  // أزرار فتح المودال لكل منتج
+  document.querySelectorAll(".btn-open").forEach(btn => {
+    btn.addEventListener("click", e => {
+      const productId = e.target.closest(".card").getAttribute("data-id");
+      openModal(productId);
     });
   });
 
-  modalClose.onclick = () => {
-    modalOverlay.style.display = "none";
-  };
+  // --- تابع الشحن ---
+  const trackingInput = document.getElementById("tracking-input");
+  const searchTrackingBtn = document.getElementById("search-tracking-btn");
+  const trackingResult = document.getElementById("tracking-result");
 
-  trackingCodeEl.onclick = () => {
-    const range = document.createRange();
-    range.selectNode(trackingCodeEl);
-    window.getSelection().removeAllRanges();
-    window.getSelection().addRange(range);
-    document.execCommand('copy');
-    alert('تم نسخ كود التتبع');
-  };
-
-  orderForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-
-    if(!orderForm.checkValidity()){
-      errorMsg.textContent = "يرجى تعبئة جميع الحقول بشكل صحيح.";
-      errorMsg.style.display = "block";
+  searchTrackingBtn.addEventListener("click", async () => {
+    const code = trackingInput.value.trim();
+    if (!code) {
+      trackingResult.textContent = "الرجاء إدخال كود التتبع.";
       return;
     }
-    if(currentProduct.type === "code" && !codeTypeSelect.value){
-      errorMsg.textContent = "يرجى اختيار نوع الكود.";
-      errorMsg.style.display = "block";
-      return;
+    trackingResult.textContent = "جار البحث...";
+
+    // جلب بيانات الشحن من Google Sheets عبر Google Apps Script API (اعتمدت رابط السكريبت أدناه)
+    const googleScriptURL = "https://script.google.com/macros/s/AKfycbw8bgnUQ4g_ngKpfFfaal5Zp-2J_mTOMbJJ1dQxnBCiY9zHaWLY-NU_C6jVAryq3MiL/exec";
+
+    try {
+      const res = await fetch(`${googleScriptURL}?action=search&trackingCode=${encodeURIComponent(code)}`);
+      if (!res.ok) throw new Error("فشل في جلب البيانات");
+      const json = await res.json();
+
+      if (json.success && json.data) {
+        const d = json.data;
+        trackingResult.innerHTML =
+          `<strong>تم العثور على الطلب:</strong><br>` +
+          `الاسم: ${d.fullName}<br>` +
+          `رقم الهاتف: ${d.phone}<br>` +
+          `المحافظة: ${d.governorate}<br>` +
+          `الهاتف: ${d.transferPhone}<br>` +
+          `العنوان: ${d.address}<br>` +
+          `المنتج: ${d.productName}<br>` +
+          `السعر: ${d.price}<br>` +
+          `<img src="${d.transferScreenshot}" alt="صورة التحويل" style="max-width:100%; margin-top:10px; border-radius:8px;">`;
+      } else {
+        trackingResult.textContent = "لم يتم العثور على طلب بهذا الكود.";
+      }
+    } catch (error) {
+      trackingResult.textContent = "حدث خطأ أثناء البحث.";
+      console.error(error);
     }
-    if(document.getElementById('transferImage').files.length === 0){
-      errorMsg.textContent = "يرجى رفع صورة التحويل.";
-      errorMsg.style.display = "block";
-      return;
-    }
-
-    errorMsg.style.display = "none";
-    orderForm.style.display = "none";
-    loading.style.display = "block";
-    buyBtn.disabled = true;
-
-    const file = document.getElementById('transferImage').files[0];
-    const reader = new FileReader();
-
-    reader.onload = function() {
-      const transferImageBase64 = reader.result;
-
-      const dataToSend = {
-        fullName: orderForm.fullName.value.trim(),
-        province: orderForm.province.value.trim(),
-        address: orderForm.address.value.trim(),
-        phoneContact: orderForm.phoneContact.value.trim(),
-        phoneTransfer: orderForm.phoneTransfer.value.trim(),
-        productName: currentProduct.name,
-        productPrice: currentProduct.price,
-        codeType: codeTypeSelect.value,
-        transferImageBase64
-      };
-
-      fetch(WEB_APP_URL, {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify(dataToSend)
-      })
-      .then(res => res.json())
-      .then(result => {
-        if(result.status === "success"){
-          successMsg.style.display = "block";
-          orderDetails.innerHTML = `
-            <p><strong>الاسم:</strong> ${result.data.fullName}</p>
-            <p><strong>المحافظة:</strong> ${result.data.province}</p>
-            <p><strong>العنوان:</strong> ${result.data.address}</p>
-            <p><strong>رقم التواصل:</strong> ${result.data.phoneContact}</p>
-            <p><strong>رقم المحول:</strong> ${result.data.phoneTransfer}</p>
-          `;
-          trackingCodeEl.textContent = result.data.trackingCode;
-
-          loading.style.display = "none";
-        } else {
-          errorMsg.textContent = result.message || "حدث خطأ أثناء الطلب";
-          errorMsg.style.display = "block";
-          loading.style.display = "none";
-          orderForm.style.display = "block";
-          buyBtn.disabled = false;
-        }
-      })
-      .catch(() => {
-        errorMsg.textContent = "خطأ في الاتصال بالخادم، حاول مرة أخرى";
-        errorMsg.style.display = "block";
-        loading.style.display = "none";
-        orderForm.style.display = "block";
-        buyBtn.disabled = false;
-      });
-    };
-
-    reader.readAsDataURL(file);
   });
 
-  // مودال تتبع الطلب
-  const trackOrderBtn = document.getElementById('trackOrderBtn');
-  const trackModalOverlay = document.getElementById('trackModalOverlay');
-  const trackModalClose = document.getElementById('trackModalClose');
-  const trackForm = document.getElementById('trackForm');
-  const trackResult = document.getElementById('trackResult');
-
-  trackOrderBtn.onclick = () => {
-    trackResult.textContent = "";
-    trackForm.reset();
-    trackModalOverlay.style.display = "flex";
-  };
-  trackModalClose.onclick = () => {
-    trackModalOverlay.style.display = "none";
-  };
-
-  trackForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const code = trackForm.trackingInput.value.trim();
-    if(code.length === 0){
-      trackResult.textContent = "ادخل كود التتبع!";
-      return;
-    }
-    trackResult.textContent = "جاري البحث...";
-    fetch(WEB_APP_URL + "?action=track&code=" + encodeURIComponent(code))
-      .then(res => res.json())
-      .then(data => {
-        if(data.status === "success" && data.data){
-          trackResult.innerHTML = `
-            <p><strong>الاسم:</strong> ${data.data.fullName}</p>
-            <p><strong>المحافظة:</strong> ${data.data.province}</p>
-            <p><strong>العنوان:</strong> ${data.data.address}</p>
-            <p><strong>رقم التواصل:</strong> ${data.data.phoneContact}</p>
-            <p><strong>رقم المحول:</strong> ${data.data.phoneTransfer}</p>
-            <p><strong>حالة الشحن:</strong> ${data.data.shippingStatus}</p>
-            <p><strong>السعر:</strong> ${data.data.price} جنيه</p>
-            <p><strong>تاريخ الطلب:</strong> ${new Date(data.data.date).toLocaleString()}</p>
-          `;
-        } else {
-          trackResult.textContent = data.message || "كود التتبع غير موجود.";
-        }
-      })
-      .catch(() => {
-        trackResult.textContent = "خطأ في الاتصال بالخادم، حاول مرة أخرى.";
-      });
+  // زر إغلاق شاشة النجاح
+  closeSuccessBtn.addEventListener("click", () => {
+    successScreen.style.display = "none";
+    closeModal();
   });
 </script>
-
-<style>
-  @keyframes bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-20px); }
-  }
-</style>
 
 </body>
 </html>
