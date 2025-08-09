@@ -2,163 +2,200 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <title>طلب شراء</title>
+  <title>منتجات شراء</title>
+  <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.6.2/dist/dotlottie-wc.js" type="module"></script>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f0f2f5;
-      margin: 0; padding: 20px;
-    }
-    .container {
-      max-width: 600px;
-      background: white;
-      margin: auto;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
-    }
-    h2 {
-      text-align: center;
-      color: #333;
-      margin-bottom: 20px;
-    }
-    label {
-      display: block;
-      margin-top: 15px;
-      font-weight: bold;
-      color: #444;
-    }
-    input, select {
-      width: 100%;
-      padding: 10px;
-      margin-top: 5px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
+    /* Reset */
+    * {
       box-sizing: border-box;
-      font-size: 16px;
+      margin: 0;
+      padding: 0;
+      font-family: 'Cairo', sans-serif;
+      cursor: default;
     }
-    button {
-      width: 100%;
-      margin-top: 25px;
-      background-color: #28a745;
+
+    body, html {
+      height: 100%;
+      overflow: hidden;
+      background: #111;
+      position: relative;
       color: white;
-      border: none;
-      font-size: 18px;
-      padding: 15px;
-      border-radius: 10px;
+    }
+
+    /* خلفية الـ Lottie (تكبير وتوسيط) */
+    dotlottie-wc {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      width: 100vw;
+      height: 100vh;
+      transform: translate(-50%, -50%);
+      z-index: -1;
+      opacity: 0.15;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    /* الحاوية الرئيسية */
+    .container {
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 30px;
+      padding: 20px;
+    }
+
+    /* شكل الكارت */
+    .card {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      box-shadow:
+        0 4px 15px rgba(255, 255, 255, 0.2),
+        inset 0 0 10px rgba(255, 255, 255, 0.1);
+      width: 280px;
+      height: 380px;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 30px 25px;
+      backdrop-filter: blur(15px);
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
       cursor: pointer;
-      transition: background-color 0.3s ease;
+      position: relative;
+      overflow: hidden;
     }
-    button:hover {
-      background-color: #218838;
+
+    /* ظل عند التحويم */
+    .card:hover {
+      transform: translateY(-15px) scale(1.05);
+      box-shadow:
+        0 15px 25px rgba(255, 255, 255, 0.4),
+        inset 0 0 20px rgba(255, 255, 255, 0.2);
+      z-index: 2;
     }
-    #message {
-      margin-top: 20px;
-      font-weight: bold;
+
+    /* حركة بسيطة على الكارت */
+    .card::before {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(270deg, #ff005a, #ff9a00, #00ffe7, #ff005a);
+      background-size: 600% 600%;
+      animation: gradientShift 8s ease infinite;
+      filter: blur(25px);
+      opacity: 0.5;
+      transition: opacity 0.4s ease;
+      border-radius: 20px;
+      z-index: 0;
+    }
+
+    .card:hover::before {
+      opacity: 0.9;
+    }
+
+    @keyframes gradientShift {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    /* محتويات الكارت */
+    .card .title {
+      font-size: 1.8rem;
+      font-weight: 700;
       text-align: center;
+      margin-bottom: 15px;
+      z-index: 1;
+      user-select: none;
+    }
+
+    .card .price {
+      font-size: 2.6rem;
+      font-weight: 900;
+      text-align: center;
+      margin-bottom: 10px;
+      color: #ffcc00;
+      z-index: 1;
+      user-select: none;
+    }
+
+    /* شكل الزر أو رسالة الشراء */
+    .card .buy-btn {
+      background: #ffcc00;
+      color: #111;
+      font-weight: 700;
+      padding: 12px 0;
+      border-radius: 12px;
+      text-align: center;
+      font-size: 1.3rem;
+      user-select: none;
+      box-shadow: 0 5px 15px rgba(255, 204, 0, 0.5);
+      transition: background 0.3s ease;
+      z-index: 1;
+    }
+
+    .card .buy-btn:hover {
+      background: #ffaa00;
+    }
+
+    /* Responsive */
+    @media (max-width: 960px) {
+      .container {
+        flex-direction: column;
+        gap: 25px;
+        padding: 15px;
+      }
+      .card {
+        width: 85vw;
+        max-width: 320px;
+      }
     }
   </style>
 </head>
 <body>
 
+  <dotlottie-wc 
+    src="https://lottie.host/e8e21b3d-18f4-45ce-a24f-19a2a5be16e5/6PJt9ASQyK.lottie" 
+    style="width: 100vw; height: 100vh;" 
+    speed="1" 
+    autoplay 
+    loop>
+  </dotlottie-wc>
+
   <div class="container">
-    <h2>طلب شراء</h2>
-    <form id="orderForm">
-      <label for="name">اسم العميل</label>
-      <input type="text" id="name" name="name" required />
-
-      <label for="phone">رقم الهاتف</label>
-      <input type="tel" id="phone" name="phone" pattern="[0-9]+" required />
-
-      <label for="governorate">المحافظة</label>
-      <input type="text" id="governorate" name="governorate" required />
-
-      <label for="phoneAlt">الهاتف البديل</label>
-      <input type="tel" id="phoneAlt" name="phoneAlt" pattern="[0-9]*" />
-
-      <label for="address">العنوان</label>
-      <input type="text" id="address" name="address" required />
-
-      <label for="shipping">الشحن (جنيه)</label>
-      <input type="number" id="shipping" name="shipping" value="30" readonly />
-
-      <label for="price">السعر (جنيه)</label>
-      <input type="number" id="price" name="price" value="230" readonly />
-
-      <label for="transferNumber">رقم التحويل</label>
-      <input type="text" id="transferNumber" name="transferNumber" required />
-
-      <label for="transferImage">صورة التحويل</label>
-      <input type="file" id="transferImage" accept="image/*" />
-
-      <button type="submit">إرسال الطلب</button>
-    </form>
-
-    <div id="message"></div>
+    <div class="card" onclick="goToLink()">
+      <div class="title">مذكرات الصف الثالث الثانوي</div>
+      <div class="price">100 جنيه</div>
+      <div class="buy-btn">شراء الآن</div>
+    </div>
+    <div class="card" onclick="goToLink()">
+      <div class="title">مذكرات الصف الثاني الثانوي</div>
+      <div class="price">80 جنيه</div>
+      <div class="buy-btn">شراء الآن</div>
+    </div>
+    <div class="card" onclick="goToLink()">
+      <div class="title">اكودنا</div>
+      <div class="price">120 جنيه</div>
+      <div class="buy-btn">شراء الآن</div>
+    </div>
   </div>
 
-<script>
-  const form = document.getElementById('orderForm');
-  const message = document.getElementById('message');
-  const transferImageInput = document.getElementById('transferImage');
-
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    message.style.color = "black";
-    message.textContent = "جاري إرسال الطلب...";
-
-    const reader = new FileReader();
-    reader.onload = function(evt) {
-      const dataURL = evt.target.result;
-      sendData(dataURL);
-    };
-
-    if (transferImageInput.files.length > 0) {
-      reader.readAsDataURL(transferImageInput.files[0]);
-    } else {
-      sendData("");
+  <script>
+    function goToLink() {
+      window.location.href = "https://script.google.com/macros/s/AKfycbz6BoE4FylPmOz7MYu-gcwnSyDY6bL5iTpSBNBdsInnq5yEeoYzi5EKzYvLTjhRgTI7bg/exec";
     }
-  });
-
-  function sendData(imageBase64) {
-    const data = {
-      name: form.name.value.trim(),
-      phone: form.phone.value.trim(),
-      governorate: form.governorate.value.trim(),
-      phoneAlt: form.phoneAlt.value.trim(),
-      address: form.address.value.trim(),
-      shipping: Number(form.shipping.value),
-      price: Number(form.price.value),
-      transferNumber: form.transferNumber.value.trim(),
-      transferImageBase64: imageBase64
-    };
-
-    // استخدم XMLHttpRequest بدل fetch
-    const xhr = new XMLHttpRequest();
-    xhr.open("POST", "https://script.google.com/macros/s/AKfycbyiCfvrRpFwr91H_kHdZHzUirBXEuHYZtUXavgpUm9BdCg0C9QvegpByA3ymWBQ2P8b9A/exec", true);
-    xhr.setRequestHeader("Content-Type", "application/json");
-
-    xhr.onreadystatechange = function() {
-      if (xhr.readyState === 4) {
-        if (xhr.status === 200) {
-          message.style.color = "green";
-          message.textContent = "تم إرسال الطلب بنجاح";
-          form.reset();
-        } else {
-          message.style.color = "red";
-          message.textContent = "حدث خطأ في الاتصال بالخادم";
-        }
-      }
-    };
-
-    xhr.onerror = function() {
-      message.style.color = "red";
-      message.textContent = "حدث خطأ في الاتصال بالخادم";
-    };
-
-    xhr.send(JSON.stringify(data));
-  }
-</script>
+  </script>
 
 </body>
 </html>
