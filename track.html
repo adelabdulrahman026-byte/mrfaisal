@@ -1,206 +1,148 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>شراء المذكرة</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>نموذج الطلب</title>
   <style>
     body {
-      font-family: 'Cairo', sans-serif;
-      background: linear-gradient(135deg, #4facfe, #00f2fe);
-      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
       margin: 0;
+      padding: 0;
+    }
+    .container {
+      width: 100%;
+      max-width: 600px;
+      margin: 50px auto;
+      background-color: #fff;
       padding: 20px;
-      color: #fff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
     h1 {
-      margin-bottom: 20px;
       text-align: center;
-      text-shadow: 0 0 10px #0006;
-    }
-    form {
-      background: rgba(0,0,0,0.4);
-      padding: 20px;
-      border-radius: 10px;
-      width: 100%;
-      max-width: 400px;
-      box-shadow: 0 0 15px #0009;
+      color: #333;
     }
     label {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 5px;
       display: block;
-      margin-top: 15px;
-      font-weight: bold;
     }
-    input, select {
+    input, textarea {
       width: 100%;
-      padding: 8px 10px;
-      border-radius: 5px;
-      border: none;
-      margin-top: 5px;
-      font-size: 16px;
-    }
-    input[type="file"] {
-      padding: 3px;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
     }
     button {
-      margin-top: 20px;
       width: 100%;
-      background: #00c853;
-      border: none;
-      padding: 12px;
-      font-size: 18px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: bold;
+      padding: 10px;
+      background-color: #4CAF50;
       color: white;
-      transition: background-color 0.3s ease;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
     }
     button:hover {
-      background: #00b14a;
-    }
-    .note {
-      margin-top: 15px;
-      background: #ffeb3b;
-      color: #333;
-      padding: 10px;
-      border-radius: 8px;
-      font-weight: bold;
-      text-align: center;
-    }
-    .message {
-      margin-top: 20px;
-      font-size: 18px;
-      font-weight: bold;
-      text-align: center;
-      padding: 10px;
-      border-radius: 8px;
-    }
-    .success {
-      background-color: #4caf50;
-      color: white;
+      background-color: #45a049;
     }
     .error {
-      background-color: #f44336;
-      color: white;
+      color: red;
+      font-size: 12px;
+      margin-bottom: 15px;
     }
   </style>
 </head>
 <body>
 
-  <h1>شراء مذكرة الصف الثالث الثانوي</h1>
+  <div class="container">
+    <h1>نموذج الطلب</h1>
+    <div class="error" id="error-message"></div>
+    <form id="order-form">
+      <label for="name">الاسم الكامل</label>
+      <input type="text" id="name" name="name" required>
 
-  <form id="orderForm">
-    <label for="name">الاسم الكامل</label>
-    <input type="text" id="name" required />
+      <label for="phone">رقم الهاتف</label>
+      <input type="text" id="phone" name="phone" required>
 
-    <label for="phone">رقم الموبايل (رقم صحيح فقط)</label>
-    <input type="tel" id="phone" pattern="[0-9]{10,15}" placeholder="مثال: 01012345678" required />
+      <label for="product">المنتج المطلوب</label>
+      <input type="text" id="product" name="product" required>
 
-    <label for="vodafoneNumber">رقم فودافون كاش للتحويل</label>
-    <input type="tel" id="vodafoneNumber" pattern="[0-9]{10,15}" placeholder="رقم فودافون كاش" required />
+      <label for="price">السعر</label>
+      <input type="number" id="price" name="price" required>
 
-    <label>اختيار المنتج</label>
-    <select id="product" required>
-      <option value="مذكرة الصف الثالث الثانوي" selected>مذكرة الصف الثالث الثانوي</option>
-    </select>
+      <label for="shipping">الشحن</label>
+      <input type="number" id="shipping" name="shipping" required>
 
-    <label>السعر (جنيه)</label>
-    <input type="number" id="price" value="200" readonly />
+      <label for="total">الإجمالي</label>
+      <input type="number" id="total" name="total" required>
 
-    <label>مصاريف الشحن (جنيه)</label>
-    <input type="number" id="shipping" value="30" readonly />
+      <label for="vodafoneNumber">رقم فودافون كاش</label>
+      <input type="text" id="vodafoneNumber" name="vodafoneNumber" required>
 
-    <label>الإجمالي (جنيه)</label>
-    <input type="number" id="total" value="230" readonly />
+      <label for="image">صورة التحويل (اختياري)</label>
+      <input type="file" id="image" name="image">
 
-    <label for="image">رفع صورة تحويل فودافون كاش</label>
-    <input type="file" id="image" accept="image/*" required />
-
-    <button type="submit">يلا اشتري</button>
-
-    <div class="note">
-      ملحوظة: في حالة عدم كتابة رقم التحويل أو رفع صورة التحويل يعتبر الطلب لاغياً.
-    </div>
-  </form>
-
-  <div id="message" class="message" style="display:none;"></div>
+      <button type="submit">إرسال الطلب</button>
+    </form>
+  </div>
 
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby7KUu4Jy_Et8fsASTYUO4LoyOYqGDeTM1ks3L0yoV7XGF5kAkfBePgZkLE-4QCsukLJQ/exec";
-
-    const form = document.getElementById('orderForm');
-    const messageDiv = document.getElementById('message');
-    const imageInput = document.getElementById('image');
+    const form = document.getElementById('order-form');
+    const errorMessage = document.getElementById('error-message');
+    const scriptUrl = 'https://script.google.com/macros/s/AKfycbyRkLmFu0DQlNASGA0DTD5bgoJdjtxOMAIatcDWR0pXxdI3bL9bfJ-d2yc_zFokFvmHwQ/exec';
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
+      errorMessage.textContent = ''; // Reset error message
 
-      // تحقق من وجود صورة
-      if (!imageInput.files.length) {
-        showMessage("من فضلك ارفع صورة التحويل", "error");
-        return;
-      }
-
-      // قراءة بيانات الصورة كـ Base64
-      const file = imageInput.files[0];
-      const reader = new FileReader();
-
-      reader.onload = async function(event) {
-        const imageBase64 = event.target.result;
-
-        const data = {
-          name: document.getElementById('name').value.trim(),
-          phone: document.getElementById('phone').value.trim(),
-          vodafoneNumber: document.getElementById('vodafoneNumber').value.trim(),
-          product: document.getElementById('product').value,
-          price: Number(document.getElementById('price').value),
-          shipping: Number(document.getElementById('shipping').value),
-          total: Number(document.getElementById('total').value),
-          imageBase64: imageBase64
-        };
-
-        // تحقق من الحقول المطلوبة
-        if (!data.name || !data.phone || !data.vodafoneNumber) {
-          showMessage("من فضلك املأ جميع الحقول المطلوبة", "error");
-          return;
-        }
-
-        try {
-          showMessage("جاري إرسال الطلب...", "success");
-
-          const response = await fetch(SCRIPT_URL, {
-            method: "POST",
-            body: JSON.stringify(data),
-            headers: {
-              "Content-Type": "application/json"
-            }
-          });
-
-          const result = await response.json();
-
-          if (result.status === "success") {
-            showMessage(`تم استلام طلبك بنجاح! رقم التتبع الخاص بك: ${result.trackingCode}`, "success");
-            form.reset();
-          } else {
-            showMessage("حدث خطأ أثناء إرسال الطلب: " + result.message, "error");
-          }
-
-        } catch (err) {
-          showMessage("حدث خطأ في الاتصال بالخادم. حاول مرة أخرى.", "error");
-        }
+      const formData = new FormData(form);
+      const data = {
+        name: formData.get('name'),
+        phone: formData.get('phone'),
+        product: formData.get('product'),
+        price: formData.get('price'),
+        shipping: formData.get('shipping'),
+        total: formData.get('total'),
+        vodafoneNumber: formData.get('vodafoneNumber'),
+        imageBase64: await getBase64Image(formData.get('image'))
       };
 
-      reader.readAsDataURL(file);
+      try {
+        const response = await fetch(scriptUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+        if (result.status === 'success') {
+          alert('تم إرسال الطلب بنجاح. كود التتبع: ' + result.trackingCode);
+          form.reset();
+        } else {
+          throw new Error(result.message || 'حدث خطأ غير متوقع.');
+        }
+      } catch (error) {
+        errorMessage.textContent = 'خطأ: ' + error.message;
+      }
     });
 
-    function showMessage(text, type) {
-      messageDiv.textContent = text;
-      messageDiv.className = "message " + type;
-      messageDiv.style.display = "block";
+    async function getBase64Image(fileInput) {
+      if (!fileInput || !fileInput.files.length) return '';
+      const file = fileInput.files[0];
+      const reader = new FileReader();
+      return new Promise((resolve, reject) => {
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
     }
   </script>
 
