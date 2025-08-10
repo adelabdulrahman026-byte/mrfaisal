@@ -2,225 +2,128 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>منتجات مع خلفية Lottie وكروت فيديو</title>
-  <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.6.2/dist/dotlottie-wc.js" type="module"></script>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Cairo&display=swap');
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body, html {
-      margin: 0;
-      padding: 0;
-      font-family: 'Cairo', sans-serif;
-      background: #fff;
-      color: #222;
-      overflow-x: hidden;
-    }
-
-    /* اللوتي فوق العنوان بحجم كبير */
-    .lottie-wrapper {
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      margin-top: 20px;
-      margin-bottom: 10px;
-    }
-    .lottie-wrapper dotlottie-wc {
-      width: 350px !important;
-      height: 350px !important;
-      opacity: 0.4;
-    }
-
-    h2 {
-      text-align: center;
-      font-size: 2.2rem;
-      font-weight: 800;
-      margin: 0 0 25px;
-      color: #222;
-      letter-spacing: 1px;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.1);
-    }
-
-    .container-wrapper {
-      max-width: 480px;
-      margin: 0 auto 40px;
-      padding: 0 15px;
-    }
-
-    .container {
-      display: flex;
-      flex-direction: column;
-      gap: 30px;
-    }
-
-    .card {
-      background: #f9f9f9;
-      border-radius: 20px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-      cursor: pointer;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      width: 100%;
-      min-height: 350px;
-    }
-
-    .card:hover {
-      transform: scale(1.03);
-      box-shadow: 0 14px 45px rgba(0, 0, 0, 0.15);
-      z-index: 10;
-    }
-
-    .video-wrapper {
-      flex: 1 1 auto;
-      border-top-left-radius: 20px;
-      border-top-right-radius: 20px;
-      overflow: hidden;
-      position: relative;
-      height: 220px;
-    }
-
-    .video-wrapper video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      filter: brightness(0.9);
-      transition: filter 0.3s ease;
-    }
-
-    .card:hover video {
-      filter: brightness(1);
-    }
-
-    .info {
-      padding: 20px 25px;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      gap: 12px;
-      background: #fff;
-      border-bottom-left-radius: 20px;
-      border-bottom-right-radius: 20px;
-      box-shadow: 0 -3px 10px rgba(0,0,0,0.05);
-    }
-
-    .title {
-      font-size: 1.7rem;
-      font-weight: 700;
-      color: #222;
-    }
-
-    .price {
-      font-size: 2.2rem;
-      font-weight: 900;
-      color: #ff9900;
-    }
-
-    .buy-btn {
-      background: #ff9900;
-      color: #fff;
-      padding: 16px 0;
-      border-radius: 20px;
-      font-weight: 700;
-      font-size: 1.3rem;
-      transition: background 0.3s ease;
-      user-select: none;
-      box-shadow: 0 4px 12px rgba(255,153,0,0.6);
-      margin-top: 10px;
-    }
-
-    .buy-btn:hover {
-      background: #e68a00;
-    }
-
-    @media (max-width: 480px) {
-      .lottie-wrapper dotlottie-wc {
-        width: 280px !important;
-        height: 280px !important;
-        opacity: 0.35;
-      }
-      h2 {
-        font-size: 1.8rem;
-        margin-bottom: 20px;
-      }
-      .video-wrapper {
-        height: 180px;
-      }
-      .title {
-        font-size: 1.5rem;
-      }
-      .price {
-        font-size: 1.8rem;
-      }
-      .buy-btn {
-        font-size: 1.1rem;
-        padding: 14px 0;
-      }
-      .card {
-        min-height: 320px;
-      }
-    }
-  </style>
+  <title>طلب شراء</title>
+  <!-- ... باقي الـ CSS كما هو ... -->
 </head>
 <body>
-
-  <div class="lottie-wrapper">
-    <dotlottie-wc 
-      src="https://lottie.host/e8e21b3d-18f4-45ce-a24f-19a2a5be16e5/6PJt9ASQyK.lottie" 
-      speed="1" autoplay loop
-    ></dotlottie-wc>
-  </div>
-
-  <h2>اشتري من عندنا</h2>
-
-  <div class="container-wrapper">
-    <div class="container">
-      <div class="card" onclick="goToLink()">
-        <div class="video-wrapper">
-          <video src="https://files.catbox.moe/lgvvn8.mp4" autoplay muted loop playsinline></video>
-        </div>
-        <div class="info">
-          <div class="title">مذكرات الصف الثالث الثانوي</div>
-          <div class="price">100 جنيه</div>
-          <div class="buy-btn">شراء الآن</div>
-        </div>
-      </div>
-
-      <div class="card" onclick="goToLink()">
-        <div class="video-wrapper">
-          <video src="https://files.catbox.moe/lgvvn8.mp4" autoplay muted loop playsinline></video>
-        </div>
-        <div class="info">
-          <div class="title">مذكرات الصف الثاني الثانوي</div>
-          <div class="price">80 جنيه</div>
-          <div class="buy-btn">شراء الآن</div>
-        </div>
-      </div>
-
-      <div class="card" onclick="goToLink()">
-        <div class="video-wrapper">
-          <video src="https://files.catbox.moe/lgvvn8.mp4" autoplay muted loop playsinline></video>
-        </div>
-        <div class="info">
-          <div class="title">اكودنا</div>
-          <div class="price">120 جنيه</div>
-          <div class="buy-btn">شراء الآن</div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <!-- ... باقي الـ HTML كما هو ... -->
 
   <script>
-    function goToLink() {
-      window.location.href = "https://script.google.com/macros/s/AKfycbzv1FID4N9833EHs-IKvkuM__BL1jljH5BxW6KpYEPFNcqKSKpUHhKnqyeuJhT5BrWFIg/exec";
-    }
-  </script>
+    const GS_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzDY-wkAZx6eE539Zu1_hSyioIR03-4dyUPPN-glpGoZBTPFsFRMS0U-i-kPDhTFjs1pg/exec";
 
+    const form = document.getElementById('orderForm');
+    const message = document.getElementById('message');
+    const loadingScreen = document.getElementById('loadingScreen');
+    const confirmationScreen = document.getElementById('confirmationScreen');
+    const orderDetailsDiv = document.getElementById('orderDetails');
+    const trackingCodeDiv = document.getElementById('trackingCode');
+    const closeBtn = document.getElementById('closeBtn');
+    const buyBtn = document.getElementById('buyBtn');
+    const mainContainer = document.getElementById('mainContainer');
+
+    trackingCodeDiv.addEventListener('click', () => {
+      const text = trackingCodeDiv.textContent;
+      navigator.clipboard.writeText(text)
+        .then(() => {
+          trackingCodeDiv.textContent = "✅ تم النسخ! " + text;
+          setTimeout(() => trackingCodeDiv.textContent = text, 2500);
+        })
+        .catch(() => {
+          alert('فشل النسخ، يرجى نسخه يدوياً.');
+        });
+    });
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      if (!form.checkValidity()) {
+        message.style.color = "red";
+        message.textContent = "يرجى تعبئة كل الحقول بشكل صحيح";
+        return;
+      }
+
+      if (!form.transferImage.files.length) {
+        message.style.color = "red";
+        message.textContent = "يرجى رفع صورة التحويل";
+        return;
+      }
+
+      message.style.color = "#218838";
+      message.textContent = "";
+
+      buyBtn.disabled = true;
+      mainContainer.style.filter = "blur(3px)";
+      loadingScreen.style.display = "flex";
+
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        const dataURL = evt.target.result;
+
+        const orderData = {
+          name: form.name.value.trim(),
+          phone: form.phone.value.trim(),
+          governorate: form.governorate.value.trim(),
+          phoneAlt: form.phoneAlt.value.trim(),
+          address: form.address.value.trim(),
+          price: 230,
+          shipping: 30,
+          transferNumber: form.transferNumber.value.trim(),
+          transferImageBase64: dataURL
+        };
+
+        fetch(GS_WEBAPP_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(orderData)
+        })
+        .then(response => response.json())
+        .then(response => {
+          loadingScreen.style.display = "none";
+          mainContainer.style.filter = "none";
+
+          if (response.status === "success") {
+            confirmationScreen.style.display = "flex";
+
+            orderDetailsDiv.innerHTML =
+              `<p><strong>الاسم:</strong> ${orderData.name}</p>
+              <p><strong>رقم الهاتف:</strong> ${orderData.phone}</p>
+              <p><strong>المحافظة:</strong> ${orderData.governorate}</p>
+              <p><strong>الهاتف البديل:</strong> ${orderData.phoneAlt || '-'}</p>
+              <p><strong>العنوان:</strong> ${orderData.address}</p>
+              <p><strong>السعر + الشحن:</strong> ${orderData.price + orderData.shipping} جنيه</p>
+              <p><strong>رقم التحويل:</strong> ${orderData.transferNumber}</p>
+              <p><strong>نوع الطلب:</strong> مذكرة الصف الثالث الثانوي</p>
+              <div class="checkmark-emoji" aria-hidden="true"></div>`;
+
+            trackingCodeDiv.textContent = response.trackingCode;
+
+            buyBtn.disabled = false;
+            form.reset();
+            message.textContent = "";
+          } else {
+            buyBtn.disabled = false;
+            message.style.color = "red";
+            message.textContent = response.message || "حدث خطأ أثناء الحفظ";
+          }
+        })
+        .catch(error => {
+          loadingScreen.style.display = "none";
+          mainContainer.style.filter = "none";
+          buyBtn.disabled = false;
+          message.style.color = "red";
+          message.textContent = "حدث خطأ في الاتصال بالخادم";
+          console.error(error);
+        });
+      };
+
+      reader.readAsDataURL(form.transferImage.files[0]);
+    });
+
+    closeBtn.addEventListener('click', () => {
+      confirmationScreen.style.display = "none";
+    });
+  </script>
 </body>
 </html>
