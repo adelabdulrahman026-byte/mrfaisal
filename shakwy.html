@@ -67,7 +67,8 @@
 
   input[type="text"],
   input[type="tel"],
-  textarea {
+  textarea,
+  select {
     width: 100%;
     padding: 10px 12px;
     margin-bottom: 18px;
@@ -80,7 +81,8 @@
 
   input[type="text"]:focus,
   input[type="tel"]:focus,
-  textarea:focus {
+  textarea:focus,
+  select:focus {
     border-color: #3380ff;
     outline: none;
     box-shadow: 0 0 6px #3380ff;
@@ -104,15 +106,99 @@
     transition: background 0.3s ease;
   }
 
-  button:hover {
+  button:hover:enabled {
     background: #1a5dcc;
     box-shadow: 0 7px 20px rgba(26, 93, 204, 0.8);
+  }
+  
+  button:disabled {
+    background: #a0c1ff;
+    cursor: not-allowed;
+    box-shadow: none;
   }
 
   /* Lottie container */
   .lottie-container {
     margin: 15px auto 25px;
     text-align: center;
+  }
+
+  /* Modal Styles */
+  .modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right:0; bottom:0;
+    background: rgba(0,0,0,0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
+
+  .modal {
+    background: white;
+    padding: 25px 30px;
+    max-width: 400px;
+    border-radius: 20px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+    text-align: center;
+    font-size: 16px;
+    color: #333;
+  }
+
+  .modal h2 {
+    margin-top: 0;
+    margin-bottom: 15px;
+  }
+
+  .modal p {
+    text-align: justify;
+    line-height: 1.5;
+    margin-bottom: 20px;
+  }
+
+  .modal p a {
+    color: #3380ff;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  .modal label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    font-weight: 600;
+    cursor: pointer;
+    color: #333;
+  }
+
+  .modal input[type="checkbox"] {
+    margin-left: 10px;
+    width: 20px;
+    height: 20px;
+  }
+
+  .modal button {
+    background: #3380ff;
+    color: white;
+    font-size: 18px;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 700;
+    box-shadow: 0 5px 15px rgba(51, 128, 255, 0.6);
+    transition: background 0.3s ease;
+  }
+
+  .modal button:disabled {
+    background: #a0c1ff;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+
+  .modal button:hover:enabled {
+    background: #1a5dcc;
   }
 
   /* Responsive */
@@ -124,6 +210,9 @@
     }
     .lottie-container {
       width: 250px;
+    }
+    .modal {
+      margin: 0 10px;
     }
   }
 </style>
@@ -147,48 +236,127 @@
 
   <label for="phone">رقم التليفون</label>
   <input type="tel" id="phone" name="phone" placeholder="مثال: 01012345678" pattern="^(01[0125])[0-9]{8}$" required />
+  
+  <label for="complaintFrom">الشكوى من</label>
+  <input type="text" id="complaintFrom" name="complaintFrom" placeholder="من أين تأتي الشكوى؟" required />
 
   <label for="complaint">نص الشكوى</label>
   <textarea id="complaint" name="complaint" placeholder="اكتب شكوتك هنا..." required></textarea>
 
-  <button type="submit">قدم الشكوى</button>
+  <button type="submit" id="submitBtn" disabled>قدم الشكوى</button>
 </form>
 
+<!-- Modal سياسة الخصوصية -->
+<div id="privacyModal" class="modal-overlay">
+  <div class="modal">
+    <h2>سياسة الخصوصية والشروط</h2>
+    <p>
+      يرجى قراءة 
+      <a href="privacy.html" target="_blank" rel="noopener noreferrer">سياسة الخصوصية</a>
+      بعناية قبل تقديم الشكوى.
+      <br><br>
+      نحن نلتزم بحماية بياناتك الشخصية ولن نشاركها مع أي جهة خارجية بدون إذنك.
+      <br><br>
+      باستخدامك لهذا النموذج، فإنك توافق على جمع واستخدام بياناتك لغرض معالجة شكواك فقط.
+    </p>
+
+    <label>
+      <input type="checkbox" id="agreeCheckbox" />
+      أنا أوافق على سياسة الخصوصية والشروط
+    </label>
+
+    <button id="agreeBtn" disabled>تم</button>
+  </div>
+</div>
+
 <script>
-  document.getElementById('complaintForm').addEventListener('submit', function(e){
+  const privacyModal = document.getElementById('privacyModal');
+  const agreeCheckbox = document.getElementById('agreeCheckbox');
+  const agreeBtn = document.getElementById('agreeBtn');
+  const submitBtn = document.getElementById('submitBtn');
+  const complaintForm = document.getElementById('complaintForm');
+
+  // تفعيل زر "تم" فقط لو تم اختيار checkbox
+  agreeCheckbox.addEventListener('change', () => {
+    agreeBtn.disabled = !agreeCheckbox.checked;
+  });
+
+  agreeBtn.addEventListener('click', () => {
+    privacyModal.style.display = 'none';
+    submitBtn.disabled = false;
+  });
+
+  complaintForm.addEventListener('submit', async function(e){
     e.preventDefault();
 
     const name = document.getElementById('name').value.trim();
     const phone = document.getElementById('phone').value.trim();
+    const complaintFrom = document.getElementById('complaintFrom').value.trim();
     const complaint = document.getElementById('complaint').value.trim();
 
-    if(!name || !phone || !complaint){
+    if(!name || !phone || !complaintFrom || !complaint){
       alert('من فضلك أكمل جميع الحقول');
       return;
     }
 
-    // تحقق من تطابق الرقم مع الـ pattern (للتأكيد عند الإرسال)
     const phonePattern = /^(01[0125])[0-9]{8}$/;
     if(!phonePattern.test(phone)){
       alert('من فضلك أدخل رقم موبايل مصري صحيح يبدأ بـ 010 أو 011 أو 012 أو 015 ويكون 11 رقم.');
       return;
     }
 
-    // رقم واتساب
-    const whatsappNumber = '201093139047';
+    const token = 'LGQTaKiC0BCmDkQMyMoj9Bep3usAEJSro0zzC35bnJ';
+    const instance_id = 'instance1680';
+    const api_url = `https://wapilot.net/api/v1/${instance_id}/send-message`;
 
-    // تكوين رسالة واتساب
+    // رقمين الإرسال بصيغة واتساب
+    const recipients = [
+      '201093139047@c.us',
+      '201114004712@c.us'
+    ];
+
     const message = 
-      `السلام عليكم،%0A` + 
-      `لدي شكوى من:%0A` + 
-      `الاسم: ${encodeURIComponent(name)}%0A` + 
-      `رقم التليفون: ${encodeURIComponent(phone)}%0A` + 
-      `الشكوى:%0A${encodeURIComponent(complaint)}`;
+      `السلام عليكم،\n` + 
+      `لدي شكوى من:\n` + 
+      `الاسم: ${name}\n` + 
+      `رقم التليفون: ${phone}\n` +
+      `الشكوى من: ${complaintFrom}\n` +
+      `الشكوى:\n${complaint}`;
 
-    // فتح واتساب ويب مع الرسالة والرقم
-    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${message}`;
+    async function sendMessage(to, text) {
+      try {
+        const response = await fetch(api_url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            phone: to,
+            message: text
+          })
+        });
+        const data = await response.json();
+        return data;
+      } catch(err) {
+        console.error('خطأ في إرسال الرسالة:', err);
+        throw err;
+      }
+    }
 
-    window.open(whatsappUrl, '_blank');
+    try {
+      for (const recipient of recipients) {
+        await sendMessage(recipient, message);
+      }
+      alert('تم إرسال شكواك بنجاح. شكرًا لتواصلك معنا.');
+      complaintForm.reset();
+      submitBtn.disabled = true;
+      privacyModal.style.display = 'flex';
+      agreeCheckbox.checked = false;
+      agreeBtn.disabled = true;
+    } catch (error) {
+      alert('حدث خطأ أثناء إرسال الشكوى، الرجاء المحاولة لاحقًا.');
+    }
   });
 </script>
 
