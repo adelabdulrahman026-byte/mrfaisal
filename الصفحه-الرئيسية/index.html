@@ -7,14 +7,24 @@
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800;900&display=swap" rel="stylesheet" />
   <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.6.2/dist/dotlottie-wc.js" type="module"></script>
   <style>
+    :root {
+      --color-bg: #fff;
+      --color-text: #111;
+      --color-card-bg: #f9f9f9;
+      --color-card-shadow: rgba(0,0,0,0.12);
+      --color-tip-shadow-opacity: 0.08;
+      --color-link: #4caf50;
+      --color-link-hover: #2e7d32;
+    }
     body, html {
       margin: 0; padding: 0;
       font-family: 'Cairo', sans-serif;
-      color: #111;
+      color: var(--color-text);
       min-height: 100vh;
       overflow-x: hidden;
       scroll-behavior: smooth;
-      background: #000;
+      background: var(--color-bg);
+      transition: background-color 0.4s ease, color 0.4s ease;
     }
     #preloader {
       position: fixed;
@@ -27,36 +37,84 @@
       justify-content: center;
       align-items: center;
     }
-    #videoBackground {
-      position: relative;
-      height: 100vh;
+    /* كارت الفيديو */
+    #videoCard {
+      max-width: 980px;
+      margin: 30px auto 40px;
+      background: var(--color-card-bg);
+      border-radius: 18px;
+      box-shadow: 0 8px 24px var(--color-card-shadow);
       overflow: hidden;
+      position: relative;
+      aspect-ratio: 16 / 9;
+      transition: background-color 0.4s ease, box-shadow 0.4s ease;
     }
-    #videoBackground video {
-      position: absolute;
-      top: 50%;
-      left: 50%;
+    #videoCard video {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      transform: translate(-50%, -50%);
-      z-index: 0;
-      background: #000;
+      display: block;
+      border-radius: 18px;
+      user-select: none;
     }
-    #videoOverlay {
-      position: relative;
-      z-index: 1;
-      text-align: center;
+
+    /* حاوية النصايح */
+    #tipsContainer {
+      max-width: 480px;
+      margin: 0 auto 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      transition: background-color 0.4s ease;
+    }
+
+    /* كل ورقة نصيحة */
+    .tipCard {
+      border-radius: 20px;
+      padding: 22px 26px;
+      font-size: 20px;
+      font-weight: 700;
+      font-style: normal;
+      letter-spacing: 0.03em;
+      user-select: none;
+      transition: box-shadow 0.3s ease, transform 0.3s ease, background-color 0.4s ease, color 0.4s ease;
+      cursor: default;
+      color: var(--color-text);
+      box-shadow: 0 8px 20px rgba(0,0,0,var(--color-tip-shadow-opacity));
+    }
+    .tipCard:hover {
+      box-shadow: 0 14px 28px rgba(0,0,0,0.15);
+      transform: translateY(-4px);
+    }
+    .tip1 { background: #fff8e1; color: #665c00; box-shadow: 0 8px 20px rgba(255, 223, 93, 0.7); }
+    .tip2 { background: #e1f5fe; color: #01579b; box-shadow: 0 8px 20px rgba(41, 182, 246, 0.6); }
+    .tip3 { background: #e8f5e9; color: #2e7d32; box-shadow: 0 8px 20px rgba(102, 187, 106, 0.6); }
+    .tip4 { background: #fff3e0; color: #ef6c00; box-shadow: 0 8px 20px rgba(255, 183, 77, 0.7); }
+    .tip5 { background: #fce4ec; color: #880e4f; box-shadow: 0 8px 20px rgba(240, 98, 146, 0.7); }
+    .tip6 { background: #ede7f6; color: #311b92; box-shadow: 0 8px 20px rgba(121, 134, 203, 0.7); }
+    .tip7 { background: #f3e5f5; color: #6a1b9a; box-shadow: 0 8px 20px rgba(186, 104, 200, 0.7); }
+
+    /* كارت مرحباً */
+    .welcome-card {
+      max-width: 480px;
+      margin: 0 auto 30px;
+      background: linear-gradient(135deg, #4caf50, #2e7d32);
       color: white;
-      font-size: 28px;
-      font-weight: 900;
-      top: 45%;
-      transform: translateY(-50%);
-      text-shadow: 0 4px 8px rgba(0,0,0,0.5);
+      padding: 22px 28px;
+      border-radius: 18px;
+      font-size: 24px;
+      font-weight: 800;
+      text-align: center;
+      box-shadow: 0 8px 24px rgba(46,125,50,0.6);
+      letter-spacing: 0.06em;
+      user-select: none;
+      transition: background 0.4s ease;
     }
+
     .content {
       background: white;
-      padding: 40px 16px;
+      padding: 0 16px 40px;
+      transition: background-color 0.4s ease;
     }
     .social-section {
       display: flex;
@@ -76,7 +134,7 @@
       display: flex;
       align-items: center;
       gap: 16px;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.4s ease, border-color 0.4s ease;
     }
     .social-card:hover {
       transform: scale(1.04);
@@ -84,10 +142,11 @@
       border-color: #4caf50;
     }
     .social-card a {
-      color: #111;
+      color: var(--color-text);
       text-decoration: none;
       flex: 1;
       display: block;
+      transition: color 0.4s ease;
     }
     .social-card img {
       width: 56px;
@@ -98,6 +157,7 @@
       padding: 6px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.12);
       flex-shrink: 0;
+      transition: background-color 0.4s ease;
     }
     /* زر ابدأ الرحلة */
     .start-journey {
@@ -114,6 +174,7 @@
       cursor: pointer;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
       animation: pulse 1.5s infinite;
+      user-select: none;
     }
     .start-journey:hover {
       transform: scale(1.05);
@@ -126,7 +187,7 @@
     }
     footer {
       width: 100%;
-      padding: 12px 8px;
+      padding: 12px 8px 28px;
       text-align: center;
       font-size: 11px;
       color: #999;
@@ -134,15 +195,151 @@
       font-weight: 600;
       font-family: 'Cairo', sans-serif;
       box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+      position: relative;
+      user-select: none;
+      transition: background-color 0.4s ease, color 0.4s ease;
     }
-    footer span {
+    footer span, footer a.wa-link {
       font-style: italic;
-      color: #4caf50;
+      color: var(--color-link);
       font-weight: 700;
+      cursor: pointer;
+      text-decoration: underline;
+      transition: color 0.4s ease;
+    }
+    footer a.privacy-link {
+      display: block;
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--color-link);
+      text-decoration: none;
+      font-weight: 700;
+      user-select: none;
+      transition: color 0.3s ease;
+    }
+    footer a.privacy-link:hover {
+      color: var(--color-link-hover);
+      text-decoration: underline;
+    }
+
+    /* زرار الوضع الليلي */
+    #toggleDarkMode {
+      position: fixed;
+      top: 12px;
+      left: 12px; /* لأن dir=rtl */
+      background: var(--color-link);
+      border: none;
+      border-radius: 12px;
+      padding: 8px 14px;
+      color: white;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(76,175,80,0.6);
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      z-index: 10000;
+      user-select: none;
+    }
+    #toggleDarkMode:hover {
+      background: var(--color-link-hover);
+      transform: scale(1.05);
+    }
+
+    /* الوضع الليلي */
+    body.dark {
+      --color-bg: #121212;
+      --color-text: #ddd;
+      --color-card-bg: #1e1e1e;
+      --color-card-shadow: rgba(0,0,0,0.8);
+      --color-tip-shadow-opacity: 0.3;
+      --color-link: #81c784;
+      --color-link-hover: #519657;
+      background-color: var(--color-bg);
+      color: var(--color-text);
+    }
+    body.dark #videoCard {
+      background-color: var(--color-card-bg);
+      box-shadow: 0 8px 24px var(--color-card-shadow);
+    }
+    body.dark .tipCard {
+      color: var(--color-text);
+      box-shadow: 0 8px 20px rgba(0,0,0,var(--color-tip-shadow-opacity));
+    }
+    body.dark .welcome-card {
+      background: linear-gradient(135deg, #81c784, #519657);
+      box-shadow: 0 8px 24px rgba(81,150,87,0.8);
+    }
+    body.dark .content {
+      background-color: var(--color-card-bg);
+    }
+    body.dark .social-card {
+      background-color: var(--color-card-bg);
+      border-color: #519657;
+    }
+    body.dark .social-card:hover {
+      border-color: var(--color-link-hover);
+      box-shadow: 0 10px 30px rgba(129,199,132,0.5);
+    }
+    body.dark .social-card a {
+      color: var(--color-text);
+    }
+    body.dark .social-card img {
+      background-color: var(--color-card-bg);
+    }
+    body.dark footer {
+      background-color: #1a1a1a;
+      color: #aaa;
+    }
+    body.dark footer span, body.dark footer a.wa-link {
+      color: var(--color-link);
+    }
+    body.dark footer a.privacy-link {
+      color: var(--color-link);
+    }
+    body.dark footer a.privacy-link:hover {
+      color: var(--color-link-hover);
+    }
+
+    /* استجابة للموبايل */
+    @media (max-width: 520px) {
+      #tipsContainer {
+        max-width: 90%;
+        gap: 14px;
+      }
+      .tipCard {
+        font-size: 18px;
+        padding: 18px 20px;
+      }
+      .welcome-card {
+        font-size: 20px;
+        padding: 18px 20px;
+      }
+      .social-card img {
+        width: 48px;
+        height: 48px;
+      }
+      .start-journey {
+        font-size: 18px;
+        padding: 14px 18px;
+      }
+      #videoCard {
+        max-width: 90vw;
+        aspect-ratio: 16 / 9;
+        margin: 20px auto 30px;
+      }
+      #toggleDarkMode {
+        top: 8px;
+        left: 8px;
+        padding: 6px 12px;
+        font-size: 13px;
+      }
     }
   </style>
 </head>
 <body>
+
+  <!-- زرار الوضع الليلي -->
+  <button id="toggleDarkMode" aria-pressed="false" aria-label="تبديل الوضع الليلي">🌙 الليل</button>
 
   <!-- شاشة التحميل -->
   <div id="preloader" aria-label="تحميل">
@@ -156,48 +353,63 @@
     </dotlottie-wc>
   </div>
 
-  <!-- خلفية الفيديو -->
-  <section id="videoBackground">
+  <!-- كارت الفيديو -->
+  <section id="videoCard" aria-label="فيديو تعليمي">
     <video autoplay muted loop playsinline>
-      <source src="https://files.catbox.moe/1dldfl.mp4" type="video/mp4" />
+      <source src="https://files.catbox.moe/hv05e9.mp4" type="video/mp4" />
       متصفحك لا يدعم عرض الفيديو.
     </video>
-    <div id="videoOverlay">مرحباً بك في عالم مستر فيصل</div>
   </section>
+
+  <!-- كارت النصايح -->
+  <section id="tipsContainer" aria-label="نصايح تعليمية">
+    <div class="tipCard tip1">📚 دراسة مستمرة تؤدي إلى النجاح!</div>
+    <div class="tipCard tip2">⏳ لا تؤجل عمل اليوم إلى الغد.</div>
+    <div class="tipCard tip3">🔄 المراجعة المنتظمة تثبت المعلومات.</div>
+    <div class="tipCard tip4">🗺️ استخدم الخرائط لفهم الجغرافيا بشكل أفضل.</div>
+    <div class="tipCard tip5">❓ اسأل دائمًا وتفاعل مع المعلم.</div>
+    <div class="tipCard tip6">👥 التعلم مع الأصدقاء يزيد من الفهم.</div>
+    <div class="tipCard tip7">🕒 خطط وقتك جيدًا لتحقيق أفضل النتائج.</div>
+  </section>
+
+  <!-- كارت مرحباً -->
+  <div class="welcome-card" aria-label="رسالة ترحيبية">
+    مرحباً بك في عالم مستر فيصل
+  </div>
 
   <!-- محتوى الكروت -->
   <div class="content">
     <section class="social-section" aria-label="روابط التواصل الاجتماعي">
       <div class="social-card">
-        <a href="https://www.whatsapp.com/channel/0029Vb5eotiHFxOvJuFpMI39" target="_blank">
+        <a href="https://www.whatsapp.com/channel/0029Vb5eotiHFxOvJuFpMI39" target="_blank" rel="noopener noreferrer">
           <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="واتساب" />
           <h3>انضم لقناة الواتساب</h3>
           <p>تابع آخر الأخبار والعروض</p>
         </a>
       </div>
       <div class="social-card">
-        <a href="https://www.facebook.com/groups/450656791778335/?locale=ar_AR" target="_blank">
+        <a href="https://www.facebook.com/groups/450656791778335/?locale=ar_AR" target="_blank" rel="noopener noreferrer">
           <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="فيسبوك جروب" />
           <h3>انضم لجروب الفيسبوك</h3>
           <p>محتوى خاص وتفاعل مباشر</p>
         </a>
       </div>
       <div class="social-card">
-        <a href="https://youtube.com/@mr.faisal.geography?si=5HQdYcyREdFSKiwp" target="_blank">
+        <a href="https://youtube.com/@mr.faisal.geography?si=5HQdYcyREdFSKiwp" target="_blank" rel="noopener noreferrer">
           <img src="https://upload.wikimedia.org/wikipedia/commons/4/42/YouTube_icon_%282013-2017%29.png" alt="يوتيوب" />
           <h3>اشترك في قناة اليوتيوب</h3>
           <p>شروحات جغرافيا ومراجعات قوية</p>
         </a>
       </div>
       <div class="social-card">
-        <a href="https://www.tiktok.com/@mr.faisal.geo?_t=ZS-8ySdp4xYApc&_r=1" target="_blank">
+        <a href="https://www.tiktok.com/@mr.faisal.geo?_t=ZS-8ySdp4xYApc&_r=1" target="_blank" rel="noopener noreferrer">
           <img src="https://upload.wikimedia.org/wikipedia/en/a/a9/TikTok_logo.svg" alt="تيك توك" />
           <h3>تابعني على تيك توك</h3>
           <p>فيديوهات تعليمية ومراجعات</p>
         </a>
       </div>
       <div class="social-card">
-        <a href="https://www.facebook.com/Mr.faisl" target="_blank">
+        <a href="https://www.facebook.com/Mr.faisl" target="_blank" rel="noopener noreferrer">
           <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="صفحة فيسبوك" />
           <h3>تابع صفحتي على فيسبوك</h3>
           <p>أحدث الأخبار والمحتوى الخاص</p>
@@ -206,14 +418,21 @@
     </section>
 
     <!-- زر ابدأ الرحلة -->
-    <div class="start-journey" onclick="location.href='https://www.mrfaisal.net/start.html'">
+    <div class="start-journey" onclick="location.href='https://www.mrfaisal.net/start.html'" role="button" tabindex="0" aria-label="ابدأ الرحلة الآن - اضغط هنا">
       🚀 ابدأ الرحلة الآن - اضغط هنا
     </div>
   </div>
 
   <!-- تذييل الحقوق -->
   <footer>
-    جميع الحقوق محفوظة لدى <span>abdulrahman adel</span> | نسخة الموقع لدفعه 2026 &copy;
+    جميع الحقوق محفوظة لدى 
+    <a href="https://wa.me/201093139047" target="_blank" rel="noopener noreferrer" class="wa-link">
+      abdulrahman adel
+    </a> 
+    | نسخة الموقع لدفعه 2026 &copy;
+    <a href="privacy.html" class="privacy-link" target="_blank" rel="noopener noreferrer" aria-label="صفحة سياسة الخصوصية">
+      سياسة الخصوصية
+    </a>
   </footer>
 
   <script>
@@ -223,6 +442,15 @@
       preloader.style.opacity = 0;
       setTimeout(() => preloader.style.display = 'none', 800);
     });
+
+    const toggleBtn = document.getElementById('toggleDarkMode');
+    toggleBtn.addEventListener('click', () => {
+      document.body.classList.toggle('dark');
+      const isDark = document.body.classList.contains('dark');
+      toggleBtn.textContent = isDark ? '☀️ النهار' : '🌙 الليل';
+      toggleBtn.setAttribute('aria-pressed', isDark);
+    });
   </script>
+
 </body>
 </html>
