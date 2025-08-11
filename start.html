@@ -196,6 +196,59 @@
     font-size: 0.85rem;
   }
 
+  /* كارت الصورة الجديدة مع زر العرض قريبًا */
+  .coming-soon-card {
+    position: relative;
+    width: 100%;
+    max-width: 760px;
+    height: 400px; /* ارتفاع أكبر للطول */
+    margin: 0 auto 45px;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.18);
+    cursor: default; /* مؤشر عادي */
+  }
+  .coming-soon-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* عشان الصورة تظهر كاملة */
+    display: block;
+    filter: brightness(0.65);
+    transition: filter 0.3s ease;
+  }
+  .coming-soon-card:hover img {
+    filter: brightness(0.8);
+  }
+  .coming-soon-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #ff0000;
+    color: white;
+    padding: 14px 30px;
+    border-radius: 30px;
+    font-weight: 900;
+    font-size: 1.2rem;
+    box-shadow:
+      0 0 8px #ff0000,
+      0 0 20px #ff0000,
+      0 0 32px #ff0000,
+      0 0 48px #ff0000;
+    text-decoration: none;
+    transition: box-shadow 0.3s ease; /* إزالة transform من الانتقال */
+    display: inline-block;
+    cursor: pointer;
+  }
+  .coming-soon-button:hover {
+    box-shadow:
+      0 0 16px #ff4d4d,
+      0 0 36px #ff4d4d,
+      0 0 52px #ff4d4d,
+      0 0 68px #ff4d4d;
+    /* حذف transform: scale(1.08); */
+  }
+
   /* الفوتر */
   footer {
     text-align: center;
@@ -244,6 +297,13 @@
       height: 180px;
       object-fit: contain;
     }
+    .coming-soon-card {
+      height: 280px;
+    }
+    .coming-soon-button {
+      font-size: 1rem;
+      padding: 12px 24px;
+    }
   }
 </style>
 </head>
@@ -286,6 +346,12 @@
       <div class="yt-subtitle">على اليوتيوب</div>
       <div class="yt-stat">📺 عدد المشتركين: 102,000</div>
       <div class="yt-stat">👁️‍🗨️ عدد المشاهدات: 4,300,000</div>
+    </section>
+
+    <!-- كارت العرض قريباً -->
+    <section class="coming-soon-card" aria-label="قريباً على اليوتيوب">
+      <img src="https://files.catbox.moe/vimik0.jpg" alt="صورة العرض قريباً" />
+      <a href="https://www.youtube.com/@Mr.faisal.geography" target="_blank" rel="noopener" class="coming-soon-button" aria-label="زيارة قناة مستر فيصل على اليوتيوب">يعرض قريبًا</a>
     </section>
 
     <!-- الفوتر -->
