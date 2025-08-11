@@ -5,12 +5,14 @@
   <title>تواصل معنا مع نصائح</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
-    body {
-      background-color: #f4f0f8;
-      font-family: 'Cairo', sans-serif;
-      padding: 15px;
-      margin: 0;
+    html, body {
       overflow-x: hidden;
+      max-width: 100vw;
+      position: relative;
+      margin: 0;
+      padding: 15px;
+      font-family: 'Cairo', sans-serif;
+      background-color: #f4f0f8;
     }
 
     /* العنوان */
@@ -66,6 +68,8 @@
       justify-content: center;
       gap: 20px;
       margin-bottom: 40px;
+      overflow-x: hidden;
+      max-width: 100vw;
     }
 
     /* كارت تواصل مستطيل بالعرض */
@@ -268,7 +272,7 @@
 <div class="header-wrapper">
   <div class="header-title">
     <img src="https://img.icons8.com/ios-filled/50/ffffff/chat--v1.png" alt="دردشة" />
-    تواصل مع فريقنا نحن هنا لمساعدتك
+    تواصل مع فريقنا
   </div>
 </div>
 
@@ -388,9 +392,6 @@
     }, {threshold: 0.2});
 
     targets.forEach((el, i) => {
-      // بالتناوب نضيف from-left للكارت الثاني والرابع وهكذا (مفروض في html تم إضافته بالفعل)
-      // بس لو حبيت تضيف برمجياً تقدر هنا:
-      // if(i % 2 === 1) el.classList.add('from-left');
       observer.observe(el);
     });
   }
