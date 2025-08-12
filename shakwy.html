@@ -243,7 +243,7 @@
     '201114004712@c.us'  // 01114004712
   ];
 
-  // تفعيل زر "تم" فقط لو تم اختيار checkbox
+  // حدث لتفعيل زر "تم" بمجرد الضغط على مربع الاختيار
   agreeCheckbox.addEventListener('change', () => {
     agreeBtn.disabled = !agreeCheckbox.checked;
   });
@@ -273,12 +273,12 @@
     }
 
     const message = 
-      السلام عليكم،\n + 
-      لدي شكوى من:\n + 
-      الاسم: ${name}\n + 
-      رقم التليفون: ${phone}\n +
-      الشكوى من: ${complaintFrom}\n +
-      الشكوى:\n${complaint};
+      `السلام عليكم،\n` + 
+      `لدي شكوى من:\n` + 
+      `الاسم: ${name}\n` + 
+      `رقم التليفون: ${phone}\n` +
+      `الشكوى من: ${complaintFrom}\n` +
+      `الشكوى:\n${complaint}`;
 
     async function sendMessage(to, text) {
       try {
