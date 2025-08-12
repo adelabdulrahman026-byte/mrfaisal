@@ -174,25 +174,6 @@
       margin: 0 10px;
     }
   }
-
-  /* Loading overlay */
-  #loadingOverlay {
-    display: none;
-    position: fixed;
-    top:0; left:0; right:0; bottom:0;
-    background: rgba(255, 255, 255, 0.85);
-    z-index: 10000;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-  #loadingOverlay p {
-    margin-top: 15px;
-    font-size: 20px;
-    color: #3380ff;
-    font-weight: 700;
-  }
 </style>
 
 </head>
@@ -247,19 +228,12 @@
   </div>
 </div>
 
-<!-- Loading Overlay -->
-<div id="loadingOverlay">
-  <dotlottie-wc src="https://lottie.host/f17dc6ae-6d4a-4c71-910c-6a487a10b851/BVb2R8cqFB.lottie" style="width: 300px;height: 300px" speed="1" autoplay loop></dotlottie-wc>
-  <p>جاري إرسال شكوتك...</p>
-</div>
-
 <script>
   const privacyModal = document.getElementById('privacyModal');
   const agreeCheckbox = document.getElementById('agreeCheckbox');
   const agreeBtn = document.getElementById('agreeBtn');
   const submitBtn = document.getElementById('submitBtn');
   const complaintForm = document.getElementById('complaintForm');
-  const loadingOverlay = document.getElementById('loadingOverlay');
 
   // رابط Google Apps Script Web App - استبدله بالرابط الخاص بك
   const proxyUrl = 'https://script.google.com/macros/s/AKfycbwV5vYp22r6cp1DnRUvXckJoWCVYiJpPQvIK3u7g7a2cZwHa29jcMB7j4_Zc1VYvSIi/exec';
@@ -269,6 +243,7 @@
     '201114004712@c.us'  // 01114004712
   ];
 
+  // تفعيل زر "تم" فقط لو تم اختيار checkbox
   agreeCheckbox.addEventListener('change', () => {
     agreeBtn.disabled = !agreeCheckbox.checked;
   });
@@ -298,16 +273,12 @@
     }
 
     const message = 
-      `السلام عليكم،\n` + 
-      `لدي شكوى من:\n` + 
-      `الاسم: ${name}\n` + 
-      `رقم التليفون: ${phone}\n` +
-      `الشكوى من: ${complaintFrom}\n` +
-      `الشكوى:\n${complaint}`;
-
-    // **أظهر اللودينج هنا لما يضغط المستخدم "قدم الشكوى"**
-    loadingOverlay.style.display = 'flex';
-    submitBtn.disabled = true;
+      السلام عليكم،\n + 
+      لدي شكوى من:\n + 
+      الاسم: ${name}\n + 
+      رقم التليفون: ${phone}\n +
+      الشكوى من: ${complaintFrom}\n +
+      الشكوى:\n${complaint};
 
     async function sendMessage(to, text) {
       try {
@@ -336,10 +307,6 @@
       agreeBtn.disabled = true;
     } catch (error) {
       alert('حدث خطأ أثناء إرسال الشكوى، الرجاء المحاولة لاحقًا.');
-    } finally {
-      // إخفاء اللودينج بعد انتهاء الإرسال أو الخطأ
-      loadingOverlay.style.display = 'none';
-      submitBtn.disabled = false;
     }
   });
 </script>
