@@ -305,7 +305,7 @@
       `الشكوى من: ${complaintFrom}\n` +
       `الشكوى:\n${complaint}`;
 
-    // إظهار اللودينج
+    // **أظهر اللودينج هنا لما يضغط المستخدم "قدم الشكوى"**
     loadingOverlay.style.display = 'flex';
     submitBtn.disabled = true;
 
@@ -337,7 +337,7 @@
     } catch (error) {
       alert('حدث خطأ أثناء إرسال الشكوى، الرجاء المحاولة لاحقًا.');
     } finally {
-      // إخفاء اللودينج
+      // إخفاء اللودينج بعد انتهاء الإرسال أو الخطأ
       loadingOverlay.style.display = 'none';
       submitBtn.disabled = false;
     }
