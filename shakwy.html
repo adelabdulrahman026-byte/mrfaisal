@@ -10,15 +10,11 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Cairo&display=swap');
 
-  * {
-    box-sizing: border-box;
-  }
-
+  * { box-sizing: border-box; }
   body {
     font-family: 'Cairo', sans-serif;
     background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);
-    margin: 0;
-    padding: 0 15px;
+    margin: 0; padding: 0 15px;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -26,23 +22,16 @@
     justify-content: center;
     animation: bgPulse 8s ease-in-out infinite;
   }
-
   @keyframes bgPulse {
-    0%, 100% {
-      background-position: 0% 50%;
-    }
-    50% {
-      background-position: 100% 50%;
-    }
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
   }
-
   h1 {
     color: #fff;
     text-align: center;
     margin-bottom: 20px;
     text-shadow: 0 0 8px rgba(0,0,0,0.3);
   }
-
   form {
     background: rgba(255, 255, 255, 0.9);
     border-radius: 20px;
@@ -52,23 +41,19 @@
     box-shadow: 0 8px 25px rgba(0,0,0,0.15);
     animation: formEntrance 1s ease forwards;
   }
-
   @keyframes formEntrance {
     from {opacity: 0; transform: translateY(50px);}
     to {opacity: 1; transform: translateY(0);}
   }
-
   label {
     display: block;
     margin-bottom: 6px;
     font-weight: 600;
     color: #333;
   }
-
   input[type="text"],
   input[type="tel"],
-  textarea,
-  select {
+  textarea {
     width: 100%;
     padding: 10px 12px;
     margin-bottom: 18px;
@@ -78,20 +63,14 @@
     resize: vertical;
     transition: border-color 0.3s ease;
   }
-
   input[type="text"]:focus,
   input[type="tel"]:focus,
-  textarea:focus,
-  select:focus {
+  textarea:focus {
     border-color: #3380ff;
     outline: none;
     box-shadow: 0 0 6px #3380ff;
   }
-
-  textarea {
-    min-height: 100px;
-  }
-
+  textarea { min-height: 100px; }
   button {
     width: 100%;
     background: #3380ff;
@@ -105,25 +84,19 @@
     box-shadow: 0 5px 15px rgba(51, 128, 255, 0.6);
     transition: background 0.3s ease;
   }
-
   button:hover:enabled {
     background: #1a5dcc;
     box-shadow: 0 7px 20px rgba(26, 93, 204, 0.8);
   }
-  
   button:disabled {
     background: #a0c1ff;
     cursor: not-allowed;
     box-shadow: none;
   }
-
-  /* Lottie container */
   .lottie-container {
     margin: 15px auto 25px;
     text-align: center;
   }
-
-  /* Modal Styles */
   .modal-overlay {
     position: fixed;
     top: 0; left: 0; right:0; bottom:0;
@@ -133,7 +106,6 @@
     align-items: center;
     z-index: 9999;
   }
-
   .modal {
     background: white;
     padding: 25px 30px;
@@ -144,24 +116,17 @@
     font-size: 16px;
     color: #333;
   }
-
-  .modal h2 {
-    margin-top: 0;
-    margin-bottom: 15px;
-  }
-
+  .modal h2 { margin-top: 0; margin-bottom: 15px; }
   .modal p {
     text-align: justify;
     line-height: 1.5;
     margin-bottom: 20px;
   }
-
   .modal p a {
     color: #3380ff;
     text-decoration: underline;
     cursor: pointer;
   }
-
   .modal label {
     display: flex;
     align-items: center;
@@ -171,13 +136,11 @@
     cursor: pointer;
     color: #333;
   }
-
   .modal input[type="checkbox"] {
     margin-left: 10px;
     width: 20px;
     height: 20px;
   }
-
   .modal button {
     background: #3380ff;
     color: white;
@@ -190,18 +153,14 @@
     box-shadow: 0 5px 15px rgba(51, 128, 255, 0.6);
     transition: background 0.3s ease;
   }
-
   .modal button:disabled {
     background: #a0c1ff;
     cursor: not-allowed;
     box-shadow: none;
   }
-
   .modal button:hover:enabled {
     background: #1a5dcc;
   }
-
-  /* Responsive */
   @media (max-width: 450px) {
     form {
       padding: 20px;
@@ -214,6 +173,25 @@
     .modal {
       margin: 0 10px;
     }
+  }
+
+  /* Loading overlay */
+  #loadingOverlay {
+    display: none;
+    position: fixed;
+    top:0; left:0; right:0; bottom:0;
+    background: rgba(255, 255, 255, 0.85);
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  #loadingOverlay p {
+    margin-top: 15px;
+    font-size: 20px;
+    color: #3380ff;
+    font-weight: 700;
   }
 </style>
 
@@ -269,14 +247,28 @@
   </div>
 </div>
 
+<!-- Loading Overlay -->
+<div id="loadingOverlay">
+  <dotlottie-wc src="https://lottie.host/f17dc6ae-6d4a-4c71-910c-6a487a10b851/BVb2R8cqFB.lottie" style="width: 300px;height: 300px" speed="1" autoplay loop></dotlottie-wc>
+  <p>جاري إرسال شكوتك...</p>
+</div>
+
 <script>
   const privacyModal = document.getElementById('privacyModal');
   const agreeCheckbox = document.getElementById('agreeCheckbox');
   const agreeBtn = document.getElementById('agreeBtn');
   const submitBtn = document.getElementById('submitBtn');
   const complaintForm = document.getElementById('complaintForm');
+  const loadingOverlay = document.getElementById('loadingOverlay');
 
-  // تفعيل زر "تم" فقط لو تم اختيار checkbox
+  // رابط Google Apps Script Web App - استبدله بالرابط الخاص بك
+  const proxyUrl = 'https://script.google.com/macros/s/AKfycbwV5vYp22r6cp1DnRUvXckJoWCVYiJpPQvIK3u7g7a2cZwHa29jcMB7j4_Zc1VYvSIi/exec';
+
+  const recipients = [
+    '201093139047@c.us', // 01093139047
+    '201114004712@c.us'  // 01114004712
+  ];
+
   agreeCheckbox.addEventListener('change', () => {
     agreeBtn.disabled = !agreeCheckbox.checked;
   });
@@ -305,16 +297,6 @@
       return;
     }
 
-    const token = 'LGQTaKiC0BCmDkQMyMoj9Bep3usAEJSro0zzC35bnJ';
-    const instance_id = 'instance1680';
-    const api_url = `https://wapilot.net/api/v1/${instance_id}/send-message`;
-
-    // رقمين الإرسال بصيغة واتساب
-    const recipients = [
-      '201093139047@c.us',
-      '201114004712@c.us'
-    ];
-
     const message = 
       `السلام عليكم،\n` + 
       `لدي شكوى من:\n` + 
@@ -323,18 +305,16 @@
       `الشكوى من: ${complaintFrom}\n` +
       `الشكوى:\n${complaint}`;
 
+    // إظهار اللودينج
+    loadingOverlay.style.display = 'flex';
+    submitBtn.disabled = true;
+
     async function sendMessage(to, text) {
       try {
-        const response = await fetch(api_url, {
+        const response = await fetch(proxyUrl, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify({
-            phone: to,
-            message: text
-          })
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone: to, message: text })
         });
         const data = await response.json();
         return data;
@@ -356,6 +336,10 @@
       agreeBtn.disabled = true;
     } catch (error) {
       alert('حدث خطأ أثناء إرسال الشكوى، الرجاء المحاولة لاحقًا.');
+    } finally {
+      // إخفاء اللودينج
+      loadingOverlay.style.display = 'none';
+      submitBtn.disabled = false;
     }
   });
 </script>
