@@ -8,6 +8,7 @@
 <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.6.2/dist/dotlottie-wc.js" type="module"></script>
 
 <style>
+  /* نفس الستايلات بدون تغيير */
   @import url('https://fonts.googleapis.com/css2?family=Cairo&display=swap');
 
   * { box-sizing: border-box; }
@@ -235,15 +236,10 @@
   const submitBtn = document.getElementById('submitBtn');
   const complaintForm = document.getElementById('complaintForm');
 
-  // رابط Google Apps Script Web App - استبدله بالرابط الخاص بك
-  const proxyUrl = 'https://script.google.com/macros/s/AKfycbwM71hGHlIq-1HT1WUPXGx3j4KdGhkYj2hYNLspPT2-atc3h0WRtZQXSuBNvf_Yr-Rz/exec';
+  // رقم واتساب لتلقي الشكوى بدون 0 في البداية وبدون + (لمصر)
+  const whatsappNumber = '201093139047'; // رقم 01093139047 مع كود مصر 20
 
-  const recipients = [
-    '201093139047@c.us', // 01093139047
-    '201114004712@c.us'  // 01114004712
-  ];
-
-  // حدث لتفعيل زر "تم" بمجرد الضغط على مربع الاختيار
+  // تفعيل زر "تم" عند اختيار الموافقة
   agreeCheckbox.addEventListener('change', () => {
     agreeBtn.disabled = !agreeCheckbox.checked;
   });
@@ -253,7 +249,7 @@
     submitBtn.disabled = false;
   });
 
-  complaintForm.addEventListener('submit', async function(e){
+  complaintForm.addEventListener('submit', function(e){
     e.preventDefault();
 
     const name = document.getElementById('name').value.trim();
@@ -272,42 +268,26 @@
       return;
     }
 
+    // تكوين رسالة الشكوى
     const message = 
-      `السلام عليكم،\n` + 
-      `لدي شكوى من:\n` + 
-      `الاسم: ${name}\n` + 
-      `رقم التليفون: ${phone}\n` +
-      `الشكوى من: ${complaintFrom}\n` +
-      `الشكوى:\n${complaint}`;
+      `السلام عليكم،%0A` +  // %0A = سطر جديد في URL encoding
+      `لدي شكوى من:%0A` + 
+      `الاسم: ${encodeURIComponent(name)}%0A` + 
+      `رقم التليفون: ${encodeURIComponent(phone)}%0A` +
+      `الشكوى من: ${encodeURIComponent(complaintFrom)}%0A` +
+      `الشكوى:%0A${encodeURIComponent(complaint)}`;
 
-    async function sendMessage(to, text) {
-      try {
-        const response = await fetch(proxyUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ phone: to, message: text })
-        });
-        const data = await response.json();
-        return data;
-      } catch(err) {
-        console.error('خطأ في إرسال الرسالة:', err);
-        throw err;
-      }
-    }
+    // فتح رابط واتساب مع الرسالة الجاهزة
+    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${message}`;
 
-    try {
-      for (const recipient of recipients) {
-        await sendMessage(recipient, message);
-      }
-      alert('تم إرسال شكواك بنجاح. شكرًا لتواصلك معنا.');
-      complaintForm.reset();
-      submitBtn.disabled = true;
-      privacyModal.style.display = 'flex';
-      agreeCheckbox.checked = false;
-      agreeBtn.disabled = true;
-    } catch (error) {
-      alert('حدث خطأ أثناء إرسال الشكوى، الرجاء المحاولة لاحقًا.');
-    }
+    window.open(whatsappUrl, '_blank');
+
+    // بعد الفتح يمكن إعادة تعيين النموذج وإعادة عرض النافذة مرة أخرى
+    complaintForm.reset();
+    submitBtn.disabled = true;
+    privacyModal.style.display = 'flex';
+    agreeCheckbox.checked = false;
+    agreeBtn.disabled = true;
   });
 </script>
 
