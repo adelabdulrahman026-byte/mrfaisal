@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title> 3 ثانوي تسليم الواجب - مستر فيصل</title>
+<title>3 ثانوي تسليم الواجب - مستر فيصل</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600&display=swap" rel="stylesheet">
 <style>
 body{
@@ -77,28 +77,22 @@ button:hover{
   background:#6a1b9a;
 }
 .question-container{
-  scroll-snap-type:y mandatory;
-  overflow-y:auto;
-  max-height:500px;
-  scroll-behavior:smooth;
-  display:grid;
-  grid-template-columns:1fr;
-  gap:15px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  height:500px;
 }
 .question-card{
-  scroll-snap-align:start;
   border:2px solid #d1c4e9;
   background:#f9f5ff;
   padding:20px;
   border-radius:15px;
-  transition:0.3s;
-  opacity:0;
-  transform:translateY(20px);
+  width:100%;
+  max-width:700px;
+  display:none;
 }
-.question-card.show{
-  opacity:1;
-  transform:translateY(0);
-}
+.question-card.active{display:block;}
 .options label{
   display:block;
   margin:8px 0;
@@ -112,6 +106,11 @@ button:hover{
 .options input:checked + span{
   background:#d1c4e9;
   transform:scale(1.05);
+}
+.nav-buttons{
+  display:flex;
+  justify-content:space-between;
+  margin-top:15px;
 }
 #resultCard{display:none;}
 #qrContainer{
@@ -192,37 +191,47 @@ button:hover{
 <input type="text" id="studentName" placeholder="الاسم">
 <input type="text" id="studentMobile" placeholder="رقم الموبايل">
 <input type="text" id="centerCode" placeholder="كود السنتر" style="display:none;">
-
 <div class="privacy-container">
 <input type="checkbox" id="privacyCheck">
 <label for="privacyCheck">أوافق على <a href="https://www.mrfaisal.net/privacy.html" target="_blank">سياسة الخصوصية</a></label>
 </div>
-
 <button onclick="startHomework()">ابدأ الواجب</button>
 </div>
 
 <div class="card" id="homeworkCard" style="display:none;">
 <h2>الواجب</h2>
 <div class="question-container" id="homeworkForm"></div>
+<div class="nav-buttons">
+  <button id="prevQuestion" onclick="prevQuestion()">السؤال السابق</button>
+  <button id="nextQuestion" onclick="nextQuestion()">التالي</button>
+</div>
 <button id="centerSubmit" style="display:none;" onclick="submitHomework()">سلم الواجب</button>
 <button id="onlineSubmit" style="display:none;" onclick="submitOnline()">سلم واجبك أونلاين</button>
 </div>
 
 <div class="card" id="resultCard">
 <h2>تم التصحيح 🎉</h2>
-<div id="studentInfo"></div>
-<div id="answersReview"></div>
-<p style="text-align:center;font-weight:bold;color:#4a148c">ده QR اللي هتدخل بيه الحصه بتاعتك، احتفظ بيه 📱</p>
+
+<!-- QR -->
 <div id="qrContainer"></div>
+<p style="text-align:center;font-weight:bold;color:#4a148c;margin-top:10px;"> احتفظ بيه علشان تدخل  الحصه بتاعتك لو انت طالب سنتر لو انت طالب اونلاين انزل اخر الصفحه ابعته لينا احتفظ ده QR بتاعك 📱</p>
+
+<!-- تصحيح الأسئلة -->
+<div id="answersReview"></div>
+
+<!-- بيانات الطالب -->
+<div id="studentInfo"></div>
+
+<!-- نصيحة الطالب -->
 <div id="advice" style="text-align:center;font-size:18px;margin-top:15px;color:#4a148c;font-weight:bold"></div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/kjua@0.1.1/dist/kjua.min.js"></script>
-
 <script>
 let homeworkData=[];
 let studentType="";
 let studentQR="";
+let currentQuestion=0;
 
 function selectType(type){
   studentType = type;
@@ -265,11 +274,11 @@ async function startHomework(){
         });
         div.appendChild(optsDiv);
         form.appendChild(div);
-        setTimeout(()=>{div.classList.add('show')},i*100);
       });
       document.getElementById('homeworkCard').style.display="block";
       if(studentType=="online") document.getElementById('onlineSubmit').style.display="block";
       if(studentType=="center") document.getElementById('centerSubmit').style.display="block";
+      showQuestion(0);
     },800);
 
   }catch(e){
@@ -277,6 +286,23 @@ async function startHomework(){
     document.getElementById('formCard').style.display="block";
     document.getElementById('gifLoading').style.display="none";
   }
+}
+
+function showQuestion(index){
+  const cards=document.querySelectorAll('.question-card');
+  cards.forEach((c,i)=>c.classList.remove('active'));
+  if(index>=0 && index<cards.length){
+    cards[index].classList.add('active');
+    currentQuestion=index;
+  }
+}
+
+function nextQuestion(){
+  if(currentQuestion<homeworkData.length-1) showQuestion(currentQuestion+1);
+}
+
+function prevQuestion(){
+  if(currentQuestion>0) showQuestion(currentQuestion-1);
 }
 
 function submitHomework(){ generateResult(false); }
@@ -300,13 +326,18 @@ function generateResult(isOnline){
       الإجابة الصحيحة: ${correct}</p>`;
   });
 
-  studentQR = `✅ الطالب: ${name}\n📱: ${mobile}\n🏷 الواجب: MSQ Test\nدرجته: ${score}/${homeworkData.length}\nكود فريد: ${Math.random().toString(36).substring(2,10)}`;
+  studentQR = `✅ الطالب: ${name}\n📱: ${mobile}\n🏷 الواجب: تم عمل الواجب\nدرجته: ${score}/${homeworkData.length}\nكود فريد: ${Math.random().toString(36).substring(2,10)}`;
 
   document.getElementById('homeworkCard').style.display="none";
   document.getElementById('resultCard').style.display="block";
+
+  document.getElementById('qrContainer').innerHTML="";
+  let qr = kjua({text:studentQR,size:250,render:'canvas',fill:'#4a148c',quiet:2,rounded:10});
+  document.getElementById('qrContainer').appendChild(qr);
+
+  document.getElementById('answersReview').innerHTML = reviewHTML;
   document.getElementById('studentInfo').innerText = 
     `الاسم: ${name}\nالموبايل: ${mobile}\nالنوع: ${studentType}\nكود السنتر: ${code}\nدرجتك: ${score}/${homeworkData.length}`;
-  document.getElementById('answersReview').innerHTML = reviewHTML;
 
   // نصيحة حسب الدرجة
   const adviceDiv = document.getElementById('advice');
@@ -320,28 +351,32 @@ function generateResult(isOnline){
     adviceDiv.innerText = phrases[Math.floor(Math.random()*phrases.length)];
   }
 
-  document.getElementById('qrContainer').innerHTML="";
-  let qr = kjua({text:studentQR,size:250,render:'canvas',fill:'#4a148c',quiet:2,rounded:10});
-  document.getElementById('qrContainer').appendChild(qr);
-
   if(isOnline){
-    const waUrl = `https://wa.me/201556618507?text=${encodeURIComponent("ده QR الخاص بالطالب:\n"+studentQR)}`;
-    let btn = document.createElement("a");
-    btn.href = waUrl;
-    btn.target="_blank";
-    btn.id="waButton";
-    btn.innerText="سلم واجبك أونلاين";
-    btn.style.display="block";
-    btn.style.width="100%";
-    btn.style.textAlign="center";
-    btn.style.padding="14px";
-    btn.style.background="#25D366";
-    btn.style.color="#fff";
-    btn.style.marginTop="15px";
-    btn.style.borderRadius="12px";
-    btn.style.fontWeight="bold";
-    btn.style.fontSize="16px";
-    document.getElementById('resultCard').appendChild(btn);
+    qr.toBlob(function(blob){
+      const waUrl = `https://wa.me/201556618507?text=`;
+      let file = new File([blob], "qr.png",{type:"image/png"});
+      let reader = new FileReader();
+      reader.onload = function(e){
+        let imgData = e.target.result;
+        let btn = document.createElement("a");
+        btn.href = `https://api.whatsapp.com/send?phone=201556618507&text=الواجب&media=${encodeURIComponent(imgData)}`;
+        btn.target="_blank";
+        btn.id="waButton";
+        btn.innerText="سلم واجبك أونلاين";
+        btn.style.display="block";
+        btn.style.width="100%";
+        btn.style.textAlign="center";
+        btn.style.padding="14px";
+        btn.style.background="#25D366";
+        btn.style.color="#fff";
+        btn.style.marginTop="15px";
+        btn.style.borderRadius="12px";
+        btn.style.fontWeight="bold";
+        btn.style.fontSize="16px";
+        document.getElementById('resultCard').appendChild(btn);
+      };
+      reader.readAsDataURL(file);
+    });
   }
 }
 </script>
