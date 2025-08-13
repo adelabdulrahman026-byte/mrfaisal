@@ -247,7 +247,7 @@ async function startHomework(){
   document.getElementById('gifLoading').style.display="block";
 
   try{
-    const response = await fetch("https://script.google.com/macros/s/AKfycbxCvG4siYYfkAOFx32zsbPBenDG5hbx5IQ97JO7ux1ksfTiEW5S7KE2QqSS14-ZlgVGEw/exec");
+    const response = await fetch("https://script.google.com/macros/s/AKfycbxRQ75aAJHWx3v0UGmuxKWMJ52mtYOcXYOpm__i-_gZJ6X2V2mfMreSMC1-NRiRiGRWmg/exec");
     homeworkData = await response.json();
 
     setTimeout(()=>{
