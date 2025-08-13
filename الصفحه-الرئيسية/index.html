@@ -430,12 +430,13 @@
       abdulrahman adel
     </a> 
     | نسخة الموقع لدفعه 2026 &copy;
-    <a href="privacy.html" class="https://www.mrfaisal.net/privacy.html" target="_blank" rel="noopener noreferrer" aria-label="صفحة سياسة الخصوصية">
+    <a href="privacy.html" class="privacy-link" target="_blank" rel="noopener noreferrer" aria-label="صفحة سياسة الخصوصية">
       سياسة الخصوصية
     </a>
   </footer>
 
   <script>
+    // preloader
     const preloader = document.getElementById('preloader');
     window.addEventListener('load', () => {
       preloader.style.transition = 'opacity 0.8s ease';
@@ -443,12 +444,19 @@
       setTimeout(() => preloader.style.display = 'none', 800);
     });
 
+    // dark mode toggle
     const toggleBtn = document.getElementById('toggleDarkMode');
     toggleBtn.addEventListener('click', () => {
       document.body.classList.toggle('dark');
       const isDark = document.body.classList.contains('dark');
       toggleBtn.textContent = isDark ? '☀️ النهار' : '🌙 الليل';
       toggleBtn.setAttribute('aria-pressed', isDark);
+    });
+
+    // منع النقر يمين
+    document.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+      alert('تم تعطيل النقر بزر الماوس الأيمن.');
     });
   </script>
 
