@@ -2,62 +2,304 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <title>قريبًا المواعيد</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>مواعيد السناتر</title>
   <style>
     body {
-      margin: 0;
-      padding: 0;
+      background-color: #f0f8ff;
       font-family: 'Cairo', sans-serif;
-      background: linear-gradient(135deg, #607d8b, #90a4ae);
+      margin: 0;
+      padding-top: 60px;
+    }
+
+    .top-bar {
+      position: fixed;
+      top: 0;
+      right: 0;
+      left: 0;
+      background: linear-gradient(90deg, #0072ff, #00c6ff);
+      color: white;
+      padding: 12px;
+      font-size: 18px;
+      font-weight: bold;
+      text-align: center;
+      z-index: 999;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      word-wrap: break-word;
+    }
+
+    h2 {
+      text-align: center;
+      color: #005fa3;
+      margin-bottom: 30px;
+      padding: 0 10px;
+    }
+
+    .cards-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+      padding: 0 10px;
+    }
+
+    .card {
+      background: linear-gradient(135deg, #0072ff, #00c6ff);
+      color: white;
+      border-radius: 15px;
+      padding: 20px;
+      width: 230px;
+      height: 200px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      position: relative;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      color: white;
-      text-align: center;
+      justify-content: flex-start;
+      align-items: flex-start;
+      text-align: right;
+      animation: fadeSlideIn 0.6s ease forwards;
+      opacity: 0;
+      transform: translateY(30px);
     }
 
-    h1 {
-      font-size: 2.5em;
+    .card.active {
+      background: linear-gradient(135deg, #2ecc71, #27ae60);
+    }
+
+    .card.active::after {
+      content: "احنا النهارده هنا 🎯";
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      background: rgba(255,255,255,0.2);
+      padding: 5px 10px;
+      border-radius: 10px;
+      font-size: 14px;
       font-weight: bold;
-      margin-bottom: 20px;
-      animation: fadeIn 1s ease-in-out;
+      animation: pulse 1.5s infinite;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+    .emoji {
+      font-size: 36px;
+      margin-bottom: 10px;
+      animation: bounce 2s infinite;
     }
 
-    dotlottie-wc {
-      max-width: 90%;
-      height: auto;
+    .card h3 {
+      margin: 0 0 8px 0;
+      font-size: 20px;
+    }
+
+    .card p {
+      margin: 4px 0;
+      font-size: 15px;
+    }
+
+    .time-card {
+      background: linear-gradient(135deg, #34495e, #2c3e50);
+      color: white;
+      border-radius: 15px;
+      padding: 20px;
+      width: 260px;
+      margin: 40px auto 0 auto;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+      text-align: center;
+      animation: fadeSlideIn 0.6s ease forwards;
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    .time-card .emoji {
+      font-size: 50px;
+      animation: bounce 2s infinite;
+      margin-bottom: 10px;
+    }
+
+    .time-card h3 {
+      margin: 0;
+      font-size: 22px;
+      color: #ecf0f1;
+    }
+
+    .time-card p {
+      margin: 5px 0;
+      font-size: 16px;
+      font-weight: bold;
+      color: #bdc3c7;
+    }
+
+    @keyframes fadeSlideIn {
+      0% { opacity: 0; transform: translateY(30px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 0.8; }
+      100% { transform: scale(1.1); opacity: 1; }
     }
 
     @media (max-width: 500px) {
-      h1 {
-        font-size: 2em;
+      .card, .time-card {
+        width: 90%;
+        height: auto;
+        padding: 15px;
       }
-      dotlottie-wc {
-        width: 250px;
-        height: 250px;
+      .top-bar {
+        font-size: 14px;
+        padding: 8px;
+      }
+      h2 {
+        font-size: 16px;
+        margin-bottom: 15px;
+      }
+      .card h3 {
+        font-size: 16px;
+      }
+      .card p {
+        font-size: 13px;
+      }
+      .emoji {
+        font-size: 28px;
+      }
+      .time-card h3 {
+        font-size: 16px;
+      }
+      .time-card p {
+        font-size: 13px;
       }
     }
   </style>
 </head>
 <body>
 
-  <h1>قريبًا المواعيد</h1>
+<div class="top-bar" id="nextSessionBar">جاري التحميل...</div>
+<h2>مواعيدنا في السناتر</h2>
+<div class="cards-container" id="cards"></div>
 
-  <!-- إضافة الـ GIF (Lottie Animation) -->
-  <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.6.2/dist/dotlottie-wc.js" type="module"></script>
-  <dotlottie-wc 
-    src="https://lottie.host/9b40cc03-92c6-4143-be12-fdfc71bdf879/1pdWMkUkBH.lottie" 
-    style="width: 300px; height: 300px;" 
-    speed="1" autoplay loop>
-  </dotlottie-wc>
+<div class="time-card">
+  <div class="emoji">⏰</div>
+  <div>
+    <h3>الساعة الآن</h3>
+    <p id="current-time">--:--</p>
+    <p id="current-day">---</p>
+  </div>
+</div>
+
+<script>
+  const schedule = [
+    // السبت
+    {name: "يونايتد", day: "السبت", hour: 10, minute: 0, address: "الحضره", emoji: "🏫"},
+    {name: "الجامعه", day: "السبت", hour: 16, minute: 0, address: "الساعه", emoji: "🎓"},
+    {name: "ثانويه الكويت", day: "السبت", hour: 18, minute: 0, address: "المندره قبلي", emoji: "📚"},
+    {name: "الزهراوي", day: "السبت", hour: 19, minute: 30, address: "سيدي بشر عبدالناصر", emoji: "🏫"},
+    // الأحد
+    {name: "كامبردج", day: "الأحد", hour: 16, minute: 0, address: "سيدي بشر ش المسرح", emoji: "🎒"},
+    {name: "رويال", day: "الأحد", hour: 17, minute: 30, address: "سيدي بشر بحري", emoji: "👑"},
+    {name: "نور السما", day: "الأحد", hour: 19, minute: 0, address: "سيدي بشر الترام", emoji: "🌟"},
+    {name: "ناسا ميامي", day: "الأحد", hour: 20, minute: 0, address: "ميامي خليل حمادة", emoji: "🚀"},
+    // الاثنين
+    {name: "نيوكامبردج", day: "الاثنين", hour: 15, minute: 30, address: "سيدي بشر شركه الكهرباء", emoji: "📘"},
+    // الثلاثاء
+    {name: "العلا", day: "الثلاثاء", hour: 15, minute: 0, address: "ابوسليمان", emoji: "📚"},
+    {name: "القمه", day: "الثلاثاء", hour: 17, minute: 0, address: "السيوف", emoji: "🏆"},
+    {name: "هاوس", day: "الثلاثاء", hour: 19, minute: 0, address: "محرم بك", emoji: "🏠"},
+    // الأربعاء
+    {name: "القدس", day: "الأربعاء", hour: 14, minute: 30, address: "العوايد", emoji: "🕌"},
+    {name: "الاندلس", day: "الأربعاء", hour: 16, minute: 0, address: "الزوايدة", emoji: "🏛️"},
+    {name: "ستارز", day: "الأربعاء", hour: 18, minute: 0, address: "المندرة امام حسني", emoji: "⭐"},
+    // الجمعة
+    {name: "ميامي", day: "الجمعة", hour: 16, minute: 0, address: "ميامي اسفل كوبري 45", emoji: "🌊"},
+    {name: "الرياض السيوف", day: "الجمعة", hour: 18, minute: 0, address: "السيوف", emoji: "⚽"}
+  ];
+
+  const daysMap = {
+    "Saturday": "السبت",
+    "Sunday": "الأحد",
+    "Monday": "الاثنين",
+    "Tuesday": "الثلاثاء",
+    "Wednesday": "الأربعاء",
+    "Thursday": "الخميس",
+    "Friday": "الجمعة",
+  };
+
+  const container = document.getElementById('cards');
+
+  schedule.forEach((item, index) => {
+    const today = daysMap[new Date().toLocaleDateString('en-US', { weekday: 'long' })];
+    const isNow = (item.day === today);
+
+    let hour12 = item.hour % 12 || 12;
+    const period = item.hour >= 12 ? 'م' : 'ص';
+    const minuteFormatted = item.minute.toString().padStart(2, '0');
+
+    const card = document.createElement('div');
+    card.className = 'card' + (isNow ? ' active' : '');
+    card.style.animationDelay = `${0.1 * index}s`;
+    card.innerHTML = `
+      <div class="emoji">${item.emoji}</div>
+      <h3>${item.name}</h3>
+      <p><strong>اليوم:</strong> ${item.day}</p>
+      <p><strong>الساعة:</strong> ${hour12}:${minuteFormatted} ${period}</p>
+      <p><strong>العنوان:</strong> ${item.address}</p>
+    `;
+    container.appendChild(card);
+  });
+
+  const nextSessionBar = document.getElementById('nextSessionBar');
+
+  function updateCountdownBar() {
+    const now = new Date();
+    const today = daysMap[now.toLocaleDateString('en-US', { weekday: 'long' })];
+
+    const upcoming = schedule
+      .filter(s => s.day === today && (s.hour > now.getHours() || (s.hour === now.getHours() && s.minute > now.getMinutes())))
+      .sort((a, b) => a.hour - b.hour || a.minute - b.minute)[0];
+
+    if (!upcoming) {
+      nextSessionBar.textContent = "لا توجد حصص قادمة اليوم";
+      return;
+    }
+
+    const target = new Date();
+    target.setHours(upcoming.hour, upcoming.minute, 0, 0);
+
+    const diff = target - now;
+    if (diff <= 0) {
+      nextSessionBar.textContent = `الآن حصة ${upcoming.name}`;
+      return;
+    }
+
+    const hours = Math.floor(diff / 1000 / 60 / 60);
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+    nextSessionBar.textContent = `الحصة القادمة: سنتر ${upcoming.name} - باقي ${String(hours).padStart(2,'0')}:${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
+  }
+
+  setInterval(updateCountdownBar, 1000);
+  updateCountdownBar();
+
+  function updateClockCard() {
+    const now = new Date();
+    let hours = now.getHours();
+    const minutes = now.getMinutes().toString().padStart(2,'0');
+    const day = daysMap[now.toLocaleDateString('en-US', { weekday: 'long' })];
+
+    const period = hours >= 12 ? 'م' : 'ص';
+    hours = hours % 12 || 12;
+
+    document.getElementById('current-time').textContent = `${hours}:${minutes} ${period}`;
+    document.getElementById('current-day').textContent = day;
+  }
+
+  setInterval(updateClockCard, 1000);
+  updateClockCard();
+</script>
 
 </body>
 </html>
