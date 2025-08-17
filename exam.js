@@ -1,4 +1,4 @@
-const ENDPOINT = "https://script.google.com/macros/s/AKfycbz1anGSdFDEMj41VxKNcHkrTicjY2fkXezQot3WL8Ec43bIBvlo6wC2jG4TViCj7A3OFQ/exec";
+const ENDPOINT = "https://script.google.com/macros/s/AKfycbytj_KyKAMT4-XHRH1txTAxqiYc5httxdR3pIJ9Lpa3F7paZMuPAsWn8IzUVCT7ZxMUDw/exec";
 
 // بدء الامتحان
 async function startExam(studentName) {
