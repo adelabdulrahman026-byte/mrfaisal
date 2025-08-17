@@ -1,4 +1,4 @@
-const API_URL = "https://script.google.com/macros/s/AKfycbzn0vSOiIAHHKRpx_m3b1Yp0pwo7YA8jZYPAcGvrvhP6zhq2E1t-IxoLn_lKAfOghqm9g/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbydIEYV3O4EGNWG2TBdfnjcB7WEkuBtgBxcuV1R7LNCwLcDtj8sa71_gNX2s4T0H0ueDA/exec";
 
 // بدء الامتحان
 async function startExam(studentName) {
