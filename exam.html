@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>امتحان الجغرافيا السياسية</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --primary:#1e88e5;
+      --gradient: linear-gradient(135deg,#1e88e5,#00c6ff);
+      --bg:#f2f7fb;
+    }
+    body{margin:0;background:var(--bg);font-family:'Cairo',sans-serif}
+    .shell{
+      min-height:100dvh;display:grid;place-items:center;
+      padding:18px;background:radial-gradient(1200px 600px at 100% -10%,#e3f2fd,transparent),radial-gradient(900px 400px at -10% 100%,#e0f7fa,transparent);
+    }
+    .card{
+      width:min(960px,92vw);background:#fff;border-radius:28px;padding:22px 22px 28px;
+      box-shadow:0 12px 40px rgba(0,0,0,.12);position:relative;overflow:hidden
+    }
+    .header{
+      display:flex;align-items:center;gap:12px;justify-content:space-between;margin-bottom:8px
+    }
+    .title{
+      font-weight:900;font-size:24px;background:var(--gradient);-webkit-background-clip:text;background-clip:text;color:transparent
+    }
+    .badge{
+      padding:6px 10px;border-radius:999px;background:#eef7ff;font-weight:700;font-size:13px;color:#2563eb
+    }
+    hr{border:none;height:1px;background:#eef1f6;margin:12px 0 18px}
+
+    .step{display:none;animation:fade .4s ease}
+    .step.active{display:block}
+    @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+    label{font-weight:700;display:block;margin:10px 0 6px}
+    input[type="text"]{
+      width:100%;padding:12px 14px;border:1px solid #e3e8ef;border-radius:14px;outline:none;font-size:16px
+    }
+    .privacy{margin-top:10px;display:flex;gap:8px;align-items:flex-start;font-size:14px}
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;gap:8px;
+      background:var(--gradient);color:#fff;font-weight:900;border:none;padding:12px 18px;border-radius:14px;
+      cursor:pointer;transition:.25s;margin-top:14px
+    }
+    .btn:hover{transform:translateY(-1px);filter:saturate(1.1)}
+    .muted{color:#6b7280;font-size:14px}
+
+    .question{background:#f8fbff;border:1px solid #e6eef8;border-radius:16px;padding:12px 14px;margin:12px 0}
+    .question .q{font-weight:800;margin-bottom:8px}
+    .opt{display:block;margin:6px 0}
+    .opt input{margin-left:6px}
+
+    .result{
+      display:none;text-align:center;background:#ecfdf5;border:1px solid #bbf7d0;border-radius:18px;padding:18px;margin-top:16px;
+      font-weight:900;font-size:18px
+    }
+
+    .leaderboard{
+      display:none;margin-top:20px;background:#f7f7ff;border:1px solid #e6e6ff;padding:14px;border-radius:18px
+    }
+    .leaderboard h3{margin:0 0 10px;text-align:center}
+    .board{list-style:none;padding:0;margin:0;display:grid;gap:8px}
+    .board li{
+      background:#fff;border:1px solid #eef2ff;border-radius:12px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center
+    }
+    .me{outline:2px solid #60a5fa;box-shadow:0 0 0 4px #e0f2fe}
+
+    .foot{margin-top:10px;text-align:center;color:#64748b;font-size:12px}
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <div class="card">
+      <div class="header">
+        <div class="title">امتحان الجغرافيا السياسية</div>
+        <div class="badge">محاولة واحدة فقط</div>
+      </div>
+      <hr/>
+
+      <!-- الخطوة 1: بيانات الطالب + سياسة الخصوصية -->
+      <div class="step active" id="step-1">
+        <label>اسم الطالب</label>
+        <input type="text" id="studentName" placeholder="اكتب اسمك كامل" />
+        <div class="privacy">
+          <input type="checkbox" id="agree">
+          <label for="agree" class="muted">أوافق على <a href="#" target="_blank">سياسة الخصوصية</a> وأقرّ بمحاولة واحدة فقط.</label>
+        </div>
+        <button class="btn" id="startBtn">ابدأ الامتحان</button>
+        <div class="muted" style="margin-top:6px">* يتم تسجيل وقت البدء لحساب الأسرع.</div>
+      </div>
+
+      <!-- الخطوة 2: الأسئلة -->
+      <div class="step" id="step-2">
+        <form id="examForm"></form>
+        <button class="btn" id="submitBtn">تسليم الإجابات</button>
+        <div id="resultBox" class="result"></div>
+
+        <div id="leaderboard" class="leaderboard">
+          <h3>لوحة المتسابقين</h3>
+          <ol id="board" class="board"></ol>
+        </div>
+      </div>
+
+      <div class="foot">© امتحان تجريبي – النتيجة تظهر فورًا مع الترتيب حسب الدرجة ثم الأسرع</div>
+    </div>
+  </div>
+
+  <!-- 🎊 confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+  <script>
+    // ←← ضع رابط الويب آب هنا (من نشر Google Apps Script)
+    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbx-AKKT3rtyr3Nb9akv4PplcrLwK6SI72bEXksUL1610UUlVzBkcS8NaepGkWGe1m8-yQ/exec';
+
+    // الأسئلة والاختيارات والإجابات الصحيحة (حسب ما أرسلت)
+    const questions = [
+      "اكبر القارات مورفولوجيا وديموغرافيا تقع فى النصف .... لخريطة العالم .",
+      "اى من القارات التالية خالية من الدول الحبيسة ....",
+      "تعتبر جنوب السودان من الدول ....",
+      "اى من القارات التالية تمر بها ثلاث دوائر عرض رئيسية ....",
+      "تقع استراليا بالنسبة لأمريكا الشمالية فى الجهة....",
+      "الدولة الحبيسة التى تتمتع بأكبر مساحة فى العالم تقع فى النصف ....",
+      "اى من القارات التالية تعتبر الاعلى فى نسبة الدول المتقدمة ....",
+      "اذا مر نهر عبر عدة دول نامية ، فما الأثر الجغرافى أو السياسى المحتمل لذلك ؟ ....",
+      "إذا تم غلق مضيق البيسفور فأن الدول التى ستتأثر هى التى تطل على ....",
+      "قناه بنما تمثل موقعا استراتيجيا لأنها : ....",
+      "اى من الدول التالية ليست دولة بحرية ؟....",
+      "أى من العبارات التاليه يمثلها عام 1651م ....",
+      "اتبع الاتحاد السوفيتي الأيدولوجية الاشتراكية ودول ....",
+      "من أهم المناطق الاستراتيجية في العالم ويوجد في جنوب الوطن العربي....",
+      "نهر الفولجا من الأنهار المحلية التى لا تتأثر بها مشكلات حول تقسيم المياه وهو ما يتشابه مع نهر ....",
+      "العامل المؤثر في تحديد الأنشطة البشرية للسكان داخل الدولة هو ....",
+      "تعد من أكبر الدول الحبيسة في العالم وتقع في الربع الشمالى الشرقى ....",
+      "أحد المضايق الآتية يخرج عن نطاق قارة إفريقيا....",
+      "القوة العظمى الان في العالم تنتمى للعالم....",
+      "النهر الذى لم تتغير جنسيات السكان على جانبى مجراه هو ....",
+      "اى من المسطحات المائية الآتية يعد نقطة التقاء خط طول صفر مع دائرة عرض صفر ....",
+      "اى من الدول الآتية تحد ليبيا من الجهة الجنوبية الغربية ....",
+      "رغم أن الصين هى القوة الاقتصادية الثابتة في العالم بعد الولايات المتحدة إلا أنها لا تزال تصنف من ضمن دول العالم....",
+      "اى من المناطق الآتية تتوقع أن تزيد بها ، عليه النشاط البشرى للسكان ....",
+      "يبلغ المتوسط العالمى لمساهمة المصايد البحرية فى اقتصاد اى دولة حوالى 1.5٪ من الناتج المحلى ، فى ضوء هذه العبارة اى من الدول الآتية تتوقع أن تشارك بنسبة كبيرة من المصايد البحرية ...."
+    ];
+
+    const options = [
+      ["الجنوب الشرقى","الشمال الشرقى","جنوب غربى","شمال غربى"],
+      ["أمريكا الجنوبية","أوروبا","أفريقيا","أمريكا الشمالية"],
+      ["البحرية المتقدمة","البحرية النامية","حبيسة متقدمة","حبيسة نامية"],
+      ["استراليا","امريكا الجنوبيه","اسيا","افريقيا"],
+      ["جنوب شرقها","جنوب غربها","شمال شرقها","شمال غربها"],
+      ["جنوب شرق","جنوب غرب","شمال غرب","شمال شرق"],
+      ["اوروبا","امريكا الشماليه","اسيا","استراليا"],
+      ["تقوية التعاون الاقتصادى","نشوء خلافات حول تقاسم المياه","زيادة الكثافة السكانية على ضفافه","حدوث فيضانات موسمية مدمرة"],
+      ["البحر الاحمر","البحر المتوسط","البحر الأسود","خليج العربى"],
+      ["تصل المحيط الهادئ بالمحيط الأطلسي","تصل البحر المتوسط بالبحر الأحمر","تصل البحر الأسود ببحر مرمرة","تصل الخليج العربي بالمحيط الهندي"],
+      ["مصر","تركيا","بوليفيا","الهند"],
+      ["النصف الثاني من القرن 16","النصف الثاني من القرن 17","النصف الأخير من القرن 17","النصف الاول من القرن 16"],
+      ["شرق أوروبا","شرق آسيا","غرب أوروبا","غرب آسيا"],
+      ["مضيق هرمز","مضيق جبل طارق","قناه السويس","مضيق باب المندب"],
+      ["الدانوب","النيل","البو","الراين"],
+      ["خطوط الطول","علاقاتها الخارجية","سلطتها التنفيذية","دوائر العرض"],
+      ["منغوليا","إيران","كازاخستان","أفغانستان"],
+      ["مضيق موزمبيق","مضيق جبل طارق","مضيق ملقا","مضيق باب المندب"],
+      ["النامى القديم","المتقدم القديم","النامى الحديث","المتقدم الحديث"],
+      ["الراين","الدانوب","السين","الامازون"],
+      ["المحيط الهندي","المحيط الأطلنطي","المحيط الهادى","البحر المتوسط"],
+      ["السودان","مدغشقر","المغرب","النيجر"],
+      ["القديم النامى","القديم المتقدم","الحديث النامى","الحديث المتقدم"],
+      ["صفر- 3 شمالا","6- 9 جنوبا","23.5- 45 شمالا","66.5- 90 جنوبا"],
+      ["الولايات المتحدة","منغوليا","ليبيا","إيران"]
+    ];
+
+    // الإجابات الصحيحة: 0=A, 1=B, 2=C, 3=D
+    const correctAnswers = [1,3,3,3,1,3,0,1,2,0,2,1,0,3,2,3,2,2,3,3,1,3,0,2,0];
+
+    // عناصر DOM
+    const step1 = document.getElementById('step-1');
+    const step2 = document.getElementById('step-2');
+    const startBtn = document.getElementById('startBtn');
+    const nameInput = document.getElementById('studentName');
+    const agree = document.getElementById('agree');
+    const form = document.getElementById('examForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const resultBox = document.getElementById('resultBox');
+    const leaderboardBox = document.getElementById('leaderboard');
+    const board = document.getElementById('board');
+
+    // بناء الأسئلة
+    function renderQuestions() {
+      form.innerHTML = '';
+      questions.forEach((q, i) => {
+        const wrap = document.createElement('div');
+        wrap.className = 'question';
+        const qEl = document.createElement('div');
+        qEl.className = 'q';
+        qEl.textContent = `${i + 1}- ${q}`;
+        wrap.appendChild(qEl);
+
+        options[i].forEach((opt, idx) => {
+          const label = document.createElement('label');
+          label.className = 'opt';
+          label.innerHTML = `<input type="radio" name="q${i}" value="${idx}"> ${opt}`;
+          wrap.appendChild(label);
+        });
+
+        form.appendChild(wrap);
+      });
+    }
+
+    // حساب الدرجة
+    function calcScore() {
+      let score = 0;
+      for (let i=0;i<questions.length;i++){
+        const chosen = form.querySelector(`input[name="q${i}"]:checked`);
+        if (!chosen) continue;
+        if (Number(chosen.value) === correctAnswers[i]) score++;
+      }
+      return score;
+    }
+
+    // لوح المتسابقين
+    function drawLeaderboard(list, myName) {
+      board.innerHTML = '';
+      list.forEach((row, idx) => {
+        const li = document.createElement('li');
+        if (row.name.trim() === myName.trim()) li.classList.add('me');
+        li.innerHTML = `
+          <div><strong>${idx+1}.</strong> ${row.name}</div>
+          <div>درجة: <strong>${row.score}</strong> — زمن: ${row.duration ? (row.duration+'ث') : '—'}</div>
+        `;
+        board.appendChild(li);
+      });
+    }
+
+    // مؤثرات 🎊
+    function party() {
+      confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 } });
+      setTimeout(()=>confetti({ particleCount: 80, spread: 90, origin: { y: 0.4 } }), 250);
+    }
+
+    // بدء الامتحان (تسجيل وقت الدخول)
+    startBtn.addEventListener('click', async () => {
+      const name = nameInput.value.trim();
+      if (!name) { alert('من فضلك اكتب اسمك.'); return; }
+      if (!agree.checked) { alert('لابد من الموافقة على سياسة الخصوصية.'); return; }
+
+      try {
+        const r = await fetch(`${WEB_APP_URL}?action=start&name=${encodeURIComponent(name)}`);
+        const j = await r.json();
+        if (!j.ok && j.error) { alert('تعذر البدء: ' + j.error); return; }
+
+        // عرض الأسئلة
+        renderQuestions();
+        step1.classList.remove('active'); step1.style.display='none';
+        step2.classList.add('active'); step2.style.display='block';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } catch (e) {
+        alert('خطأ في الاتصال، حاول مرة أخرى.');
+      }
+    });
+
+    // تسليم الامتحان
+    submitBtn.addEventListener('click', async () => {
+      const name = nameInput.value.trim();
+      if (!name) { alert('الاسم غير موجود.'); return; }
+
+      // التحقق أن كل سؤال مجاوب
+      for (let i=0;i<questions.length;i++){
+        if (!form.querySelector(`input[name="q${i}"]:checked`)) {
+          alert(`جاوب على السؤال رقم ${i+1} من فضلك.`);
+          return;
+        }
+      }
+
+      const score = calcScore();
+
+      try {
+        const r = await fetch(`${WEB_APP_URL}?action=submit&name=${encodeURIComponent(name)}&score=${score}`);
+        const j = await r.json();
+
+        if (j.ok) {
+          // النتيجة
+          resultBox.style.display = 'block';
+          if (j.status === 'already') {
+            resultBox.innerHTML = `⚠️ تم تسليم الامتحان سابقًا.<br>درجتك: <strong>${j.score}</strong> / ${questions.length} — ترتيبك الحالي: <strong>#${j.rank ?? '—'}</strong>`;
+          } else {
+            resultBox.innerHTML = `🎉 مبروك ${name}! درجتك <strong>${j.score}</strong> من ${questions.length} — ترتيبك: <strong>#${j.rank ?? '—'}</strong>`;
+            party();
+          }
+
+          // لوحة المتسابقين
+          if (Array.isArray(j.leaderboard)) {
+            drawLeaderboard(j.leaderboard, name);
+            leaderboardBox.style.display = 'block';
+          }
+          // تعطيل الزر بعد التسليم
+          submitBtn.disabled = true;
+          submitBtn.textContent = 'تم التسليم ✅';
+        } else {
+          alert('تعذر التسليم: ' + (j.error || 'خطأ غير معروف'));
+        }
+      } catch (e) {
+        alert('مشكلة في الاتصال، حاول مرة تانية.');
+      }
+    });
+  </script>
+</body>
+</html>
