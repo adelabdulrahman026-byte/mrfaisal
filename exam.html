@@ -1,0 +1,140 @@
+<!-- File: exam.html -->
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>امتحان - مستر فيصل</title>
+  <link rel="stylesheet" href="exam.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="page">
+    <!-- شاشة الدخول -->
+    <section id="screen-start" class="card show">
+      <h1 class="title">امتحان مستر فيصل</h1>
+      <p class="muted">من فضلك أدخل بياناتك لبدء الامتحان. دخول مرة واحدة فقط.</p>
+      <form id="start-form" class="grid">
+        <label class="field">
+          <span>الاسم الكامل</span>
+          <input type="text" id="student-name" required placeholder="اكتب اسمك ثلاثي">
+        </label>
+        <label class="field">
+          <span>رقم الجلوس</span>
+          <input type="text" id="student-id" required placeholder="12345">
+        </label>
+        <button type="submit" class="btn-primary">ابدأ الامتحان</button>
+        <p id="start-error" class="error"></p>
+      </form>
+    </section>
+
+    <!-- ورقة الأسئلة -->
+    <section id="screen-exam" class="card">
+      <div class="exam-header">
+        <h2>الأسئلة</h2>
+        <div class="pill">
+          الوقت المتبقي: <span id="countdown">—</span>
+        </div>
+      </div>
+
+      <!-- نموذج الأسئلة (مثال 10 أسئلة اختيار من متعدد) -->
+      <form id="exam-form" class="qa-list">
+        <!-- مثال أسئلة؛ غيّر المحتوى بحرية لكن احتفظ بـ data-qid -->
+        <div class="q">
+          <h3>1) عاصمة مصر هي؟</h3>
+          <div class="opts" data-qid="Q1">
+            <label><input type="radio" name="Q1" value="A" required> الإسكندرية</label>
+            <label><input type="radio" name="Q1" value="B"> القاهرة</label>
+            <label><input type="radio" name="Q1" value="C"> الجيزة</label>
+            <label><input type="radio" name="Q1" value="D"> المنصورة</label>
+          </div>
+        </div>
+
+        <div class="q">
+          <h3>2) أكبر كوكب في المجموعة الشمسية؟</h3>
+          <div class="opts" data-qid="Q2">
+            <label><input type="radio" name="Q2" value="A" required> الأرض</label>
+            <label><input type="radio" name="Q2" value="B"> المريخ</label>
+            <label><input type="radio" name="Q2" value="C"> زحل</label>
+            <label><input type="radio" name="Q2" value="D"> المشتري</label>
+          </div>
+        </div>
+
+        <!-- ... كرر بالصيغ التي تريدها حتى Q10 ... -->
+        <div class="q">
+          <h3>3) نتيجة 2 + 2 = ؟</h3>
+          <div class="opts" data-qid="Q3">
+            <label><input type="radio" name="Q3" value="A" required> 3</label>
+            <label><input type="radio" name="Q3" value="B"> 4</label>
+            <label><input type="radio" name="Q3" value="C"> 5</label>
+            <label><input type="radio" name="Q3" value="D"> 6</label>
+          </div>
+        </div>
+
+        <!-- ضع باقي الأسئلة حتى Q10 -->
+        <input type="hidden" id="exam-token">
+        <div class="actions">
+          <button type="submit" class="btn-primary large">تسليم الامتحان</button>
+          <p id="exam-error" class="error"></p>
+        </div>
+      </form>
+    </section>
+
+    <!-- شاشة النتيجة + اللوحة -->
+    <section id="screen-result" class="card">
+      <div class="result-hero">
+        <canvas id="confetti-canvas"></canvas>
+        <h2 id="result-title">تم التسليم!</h2>
+        <div class="stats">
+          <div class="stat">
+            <span class="k">درجتك</span>
+            <span class="v" id="score-value">—</span>
+          </div>
+          <div class="stat">
+            <span class="k">ترتيبك</span>
+            <span class="v" id="rank-value">—</span>
+          </div>
+          <div class="stat">
+            <span class="k">عدد المشاركين</span>
+            <span class="v" id="total-value">—</span>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="lead">لوحة المتسابقين (تتحدّث تلقائيًا)</h3>
+      <div class="filters">
+        <button id="refresh-leaderboard" class="btn-ghost">تحديث الآن</button>
+      </div>
+      <div class="table-wrap">
+        <table id="leaderboard">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>الاسم</th>
+              <th>رقم الجلوس</th>
+              <th>الدرجة</th>
+              <th>أسرع دخول</th>
+              <th>وقت التسليم</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <div class="hint">
+        * الترتيب يعتمد على أعلى درجة ثم الأسبق في التسليم. “أسرع دخول” هو أول وقت سجلّه الطالب عند فتح الامتحان.
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // === غيّر هذا بالرابط المنشور من Web App (Apps Script) ===
+    window.GAS_ENDPOINT = "PUT_YOUR_DEPLOYED_WEB_APP_URL_HERE";
+    // مدة الامتحان (دقائق)
+    window.EXAM_DURATION_MIN = 20;
+  </script>
+  <script src="libs/confetti.min.js"></script>
+  <script src="exam.js" defer></script>
+</body>
+</html>
