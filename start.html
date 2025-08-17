@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title> كل ما تحتاجه هنا في موقع مستر فيصل</title>
+<title>كل ما تحتاجه هنا في موقع مستر فيصل</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet" />
 <style>
   body {
@@ -149,7 +149,8 @@
   .button-link:nth-child(5) { background: #f44336; animation-delay: 1.2s; } /* أحمر */
   .button-link:nth-child(6) { background: #00bcd4; animation-delay: 1.5s; } /* سماوي */
   .button-link:nth-child(7) { background: #795548; animation-delay: 1.8s; } /* بني */
-
+  .button-link:nth-child(8) { background: #ff5722; animation-delay: 2.1s; } /* برتقالي محمر */
+  
   @keyframes pulse {
     0%, 100% { box-shadow: 0 0 12px rgba(255,255,255,0.3); }
     50% { box-shadow: 0 0 22px rgba(255,255,255,0.6); }
@@ -168,9 +169,9 @@
   }
   .yt-card img {
     width: 100%;
-    height: 240px; /* زيادة الارتفاع لاظهار وجه الشخص */
-    object-fit: contain; /* بدل cover عشان يظهر كامل */
-    background: #f0f0f0; /* خلفية فاتحة */
+    height: 240px;
+    object-fit: contain;
+    background: #f0f0f0;
   }
   .yt-card .yt-title {
     font-size: 1.6rem;
@@ -196,22 +197,22 @@
     font-size: 0.85rem;
   }
 
-  /* كارت الصورة الجديدة مع زر العرض قريبًا */
+  /* كارت العرض قريباً */
   .coming-soon-card {
     position: relative;
     width: 100%;
     max-width: 760px;
-    height: 400px; /* ارتفاع أكبر للطول */
+    height: 400px;
     margin: 0 auto 45px;
     border-radius: 20px;
     overflow: hidden;
     box-shadow: 0 12px 30px rgba(0,0,0,0.18);
-    cursor: default; /* مؤشر عادي */
+    cursor: default;
   }
   .coming-soon-card img {
     width: 100%;
     height: 100%;
-    object-fit: contain; /* عشان الصورة تظهر كاملة */
+    object-fit: contain;
     display: block;
     filter: brightness(0.65);
     transition: filter 0.3s ease;
@@ -236,7 +237,7 @@
       0 0 32px #ff0000,
       0 0 48px #ff0000;
     text-decoration: none;
-    transition: box-shadow 0.3s ease; /* إزالة transform من الانتقال */
+    transition: box-shadow 0.3s ease;
     display: inline-block;
     cursor: pointer;
   }
@@ -246,7 +247,6 @@
       0 0 36px #ff4d4d,
       0 0 52px #ff4d4d,
       0 0 68px #ff4d4d;
-    /* حذف transform: scale(1.08); */
   }
 
   /* الفوتر */
@@ -288,14 +288,13 @@
       width: 100%;
       font-size: 13px;
       padding: 12px 14px;
-      animation: none !important; /* ايقاف الانيميشن على الموبايل عشان ما يكونش تقيل */
+      animation: none !important;
     }
     .yt-card {
       max-width: 100%;
     }
     .yt-card img {
       height: 180px;
-      object-fit: contain;
     }
     .coming-soon-card {
       height: 280px;
@@ -337,6 +336,7 @@
       <a href="track.html" class="button-link">اشتري من عندنا 🛒</a>
       <a href="contact.html" class="button-link">اسألنا سؤال 📞</a>
       <a href="shakwy.html" class="button-link">الشكاوي 📣</a>
+      <a href="exam.html" class="button-link">امتحاناتنا 📚</a>
     </nav>
 
     <!-- كارت اليوتيوب -->
@@ -359,10 +359,10 @@
       <a href="privacy.html">سياسة الخصوصية</a> | <span>© 2025 مستر فيصل</span>
     </footer>
     <script>
-  document.addEventListener('contextmenu', function(e) {
-    e.preventDefault();
-  });
-</script>
+      document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+      });
+    </script>
   </main>
 </body>
 </html>
