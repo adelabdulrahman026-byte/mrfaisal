@@ -1,29 +1,333 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>  امتحاناتنا</title>
-  <style>
-    body, html {
-      margin: 0; padding: 0; height: 100%;
-      direction: rtl;
-    }
-    iframe {
-      width: 100%;
-      height: 100vh;
-      border: none;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام الامتحانات الإلكتروني</title>
+    <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.6.2/dist/dotlottie-wc.js" type="module"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --accent: #4895ef;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4cc9f0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Tajawal', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 500px;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            overflow: hidden;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        h1 {
+            font-size: 1.8rem;
+            color: var(--secondary);
+            margin-bottom: 1.5rem;
+            font-weight: 800;
+            position: relative;
+            display: inline-block;
+        }
+        
+        h1:after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: var(--accent);
+            border-radius: 3px;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            color: #555;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+        
+        .animation-container {
+            margin: 1.5rem 0;
+            position: relative;
+        }
+        
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 2rem;
+        }
+        
+        .btn {
+            padding: 14px 20px;
+            font-size: 1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            width: 100%;
+            color: white;
+            background: var(--primary);
+            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.3);
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(67, 97, 238, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            box-shadow: none;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(67, 97, 238, 0.05);
+        }
+        
+        /* تصميم الكرات الورقية */
+        .paper-ball {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            font-size: 0.9rem;
+            color: var(--dark);
+            line-height: 1.4;
+            animation: float 8s infinite ease-in-out;
+            z-index: -1;
+            opacity: 0.9;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+        
+        /* نصيحة داخل الكرات */
+        .advice {
+            position: absolute;
+            font-size: 0.8rem;
+            color: #555;
+            padding: 10px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 140px;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 20;
+        }
+        
+        .paper-ball:hover .advice {
+            opacity: 1;
+            transform: translateY(-10px);
+        }
+        
+        /* تأثيرات النجمة */
+        .star {
+            position: absolute;
+            color: var(--accent);
+            font-size: 1.2rem;
+            animation: twinkle 2s infinite alternate;
+        }
+        
+        @keyframes twinkle {
+            from { opacity: 0.3; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1.1); }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 1.5rem;
+                border-radius: 18px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+            
+            .btn {
+                padding: 12px 18px;
+            }
+        }
+    </style>
 </head>
 <body>
-  <iframe src="https://script.google.com/macros/s/AKfycbyDTYXSoyn2dzSOm96GnAdjLPL6Xx3j2AY429h2ea6ueheLwLBWfaYFpouCg1njS8PrFA/exec" 
-          allowfullscreen>
-  </iframe>
-  <script>
-  document.addEventListener('contextmenu', function(e) {
-    e.preventDefault();
-  });
-</script>
+    <!-- الكرات الورقية العائمة -->
+    <div class="paper-ball" style="top: 10%; left: 10%; width: 80px; height: 80px;">
+        <div class="advice">ابدأ بالمذاكرة مبكراً ولا تؤجل</div>
+        📚
+    </div>
+    <div class="paper-ball" style="top: 70%; left: 80%; width: 70px; height: 70px;">
+        <div class="advice">خذ قسطاً كافياً من النوم قبل الامتحان</div>
+        😴
+    </div>
+    <div class="paper-ball" style="top: 30%; left: 75%; width: 60px; height: 60px;">
+        <div class="advice">راجع أهم النقاط قبل دخول الامتحان</div>
+        🔍
+    </div>
+    <div class="paper-ball" style="top: 80%; left: 15%; width: 65px; height: 65px;">
+        <div class="advice">كن واثقاً من نفسك وقدراتك</div>
+        💪
+    </div>
+    
+    <!-- النجوم -->
+    <div class="star" style="top: 15%; left: 20%;">✦</div>
+    <div class="star" style="top: 25%; left: 85%;">✧</div>
+    <div class="star" style="top: 85%; left: 25%;">✧</div>
+    <div class="star" style="top: 75%; left: 75%;">✦</div>
+    
+    <div class="container">
+        <h1>نظام الامتحانات الإلكتروني</h1>
+        
+        <p class="subtitle">
+            "التميز ليس صدفة، بل نتيجة التخطيط الجاد والعمل الدؤوب"
+        </p>
+        
+        <div class="animation-container">
+            <dotlottie-wc 
+                src="https://lottie.host/d1c8be62-6513-4257-890f-41eae2c6ec20/G9moJ0phPP.lottie" 
+                style="width: 220px; height: 220px" 
+                speed="1" 
+                autoplay 
+                loop>
+            </dotlottie-wc>
+        </div>
+        
+        <p class="subtitle">اختر الصف الذي تريد أداء الامتحان فيه:</p>
+        
+        <div class="btn-group">
+            <button class="btn" onclick="navigateTo('https://www.mrfaisal.net/examtanya.html')">
+                الصف الثاني الثانوي
+            </button>
+            <button class="btn btn-secondary" onclick="navigateTo('https://www.mrfaisal.net/examtalta.html')">
+                الصف الثالث الثانوي
+            </button>
+        </div>
+    </div>
+    
+    <script>
+        // الانتقال مع تأثيرات
+        function navigateTo(url) {
+            // تأثير اهتزاز
+            document.querySelector('.container').style.animation = 'shake 0.5s ease-in-out';
+            
+            // الانتقال بعد التأثير
+            setTimeout(() => {
+                window.location.href = url;
+            }, 500);
+        }
+        
+        // إضافة تأثير اهتزاز عند التحميل
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                document.querySelector('.container').style.animation = 'shake 0.5s ease-in-out';
+            }, 300);
+        });
+        
+        // تحريك الكرات الورقية بشكل عشوائي
+        const paperBalls = document.querySelectorAll('.paper-ball');
+        paperBalls.forEach(ball => {
+            // إعداد مواضع عشوائية للكرات
+            const duration = 8 + Math.random() * 7;
+            const delay = Math.random() * 5;
+            ball.style.animation = `float ${duration}s ease-in-out ${delay}s infinite`;
+            
+            // جعل الكرات قابلة للسحب على الشاشات التي تدعم اللمس
+            if ('ontouchstart' in window) {
+                let posX = 0, posY = 0;
+                let isDragging = false;
+                
+                ball.addEventListener('touchstart', (e) => {
+                    isDragging = true;
+                    posX = e.touches[0].clientX - ball.getBoundingClientRect().left;
+                    posY = e.touches[0].clientY - ball.getBoundingClientRect().top;
+                    ball.style.animation = 'none';
+                    ball.style.zIndex = '100';
+                });
+                
+                document.addEventListener('touchmove', (e) => {
+                    if (!isDragging) return;
+                    e.preventDefault();
+                    ball.style.left = (e.touches[0].clientX - posX) + 'px';
+                    ball.style.top = (e.touches[0].clientY - posY) + 'px';
+                });
+                
+                document.addEventListener('touchend', () => {
+                    isDragging = false;
+                    setTimeout(() => {
+                        ball.style.animation = `float ${duration}s ease-in-out ${delay}s infinite`;
+                        ball.style.zIndex = '-1';
+                    }, 1000);
+                });
+            }
+        });
+        
+        // إضافة تأثير اهتزاز عند التمرير
+        window.addEventListener('scroll', () => {
+            document.querySelector('.container').style.animation = 'shake 0.3s ease-in-out';
+            setTimeout(() => {
+                document.querySelector('.container').style.animation = '';
+            }, 300);
+        });
+    </script>
 </body>
 </html>
