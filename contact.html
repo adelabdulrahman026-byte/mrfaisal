@@ -2,11 +2,12 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <title>تواصل معنا </title>
+  <title>تواصل معنا</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
       --primary: #6a1b9a;
@@ -21,146 +22,159 @@
       --card-hover-shadow: 0 15px 30px rgba(0,0,0,0.3);
     }
     
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
     html, body {
       overflow-x: hidden;
       max-width: 100vw;
       position: relative;
-      margin: 0;
-      padding: 15px;
       font-family: 'Cairo', sans-serif;
-      background-color: var(--light-bg);
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e7ec 100%);
       color: var(--text);
+      min-height: 100vh;
+      scroll-behavior: smooth;
     }
 
-    /* العنوان */
+    .page-container {
+      padding: 0;
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    /* الشريط العلوي */
+    .header {
+      background: linear-gradient(45deg, var(--primary), var(--primary-light));
+      color: white;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('https://adelabdulrahman026-byte.github.io/dashboard/aref.png');
+      background-size: cover;
+      background-position: center;
+      opacity: 0.15;
+      mix-blend-mode: overlay;
+    }
+
     .header-title {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
-      background: linear-gradient(45deg, var(--primary), var(--primary-light));
+      gap: 12px;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
       color: white;
-      padding: 12px 25px;
+      padding: 15px 30px;
       border-radius: 50px;
       box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-      animation: slideUp 1s ease forwards, pulseHeader 2s infinite;
+      animation: slideUp 1s ease forwards;
       opacity: 0;
       transform: translateY(30px);
-      font-size: 22px;
-      margin: 0 auto 20px;
+      font-size: 24px;
+      margin: 0 auto;
       max-width: fit-content;
+      position: relative;
+      z-index: 2;
     }
 
     .header-title img {
-      width: 26px;
-      height: 26px;
+      width: 28px;
+      height: 28px;
       animation: pulseIcon 1.5s infinite;
     }
 
-    .header-wrapper {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 25px;
+    /* المحتوى الرئيسي */
+    .main-content {
+      padding: 40px 20px;
+      max-width: 1200px;
+      margin: 0 auto;
     }
 
-    @keyframes slideUp {
-      0% { opacity: 0; transform: translateY(30px); }
-      100% { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes pulseHeader {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.03); }
-    }
-
-    @keyframes pulseIcon {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.2); }
-    }
-
-    /* الحاوية */
-    .container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
+    /* شبكة أعضاء الفريق */
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
       gap: 25px;
-      margin-bottom: 40px;
-      overflow-x: hidden;
-      max-width: 100vw;
+      margin-bottom: 50px;
     }
 
-    /* كارت تواصل */
-    .contact-card {
-      position: relative;
-      width: 350px;
-      height: 180px;
+    /* بطاقة العضو */
+    .member-card {
+      background: white;
       border-radius: 20px;
       overflow: hidden;
-      cursor: pointer;
       box-shadow: var(--card-shadow);
+      transition: all 0.4s ease;
       opacity: 0;
-      transform: translateX(100px) translateY(60px);
-      transition: transform 0.7s ease, opacity 0.7s ease, box-shadow 0.3s ease;
+      transform: translateY(50px);
       display: flex;
       flex-direction: column;
-      justify-content: flex-end;
-      padding: 15px 25px;
-      color: white;
-      font-weight: 700;
-      text-shadow: 0 2px 8px rgba(0,0,0,0.7);
-      background-position: center center;
-      background-size: cover;
-      background-repeat: no-repeat;
-      border: 2px solid transparent;
+      height: 100%;
     }
 
-    /* للبطاقة التي تظهر من اليسار */
-    .contact-card.from-left {
-      transform: translateX(-100px) translateY(60px);
+    .member-card.show {
+      opacity: 1;
+      transform: translateY(0);
     }
 
-    /* طبقة تعتيم على الصورة */
-    .contact-card::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.3));
-      z-index: 0;
-      transition: background 0.3s ease;
-      border-radius: 20px;
-    }
-
-    .contact-card:hover {
-      transform: translateY(-8px) scale(1.03);
+    .member-card:hover {
+      transform: translateY(-10px);
       box-shadow: var(--card-hover-shadow);
-      border-color: var(--primary-light);
-    }
-    .contact-card:hover::before {
-      background: linear-gradient(to top, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.4));
     }
 
-    /* محتوى الكارت */
-    .content-wrapper {
+    .member-image {
+      height: 200px;
+      overflow: hidden;
       position: relative;
-      z-index: 1;
-      text-align: center;
+    }
+
+    .member-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .member-card:hover .member-image img {
+      transform: scale(1.05);
+    }
+
+    .member-info {
+      padding: 20px;
       flex-grow: 1;
       display: flex;
       flex-direction: column;
-      justify-content: center;
-      gap: 5px;
     }
 
-    .name {
+    .member-name {
       font-size: 22px;
-      margin-bottom: 3px;
       font-weight: 700;
+      margin-bottom: 5px;
+      color: var(--primary);
     }
 
-    .subject {
-      font-size: 17px;
-      font-weight: 500;
-      margin-bottom: 10px;
+    .member-role {
+      font-size: 16px;
+      color: #666;
+      margin-bottom: 15px;
+    }
+
+    .member-contact {
+      margin-top: auto;
     }
 
     .whatsapp-button {
@@ -169,262 +183,360 @@
       justify-content: center;
       background-color: var(--accent);
       color: white;
-      padding: 10px 18px;
+      padding: 12px 20px;
       border-radius: 30px;
       text-decoration: none;
       font-size: 16px;
       font-weight: 700;
-      box-shadow: 0 5px 15px rgba(37, 211, 102, 0.7);
+      box-shadow: 0 5px 15px rgba(37, 211, 102, 0.4);
       transition: all 0.3s ease;
-      user-select: none;
       gap: 8px;
-      margin: 0 auto;
-      width: fit-content;
-      min-width: 140px;
+      width: 100%;
+      text-align: center;
     }
 
     .whatsapp-button:hover {
       background-color: var(--accent-dark);
       transform: translateY(-2px);
-      box-shadow: 0 7px 18px rgba(37, 211, 102, 0.9);
+      box-shadow: 0 7px 18px rgba(37, 211, 102, 0.6);
     }
 
-    .whatsapp-button img {
-      width: 22px;
-      height: 22px;
-    }
-
-    .note-top {
-      position: absolute;
-      top: 15px;
-      left: 15px;
+    .note-badge {
+      display: inline-block;
       background-color: var(--warning);
       color: white;
       font-size: 12px;
-      padding: 6px 12px;
+      padding: 5px 12px;
       border-radius: 20px;
       font-weight: 600;
-      box-shadow: 0 2px 8px rgba(233, 30, 99, 0.6);
-      user-select: none;
-      z-index: 2;
-      max-width: 85%;
-      text-align: center;
-      line-height: 1.2;
+      margin-top: 10px;
     }
 
-    .note-top.info {
+    .note-badge.info {
       background-color: var(--info);
-      box-shadow: 0 2px 8px rgba(33, 150, 243, 0.6);
     }
 
-    /* ظهور الكارت */
-    .contact-card.show {
-      opacity: 1;
-      transform: translateX(0) translateY(0);
-      transition: opacity 0.7s ease, transform 0.7s ease;
+    /* قسم النصائح */
+    .tips-section {
+      background: linear-gradient(135deg, var(--primary-light), var(--primary));
+      padding: 40px 20px;
+      border-radius: 20px;
+      color: white;
+      margin-top: 40px;
     }
 
-    /* نصائح - ورقة */
-    .tips-container {
-      max-width: 700px;
-      margin: 0 auto 50px auto;
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      padding: 0 15px;
-    }
-
-    .tip {
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-      padding: 15px 20px;
-      font-size: 16px;
-      color: var(--text);
-      opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 0.7s ease, transform 0.7s ease;
-      user-select: none;
+    .tips-title {
+      text-align: center;
+      font-size: 28px;
+      margin-bottom: 30px;
       display: flex;
       align-items: center;
-      gap: 10px;
-      border-right: 4px solid var(--primary);
+      justify-content: center;
+      gap: 15px;
     }
 
-    .tip.show {
+    .tips-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .tip-card {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      transition: transform 0.3s ease;
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    .tip-card.show {
       opacity: 1;
       transform: translateY(0);
     }
 
-    /* ايموجي */
-    .tip .emoji {
-      font-size: 22px;
-      background: linear-gradient(45deg, var(--primary), var(--primary-light));
-      color: white;
-      width: 35px;
-      height: 35px;
+    .tip-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .tip-emoji {
+      font-size: 28px;
+      background: rgba(255, 255, 255, 0.2);
+      width: 50px;
+      height: 50px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
+      flex-shrink: 0;
     }
 
-    /* موبايل */
-    @media (max-width: 600px) {
-      .contact-card {
-        width: 90%;
-        height: 160px;
+    .tip-text {
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    /* الرسوم المتحركة */
+    @keyframes slideUp {
+      0% { opacity: 0; transform: translateY(30px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulseIcon {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+
+    /* التكيف مع الشاشات المختلفة */
+    @media (max-width: 768px) {
+      .team-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 20px;
       }
-      .name {
-        font-size: 18px;
+      
+      .member-image {
+        height: 180px;
       }
-      .subject {
-        font-size: 14px;
+      
+      .tips-grid {
+        grid-template-columns: 1fr;
       }
-      .whatsapp-button {
-        font-size: 14px;
-        padding: 8px 16px;
-        min-width: 130px;
+      
+      .header-title {
+        font-size: 20px;
+        padding: 12px 25px;
       }
-      .tips-container {
-        max-width: 100%;
+    }
+
+    @media (max-width: 480px) {
+      .team-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .main-content {
+        padding: 20px 15px;
+      }
+      
+      .tip-card {
+        flex-direction: column;
+        text-align: center;
       }
     }
   </style>
 </head>
 <body>
 
-<!-- GIF -->
-<div class="gif-container" style="display:flex; justify-content:center; margin-bottom:20px;">
-  <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.6.2/dist/dotlottie-wc.js" type="module"></script>
-  <dotlottie-wc src="https://lottie.host/06e99f44-ec18-4512-ad5a-0e81ffcaa640/paKTlRDkFS.lottie" style="width: 250px; height: 250px" speed="1" autoplay loop></dotlottie-wc>
-</div>
+<div class="page-container">
+  <!-- الشريط العلوي -->
+  <header class="header">
+    <h1 class="header-title">
+      <img src="https://img.icons8.com/ios-filled/50/ffffff/chat--v1.png" alt="دردشة" />
+      تواصل مع فريقنا
+    </h1>
+  </header>
 
-<!-- عنوان متحرك تحت الـ GIF -->
-<div class="header-wrapper">
-  <div class="header-title">
-    <img src="https://img.icons8.com/ios-filled/50/ffffff/chat--v1.png" alt="دردشة" />
-    تواصل مع فريقنا
-  </div>
-</div>
+  <!-- المحتوى الرئيسي -->
+  <main class="main-content">
+    <!-- شبكة أعضاء الفريق -->
+    <div class="team-grid">
+      <!-- عضو الفريق 1 -->
+      <div class="member-card">
+        <div class="member-image">
+          <img src="https://adelabdulrahman026-byte.github.io/dashboard/aref.png" alt="مستر محمد عارف">
+        </div>
+        <div class="member-info">
+          <h3 class="member-name">مستر محمد عارف</h3>
+          <p class="member-role">مادة علمية</p>
+          <div class="member-contact">
+            <a href="https://wa.me/201122341029?text=ازيك%20يا%20مستر%20محمد%20عارف" target="_blank" class="whatsapp-button">
+              <i class="fab fa-whatsapp"></i>
+              تواصل واتساب
+            </a>
+          </div>
+        </div>
+      </div>
 
-<div class="container">
+      <!-- عضو الفريق 2 -->
+      <div class="member-card">
+        <div class="member-image">
+          <img src="https://adelabdulrahman026-byte.github.io/dashboard/abdulah.png" alt="مستر عبدالله">
+        </div>
+        <div class="member-info">
+          <h3 class="member-name">مستر عبدالله</h3>
+          <p class="member-role">مادة علمية</p>
+          <div class="member-contact">
+            <a href="https://wa.me/201210373503?text=ازيك%20يا%20مستر%20عبدالله" target="_blank" class="whatsapp-button">
+              <i class="fab fa-whatsapp"></i>
+              تواصل واتساب
+            </a>
+          </div>
+        </div>
+      </div>
 
-  <!-- الكروت: نضيف class from-left بالتناوب -->
-  <div class="contact-card" style="background-image: url('https://adelabdulrahman026-byte.github.io/dashboard/aref.png');">
-    <div class="content-wrapper">
-      <div class="name"> مستر محمد عارف</div>
-      <div class="subject">مادة علمية</div>
-      <a href="https://wa.me/201122341029?text=ازيك%20يا%20مستر%20محمد%20عارف" target="_blank" class="whatsapp-button">
-        تواصل واتساب
-        <img src="https://img.icons8.com/ios-filled/20/ffffff/whatsapp.png" alt="واتساب" />
-      </a>
+      <!-- عضو الفريق 3 -->
+      <div class="member-card">
+        <div class="member-image">
+          <img src="https://adelabdulrahman026-byte.github.io/dashboard/noha.png" alt="ميس نهي">
+        </div>
+        <div class="member-info">
+          <h3 class="member-name">ميس نهي</h3>
+          <p class="member-role">مادة علمية</p>
+          <div class="member-contact">
+            <a href="https://wa.me/201276814042?text=ازيك%20يا%20ميس%20نهي" target="_blank" class="whatsapp-button">
+              <i class="fab fa-whatsapp"></i>
+              تواصل واتساب
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- عضو الفريق 4 -->
+      <div class="member-card">
+        <div class="member-image">
+          <img src="https://adelabdulrahman026-byte.github.io/dashboard/omnia.png" alt="ميس أمنية">
+        </div>
+        <div class="member-info">
+          <h3 class="member-name">ميس أمنية</h3>
+          <p class="member-role">مادة علمية</p>
+          <div class="member-contact">
+            <a href="https://wa.me/201276504341?text=ازيك%20يا%20ميس%20امنيه" target="_blank" class="whatsapp-button">
+              <i class="fab fa-whatsapp"></i>
+              تواصل واتساب
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- عضو الفريق 5 -->
+      <div class="member-card">
+        <div class="member-image">
+          <img src="https://adelabdulrahman026-byte.github.io/dashboard/manar.png" alt="ميس منار">
+        </div>
+        <div class="member-info">
+          <h3 class="member-name">ميس منار</h3>
+          <p class="member-role">مادة علمية</p>
+          <div class="member-contact">
+            <a href="https://wa.me/201280277084?text=ازيك%20يا%20ميس%20منار" target="_blank" class="whatsapp-button">
+              <i class="fab fa-whatsapp"></i>
+              تواصل واتساب
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- عضو الفريق 6 -->
+      <div class="member-card">
+        <div class="member-image">
+          <img src="https://adelabdulrahman026-byte.github.io/dashboard/sagda.png" alt="ميس سجدة">
+        </div>
+        <div class="member-info">
+          <h3 class="member-name">ميس سجدة</h3>
+          <p class="member-role">مادة علمية</p>
+          <div class="note-badge">خاص بطلاب الأونلاين فقط</div>
+          <div class="member-contact">
+            <a href="https://wa.me/201556618507?text=ازيك%20يا%20ميس%20سجدة" target="_blank" class="whatsapp-button">
+              <i class="fab fa-whatsapp"></i>
+              تواصل واتساب
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- عضو الفريق 7 -->
+      <div class="member-card">
+        <div class="member-image">
+          <img src="https://adelabdulrahman026-byte.github.io/dashboard/fatma.png" alt="فطومة">
+        </div>
+        <div class="member-info">
+          <h3 class="member-name">فطومة</h3>
+          <p class="member-role">علاقات عامة</p>
+          <div class="member-contact">
+            <a href="https://wa.me/201070086878?text=ازيك%20يا%20فطومه" target="_blank" class="whatsapp-button">
+              <i class="fab fa-whatsapp"></i>
+              تواصل واتساب
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- عضو الفريق 8 -->
+      <div class="member-card">
+        <div class="member-image">
+          <img src="https://adelabdulrahman026-byte.github.io/dashboard/laila.png" alt="استاذه ليلي">
+        </div>
+        <div class="member-info">
+          <h3 class="member-name">استاذه ليلي</h3>
+          <p class="member-role">علاقات عامة</p>
+          <div class="member-contact">
+            <a href="https://wa.me/201001933983?text=ازيك%20يا%20استاذه%20ليلي" target="_blank" class="whatsapp-button">
+              <i class="fab fa-whatsapp"></i>
+              تواصل واتساب
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- عضو الفريق 9 -->
+      <div class="member-card">
+        <div class="member-image">
+          <img src="https://adelabdulrahman026-byte.github.io/dashboard/fatma.png" alt="الاستفسارات">
+        </div>
+        <div class="member-info">
+          <h3 class="member-name">الاستفسارات العامة</h3>
+          <div class="note-badge info">خاص بالاستفسارات</div>
+          <div class="member-contact">
+            <a href="https://wa.me/201276504341?text=لدي%20استفسار" target="_blank" class="whatsapp-button">
+              <i class="fab fa-whatsapp"></i>
+              تواصل واتساب
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
 
-  <div class="contact-card from-left" style="background-image: url('https://adelabdulrahman026-byte.github.io/dashboard/abdulah.png');">
-    <div class="content-wrapper">
-      <div class="name"> مستر عبدالله</div>
-      <div class="subject">مادة علمية</div>
-      <a href="https://wa.me/201210373503?text=ازيك%20يا%20مستر%20عبدالله" target="_blank" class="whatsapp-button">
-        تواصل واتساب
-        <img src="https://img.icons8.com/ios-filled/20/ffffff/whatsapp.png" alt="واتساب" />
-      </a>
-    </div>
-  </div>
-
-  <div class="contact-card" style="background-image: url('https://adelabdulrahman026-byte.github.io/dashboard/noha.png');">
-    <div class="content-wrapper">
-      <div class="name">ميس نهي</div>
-      <div class="subject">مادة علمية</div>
-      <a href="https://wa.me/201276814042?text=ازيك%20يا%20ميس%20نهي" target="_blank" class="whatsapp-button">
-        تواصل واتساب
-        <img src="https://img.icons8.com/ios-filled/20/ffffff/whatsapp.png" alt="واتساب" />
-      </a>
-    </div>
-  </div>
-
-  <div class="contact-card from-left" style="background-image: url('https://adelabdulrahman026-byte.github.io/dashboard/omnia.png');">
-    <div class="content-wrapper">
-      <div class="name"> ميس أمنية</div>
-      <div class="subject">مادة علمية</div>
-      <a href="https://wa.me/201276504341?text=ازيك%20يا%20ميس%20امنيه" target="_blank" class="whatsapp-button">
-        تواصل واتساب
-        <img src="https://img.icons8.com/ios-filled/20/ffffff/whatsapp.png" alt="واتساب" />
-      </a>
-    </div>
-  </div>
-
-  <div class="contact-card" style="background-image: url('https://adelabdulrahman026-byte.github.io/dashboard/manar.png');">
-    <div class="content-wrapper">
-      <div class="name"> ميس منار</div>
-      <div class="subject">مادة علمية</div>
-      <a href="https://wa.me/201280277084?text=ازيك%20يا%20ميس%20منار" target="_blank" class="whatsapp-button">
-        تواصل واتساب
-        <img src="https://img.icons8.com/ios-filled/20/ffffff/whatsapp.png" alt="واتساب" />
-      </a>
-    </div>
-  </div>
-
-  <div class="contact-card from-left" style="background-image: url('https://adelabdulrahman026-byte.github.io/dashboard/sagda.png');">
-    <div class="note-top">خاص بطلاب الأونلاين فقط</div>
-    <div class="content-wrapper">
-      <div class="name">ميس سجدة</div>
-      <div class="subject">مادة علمية</div>
-      <a href="https://wa.me/201556618507?text=ازيك%20يا%20ميس%20سجدة" target="_blank" class="whatsapp-button">
-        تواصل واتساب
-        <img src="https://img.icons8.com/ios-filled/20/ffffff/whatsapp.png" alt="واتساب" />
-      </a>
-    </div>
-  </div>
-
-  <div class="contact-card" style="background-image: url('https://adelabdulrahman026-byte.github.io/dashboard/fatma.png');">
-    <div class="content-wrapper">
-      <div class="name">  فطومة</div>
-      <div class="subject">علاقات عامة</div>
-      <a href="https://wa.me/201070086878?text=ازيك%20يا%20فطومه" target="_blank" class="whatsapp-button">
-        تواصل واتساب
-        <img src="https://img.icons8.com/ios-filled/20/ffffff/whatsapp.png" alt="واتساب" />
-      </a>
-    </div>
-  </div>
-
-  <!-- بطاقة جديدة: تواصل مع استاذه ليلي -->
-  <div class="contact-card from-left" style="background-image: url('https://adelabdulrahman026-byte.github.io/dashboard/laila.png');">
-    <div class="content-wrapper">
-      <div class="name">  استاذه ليلي</div>
-      <div class="subject">علاقات عامة</div>
-      <a href="https://wa.me/201001933983?text=ازيك%20يا%20استاذه%20ليلي" target="_blank" class="whatsapp-button">
-        تواصل واتساب
-        <img src="https://img.icons8.com/ios-filled/20/ffffff/whatsapp.png" alt="واتساب" />
-      </a>
-    </div>
-  </div>
-
-  <div class="contact-card" style="background-image: url('https://adelabdulrahman026-byte.github.io/dashboard/fatma.png');">
-    <div class="note-top info">خاص بالاستفسارات</div>
-    <div class="content-wrapper">
-      <div class="name">خاص بالاستفسارات</div>
-      <a href="https://wa.me/201276504341?text=لدي%20استفسار" target="_blank" class="whatsapp-button">
-        تواصل واتساب
-        <img src="https://img.icons8.com/ios-filled/20/ffffff/whatsapp.png" alt="واتساب" />
-      </a>
-    </div>
-  </div>
-
-</div>
-
-<!-- نصائح تعليمية -->
-<div class="tips-container">
-  <div class="tip"><span class="emoji">📚</span> احرص على مراجعة الدروس يوميًا لتحسين مستواك العلمي.</div>
-  <div class="tip"><span class="emoji">⏰</span> قسّم وقت الدراسة إلى فترات قصيرة مع استراحات منتظمة.</div>
-  <div class="tip"><span class="emoji">🧠</span> استخدم الخرائط الذهنية لتسهيل حفظ المعلومات.</div>
-  <div class="tip"><span class="emoji">👥</span> شارك في مجموعات الدراسة لتبادل المعلومات والاستفادة.</div>
-  <div class="tip"><span class="emoji">❓</span> لا تتردد في طرح الأسئلة عند عدم فهم أي نقطة في الدرس.</div>
+    <!-- قسم النصائح -->
+    <section class="tips-section">
+      <h2 class="tips-title">
+        <i class="fas fa-lightbulb"></i>
+        نصائح للتعلم الفعال
+      </h2>
+      
+      <div class="tips-grid">
+        <div class="tip-card">
+          <div class="tip-emoji">📚</div>
+          <p class="tip-text">احرص على مراجعة الدروس يوميًا لتحسين مستواك العلمي.</p>
+        </div>
+        
+        <div class="tip-card">
+          <div class="tip-emoji">⏰</div>
+          <p class="tip-text">قسّم وقت الدراسة إلى فترات قصيرة مع استراحات منتظمة.</p>
+        </div>
+        
+        <div class="tip-card">
+          <div class="tip-emoji">🧠</div>
+          <p class="tip-text">استخدم الخرائط الذهنية لتسهيل حفظ المعلومات.</p>
+        </div>
+        
+        <div class="tip-card">
+          <div class="tip-emoji">👥</div>
+          <p class="tip-text">شارك في مجموعات الدراسة لتبادل المعلومات والاستفادة.</p>
+        </div>
+        
+        <div class="tip-card">
+          <div class="tip-emoji">❓</div>
+          <p class="tip-text">لا تتردد في طرح الأسئلة عند عدم فهم أي نقطة في الدرس.</p>
+        </div>
+      </div>
+    </section>
+  </main>
 </div>
 
 <script>
-  // دالة مراقبة ظهور العناصر مع انيميشن متناوب بين من اليمين ومن اليسار
+  // دالة مراقبة ظهور العناصر
   function createObserver(targets) {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -435,22 +547,19 @@
           observer.unobserve(entry.target);
         }
       });
-    }, {threshold: 0.2});
+    }, {threshold: 0.15});
 
     targets.forEach((el, i) => {
       observer.observe(el);
     });
   }
 
-  // مراقبة الكروت
-  createObserver(document.querySelectorAll('.contact-card'));
+  // مراقبة بطاقات الأعضاء
+  createObserver(document.querySelectorAll('.member-card'));
 
-  // مراقبة النصائح
-  createObserver(document.querySelectorAll('.tip'));
-  
-   document.addEventListener('contextmenu', function(e) {
-      e.preventDefault();
-    });
-  </script>
+  // مراقبة بطاقات النصائح
+  createObserver(document.querySelectorAll('.tip-card'));
+</script>
+
 </body>
 </html>
