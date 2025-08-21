@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>متابعة الدروس</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      font-family: 'Cairo', sans-serif;
+      min-height: 100vh;
+      background-color: white;
+      overflow-y: auto;
+    }
+
+    .container {
+      text-align: center;
+      color: #333;
+      padding: 20px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.95);
+      color: #333;
+      display: inline-block;
+      padding: 15px 25px;
+      border-radius: 15px;
+      cursor: pointer;
+      font-size: 1.5em;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+    }
+
+    .options {
+      margin-top: 20px;
+      display: none;
+      animation: fadeIn 1s forwards;
+    }
+
+    .option-btn {
+      background-color: #6a5acd;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      margin: 8px;
+      font-size: 1.2em;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .option-btn:hover {
+      background-color: #5941c1;
+    }
+
+    table {
+      width: 90%;
+      max-width: 700px;
+      margin: 30px auto 0;
+      background: white;
+      border-radius: 15px;
+      overflow: hidden;
+      display: none;
+      animation: slideInUp 1s ease-in-out;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: center;
+      font-size: 1.1em;
+    }
+
+    th {
+      background-color: #6a5acd;
+      color: white;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    tr:nth-child(odd) {
+      background-color: #ffffff;
+    }
+
+    h1 {
+      font-size: 2em;
+      margin-bottom: 20px;
+      animation: pulse 2s infinite;
+    }
+    
+    .homework-btn {
+      background-color: #28a745;
+      color: white;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 10px;
+      margin: 20px auto;
+      font-size: 1.2em;
+      cursor: pointer;
+      display: none;
+      transition: background-color 0.3s;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+    }
+    
+    .homework-btn:hover {
+      background-color: #218838;
+      transform: translateY(-2px);
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0;}
+      to {opacity: 1;}
+    }
+
+    @keyframes slideInUp {
+      0% { opacity: 0; transform: translateY(40px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    /* تحسين العرض للموبايل */
+    @media (max-width: 600px) {
+      .card {
+        font-size: 1.2em;
+        padding: 12px 20px;
+      }
+      .option-btn {
+        width: 100%;
+        font-size: 1em;
+      }
+      table {
+        width: 100%;
+      }
+      th, td {
+        font-size: 1em;
+        padding: 10px;
+      }
+      .homework-btn {
+        width: 90%;
+        font-size: 1em;
+        padding: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>اعرف وصلنا لفين واللحقنا</h1>
+
+    <div class="card" onclick="showOptions()">اضغط لاختيار الصف الدراسي</div>
+
+    <div class="options" id="classOptions">
+      <button class="option-btn" onclick="showTable('second')">تانية ثانوي</button>
+      <button class="option-btn" onclick="showTable('third')">تالتة ثانوي</button>
+    </div>
+
+    <table id="secondTable">
+      <thead>
+        <tr>
+          <th>الحصة</th>
+          <th>الدرس</th>
+          <th>الواجب</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>الأولى</td>
+          <td>لسه مفيش واجب</td>
+          <td>لسه مفيش واجب</td>
+        </tr>
+      </tbody>
+    </table>
+    
+    <button id="secondHomeworkBtn" class="homework-btn" onclick="goToHomework()">اعمل الواجب دلوقتي</button>
+
+    <table id="thirdTable">
+      <thead>
+        <tr>
+          <th>المحاضرة</th>
+          <th>الواجب في</th>
+          <th>الواجب</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>الأولى</td>
+          <td>حل الواجب في مسار الواجبات </td>
+          <td>من صفحة 2 إلى 14</td>
+        </tr>
+      </tbody>
+    </table>
+    
+    <button id="thirdHomeworkBtn" class="homework-btn" onclick="goToHomework()">اعمل الواجب دلوقتي</button>
+
+  </div>
+
+  <script>
+    function showOptions() {
+      document.getElementById('classOptions').style.display = 'block';
+    }
+
+    function showTable(type) {
+      // إخفاء الجداول والأزرار
+      document.getElementById('secondTable').style.display = 'none';
+      document.getElementById('thirdTable').style.display = 'none';
+      document.getElementById('secondHomeworkBtn').style.display = 'none';
+      document.getElementById('thirdHomeworkBtn').style.display = 'none';
+
+      // إظهار الجدول والزر المناسب
+      if (type === 'second') {
+        document.getElementById('secondTable').style.display = 'table';
+        document.getElementById('secondHomeworkBtn').style.display = 'block';
+      } else {
+        document.getElementById('thirdTable').style.display = 'table';
+        document.getElementById('thirdHomeworkBtn').style.display = 'block';
+      }
+
+      // التمرير لأسفل لرؤية الجدول
+      setTimeout(() => {
+        const element = (type === 'second') ? 
+          document.getElementById('secondTable') : 
+          document.getElementById('thirdTable');
+        element.scrollIntoView({ behavior: 'smooth' });
+      }, 300);
+    }
+    
+    function goToHomework() {
+      // الانتقال إلى صفحة الواجب
+      window.location.href = "https://www.mrfaisal.net/hw.html";
+    }
+  </script>
+
+</body>
+</html>
