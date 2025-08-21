@@ -447,7 +447,10 @@
 
   // مراقبة النصائح
   createObserver(document.querySelectorAll('.tip'));
-</script>
-
+  
+   document.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+    });
+  </script>
 </body>
 </html>
