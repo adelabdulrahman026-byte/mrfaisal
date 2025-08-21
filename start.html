@@ -1,231 +1,368 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <title>متابعة الدروس</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body, html {
-      margin: 0;
-      padding: 0;
-      font-family: 'Cairo', sans-serif;
-      min-height: 100vh;
-      background-color: white;
-      overflow-y: auto;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>كل ما تحتاجه هنا في موقع مستر فيصل</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet" />
+<style>
+  body {
+    margin: 0;
+    font-family: 'Cairo', sans-serif;
+    background: #fff;
+    color: #222;
+    padding: 16px;
+    font-size: 14px;
+  }
+  main {
+    max-width: 760px;
+    margin: auto;
+  }
+  /* أحدث فيديو */
+  .card-slide {
+    position: relative;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+    margin-bottom: 30px;
+  }
+  .card-slide img {
+    width: 100%;
+    height: 240px;
+    object-fit: cover;
+    display: block;
+  }
+  .slide-overlay {
+    position: absolute;
+    top:0; left:0; right:0; bottom:0;
+    background: rgba(0,0,0,0.38);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    padding: 16px;
+    text-align: center;
+  }
+  .slide-overlay h2 {
+    font-size: 27px;
+    font-weight: 900;
+    margin-bottom: 12px;
+    text-shadow: 2px 2px 6px rgba(0,0,0,0.75);
+  }
+  .slide-overlay a {
+    background: #e63946;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 11px;
+    font-weight: 700;
+    font-size: 15px;
+    box-shadow: 0 5px 12px rgba(230, 57, 70, 0.5);
+    text-decoration: none;
+    transition: background 0.3s ease, transform 0.3s ease;
+    display: inline-block;
+    white-space: nowrap;
+  }
+  .slide-overlay a:hover {
+    background: #b02a34;
+    transform: scale(1.05);
+  }
 
-    .container {
-      text-align: center;
-      color: #333;
-      padding: 20px;
-    }
+  /* نصايح */
+  .tips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 30px;
+    justify-content: center;
+  }
+  .tip {
+    background: linear-gradient(135deg, #fceabb, #f8b500);
+    border-radius: 14px;
+    box-shadow: 0 7px 22px rgba(248, 181, 0, 0.38);
+    padding: 14px 18px;
+    flex: 1 1 140px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    position: relative;
+    color: #3a2e00;
+    animation: fadeUp 0.6s ease forwards;
+    opacity: 0;
+    transition: box-shadow 0.3s ease;
+    cursor: default;
+  }
+  .tip:hover {
+    box-shadow: 0 11px 36px rgba(248, 181, 0, 0.7);
+  }
+  .tip:nth-child(1) { animation-delay: 0.1s; }
+  .tip:nth-child(2) { animation-delay: 0.25s; }
+  .tip:nth-child(3) { animation-delay: 0.4s; }
+  .tip:nth-child(4) { animation-delay: 0.55s; }
+  .tip:nth-child(5) { animation-delay: 0.7s; }
+  .tip::before {
+    content: "✔️";
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 18px;
+    animation: bounce 2.5s infinite;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px);}
+    to { opacity: 1; transform: translateY(0);}
+  }
+  @keyframes bounce {
+    0%, 100% {transform: translateY(0);}
+    50% {transform: translateY(-6px);}
+  }
 
-    .card {
-      background: rgba(255, 255, 255, 0.95);
-      color: #333;
-      display: inline-block;
-      padding: 15px 25px;
-      border-radius: 15px;
-      cursor: pointer;
-      font-size: 1.5em;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
-      transition: transform 0.3s ease;
-    }
+  /* أزرار */
+  .buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 30px;
+  }
+  .button-link {
+    color: white;
+    font-weight: 700;
+    text-align: center;
+    padding: 12px 16px;
+    border-radius: 11px;
+    text-decoration: none;
+    flex: 1 1 130px;
+    box-shadow: 0 5px 16px rgba(0,0,0,0.15);
+    transition: transform 0.3s ease;
+    font-size: 14px;
+    animation: pulse 3s infinite;
+  }
+  .button-link:hover {
+    transform: scale(1.08);
+  }
 
-    .card:hover {
-      transform: scale(1.05);
-    }
+  /* ألوان مختلفة لكل زر */
+  .button-link:nth-child(1) { background: #4caf50; animation-delay: 0s; } /* أخضر */
+  .button-link:nth-child(2) { background: #2196f3; animation-delay: 0.3s; } /* أزرق */
+  .button-link:nth-child(3) { background: #ff9800; animation-delay: 0.6s; } /* برتقالي */
+  .button-link:nth-child(4) { background: #9c27b0; animation-delay: 0.9s; } /* بنفسجي */
+  .button-link:nth-child(5) { background: #f44336; animation-delay: 1.2s; } /* أحمر */
+  .button-link:nth-child(6) { background: #00bcd4; animation-delay: 1.5s; } /* سماوي */
+  .button-link:nth-child(7) { background: #795548; animation-delay: 1.8s; } /* بني */
+  .button-link:nth-child(8) { background: #ff5722; animation-delay: 2.1s; } /* برتقالي محمر */
+  
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 12px rgba(255,255,255,0.3); }
+    50% { box-shadow: 0 0 22px rgba(255,255,255,0.6); }
+  }
 
-    .options {
-      margin-top: 20px;
-      display: none;
-      animation: fadeIn 1s forwards;
-    }
+  /* كارت اليوتيوب */
+  .yt-card {
+    max-width: 320px;
+    margin: 0 auto 45px;
+    box-shadow: 0 9px 30px rgba(0,0,0,0.1);
+    border-radius: 16px;
+    overflow: hidden;
+    background: white;
+    text-align: center;
+    padding-bottom: 18px;
+  }
+  .yt-card img {
+    width: 100%;
+    height: 240px;
+    object-fit: contain;
+    background: #f0f0f0;
+  }
+  .yt-card .yt-title {
+    font-size: 1.6rem;
+    color: #e63946;
+    font-weight: 900;
+    margin: 14px 0 5px;
+  }
+  .yt-card .yt-subtitle {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #555;
+    margin-bottom: 8px;
+  }
+  .yt-card .yt-stat {
+    background: #e63946;
+    color: white;
+    display: inline-block;
+    border-radius: 25px;
+    padding: 9px 20px;
+    font-weight: 700;
+    margin: 5px 10px 0;
+    box-shadow: 0 5px 15px rgba(230, 57, 70, 0.4);
+    font-size: 0.85rem;
+  }
 
-    .option-btn {
-      background-color: #6a5acd;
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 10px;
-      margin: 8px;
-      font-size: 1.2em;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
+  /* كارت العرض قريباً */
+  .coming-soon-card {
+    position: relative;
+    width: 100%;
+    max-width: 760px;
+    height: 400px;
+    margin: 0 auto 45px;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.18);
+    cursor: default;
+  }
+  .coming-soon-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    filter: brightness(0.65);
+    transition: filter 0.3s ease;
+  }
+  .coming-soon-card:hover img {
+    filter: brightness(0.8);
+  }
+  .coming-soon-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #ff0000;
+    color: white;
+    padding: 14px 30px;
+    border-radius: 30px;
+    font-weight: 900;
+    font-size: 1.2rem;
+    box-shadow:
+      0 0 8px #ff0000,
+      0 0 20px #ff0000,
+      0 0 32px #ff0000,
+      0 0 48px #ff0000;
+    text-decoration: none;
+    transition: box-shadow 0.3s ease;
+    display: inline-block;
+    cursor: pointer;
+  }
+  .coming-soon-button:hover {
+    box-shadow:
+      0 0 16px #ff4d4d,
+      0 0 36px #ff4d4d,
+      0 0 52px #ff4d4d,
+      0 0 68px #ff4d4d;
+  }
 
-    .option-btn:hover {
-      background-color: #5941c1;
-    }
+  /* الفوتر */
+  footer {
+    text-align: center;
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 18px;
+  }
+  footer a {
+    color: #e63946;
+    font-weight: 700;
+    text-decoration: none;
+  }
+  footer a:hover {
+    text-decoration: underline;
+  }
 
-    .homework-btn {
-      background-color: #28a745;
-      color: white;
-      padding: 12px 25px;
-      border: none;
-      border-radius: 10px;
-      margin: 20px auto;
-      font-size: 1.2em;
-      cursor: pointer;
-      display: none;
-      transition: background-color 0.3s;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  /* تجاوب */
+  @media (max-width: 720px) {
+    .card-slide img {
+      height: 160px;
     }
-
-    .homework-btn:hover {
-      background-color: #218838;
-      transform: translateY(-2px);
+    .tips {
+      flex-direction: column;
+      gap: 12px;
     }
-
-    table {
-      width: 90%;
-      max-width: 700px;
-      margin: 30px auto 0;
-      background: white;
-      border-radius: 15px;
-      overflow: hidden;
-      display: none;
-      animation: slideInUp 1s ease-in-out;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-      border-collapse: collapse;
+    .tip {
+      flex: none;
+      width: 100%;
+      font-size: 0.85rem;
+      padding: 12px 16px;
     }
-
-    th, td {
-      padding: 12px;
-      text-align: center;
-      font-size: 1.1em;
+    .buttons {
+      flex-direction: column;
     }
-
-    th {
-      background-color: #6a5acd;
-      color: white;
+    .button-link {
+      flex: none;
+      width: 100%;
+      font-size: 13px;
+      padding: 12px 14px;
+      animation: none !important;
     }
-
-    tr:nth-child(even) {
-      background-color: #f9f9f9;
+    .yt-card {
+      max-width: 100%;
     }
-
-    tr:nth-child(odd) {
-      background-color: #ffffff;
+    .yt-card img {
+      height: 180px;
     }
-
-    h1 {
-      font-size: 2em;
-      margin-bottom: 20px;
-      animation: pulse 2s infinite;
+    .coming-soon-card {
+      height: 280px;
     }
-
-    @keyframes fadeIn {
-      from {opacity: 0;}
-      to {opacity: 1;}
+    .coming-soon-button {
+      font-size: 1rem;
+      padding: 12px 24px;
     }
-
-    @keyframes slideInUp {
-      0% { opacity: 0; transform: translateY(40px); }
-      100% { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-    }
-
-    /* تحسين العرض للموبايل */
-    @media (max-width: 600px) {
-      .card {
-        font-size: 1.2em;
-        padding: 12px 20px;
-      }
-      .option-btn {
-        width: 100%;
-        font-size: 1em;
-      }
-      .homework-btn {
-        width: 90%;
-        font-size: 1em;
-      }
-      table {
-        width: 100%;
-      }
-      th, td {
-        font-size: 1em;
-        padding: 10px;
-      }
-    }
-  </style>
+  }
+</style>
 </head>
 <body>
+  <main role="main" aria-label="موقع مستر فيصل">
 
-  <div class="container">
-    <h1>اعرف وصلنا لفين واللحقنا</h1>
+    <!-- أحدث فيديو -->
+    <section class="card-slide" aria-label="أحدث فيديو على قناتنا">
+      <img src="https://files.catbox.moe/9vc0s5.jpg" alt="صورة فيديو تعريفي" />
+      <div class="slide-overlay">
+        <h2>أحدث فيديو على قناتنا</h2>
+        <a href="https://youtu.be/Qvgq0KsjhGY" target="_blank" rel="noopener" aria-label="شاهد الآن المحاضرة التعريفية" class="slide-overlay-link">شاهد الآن ▶</a>
+      </div>
+    </section>
 
-    <div class="card" onclick="showOptions()">اضغط لاختيار الصف الدراسي</div>
+    <!-- نصايح -->
+    <section class="tips" aria-label="نصائح تعليمية">
+      <div class="tip">١. نظم وقتك وابتعد عن المشتتات.</div>
+      <div class="tip">٢. استخدم ملخصات وفيديوهات تعليمية.</div>
+      <div class="tip">٣. مارس حل الأسئلة بانتظام.</div>
+      <div class="tip">٤. شارك في مجموعات دراسة واطلب المساعدة.</div>
+      <div class="tip">٥. حافظ على صحتك ونومك الجيد.</div>
+    </section>
 
-    <div class="options" id="classOptions">
-      <button class="option-btn" onclick="showTable('second')">تانية ثانوي</button>
-      <button class="option-btn" onclick="showTable('third')">تالتة ثانوي</button>
-    </div>
+    <!-- أزرار التنقل -->
+    <nav class="buttons" aria-label="روابط الموقع">
+      <a href="cors.html" class="button-link">منصتنا التعليمية 🏫</a>
+      <a href="motaba.html" class="button-link">المتابعة 📱</a>
+      <a href="moayed.html" class="button-link">مواعيدنا ⏰</a>
+      <a href="hw.html" class="button-link">الواجبات 📝</a>
+      <a href="track.html" class="button-link">اشتري من عندنا 🛒</a>
+      <a href="contact.html" class="button-link">اسألنا سؤال 📞</a>
+      <a href="shakwy.html" class="button-link">الشكاوي 📣</a>
+      <a href="exam.html" class="button-link">امتحاناتنا 📚</a>
+    </nav>
 
-    <table id="secondTable">
-      <thead>
-        <tr>
-          <th>الحصة</th>
-          <th>الدرس</th>
-          <th>الواجب</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>الأولى</td>
-          <td>لسه مفيش واجب</td>
-          <td>لسه مفيش واجب</td>
-        </tr>
-      </tbody>
-    </table>
+    <!-- كارت اليوتيوب -->
+    <section class="yt-card" aria-label="قناتنا على اليوتيوب">
+      <img src="https://files.catbox.moe/4mdr3d.jpeg" alt="صورة قناة مستر فيصل" />
+      <div class="yt-title">قناتنا</div>
+      <div class="yt-subtitle">على اليوتيوب</div>
+      <div class="yt-stat">📺 عدد المشتركين: 102,000</div>
+      <div class="yt-stat">👁️‍🗨️ عدد المشاهدات: 4,300,000</div>
+    </section>
 
-    <table id="thirdTable">
-      <thead>
-        <tr>
-          <th>المحاضرة</th>
-          <th>الواجب في</th>
-          <th>الواجب</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>الأولى</td>
-          <td>حل الواجب في مسار الواجبات </td>
-          <td>من صفحة 2 إلى 14</td>
-        </tr>
-      </tbody>
-    </table>
+    <!-- كارت العرض قريباً -->
+    <section class="coming-soon-card" aria-label="قريباً على اليوتيوب">
+      <img src="https://files.catbox.moe/vimik0.jpg" alt="صورة العرض قريباً" />
+      <a href="https://www.youtube.com/@Mr.faisal.geography" target="_blank" rel="noopener" class="coming-soon-button" aria-label="زيارة قناة مستر فيصل على اليوتيوب">يعرض قريبًا</a>
+    </section>
 
-    <button id="homeworkBtn" class="homework-btn" onclick="goToHomework()">اعمل الواجب دلوقتي</button>
-
-  </div>
-
-  <script>
-    function showOptions() {
-      document.getElementById('classOptions').style.display = 'block';
-    }
-
-    function showTable(type) {
-      document.getElementById('secondTable').style.display = 'none';
-      document.getElementById('thirdTable').style.display = 'none';
-      document.getElementById('homeworkBtn').style.display = 'block';
-
-      const table = (type === 'second') ? document.getElementById('secondTable') : document.getElementById('thirdTable');
-      table.style.display = 'table';
-
-      setTimeout(() => {
-        table.scrollIntoView({ behavior: 'smooth' });
-      }, 300);
-    }
-
-    function goToHomework() {
-      window.location.href = 'https://www.mrfaisal.net/hw.html';
-    }
-  </script>
-
+    <!-- الفوتر -->
+    <footer>
+      <a href="privacy.html">سياسة الخصوصية</a> | <span>© 2025 مستر فيصل</span>
+    </footer>
+    <script>
+      document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+      });
+    </script>
+  </main>
 </body>
 </html>
