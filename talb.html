@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <title>متابعة الدروس</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- مهم للموبايل -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body, html {
       margin: 0;
       padding: 0;
       font-family: 'Cairo', sans-serif;
       min-height: 100vh;
-      background-color: white; /* ✅ خلفية بيضاء */
+      background-color: white;
       overflow-y: auto;
     }
 
@@ -56,6 +56,25 @@
 
     .option-btn:hover {
       background-color: #5941c1;
+    }
+
+    .homework-btn {
+      background-color: #28a745;
+      color: white;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 10px;
+      margin: 20px auto;
+      font-size: 1.2em;
+      cursor: pointer;
+      display: none;
+      transition: background-color 0.3s;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .homework-btn:hover {
+      background-color: #218838;
+      transform: translateY(-2px);
     }
 
     table {
@@ -121,6 +140,10 @@
         width: 100%;
         font-size: 1em;
       }
+      .homework-btn {
+        width: 90%;
+        font-size: 1em;
+      }
       table {
         width: 100%;
       }
@@ -177,6 +200,8 @@
       </tbody>
     </table>
 
+    <button id="homeworkBtn" class="homework-btn" onclick="goToHomework()">اعمل الواجب دلوقتي</button>
+
   </div>
 
   <script>
@@ -187,6 +212,7 @@
     function showTable(type) {
       document.getElementById('secondTable').style.display = 'none';
       document.getElementById('thirdTable').style.display = 'none';
+      document.getElementById('homeworkBtn').style.display = 'block';
 
       const table = (type === 'second') ? document.getElementById('secondTable') : document.getElementById('thirdTable');
       table.style.display = 'table';
@@ -194,6 +220,10 @@
       setTimeout(() => {
         table.scrollIntoView({ behavior: 'smooth' });
       }, 300);
+    }
+
+    function goToHomework() {
+      window.location.href = 'https://www.mrfaisal.net/hw.html';
     }
   </script>
 
