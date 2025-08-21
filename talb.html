@@ -58,25 +58,6 @@
       background-color: #5941c1;
     }
 
-    .homework-btn {
-      background-color: #28a745;
-      color: white;
-      padding: 12px 25px;
-      border: none;
-      border-radius: 10px;
-      margin: 20px auto;
-      font-size: 1.2em;
-      cursor: pointer;
-      display: none;
-      transition: background-color 0.3s;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-
-    .homework-btn:hover {
-      background-color: #218838;
-      transform: translateY(-2px);
-    }
-
     table {
       width: 90%;
       max-width: 700px;
@@ -114,6 +95,25 @@
       margin-bottom: 20px;
       animation: pulse 2s infinite;
     }
+    
+    .homework-btn {
+      background-color: #28a745;
+      color: white;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 10px;
+      margin: 20px auto;
+      font-size: 1.2em;
+      cursor: pointer;
+      display: none;
+      transition: background-color 0.3s;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+    }
+    
+    .homework-btn:hover {
+      background-color: #218838;
+      transform: translateY(-2px);
+    }
 
     @keyframes fadeIn {
       from {opacity: 0;}
@@ -140,14 +140,15 @@
         width: 100%;
         font-size: 1em;
       }
-      .homework-btn {
-        width: 90%;
-        font-size: 1em;
-      }
       table {
         width: 100%;
       }
       th, td {
+        font-size: 1em;
+        padding: 10px;
+      }
+      .homework-btn {
+        width: 90%;
         font-size: 1em;
         padding: 10px;
       }
@@ -182,6 +183,8 @@
         </tr>
       </tbody>
     </table>
+    
+    <button id="secondHomeworkBtn" class="homework-btn" onclick="goToHomework()">اعمل الواجب دلوقتي</button>
 
     <table id="thirdTable">
       <thead>
@@ -199,8 +202,8 @@
         </tr>
       </tbody>
     </table>
-
-    <button id="homeworkBtn" class="homework-btn" onclick="goToHomework()">اعمل الواجب دلوقتي</button>
+    
+    <button id="thirdHomeworkBtn" class="homework-btn" onclick="goToHomework()">اعمل الواجب دلوقتي</button>
 
   </div>
 
@@ -210,20 +213,33 @@
     }
 
     function showTable(type) {
+      // إخفاء الجداول والأزرار
       document.getElementById('secondTable').style.display = 'none';
       document.getElementById('thirdTable').style.display = 'none';
-      document.getElementById('homeworkBtn').style.display = 'block';
+      document.getElementById('secondHomeworkBtn').style.display = 'none';
+      document.getElementById('thirdHomeworkBtn').style.display = 'none';
 
-      const table = (type === 'second') ? document.getElementById('secondTable') : document.getElementById('thirdTable');
-      table.style.display = 'table';
+      // إظهار الجدول والزر المناسب
+      if (type === 'second') {
+        document.getElementById('secondTable').style.display = 'table';
+        document.getElementById('secondHomeworkBtn').style.display = 'block';
+      } else {
+        document.getElementById('thirdTable').style.display = 'table';
+        document.getElementById('thirdHomeworkBtn').style.display = 'block';
+      }
 
+      // التمرير لأسفل لرؤية الجدول
       setTimeout(() => {
-        table.scrollIntoView({ behavior: 'smooth' });
+        const element = (type === 'second') ? 
+          document.getElementById('secondTable') : 
+          document.getElementById('thirdTable');
+        element.scrollIntoView({ behavior: 'smooth' });
       }, 300);
     }
-
+    
     function goToHomework() {
-      window.location.href = 'https://www.mrfaisal.net/hw.html';
+      // الانتقال إلى صفحة الواجب
+      window.location.href = "https://www.mrfaisal.net/hw.html";
     }
   </script>
 
