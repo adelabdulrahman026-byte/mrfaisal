@@ -559,7 +559,9 @@
 
   // مراقبة بطاقات النصائح
   createObserver(document.querySelectorAll('.tip-card'));
-</script>
-
+    document.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+    });
+  </script>
 </body>
 </html>
