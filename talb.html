@@ -3,17 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <title>متابعة الدروس</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- مهم للموبايل -->
   <style>
     body, html {
       margin: 0;
       padding: 0;
       font-family: 'Cairo', sans-serif;
       min-height: 100vh;
-      background-color: #f5f7fa;
+      background-color: white; /* ✅ خلفية بيضاء */
       overflow-y: auto;
     }
 
@@ -21,17 +18,6 @@
       text-align: center;
       color: #333;
       padding: 20px;
-      max-width: 1000px;
-      margin: 0 auto;
-    }
-
-    .header {
-      background: linear-gradient(135deg, #6a5acd, #4b3fab);
-      color: white;
-      padding: 25px;
-      border-radius: 15px;
-      margin-bottom: 30px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     }
 
     .card {
@@ -44,12 +30,10 @@
       font-size: 1.5em;
       box-shadow: 0 0 15px rgba(0,0,0,0.1);
       transition: transform 0.3s ease;
-      margin-bottom: 20px;
     }
 
     .card:hover {
       transform: scale(1.05);
-      box-shadow: 0 5px 20px rgba(0,0,0,0.15);
     }
 
     .options {
@@ -61,39 +45,34 @@
     .option-btn {
       background-color: #6a5acd;
       color: white;
-      padding: 12px 25px;
+      padding: 10px 20px;
       border: none;
       border-radius: 10px;
-      margin: 10px;
+      margin: 8px;
       font-size: 1.2em;
       cursor: pointer;
-      transition: all 0.3s;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+      transition: background-color 0.3s;
     }
 
     .option-btn:hover {
       background-color: #5941c1;
-      transform: translateY(-3px);
-    }
-
-    .table-container {
-      display: none;
-      margin-top: 30px;
-      animation: slideInUp 0.5s ease-in-out;
     }
 
     table {
-      width: 100%;
+      width: 90%;
+      max-width: 700px;
+      margin: 30px auto 0;
       background: white;
       border-radius: 15px;
       overflow: hidden;
+      display: none;
+      animation: slideInUp 1s ease-in-out;
       box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
       border-collapse: collapse;
-      margin-bottom: 20px;
     }
 
     th, td {
-      padding: 15px;
+      padding: 12px;
       text-align: center;
       font-size: 1.1em;
     }
@@ -111,46 +90,10 @@
       background-color: #ffffff;
     }
 
-    tr:hover {
-      background-color: #f0f0f0;
-    }
-
     h1 {
-      font-size: 2.2em;
-      margin-bottom: 10px;
-    }
-
-    h2 {
-      color: #6a5acd;
-      margin-top: 30px;
-      margin-bottom: 15px;
-    }
-
-    .homework-btn {
-      background-color: #28a745;
-      color: white;
-      padding: 15px 30px;
-      border: none;
-      border-radius: 10px;
-      margin: 20px auto;
-      font-size: 1.2em;
-      cursor: pointer;
-      transition: all 0.3s;
-      display: inline-block;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.2);
-    }
-
-    .homework-btn:hover {
-      background-color: #218838;
-      transform: translateY(-3px);
-      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    }
-
-    .footer {
-      margin-top: 40px;
-      padding: 15px;
-      color: #666;
-      font-size: 0.9em;
+      font-size: 2em;
+      margin-bottom: 20px;
+      animation: pulse 2s infinite;
     }
 
     @keyframes fadeIn {
@@ -169,32 +112,21 @@
     }
 
     /* تحسين العرض للموبايل */
-    @media (max-width: 768px) {
+    @media (max-width: 600px) {
       .card {
         font-size: 1.2em;
         padding: 12px 20px;
       }
-      
       .option-btn {
-        width: 80%;
+        width: 100%;
         font-size: 1em;
-        display: block;
-        margin: 10px auto;
       }
-      
+      table {
+        width: 100%;
+      }
       th, td {
-        font-size: 0.9em;
-        padding: 10px;
-      }
-      
-      .homework-btn {
-        width: 80%;
         font-size: 1em;
-        padding: 12px;
-      }
-      
-      h1 {
-        font-size: 1.8em;
+        padding: 10px;
       }
     }
   </style>
@@ -202,10 +134,7 @@
 <body>
 
   <div class="container">
-    <div class="header">
-      <h1>اعرف وصلنا لفين واللحقنا</h1>
-      <p>تابع دروسك وواجباتك بسهولة</p>
-    </div>
+    <h1>اعرف وصلنا لفين واللحقنا</h1>
 
     <div class="card" onclick="showOptions()">اضغط لاختيار الصف الدراسي</div>
 
@@ -214,83 +143,57 @@
       <button class="option-btn" onclick="showTable('third')">تالتة ثانوي</button>
     </div>
 
-    <div id="secondContainer" class="table-container">
-      <h2>جدول متابعة الدروس للصف الثاني الثانوي</h2>
-      <table id="secondTable">
-        <thead>
-          <tr>
-            <th>الحصة</th>
-            <th>الدرس</th>
-            <th>الواجب</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>الأولى</td>
-            <td>لسه مفيش واجب</td>
-            <td>لسه مفيش واجب</td>
-          </tr>
-          <tr>
-        </tbody>
-      </table>
-      <button class="homework-btn" onclick="goToHomework()">اعمل الواجب دلوقتي</button>
-    </div>
+    <table id="secondTable">
+      <thead>
+        <tr>
+          <th>الحصة</th>
+          <th>الدرس</th>
+          <th>الواجب</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>الأولى</td>
+          <td>لسه مفيش واجب</td>
+          <td>لسه مفيش واجب</td>
+        </tr>
+      </tbody>
+    </table>
 
-    <div id="thirdContainer" class="table-container">
-      <h2>جدول متابعة الدروس للصف الثالث الثانوي</h2>
-      <table id="thirdTable">
-        <thead>
-          <tr>
-            <th>المحاضرة</th>
-            <th>الواجب في</th>
-            <th>الواجب</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>الأولى</td>
-            <td>حل الواجب في مسار الواجبات </td>
-            <td>من صفحة 2 إلى 14</td>
-          </tr>
-          <tr>
-        </tbody>
-      </table>
-      <button class="homework-btn" onclick="goToHomework()">اعمل الواجب دلوقتي</button>
-    </div>
+    <table id="thirdTable">
+      <thead>
+        <tr>
+          <th>المحاضرة</th>
+          <th>الواجب في</th>
+          <th>الواجب</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>الأولى</td>
+          <td>حل الواجب في مسار الواجبات </td>
+          <td>من صفحة 2 إلى 14</td>
+        </tr>
+      </tbody>
+    </table>
 
-    <div class="footer">
-      <p>© 2023 نظام متابعة الدروس - جميع الحقوق محفوظة</p>
-    </div>
   </div>
 
   <script>
     function showOptions() {
       document.getElementById('classOptions').style.display = 'block';
-      document.getElementById('classOptions').scrollIntoView({ behavior: 'smooth' });
     }
 
     function showTable(type) {
-      // إخفاء جميع الجداول
-      document.getElementById('secondContainer').style.display = 'none';
-      document.getElementById('thirdContainer').style.display = 'none';
-      
-      // إظهار الجدول المحدد
-      if (type === 'second') {
-        document.getElementById('secondContainer').style.display = 'block';
-        setTimeout(() => {
-          document.getElementById('secondContainer').scrollIntoView({ behavior: 'smooth' });
-        }, 300);
-      } else {
-        document.getElementById('thirdContainer').style.display = 'block';
-        setTimeout(() => {
-          document.getElementById('thirdContainer').scrollIntoView({ behavior: 'smooth' });
-        }, 300);
-      }
-    }
-    
-    function goToHomework() {
-      // الانتقال إلى صفحة الواجب
-      window.open("https://www.mrfaisal.net/hw.html", "_blank");
+      document.getElementById('secondTable').style.display = 'none';
+      document.getElementById('thirdTable').style.display = 'none';
+
+      const table = (type === 'second') ? document.getElementById('secondTable') : document.getElementById('thirdTable');
+      table.style.display = 'table';
+
+      setTimeout(() => {
+        table.scrollIntoView({ behavior: 'smooth' });
+      }, 300);
     }
   </script>
 
