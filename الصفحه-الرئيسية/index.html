@@ -2,9 +2,10 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <title> موقع مستر فيصل الرسمي</title>
+  <title>موقع مستر فيصل الرسمي</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" />
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.6.2/dist/dotlottie-wc.js" type="module"></script>
   <style>
     :root {
@@ -15,7 +16,14 @@
       --color-tip-shadow-opacity: 0.08;
       --color-link: #4caf50;
       --color-link-hover: #2e7d32;
+      --color-primary: #4caf50;
+      --color-primary-light: #6abf69;
+      --color-primary-dark: #2e7d32;
+      --color-accent: #ff9800;
+      --sidebar-width: 300px;
+      --header-height: 70px;
     }
+
     body, html {
       margin: 0; padding: 0;
       font-family: 'Cairo', sans-serif;
@@ -26,6 +34,7 @@
       background: var(--color-bg);
       transition: background-color 0.4s ease, color 0.4s ease;
     }
+
     #preloader {
       position: fixed;
       top: 0; left: 0;
@@ -37,6 +46,172 @@
       justify-content: center;
       align-items: center;
     }
+    
+    /* شريط الرأس */
+    .header {
+      position: fixed;
+      top: 0;
+      right: 0;
+      left: 0;
+      height: var(--header-height);
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      z-index: 9990;
+      transition: background-color 0.4s ease, box-shadow 0.4s ease;
+    }
+    
+    .header-title {
+      font-weight: 900;
+      font-size: 1.5rem;
+      color: var(--color-primary);
+      margin: 0;
+    }
+    
+    .header-controls {
+      display: flex;
+      gap: 12px;
+    }
+    
+    /* أزرار التحكم */
+    .control-btn {
+      background: var(--color-primary);
+      border: none;
+      border-radius: 50%;
+      width: 45px;
+      height: 45px;
+      color: white;
+      font-size: 1.2rem;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(76,175,80,0.4);
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .control-btn:hover {
+      background: var(--color-primary-dark);
+      transform: scale(1.1);
+      box-shadow: 0 6px 16px rgba(76,175,80,0.6);
+    }
+    
+    /* القائمة الجانبية */
+    #sidebarOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.4s ease, visibility 0.4s;
+      z-index: 9995;
+    }
+    
+    #sidebarOverlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    #sidebar {
+      position: fixed;
+      top: 0;
+      right: -300px;
+      width: var(--sidebar-width);
+      height: 100%;
+      background: linear-gradient(to bottom, var(--color-primary-light), var(--color-primary));
+      box-shadow: -5px 0 25px rgba(0,0,0,0.2);
+      transition: right 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+      z-index: 9996;
+      padding: 80px 0 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    #sidebar.active {
+      right: 0;
+    }
+    
+    .sidebar-header {
+      text-align: center;
+      margin-bottom: 30px;
+      padding: 0 20px;
+    }
+    
+    .sidebar-header h2 {
+      margin: 0;
+      color: white;
+      font-weight: 800;
+      font-size: 1.8rem;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    
+    .sidebar-header p {
+      color: rgba(255,255,255,0.9);
+      margin: 8px 0 0;
+      font-size: 1rem;
+    }
+    
+    .sidebar-menu {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 0 15px;
+    }
+    
+    .button-link {
+      display: flex;
+      align-items: center;
+      padding: 16px 20px;
+      background: rgba(255, 255, 255, 0.15);
+      color: white;
+      text-decoration: none;
+      border-radius: 14px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+    }
+    
+    .button-link i {
+      margin-left: 12px;
+      font-size: 1.3rem;
+      transition: transform 0.3s ease;
+    }
+    
+    .button-link:hover {
+      background: rgba(255, 255, 255, 0.25);
+      transform: translateX(-5px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+    }
+    
+    .button-link:hover i {
+      transform: scale(1.2);
+    }
+    
+    .sidebar-footer {
+      margin-top: auto;
+      padding: 20px;
+      text-align: center;
+      color: rgba(255,255,255,0.8);
+      font-size: 0.9rem;
+      border-top: 1px solid rgba(255,255,255,0.2);
+    }
+
+    /* المحتوى الرئيسي */
+    .main-content {
+      margin-top: var(--header-height);
+      padding: 20px;
+    }
+
     /* كارت الفيديو */
     #videoCard {
       max-width: 980px;
@@ -49,6 +224,7 @@
       aspect-ratio: 16 / 9;
       transition: background-color 0.4s ease, box-shadow 0.4s ease;
     }
+    
     #videoCard video {
       width: 100%;
       height: 100%;
@@ -82,10 +258,12 @@
       color: var(--color-text);
       box-shadow: 0 8px 20px rgba(0,0,0,var(--color-tip-shadow-opacity));
     }
+    
     .tipCard:hover {
       box-shadow: 0 14px 28px rgba(0,0,0,0.15);
       transform: translateY(-4px);
     }
+    
     .tip1 { background: #fff8e1; color: #665c00; box-shadow: 0 8px 20px rgba(255, 223, 93, 0.7); }
     .tip2 { background: #e1f5fe; color: #01579b; box-shadow: 0 8px 20px rgba(41, 182, 246, 0.6); }
     .tip3 { background: #e8f5e9; color: #2e7d32; box-shadow: 0 8px 20px rgba(102, 187, 106, 0.6); }
@@ -98,7 +276,7 @@
     .welcome-card {
       max-width: 480px;
       margin: 0 auto 30px;
-      background: linear-gradient(135deg, #4caf50, #2e7d32);
+      background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
       color: white;
       padding: 22px 28px;
       border-radius: 18px;
@@ -116,6 +294,7 @@
       padding: 0 16px 40px;
       transition: background-color 0.4s ease;
     }
+    
     .social-section {
       display: flex;
       flex-direction: column;
@@ -123,6 +302,7 @@
       max-width: 480px;
       margin: 0 auto;
     }
+    
     .social-card {
       background: white;
       border-radius: 18px;
@@ -136,11 +316,13 @@
       gap: 16px;
       transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.4s ease, border-color 0.4s ease;
     }
+    
     .social-card:hover {
       transform: scale(1.04);
       box-shadow: 0 10px 30px rgba(76,175,80,0.3);
-      border-color: #4caf50;
+      border-color: var(--color-primary);
     }
+    
     .social-card a {
       color: var(--color-text);
       text-decoration: none;
@@ -148,6 +330,7 @@
       display: block;
       transition: color 0.4s ease;
     }
+    
     .social-card img {
       width: 56px;
       height: 56px;
@@ -159,12 +342,13 @@
       flex-shrink: 0;
       transition: background-color 0.4s ease;
     }
+    
     /* زر ابدأ الرحلة */
     .start-journey {
       max-width: 480px;
       margin: 30px auto 0;
       padding: 18px 20px;
-      background: linear-gradient(135deg, #4caf50, #2e7d32);
+      background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
       color: white;
       font-size: 20px;
       font-weight: bold;
@@ -176,15 +360,18 @@
       animation: pulse 1.5s infinite;
       user-select: none;
     }
+    
     .start-journey:hover {
       transform: scale(1.05);
       box-shadow: 0 8px 20px rgba(76,175,80,0.4);
     }
+    
     @keyframes pulse {
       0% { transform: scale(1); }
       50% { transform: scale(1.03); }
       100% { transform: scale(1); }
     }
+    
     footer {
       width: 100%;
       padding: 12px 8px 28px;
@@ -199,6 +386,7 @@
       user-select: none;
       transition: background-color 0.4s ease, color 0.4s ease;
     }
+    
     footer span, footer a.wa-link {
       font-style: italic;
       color: var(--color-link);
@@ -207,6 +395,7 @@
       text-decoration: underline;
       transition: color 0.4s ease;
     }
+    
     footer a.privacy-link {
       display: block;
       margin-top: 8px;
@@ -217,129 +406,223 @@
       user-select: none;
       transition: color 0.3s ease;
     }
+    
     footer a.privacy-link:hover {
       color: var(--color-link-hover);
       text-decoration: underline;
     }
 
-    /* زرار الوضع الليلي */
-    #toggleDarkMode {
-      position: fixed;
-      top: 12px;
-      left: 12px; /* لأن dir=rtl */
-      background: var(--color-link);
-      border: none;
-      border-radius: 12px;
-      padding: 8px 14px;
-      color: white;
-      font-weight: 700;
-      font-size: 14px;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(76,175,80,0.6);
-      transition: background-color 0.3s ease, transform 0.2s ease;
-      z-index: 10000;
-      user-select: none;
-    }
-    #toggleDarkMode:hover {
-      background: var(--color-link-hover);
-      transform: scale(1.05);
-    }
-
     /* الوضع الليلي */
     body.dark {
       --color-bg: #121212;
-      --color-text: #ddd;
+      --color-text: #e0e0e0;
       --color-card-bg: #1e1e1e;
       --color-card-shadow: rgba(0,0,0,0.8);
       --color-tip-shadow-opacity: 0.3;
       --color-link: #81c784;
-      --color-link-hover: #519657;
+      --color-link-hover: #a5d6a7;
+      --color-primary: #388e3c;
+      --color-primary-light: #4caf50;
+      --color-primary-dark: #2e7d32;
       background-color: var(--color-bg);
       color: var(--color-text);
     }
+    
+    body.dark .header {
+      background: rgba(30, 30, 30, 0.95);
+      box-shadow: 0 2px 20px rgba(0, 0, 0, 0.4);
+    }
+    
     body.dark #videoCard {
       background-color: var(--color-card-bg);
       box-shadow: 0 8px 24px var(--color-card-shadow);
     }
+    
     body.dark .tipCard {
       color: var(--color-text);
       box-shadow: 0 8px 20px rgba(0,0,0,var(--color-tip-shadow-opacity));
     }
+    
     body.dark .welcome-card {
-      background: linear-gradient(135deg, #81c784, #519657);
-      box-shadow: 0 8px 24px rgba(81,150,87,0.8);
+      background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+      box-shadow: 0 8px 24px rgba(56,142,60,0.8);
     }
+    
     body.dark .content {
       background-color: var(--color-card-bg);
     }
+    
     body.dark .social-card {
       background-color: var(--color-card-bg);
       border-color: #519657;
     }
+    
     body.dark .social-card:hover {
       border-color: var(--color-link-hover);
       box-shadow: 0 10px 30px rgba(129,199,132,0.5);
     }
+    
     body.dark .social-card a {
       color: var(--color-text);
     }
+    
     body.dark .social-card img {
       background-color: var(--color-card-bg);
     }
+    
     body.dark footer {
       background-color: #1a1a1a;
       color: #aaa;
     }
+    
     body.dark footer span, body.dark footer a.wa-link {
       color: var(--color-link);
     }
+    
     body.dark footer a.privacy-link {
       color: var(--color-link);
     }
+    
     body.dark footer a.privacy-link:hover {
       color: var(--color-link-hover);
     }
+    
+    body.dark #sidebar {
+      background: linear-gradient(to bottom, #2c2c2c, #1e1e1e);
+    }
+    
+    body.dark .button-link {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+    
+    body.dark .button-link:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+    
+    body.dark .sidebar-footer {
+      border-top-color: rgba(255,255,255,0.15);
+    }
 
     /* استجابة للموبايل */
-    @media (max-width: 520px) {
+    @media (max-width: 768px) {
+      :root {
+        --header-height: 60px;
+      }
+      
+      .header-title {
+        font-size: 1.2rem;
+      }
+      
+      .control-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+      }
+      
       #tipsContainer {
         max-width: 90%;
         gap: 14px;
       }
+      
       .tipCard {
         font-size: 18px;
         padding: 18px 20px;
       }
+      
       .welcome-card {
         font-size: 20px;
         padding: 18px 20px;
       }
+      
       .social-card img {
         width: 48px;
         height: 48px;
       }
+      
       .start-journey {
         font-size: 18px;
         padding: 14px 18px;
       }
+      
       #videoCard {
         max-width: 90vw;
         aspect-ratio: 16 / 9;
         margin: 20px auto 30px;
       }
-      #toggleDarkMode {
-        top: 8px;
-        left: 8px;
-        padding: 6px 12px;
-        font-size: 13px;
+      
+      #sidebar {
+        width: 85%;
+        right: -85%;
+      }
+      
+      .button-link {
+        padding: 14px 16px;
+        font-size: 1rem;
       }
     }
   </style>
 </head>
 <body>
 
-  <!-- زرار الوضع الليلي -->
-  <button id="toggleDarkMode" aria-pressed="false" aria-label="تبديل الوضع الليلي">🌙 الليل</button>
+  <!-- شريط الرأس -->
+  <div class="header">
+    <h1 class="header-title">موقع مستر فيصل الرسمي</h1>
+    <div class="header-controls">
+      <button id="toggleDarkMode" class="control-btn" aria-pressed="false" aria-label="تبديل الوضع الليلي">
+        <i class="fas fa-moon"></i>
+      </button>
+      <button id="sidebarToggle" class="control-btn" aria-label="فتح القائمة الجانبية">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- القائمة الجانبية -->
+  <div id="sidebarOverlay"></div>
+  <aside id="sidebar">
+    <div class="sidebar-header">
+      <h2>موقع مستر فيصل</h2>
+      <p>نحو تعليم جغرافي متميز</p>
+    </div>
+    <nav class="sidebar-menu">
+      <a href="cors.html" class="button-link">
+        <i class="fas fa-school"></i>
+        منصتنا التعليمية
+      </a>
+      <a href="motaba.html" class="button-link">
+        <i class="fas fa-binoculars"></i>
+        المتابعة
+      </a>
+      <a href="moayed.html" class="button-link">
+        <i class="fas fa-clock"></i>
+        مواعيدنا
+      </a>
+      <a href="hw.html" class="button-link">
+        <i class="fas fa-tasks"></i>
+        الواجبات
+      </a>
+      <a href="track.html" class="button-link">
+        <i class="fas fa-shopping-cart"></i>
+        اشتري من عندنا
+      </a>
+      <a href="contact.html" class="button-link">
+        <i class="fas fa-question-circle"></i>
+        اسألنا سؤال
+      </a>
+      <a href="shakwy.html" class="button-link">
+        <i class="fas fa-comment-dots"></i>
+        الشكاوي
+      </a>
+      <a href="exam.html" class="button-link">
+        <i class="fas fa-file-alt"></i>
+        امتحاناتنا
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <p>نسخة 2026 © جميع الحقوق محفوظة</p>
+    </div>
+  </aside>
 
   <!-- شاشة التحميل -->
   <div id="preloader" aria-label="تحميل">
@@ -353,73 +636,76 @@
     </dotlottie-wc>
   </div>
 
-  <!-- كارت الفيديو -->
-  <section id="videoCard" aria-label="فيديو تعليمي">
-    <video autoplay muted loop playsinline>
-      <source src="https://files.catbox.moe/hv05e9.mp4" type="video/mp4" />
-      متصفحك لا يدعم عرض الفيديو.
-    </video>
-  </section>
-
-  <!-- كارت النصايح -->
-  <section id="tipsContainer" aria-label="نصايح تعليمية">
-    <div class="tipCard tip1">📚 دراسة مستمرة تؤدي إلى النجاح!</div>
-    <div class="tipCard tip2">⏳ لا تؤجل عمل اليوم إلى الغد.</div>
-    <div class="tipCard tip3">🔄 المراجعة المنتظمة تثبت المعلومات.</div>
-    <div class="tipCard tip4">🗺️ استخدم الخرائط لفهم الجغرافيا بشكل أفضل.</div>
-    <div class="tipCard tip5">❓ اسأل دائمًا وتفاعل مع المعلم.</div>
-    <div class="tipCard tip6">👥 التعلم مع الأصدقاء يزيد من الفهم.</div>
-    <div class="tipCard tip7">🕒 خطط وقتك جيدًا لتحقيق أفضل النتائج.</div>
-  </section>
-
-  <!-- كارت مرحباً -->
-  <div class="welcome-card" aria-label="رسالة ترحيبية">
-    مرحباً بك في عالم مستر فيصل
-  </div>
-
-  <!-- محتوى الكروت -->
-  <div class="content">
-    <section class="social-section" aria-label="روابط التواصل الاجتماعي">
-      <div class="social-card">
-        <a href="https://www.whatsapp.com/channel/0029Vb5eotiHFxOvJuFpMI39" target="_blank" rel="noopener noreferrer">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="واتساب" />
-          <h3>انضم لقناة الواتساب</h3>
-          <p>تابع آخر الأخبار والعروض</p>
-        </a>
-      </div>
-      <div class="social-card">
-        <a href="https://www.facebook.com/groups/450656791778335/?locale=ar_AR" target="_blank" rel="noopener noreferrer">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="فيسبوك جروب" />
-          <h3>انضم لجروب الفيسبوك</h3>
-          <p>محتوى خاص وتفاعل مباشر</p>
-        </a>
-      </div>
-      <div class="social-card">
-        <a href="https://youtube.com/@mr.faisal.geography?si=5HQdYcyREdFSKiwp" target="_blank" rel="noopener noreferrer">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/4/42/YouTube_icon_%282013-2017%29.png" alt="يوتيوب" />
-          <h3>اشترك في قناة اليوتيوب</h3>
-          <p>شروحات جغرافيا ومراجعات قوية</p>
-        </a>
-      </div>
-      <div class="social-card">
-        <a href="https://www.tiktok.com/@mr.faisal.geo?_t=ZS-8ySdp4xYApc&_r=1" target="_blank" rel="noopener noreferrer">
-          <img src="https://upload.wikimedia.org/wikipedia/en/a/a9/TikTok_logo.svg" alt="تيك توك" />
-          <h3>تابعني على تيك توك</h3>
-          <p>فيديوهات تعليمية ومراجعات</p>
-        </a>
-      </div>
-      <div class="social-card">
-        <a href="https://www.facebook.com/Mr.faisl" target="_blank" rel="noopener noreferrer">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="صفحة فيسبوك" />
-          <h3>تابع صفحتي على فيسبوك</h3>
-          <p>أحدث الأخبار والمحتوى الخاص</p>
-        </a>
-      </div>
+  <!-- المحتوى الرئيسي -->
+  <div class="main-content">
+    <!-- كارت الفيديو -->
+    <section id="videoCard" aria-label="فيديو تعليمي">
+      <video autoplay muted loop playsinline>
+        <source src="https://files.catbox.moe/hv05e9.mp4" type="video/mp4" />
+        متصفحك لا يدعم عرض الفيديو.
+      </video>
     </section>
 
-    <!-- زر ابدأ الرحلة -->
-    <div class="start-journey" onclick="location.href='https://www.mrfaisal.net/start.html'" role="button" tabindex="0" aria-label="ابدأ الرحلة الآن - اضغط هنا">
-      🚀 ابدأ الرحلة الآن - اضغط هنا
+    <!-- كارت النصايح -->
+    <section id="tipsContainer" aria-label="نصايح تعليمية">
+      <div class="tipCard tip1">📚 دراسة مستمرة تؤدي إلى النجاح!</div>
+      <div class="tipCard tip2">⏳ لا تؤجل عمل اليوم إلى الغد.</div>
+      <div class="tipCard tip3">🔄 المراجعة المنتظمة تثبت المعلومات.</div>
+      <div class="tipCard tip4">🗺️ استخدم الخرائط لفهم الجغرافيا بشكل أفضل.</div>
+      <div class="tipCard tip5">❓ اسأل دائمًا وتفاعل مع المعلم.</div>
+      <div class="tipCard tip6">👥 التعلم مع الأصدقاء يزيد من الفهم.</div>
+      <div class="tipCard tip7">🕒 خطط وقتك جيدًا لتحقيق أفضل النتائج.</div>
+    </section>
+
+    <!-- كارت مرحباً -->
+    <div class="welcome-card" aria-label="رسالة ترحيبية">
+      مرحباً بك في عالم مستر فيصل
+    </div>
+
+    <!-- محتوى الكروت -->
+    <div class="content">
+      <section class="social-section" aria-label="روابط التواصل الاجتماعي">
+        <div class="social-card">
+          <a href="https://www.whatsapp.com/channel/0029Vb5eotiHFxOvJuFpMI39" target="_blank" rel="noopener noreferrer">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="واتساب" />
+            <h3>انضم لقناة الواتساب</h3>
+            <p>تابع آخر الأخبار والعروض</p>
+          </a>
+        </div>
+        <div class="social-card">
+          <a href="https://www.facebook.com/groups/450656791778335/?locale=ar_AR" target="_blank" rel="noopener noreferrer">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="فيسبوك جروب" />
+            <h3>انضم لجروب الفيسبوك</h3>
+            <p>محتوى خاص وتفاعل مباشر</p>
+          </a>
+        </div>
+        <div class="social-card">
+          <a href="https://youtube.com/@mr.faisal.geography?si=5HQdYcyREdFSKiwp" target="_blank" rel="noopener noreferrer">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/4/42/YouTube_icon_%282013-2017%29.png" alt="يوتيوب" />
+            <h3>اشترك في قناة اليوتيوب</h3>
+            <p>شروحات جغرافيا ومراجعات قوية</p>
+          </a>
+        </div>
+        <div class="social-card">
+          <a href="https://www.tiktok.com/@mr.faisal.geo?_t=ZS-8ySdp4xYApc&_r=1" target="_blank" rel="noopener noreferrer">
+            <img src="https://upload.wikimedia.org/wikipedia/en/a/a9/TikTok_logo.svg" alt="تيك توك" />
+            <h3>تابعني على تيك توك</h3>
+            <p>فيديوهات تعليمية ومراجعات</p>
+          </a>
+        </div>
+        <div class="social-card">
+          <a href="https://www.facebook.com/Mr.faisl" target="_blank" rel="noopener noreferrer">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="صفحة فيسبوك" />
+            <h3>تابع صفحتي على فيسبوك</h3>
+            <p>أحدث الأخبار والمحتوى الخاص</p>
+          </a>
+        </div>
+      </section>
+
+      <!-- زر ابدأ الرحلة -->
+      <div class="start-journey" onclick="location.href='https://www.mrfaisal.net/start.html'" role="button" tabindex="0" aria-label="ابدأ الرحلة الآن - اضغط هنا">
+        🚀 ابدأ الرحلة الآن - اضغط هنا
+      </div>
     </div>
   </div>
 
@@ -446,11 +732,50 @@
 
     // dark mode toggle
     const toggleBtn = document.getElementById('toggleDarkMode');
+    const toggleIcon = toggleBtn.querySelector('i');
+    
     toggleBtn.addEventListener('click', () => {
       document.body.classList.toggle('dark');
       const isDark = document.body.classList.contains('dark');
-      toggleBtn.textContent = isDark ? '☀️ النهار' : '🌙 الليل';
+      
+      if (isDark) {
+        toggleIcon.classList.remove('fa-moon');
+        toggleIcon.classList.add('fa-sun');
+        toggleBtn.setAttribute('aria-label', 'تبديل الوضع النهاري');
+      } else {
+        toggleIcon.classList.remove('fa-sun');
+        toggleIcon.classList.add('fa-moon');
+        toggleBtn.setAttribute('aria-label', 'تبديل الوضع الليلي');
+      }
+      
       toggleBtn.setAttribute('aria-pressed', isDark);
+    });
+
+    // إدارة القائمة الجانبية
+    const sidebar = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    
+    function openSidebar() {
+      sidebar.classList.add('active');
+      sidebarOverlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    
+    function closeSidebar() {
+      sidebar.classList.remove('active');
+      sidebarOverlay.classList.remove('active');
+      document.body.style.overflow = 'auto';
+    }
+    
+    sidebarToggle.addEventListener('click', openSidebar);
+    sidebarOverlay.addEventListener('click', closeSidebar);
+    
+    // إغلاق القائمة بالضغط على زر Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && sidebar.classList.contains('active')) {
+        closeSidebar();
+      }
     });
 
     // منع النقر يمين
