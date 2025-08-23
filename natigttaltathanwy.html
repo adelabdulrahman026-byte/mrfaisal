@@ -132,7 +132,7 @@
   </div>
 
   <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbwHwz2WaLiadoNNrfVCLXAm0FvIJppvvi4v6h8-3L5un3RNZKILjfWAFhjmSQI50h9c/exec";
+    const API_URL = "https://script.google.com/macros/s/AKfycbyT7CSTg8KyAQuAmse1TvnZxpXfEqM5xTTGhQnL-1ODI0gBsoJg3j1zt36DkCDphw9buQ/exec";
     const form = document.getElementById("attendanceForm");
     const loadingScreen = document.getElementById("loadingScreen");
     const resultDiv = document.getElementById("result");
@@ -155,7 +155,6 @@
               <p><strong>👦 اسم الطالب:</strong> ${data.name}</p>
               <p><strong>🧭 السنتر:</strong> ${data.geo}</p>
               <p><strong>📅امتحان الحصه الاولي:</strong> ${data.week1}</p>
-              <p><strong>📅امتحان الحصه التانيه :</strong> ${data.week2}</p>
             </div>
           `;
         } else {
