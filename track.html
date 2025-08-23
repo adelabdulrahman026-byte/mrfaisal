@@ -3,27 +3,189 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>  منتجاتنا</title>
+  <title>منتجاتنا</title>
   <style>
     body, html {
       margin: 0; padding: 0; height: 100%;
       direction: rtl;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      overflow: hidden;
     }
     iframe {
       width: 100%;
       height: 100vh;
       border: none;
     }
+    
+    /* نظام الحماية */
+    #contentProtection {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 10000;
+      color: white;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.5s ease, visibility 0.5s;
+    }
+    
+    #contentProtection.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .protection-message {
+      text-align: center;
+      padding: 30px;
+      background: rgba(30, 30, 30, 0.9);
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      max-width: 500px;
+      width: 80%;
+    }
+    
+    .protection-message h2 {
+      font-size: 28px;
+      margin-bottom: 15px;
+      color: #ff5555;
+    }
+    
+    .protection-message p {
+      font-size: 18px;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    
+    .protection-icon {
+      font-size: 60px;
+      margin-bottom: 20px;
+      color: #ff5555;
+    }
+    
+    .protection-note {
+      font-size: 14px;
+      margin-top: 20px;
+      opacity: 0.8;
+    }
+    
+    /* التكيف مع الشاشات المختلفة */
+    @media (max-width: 768px) {
+      .protection-message {
+        padding: 20px;
+      }
+      
+      .protection-message h2 {
+        font-size: 24px;
+      }
+      
+      .protection-message p {
+        font-size: 16px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .protection-message {
+        width: 90%;
+        padding: 15px;
+      }
+    }
   </style>
 </head>
 <body>
+  <!-- نظام حماية المحتوى -->
+  <div id="contentProtection">
+    <div class="protection-message">
+      <div class="protection-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M8 0c-.69 0-1.843.265-2.928.56-1.11.3-2.229.655-2.887.87a1.54 1.54 0 0 0-1.044 1.262c-.596 4.477.787 7.795 2.465 9.99a11.777 11.777 0 0 0 2.517 2.453c.386.273.744.482 1.048.625.28.132.581.24.829.24s.548-.108.829-.24a7.159 7.159 0 0 0 1.048-.625 11.775 11.775 0 0 0 2.517-2.453c1.678-2.195 3.061-5.513 2.465-9.99a1.541 1.541 0 0 0-1.044-1.263 62.467 62.467 0 0 0-2.887-.87C9.843.266 8.69 0 8 0zm0 5a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-3 0v-3A1.5 1.5 0 0 1 8 5zm0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+        </svg>
+      </div>
+      <h2>Content unavailable</h2>
+      <p>Resource was not cached</p>
+      <div class="protection-note">
+        تم منع الوصول إلى أدوات المطورين
+      </div>
+    </div>
+  </div>
+
   <iframe src="https://script.google.com/macros/s/AKfycbxvv-DSoheoh_hctsjLJjp44hWv0P3v7il-KF_xeImPTbT4OWmg5h_CcS_Oo6M2NwczXA/exec" 
-          allowfullscreen>
+          allowfullscreen id="productsFrame">
   </iframe>
+  
   <script>
-  document.addEventListener('contextmenu', function(e) {
-    e.preventDefault();
-  });
-</script>
+    // منع النقر الأيمن
+    document.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+    });
+
+    // نظام حماية المحتوى
+    const contentProtection = document.getElementById('contentProtection');
+    let devToolsOpen = false;
+
+    // كشف فتح أدوات المطورين
+    function detectDevTools() {
+      const widthThreshold = window.outerWidth - window.innerWidth > 160;
+      const heightThreshold = window.outerHeight - window.innerHeight > 160;
+      
+      if (widthThreshold || heightThreshold) {
+        showProtectionMessage();
+        return true;
+      }
+      
+      return false;
+    }
+
+    // كشف تغيير حجم النافذة
+    let resizeTimer;
+    window.addEventListener('resize', function() {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(function() {
+        if (detectDevTools()) {
+          showProtectionMessage();
+        }
+      }, 200);
+    });
+
+    // كشف فتح أدوات المطورين بشكل دوري
+    setInterval(function() {
+      if (detectDevTools()) {
+        showProtectionMessage();
+      }
+    }, 1000);
+
+    // كشف ضغط مفاتيح F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'F12' || 
+          (e.ctrlKey && e.shiftKey && e.key === 'I') ||
+          (e.ctrlKey && e.shiftKey && e.key === 'J') ||
+          (e.ctrlKey && e.key === 'U')) {
+        e.preventDefault();
+        showProtectionMessage();
+        return false;
+      }
+    });
+
+    // إظهار رسالة الحماية
+    function showProtectionMessage() {
+      contentProtection.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      
+      // إخفاء الإطار مؤقتاً
+      document.getElementById('productsFrame').style.visibility = 'hidden';
+    }
+
+    // إخفاء رسالة الحماية عند النقر عليها (لأغراض التطوير فقط)
+    contentProtection.addEventListener('click', function() {
+      contentProtection.classList.remove('active');
+      document.body.style.overflow = 'auto';
+      document.getElementById('productsFrame').style.visibility = 'visible';
+    });
+  </script>
 </body>
 </html>
