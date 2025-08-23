@@ -358,7 +358,7 @@
     <footer>
       <a href="privacy.html">سياسة الخصوصية</a> | <span>© 2025 مستر فيصل</span>
     </footer>
-<script>
+ <script>
     // منع النقر الأيمن
     document.addEventListener('contextmenu', function(e) {
       e.preventDefault();
@@ -416,17 +416,22 @@
       contentProtection.classList.add('active');
       document.body.style.overflow = 'hidden';
       
-      // إخفاء الإطار مؤقتاً
-      document.getElementById('productsFrame').style.visibility = 'hidden';
+      // منع أي تفاعل مع المحتوى الأساسي
+      document.querySelectorAll('main, footer').forEach(el => {
+        el.style.pointerEvents = 'none';
+        el.style.opacity = '0.2';
+      });
     }
 
     // إخفاء رسالة الحماية عند النقر عليها (لأغراض التطوير فقط)
     contentProtection.addEventListener('click', function() {
       contentProtection.classList.remove('active');
       document.body.style.overflow = 'auto';
-      document.getElementById('productsFrame').style.visibility = 'visible';
+      document.querySelectorAll('main, footer').forEach(el => {
+        el.style.pointerEvents = 'auto';
+        el.style.opacity = '1';
+      });
     });
   </script>
-  </main>
 </body>
 </html>
