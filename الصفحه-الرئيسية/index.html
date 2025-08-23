@@ -834,25 +834,31 @@
     sidebarToggle.addEventListener('click', openSidebar);
     sidebarOverlay.addEventListener('click', closeSidebar);
     
+    // إغلاق القائمة بالضغط على زر Escape
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && sidebar.classList.contains('active')) {
         closeSidebar();
       }
     });
 
-  <script>
+    // منع النقر يمين
     document.addEventListener('contextmenu', function(e) {
       e.preventDefault();
     });
 
+    // نظام حماية المحتوى
     const contentProtection = document.getElementById('contentProtection');
     let devToolsOpen = false;
 
+    // كشف فتح أدوات المطورين
     function detectDevTools() {
       const widthThreshold = window.outerWidth - window.innerWidth > 160;
       const heightThreshold = window.outerHeight - window.innerHeight > 160;
+      const orientation = widthThreshold ? 'vertical' : 'horizontal';
       
-      if (widthThreshold || heightThreshold) {
+      if (!(heightThreshold && widthThreshold) && 
+          ((window.Firebug && window.Firebug.chrome && window.Firebug.chrome.isInitialized) || 
+           widthThreshold || heightThreshold)) {
         showProtectionMessage();
         return true;
       }
@@ -860,22 +866,34 @@
       return false;
     }
 
-    let resizeTimer;
+    // كشف تغيير حجم النافذة
     window.addEventListener('resize', function() {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(function() {
-        if (detectDevTools()) {
-          showProtectionMessage();
-        }
-      }, 200);
+      if (detectDevTools()) {
+        showProtectionMessage();
+      }
     });
 
+    // كشف فتح أدوات المطورين باستخدام console.log
+    function checkConsole() {
+      const element = new Image();
+      Object.defineProperty(element, 'id', {
+        get: function() {
+          showProtectionMessage();
+        }
+      });
+      
+      console.log(element);
+      console.clear();
+    }
+
+    // كشف فتح أدوات المطورين بشكل دوري
     setInterval(function() {
       if (detectDevTools()) {
         showProtectionMessage();
       }
     }, 1000);
 
+    // كشف ضغط مفاتيح F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
     document.addEventListener('keydown', function(e) {
       if (e.key === 'F12' || 
           (e.ctrlKey && e.shiftKey && e.key === 'I') ||
@@ -887,52 +905,28 @@
       }
     });
 
-    document.addEventListener('keydown', function(e) {
-      if (e.ctrlKey && e.key === 'u') {
-        e.preventDefault();
-        showProtectionMessage();
-        return false;
-      }
-    });
-
-    document.addEventListener('keydown', function(e) {
-      // منع F12
-      if (e.key === 'F12') {
-        e.preventDefault();
-        showProtectionMessage();
-        return false;
-      }
-    });
-
-    function checkDevTools() {
-      const before = new Date().getTime();
-      debugger;
-      const after = new Date().getTime();
-      if (after - before > 100) {
-        showProtectionMessage();
-      }
-    }
-
+    // إظهار رسالة الحماية
     function showProtectionMessage() {
       contentProtection.classList.add('active');
       document.body.style.overflow = 'hidden';
       
-      document.querySelectorAll('main, footer').forEach(el => {
+      // منع أي تفاعل مع المحتوى الأساسي
+      document.querySelectorAll('.main-content, .header, footer').forEach(el => {
         el.style.pointerEvents = 'none';
         el.style.opacity = '0.2';
       });
     }
 
-    contentProtection.addEventListener('click', function() {
-      contentProtection.classList.remove('active');
-      document.body.style.overflow = 'auto';
-      document.querySelectorAll('main, footer').forEach(el => {
-        el.style.pointerEvents = 'auto';
-        el.style.opacity = '1';
-      });
-    });
-
-    setInterval(checkDevTools, 1000);
+    // إخفاء رسالة الحماية (لأغراض التطوير فقط)
+    // contentProtection.addEventListener('click', function() {
+    //   contentProtection.classList.remove('active');
+    //   document.body.style.overflow = 'auto';
+    //   document.querySelectorAll('.main-content, .header, footer').forEach(el => {
+    //     el.style.pointerEvents = 'auto';
+    //     el.style.opacity = '1';
+    //   });
+    // });
   </script>
+
 </body>
 </html>
