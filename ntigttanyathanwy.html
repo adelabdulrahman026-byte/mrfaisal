@@ -166,6 +166,76 @@
         resultDiv.innerHTML = `<div class="result-card" style="color:red;">⚠️ خطأ في الاتصال</div>`;
       }
     });
+<script>
+    // منع النقر الأيمن
+    document.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+    });
+
+    // نظام حماية المحتوى
+    const contentProtection = document.getElementById('contentProtection');
+    let devToolsOpen = false;
+
+    // كشف فتح أدوات المطورين
+    function detectDevTools() {
+      const widthThreshold = window.outerWidth - window.innerWidth > 160;
+      const heightThreshold = window.outerHeight - window.innerHeight > 160;
+      
+      if (widthThreshold || heightThreshold) {
+        showProtectionMessage();
+        return true;
+      }
+      
+      return false;
+    }
+
+    // كشف تغيير حجم النافذة
+    let resizeTimer;
+    window.addEventListener('resize', function() {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(function() {
+        if (detectDevTools()) {
+          showProtectionMessage();
+        }
+      }, 200);
+    });
+
+    // كشف فتح أدوات المطورين بشكل دوري
+    setInterval(function() {
+      if (detectDevTools()) {
+        showProtectionMessage();
+      }
+    }, 1000);
+
+    // كشف ضغط مفاتيح F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'F12' || 
+          (e.ctrlKey && e.shiftKey && e.key === 'I') ||
+          (e.ctrlKey && e.shiftKey && e.key === 'J') ||
+          (e.ctrlKey && e.key === 'U')) {
+        e.preventDefault();
+        showProtectionMessage();
+        return false;
+      }
+    });
+
+    // إظهار رسالة الحماية
+    function showProtectionMessage() {
+      contentProtection.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      
+      // إخفاء الإطار مؤقتاً
+      document.getElementById('productsFrame').style.visibility = 'hidden';
+    }
+
+    // إخفاء رسالة الحماية عند النقر عليها (لأغراض التطوير فقط)
+    contentProtection.addEventListener('click', function() {
+      contentProtection.classList.remove('active');
+      document.body.style.overflow = 'auto';
+      document.getElementById('productsFrame').style.visibility = 'visible';
+    });
   </script>
+</body>
+</html>
 </body>
 </html>
