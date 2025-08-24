@@ -326,7 +326,7 @@ function generateResult(isOnline){
       الإجابة الصحيحة: ${correct}</p>`;
   });
 
-  studentQR = `✅ الطالب: ${name}\n📱: ${mobile}\n🏷 الواجب: تم عمل الواجب\nدرجته: ${score}/${homeworkData.length}\nكود فريد: ${Math.random().toString(36).substring(2,10)}`;
+  studentQR = `✅ الطالب: ${name}\n📱: ${mobile}\n🏷  الواجب: المحاضرة الاولي \nدرجته: ${score}/${homeworkData.length}\nكود فريد: ${Math.random().toString(36).substring(2,10)}`;
 
   document.getElementById('homeworkCard').style.display="none";
   document.getElementById('resultCard').style.display="block";
