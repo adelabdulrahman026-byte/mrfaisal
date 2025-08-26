@@ -16,6 +16,8 @@
       --accent-dark: #1ebe57;
       --warning: #e91e63;
       --info: #2196f3;
+      --tech: #ff6b35;
+      --tech-dark: #e25a2b;
       --text: #333;
       --light-bg: #f4f0f8;
       --card-shadow: 0 10px 20px rgba(0,0,0,0.15);
@@ -102,6 +104,93 @@
       padding: 40px 20px;
       max-width: 1200px;
       margin: 0 auto;
+    }
+
+    /* كارت خاص للاستاذ عبدالرحمن */
+    .tech-card {
+      background: linear-gradient(135deg, var(--tech), var(--tech-dark));
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: var(--card-shadow);
+      transition: all 0.4s ease;
+      opacity: 0;
+      transform: translateY(50px);
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 30px;
+      color: white;
+      position: relative;
+    }
+
+    .tech-card.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .tech-card:hover {
+      transform: translateY(-10px);
+      box-shadow: var(--card-hover-shadow);
+    }
+
+    .tech-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('https://files.catbox.moe/crs0e7.jpg');
+      background-size: cover;
+      background-position: center;
+      opacity: 0.1;
+      mix-blend-mode: overlay;
+    }
+
+    .tech-card-content {
+      padding: 25px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      z-index: 2;
+    }
+
+    .tech-title {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .tech-description {
+      font-size: 16px;
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+
+    .tech-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background-color: white;
+      color: var(--tech-dark);
+      padding: 12px 20px;
+      border-radius: 30px;
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: 700;
+      box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
+      transition: all 0.3s ease;
+      gap: 8px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .tech-button:hover {
+      background-color: #f0f0f0;
+      transform: translateY(-2px);
+      box-shadow: 0 7px 18px rgba(255, 255, 255, 0.4);
     }
 
     /* شبكة أعضاء الفريق */
@@ -421,6 +510,23 @@
 
   <!-- المحتوى الرئيسي -->
   <main class="main-content">
+    <!-- كارت خاص للاستاذ عبدالرحمن -->
+    <div class="tech-card">
+      <div class="tech-card-content">
+        <h2 class="tech-title">
+          <i class="fas fa-laptop-code"></i>
+          استاذ عبدالرحمن - الدعم التقني
+        </h2>
+        <p class="tech-description">
+          لأي استفسارات خاصة بالموقع الإلكتروني أو المشاكل التقنية، يمكنك التواصل معنا مباشرة عبر الواتساب.
+        </p>
+        <a href="https://wa.me/201093139047?text=عندي%20مشكله%20في%20ويب%20سايت" target="_blank" class="tech-button">
+          <i class="fab fa-whatsapp"></i>
+          تواصل للدعم التقني
+        </a>
+      </div>
+    </div>
+
     <!-- شبكة أعضاء الفريق -->
     <div class="team-grid">
       <!-- عضو الفريق 1 -->
@@ -634,6 +740,9 @@
     });
   }
 
+  // مراقبة بطاقة الاستاذ عبدالرحمن
+  createObserver(document.querySelectorAll('.tech-card'));
+  
   // مراقبة بطاقات الأعضاء
   createObserver(document.querySelectorAll('.member-card'));
 
@@ -645,85 +754,6 @@
     e.preventDefault();
   });
 
-  // نظام حماية المحتوى
-  const contentProtection = document.getElementById('contentProtection');
-  let devToolsOpen = false;
-
-  // كشف فتح أدوات المطورين
-  function detectDevTools() {
-    const widthThreshold = window.outerWidth - window.innerWidth > 160;
-    const heightThreshold = window.outerHeight - window.innerHeight > 160;
-    
-    if (!(heightThreshold && widthThreshold) && 
-        ((window.Firebug && window.Firebug.chrome && window.Firebug.chrome.isInitialized) || 
-         widthThreshold || heightThreshold)) {
-      showProtectionMessage();
-      return true;
-    }
-    
-    return false;
-  }
-
-  // كشف تغيير حجم النافذة
-  window.addEventListener('resize', function() {
-    if (detectDevTools()) {
-      showProtectionMessage();
-    }
-  });
-
-  // كشف فتح أدوات المطورين باستخدام console.log
-  function checkConsole() {
-    const element = new Image();
-    Object.defineProperty(element, 'id', {
-      get: function() {
-        showProtectionMessage();
-      }
-    });
-    
-    console.log(element);
-    console.clear();
-  }
-
-  // كشف فتح أدوات المطورين بشكل دوري
-  setInterval(function() {
-    if (detectDevTools()) {
-      showProtectionMessage();
-    }
-  }, 1000);
-
-  // كشف ضغط مفاتيح F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'F12' || 
-        (e.ctrlKey && e.shiftKey && e.key === 'I') ||
-        (e.ctrlKey && e.shiftKey && e.key === 'J') ||
-        (e.ctrlKey && e.key === 'U')) {
-      e.preventDefault();
-      showProtectionMessage();
-      return false;
-    }
-  });
-
-  // إظهار رسالة الحماية
-  function showProtectionMessage() {
-    contentProtection.classList.add('active');
-    document.body.style.overflow = 'hidden';
-    
-    // منع أي تفاعل مع المحتوى الأساسي
-    document.querySelectorAll('.main-content, .header').forEach(el => {
-      el.style.pointerEvents = 'none';
-      el.style.opacity = '0.2';
-    });
-  }
-
-  // إخفاء رسالة الحماية (لأغراض التطوير فقط)
-  // contentProtection.addEventListener('click', function() {
-  //   contentProtection.classList.remove('active');
-  //   document.body.style.overflow = 'auto';
-  //   document.querySelectorAll('.main-content, .header').forEach(el => {
-  //     el.style.pointerEvents = 'auto';
-  //     el.style.opacity = '1';
-  //   });
-  // });
 </script>
 </body>
 </html>
