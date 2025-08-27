@@ -116,7 +116,6 @@
       opacity: 0;
       transform: translateY(50px);
       display: flex;
-      flex-direction: column;
       margin-bottom: 30px;
       color: white;
       position: relative;
@@ -132,26 +131,29 @@
       box-shadow: var(--card-hover-shadow);
     }
 
-    .tech-card::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: url('https://files.catbox.moe/crs0e7.jpg');
-      background-size: cover;
-      background-position: center;
-      opacity: 0.1;
-      mix-blend-mode: overlay;
+    .tech-image {
+      width: 35%;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .tech-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .tech-card:hover .tech-image img {
+      transform: scale(1.05);
     }
 
     .tech-card-content {
       padding: 25px;
       display: flex;
       flex-direction: column;
-      position: relative;
-      z-index: 2;
+      justify-content: center;
+      width: 65%;
     }
 
     .tech-title {
@@ -185,6 +187,7 @@
       gap: 8px;
       width: 100%;
       text-align: center;
+      max-width: 250px;
     }
 
     .tech-button:hover {
@@ -433,6 +436,21 @@
     }
 
     /* التكيف مع الشاشات المختلفة */
+    @media (max-width: 900px) {
+      .tech-card {
+        flex-direction: column;
+      }
+      
+      .tech-image {
+        width: 100%;
+        height: 200px;
+      }
+      
+      .tech-card-content {
+        width: 100%;
+      }
+    }
+
     @media (max-width: 768px) {
       .team-grid {
         grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -512,6 +530,9 @@
   <main class="main-content">
     <!-- كارت خاص للاستاذ عبدالرحمن -->
     <div class="tech-card">
+      <div class="tech-image">
+        <img src="https://files.catbox.moe/crs0e7.jpg" alt="استاذ عبدالرحمن - الدعم التقني">
+      </div>
       <div class="tech-card-content">
         <h2 class="tech-title">
           <i class="fas fa-laptop-code"></i>
@@ -606,7 +627,7 @@
           <h3 class="member-name">ميس منار</h3>
           <p class="member-role">مادة علمية</p>
           <div class="member-contact">
-            <a href="https://wa.me/201280277084?text=ازيك%20يا%20ميس%20منار" target="_blank" class="whatsapp-button">
+            <a href="https://wa.me/201280277084?text=ازيك%20يا%20ميس%20منar" target="_blank" class="whatsapp-button">
               <i class="fab fa-whatsapp"></i>
               تواصل واتساب
             </a>
