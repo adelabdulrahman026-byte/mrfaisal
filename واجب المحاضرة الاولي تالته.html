@@ -161,6 +161,18 @@ button:hover{
   font-weight:bold;
   text-decoration:none;
 }
+.exam-info {
+  text-align: center;
+  margin-top: 15px;
+  padding: 10px;
+  background-color: #f3e5f5;
+  border-radius: 10px;
+  font-weight: bold;
+}
+.exam-info p {
+  margin: 5px 0;
+  color: #4a148c;
+}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 </style>
 </head>
@@ -214,6 +226,14 @@ button:hover{
 
 <!-- QR -->
 <div id="qrContainer"></div>
+
+<!-- معلومات ميعاد الامتحان -->
+<div class="exam-info">
+  <p>📅 تاريخ ووقت تسليم الواجب:</p>
+  <p id="submissionDate"></p>
+  <p id="submissionTime"></p>
+</div>
+
 <p style="text-align:center;font-weight:bold;color:#4a148c;margin-top:10px;"> ده QR بتاعك خده اسكرين شوت ضروري علشان لو انت طالب سنتر مش هتدخل الحصه الا بيه ولو انت طالب اونلاين انزل اخر الصفحة وابعتلنا الاسكرين علي الواتس اب ملحوظة خد ال QR سكرين شوت📱</p>
 
 <!-- تصحيح الأسئلة -->
@@ -232,6 +252,65 @@ let homeworkData=[];
 let studentType="";
 let studentQR="";
 let currentQuestion=0;
+
+// دالة للحصول على التاريخ والوقت الحالي لمصر مع مراعاة التوقيت الصيفي
+function getEgyptDateTime() {
+  const now = new Date();
+  
+  // تحديد إزاحة التوقيت لمصر (توقيت شرق أوروبا EET)
+  // مصر تستخدم توقيت شرق أوروبا (UTC+2) والتوقيت الصيفي (UTC+3)
+  let egyptOffset = 2 * 60; // التوقيت الشتوي (UTC+2)
+  
+  // التحقق مما إذا كان التوقيت الصيفي ساريًا (عادة من آخر جمعة في أبريل إلى آخر خميس في أكتوبر)
+  const year = now.getUTCFullYear();
+  const apr = new Date(Date.UTC(year, 3, 30, 22)); // أبريل
+  const oct = new Date(Date.UTC(year, 9, 30, 22)); // أكتوبر
+  
+  // العثور على آخر جمعة في أبريل
+  while (apr.getUTCDay() !== 5) {
+    apr.setUTCDate(apr.getUTCDate() - 1);
+  }
+  
+  // العثور على آخر خميس في أكتوبر
+  while (oct.getUTCDay() !== 4) {
+    oct.setUTCDate(oct.getUTCDate() - 1);
+  }
+  
+  // التحقق مما إذا كان الآن خلال فترة التوقيت الصيفي
+  if (now >= apr && now < oct) {
+    egyptOffset = 3 * 60; // التوقيت الصيفي (UTC+3)
+  }
+  
+  const localOffset = now.getTimezoneOffset(); // إزاحة التوقيت المحلي بالدقائق
+  const egyptTime = new Date(now.getTime() + (localOffset + egyptOffset) * 60000);
+  
+  // الأيام بالأسبوع بالعربية
+  const days = ["الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"];
+  
+  // الأشهر بالعربية
+  const months = [
+    "يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو",
+    "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"
+  ];
+  
+  const dayName = days[egyptTime.getDay()];
+  const day = egyptTime.getDate();
+  const month = months[egyptTime.getMonth()];
+  const yearEgypt = egyptTime.getFullYear();
+  
+  // تنسيق الوقت
+  let hours = egyptTime.getHours();
+  const minutes = egyptTime.getMinutes().toString().padStart(2, '0');
+  const ampm = hours >= 12 ? 'مساءً' : 'صباحاً';
+  hours = hours % 12;
+  hours = hours ? hours : 12; // الساعة 0 تصبح 12
+  
+  return {
+    date: `${dayName} ${day} ${month} ${yearEgypt}`,
+    time: `الساعة ${hours}:${minutes} ${ampm}`,
+    fullDateTime: `${dayName} ${day} ${month} ${yearEgypt} - ${hours}:${minutes} ${ampm}`
+  };
+}
 
 function selectType(type){
   studentType = type;
@@ -312,6 +391,9 @@ function generateResult(isOnline){
   const name=document.getElementById('studentName').value;
   const mobile=document.getElementById('studentMobile').value;
   const code=document.getElementById('centerCode').value || "-";
+  
+  // الحصول على التاريخ والوقت الحالي لمصر
+  const egyptDateTime = getEgyptDateTime();
 
   let score=0;
   let reviewHTML="";
@@ -326,7 +408,8 @@ function generateResult(isOnline){
       الإجابة الصحيحة: ${correct}</p>`;
   });
 
-  studentQR = `✅ الطالب: ${name}\n📱: ${mobile}\n🏷  الواجب: المحاضرة الاولي \nدرجته: ${score}/${homeworkData.length}\nكود فريد: ${Math.random().toString(36).substring(2,10)}`;
+  // إضافة معلومات التاريخ والوقت إلى QR Code
+  studentQR = `📚 واجب المحاضرة الأولى\n✅ الطالب: ${name}\n📱: ${mobile}\n🏷 النوع: ${studentType}\n📊 الدرجة: ${score}/${homeworkData.length}\n📅 تاريخ التسليم: ${egyptDateTime.date}\n⏰ ${egyptDateTime.time}\n🔖 كود فريد: ${Math.random().toString(36).substring(2,10)}`;
 
   document.getElementById('homeworkCard').style.display="none";
   document.getElementById('resultCard').style.display="block";
@@ -335,9 +418,13 @@ function generateResult(isOnline){
   let qr = kjua({text:studentQR,size:250,render:'canvas',fill:'#4a148c',quiet:2,rounded:10});
   document.getElementById('qrContainer').appendChild(qr);
 
+  // عرض معلومات التاريخ والوقت
+  document.getElementById('submissionDate').innerText = egyptDateTime.date;
+  document.getElementById('submissionTime').innerText = egyptDateTime.time;
+
   document.getElementById('answersReview').innerHTML = reviewHTML;
   document.getElementById('studentInfo').innerText = 
-    `الاسم: ${name}\nالموبايل: ${mobile}\nالنوع: ${studentType}\nكود السنتر: ${code}\nدرجتك: ${score}/${homeworkData.length}`;
+    `الاسم: ${name}\nالموبايل: ${mobile}\nالنوع: ${studentType}\nكود السنتر: ${code}\nدرجتك: ${score}/${homeworkData.length}\nوقت التسليم: ${egyptDateTime.fullDateTime}`;
 
   // نصيحة حسب الدرجة
   const adviceDiv = document.getElementById('advice');
