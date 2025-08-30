@@ -372,6 +372,73 @@
       100% { transform: scale(1); }
     }
     
+    /* صورة الزتونة - محسنة */
+    .ztouna-image {
+      position: relative;
+      width: 100%;
+      height: 350px;
+      margin: 40px 0;
+      overflow: hidden;
+      background: var(--color-bg);
+      border-radius: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.5s ease;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    }
+    
+    .ztouna-image::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('https://adelabdulrahman026-byte.github.io/dashboard/%D8%A7%D9%84%D8%B2%D8%AA%D9%88%D9%86%D9%87.png') center/contain no-repeat;
+      transition: transform 0.7s ease;
+      transform: scale(1.2);
+    }
+    
+    .ztouna-image:hover::before {
+      transform: rotate(15deg) scale(1.3);
+    }
+    
+    .ztouna-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.3);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      border-radius: 20px;
+    }
+    
+    .ztouna-image:hover .ztouna-overlay {
+      opacity: 1;
+    }
+    
+    .ztouna-text {
+      color: white;
+      font-size: 28px;
+      font-weight: 800;
+      text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+      transform: translateY(20px);
+      transition: transform 0.5s ease;
+      text-align: center;
+      padding: 0 20px;
+    }
+    
+    .ztouna-image:hover .ztouna-text {
+      transform: translateY(0);
+    }
+    
     footer {
       width: 100%;
       padding: 12px 8px 28px;
@@ -470,6 +537,11 @@
       background-color: var(--color-card-bg);
     }
     
+    body.dark .ztouna-image {
+      background: var(--color-bg);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    }
+    
     body.dark footer {
       background-color: #1a1a1a;
       color: #aaa;
@@ -559,6 +631,15 @@
       .button-link {
         padding: 14px 16px;
         font-size: 1rem;
+      }
+      
+      .ztouna-image {
+        height: 250px;
+        margin: 30px 0;
+      }
+      
+      .ztouna-text {
+        font-size: 20px;
       }
     }
 
@@ -738,7 +819,7 @@
         <div class="social-card">
           <a href="https://www.facebook.com/groups/450656791778335/?locale=ar_AR" target="_blank" rel="noopener noreferrer">
             <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="فيسبوك جروب" />
-            <h3>انضم لجروب الفيسبوك</h3>
+            <h3>انضم لجروب الفيسبook</h3>
             <p>محتوى خاص وتفاعل مباشر</p>
           </a>
         </div>
@@ -768,6 +849,13 @@
       <!-- زر ابدأ الرحلة -->
       <div class="start-journey" onclick="location.href='https://www.mrfaisal.net/start.html'" role="button" tabindex="0" aria-label="ابدأ الرحلة الآن - اضغط هنا">
         🚀 ابدأ الرحلة الآن - اضغط هنا
+      </div>
+      
+      <!-- صورة الزتونة المحسنة -->
+      <div class="ztouna-image" onclick="window.open('https://youtube.com/playlist?list=PL8Efm-d8SSIHqOUzOBwM2tJDHdYk6K6rG&si=F02FlMGDMekW06vF', '_blank')" aria-label="صورة الزتونة - اضغط للذهاب إلى قائمة التشغيل">
+        <div class="ztouna-overlay">
+          <div class="ztouna-text">اضغط لمشاهدة دروس الجغرافيا</div>
+        </div>
       </div>
     </div>
   </div>
