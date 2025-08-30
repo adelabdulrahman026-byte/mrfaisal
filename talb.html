@@ -167,6 +167,7 @@
       <button class="option-btn" onclick="showTable('third')">تالتة ثانوي</button>
     </div>
 
+    <!-- جدول تانية ثانوي -->
     <table id="secondTable">
       <thead>
         <tr>
@@ -183,32 +184,49 @@
         </tr>
       </tbody>
     </table>
-  <table id="thirdTable">
-  <thead>
-    <tr>
-      <th>المحاضرة</th>
-      <th>الامتحان</th>
-      <th>الواجب</th>
-      <th>المطلوب</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>الأولى</td>
-      <td>علي ما تم اخذه في الحصه</td>
-      <td>من صفحة 2 إلى 14</td>
-      <td>—</td>
-    </tr>
-    <tr>
-      <td>الثانية</td>
-      <td>من اول الدرس التمهيدي حتي نهاية راتزل</td>
-      <td>من صفحة 15 إلى 22</td>
-      <td>مشاهدة فيديو الواجب + الزتونة الاسبوع الثاني</td>
-    </tr>
-  </tbody>
-</table>
+    
+    <button id="secondHomeworkBtn" class="homework-btn" onclick="goToHomework()">اعمل الواجب دلوقتي</button>
 
-<button id="thirdHomeworkBtn" class="homework-btn" onclick="goToHomework()">اعمل الواجب دلوقتي</button>
+    <!-- جدول تالتة ثانوي (الأول) -->
+    <table id="thirdTable">
+      <thead>
+        <tr>
+          <th>المحاضرة</th>
+          <th>الامتحان</th>
+          <th>الواجب</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>الأولى</td>
+          <td>علي ما تم اخذه في الحصه</td>
+          <td>من صفحة 2 إلى 14</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <table id="thirdTable2">
+      <thead>
+        <tr>
+          <th>المحاضرة</th>
+          <th>الامتحان</th>
+          <th>الواجب</th>
+          <th>المطلوب</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>الثانية</td>
+          <td>من اول الدرس التمهيدي حتي نهاية راتزل  </td>
+          <td>من صفحة 15 إلى 22</td>
+          <td>   مشاهدة فيديو الواجب +زتونه الاسبوع الثاني </td>
+        </tr>
+      </tbody>
+    </table>
+    
+    <button id="thirdHomeworkBtn" class="homework-btn" onclick="goToHomework()">اعمل الواجب دلوقتي</button>
+
+  </div>
 
   <script>
     function showOptions() {
@@ -219,6 +237,7 @@
       // إخفاء الجداول والأزرار
       document.getElementById('secondTable').style.display = 'none';
       document.getElementById('thirdTable').style.display = 'none';
+      document.getElementById('thirdTable2').style.display = 'none';
       document.getElementById('secondHomeworkBtn').style.display = 'none';
       document.getElementById('thirdHomeworkBtn').style.display = 'none';
 
@@ -228,6 +247,7 @@
         document.getElementById('secondHomeworkBtn').style.display = 'block';
       } else {
         document.getElementById('thirdTable').style.display = 'table';
+        document.getElementById('thirdTable2').style.display = 'table';
         document.getElementById('thirdHomeworkBtn').style.display = 'block';
       }
 
@@ -248,70 +268,6 @@
     document.addEventListener('contextmenu', function(e) {
       e.preventDefault();
     });
-
-    // نظام حماية المحتوى
-    const contentProtection = document.getElementById('contentProtection');
-    let devToolsOpen = false;
-
-    // كشف فتح أدوات المطورين
-    function detectDevTools() {
-      const widthThreshold = window.outerWidth - window.innerWidth > 160;
-      const heightThreshold = window.outerHeight - window.innerHeight > 160;
-      
-      if (widthThreshold || heightThreshold) {
-        showProtectionMessage();
-        return true;
-      }
-      
-      return false;
-    }
-
-    // كشف تغيير حجم النافذة
-    let resizeTimer;
-    window.addEventListener('resize', function() {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(function() {
-        if (detectDevTools()) {
-          showProtectionMessage();
-        }
-      }, 200);
-    });
-
-    // كشف فتح أدوات المطورين بشكل دوري
-    setInterval(function() {
-      if (detectDevTools()) {
-        showProtectionMessage();
-      }
-    }, 1000);
-
-    // كشف ضغط مفاتيح F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'F12' || 
-          (e.ctrlKey && e.shiftKey && e.key === 'I') ||
-          (e.ctrlKey && e.shiftKey && e.key === 'J') ||
-          (e.ctrlKey && e.key === 'U')) {
-        e.preventDefault();
-        showProtectionMessage();
-        return false;
-      }
-    });
-
-    // إظهار رسالة الحماية
-    function showProtectionMessage() {
-      contentProtection.classList.add('active');
-      document.body.style.overflow = 'hidden';
-      
-      // إخفاء الإطار مؤقتاً
-      document.getElementById('productsFrame').style.visibility = 'hidden';
-    }
-
-    // إخفاء رسالة الحماية عند النقر عليها (لأغراض التطوير فقط)
-    contentProtection.addEventListener('click', function() {
-      contentProtection.classList.remove('active');
-      document.body.style.overflow = 'auto';
-      document.getElementById('productsFrame').style.visibility = 'visible';
-    });
   </script>
-  </main>
 </body>
 </html>
