@@ -3,6 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <title>موقع مستر فيصل الرسمي</title>
+<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+<script>
+  window.OneSignalDeferred = window.OneSignalDeferred || [];
+  OneSignalDeferred.push(async function(OneSignal) {
+    await OneSignal.init({
+      appId: "0c4c4a28-59a1-4614-b99a-887e4cb9567b",
+      safari_web_id: "web.onesignal.auto.40f3c042-9d52-4eaf-84f1-85ef29137faa",
+      notifyButton: {
+        enable: true,
+      },
+    });
+  });
+</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" />
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
