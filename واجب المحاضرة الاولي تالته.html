@@ -81,7 +81,7 @@ button:hover{
   justify-content:center;
   align-items:center;
   flex-direction:column;
-  height:500px;
+  min-height:500px;
 }
 .question-card{
   border:2px solid #d1c4e9;
@@ -173,6 +173,24 @@ button:hover{
   margin: 5px 0;
   color: #4a148c;
 }
+.completed-message {
+  text-align: center;
+  padding: 20px;
+  background-color: #e8f5e9;
+  border-radius: 15px;
+  margin: 20px 0;
+  display: none;
+}
+.completed-message p {
+  font-size: 18px;
+  color: #2e7d32;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+.submit-button-container {
+  display: none;
+  margin-top: 20px;
+}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 </style>
 </head>
@@ -213,12 +231,18 @@ button:hover{
 <div class="card" id="homeworkCard" style="display:none;">
 <h2>الواجب</h2>
 <div class="question-container" id="homeworkForm"></div>
+<div class="completed-message" id="completedMessage">
+  <p>🎉 مبروك! خلصت كل الأسئلة</p>
+  <p>دلوقتي تقدر تسلم واجبك اضغط علي سلم الواجب علشان تاخد qr بتاعك </p>
+</div>
 <div class="nav-buttons">
   <button id="prevQuestion" onclick="prevQuestion()">السؤال السابق</button>
   <button id="nextQuestion" onclick="nextQuestion()">التالي</button>
 </div>
-<button id="centerSubmit" style="display:none;" onclick="submitHomework()">سلم الواجب</button>
-<button id="onlineSubmit" style="display:none;" onclick="submitOnline()">سلم واجبك أونلاين</button>
+<div class="submit-button-container" id="submitButtonContainer">
+  <button id="centerSubmit" style="display:none;" onclick="submitHomework()">سلم الواجب</button>
+  <button id="onlineSubmit" style="display:none;" onclick="submitOnline()">سلم واجبك أونلاين</button>
+</div>
 </div>
 
 <div class="card" id="resultCard">
@@ -252,6 +276,7 @@ let homeworkData=[];
 let studentType="";
 let studentQR="";
 let currentQuestion=0;
+let isLastQuestionReached = false;
 
 // دالة للحصول على التاريخ والوقت الحالي لمصر مع مراعاة التوقيت الصيفي
 function getEgyptDateTime() {
@@ -355,9 +380,8 @@ async function startHomework(){
         form.appendChild(div);
       });
       document.getElementById('homeworkCard').style.display="block";
-      if(studentType=="online") document.getElementById('onlineSubmit').style.display="block";
-      if(studentType=="center") document.getElementById('centerSubmit').style.display="block";
       showQuestion(0);
+      updateNavigationButtons();
     },800);
 
   }catch(e){
@@ -373,15 +397,55 @@ function showQuestion(index){
   if(index>=0 && index<cards.length){
     cards[index].classList.add('active');
     currentQuestion=index;
+    updateNavigationButtons();
+  }
+}
+
+function updateNavigationButtons() {
+  const isFirstQuestion = currentQuestion === 0;
+  const isLastQuestion = currentQuestion === homeworkData.length - 1;
+  
+  document.getElementById('prevQuestion').style.display = isFirstQuestion ? 'none' : 'block';
+  
+  if (isLastQuestion && !isLastQuestionReached) {
+    document.getElementById('nextQuestion').textContent = 'إنهاء الأسئلة';
+  } else if (!isLastQuestion) {
+    document.getElementById('nextQuestion').textContent = 'التالي';
+  }
+  
+  // إظهار زر التسليم في آخر سؤال
+  if (isLastQuestion) {
+    document.getElementById('submitButtonContainer').style.display = 'block';
+    if(studentType=="online") document.getElementById('onlineSubmit').style.display="block";
+    if(studentType=="center") document.getElementById('centerSubmit').style.display="block";
+  } else {
+    document.getElementById('submitButtonContainer').style.display = 'none';
+  }
+  
+  // إخفاء رسالة الإكمال إذا لم يكن هذا هو السؤال الأخير
+  if (!isLastQuestion) {
+    document.getElementById('completedMessage').style.display = 'none';
   }
 }
 
 function nextQuestion(){
-  if(currentQuestion<homeworkData.length-1) showQuestion(currentQuestion+1);
+  if(currentQuestion < homeworkData.length-1) {
+    showQuestion(currentQuestion+1);
+  } else if(currentQuestion === homeworkData.length-1 && !isLastQuestionReached) {
+    // وصلنا إلى آخر سؤال
+    isLastQuestionReached = true;
+    document.getElementById('nextQuestion').style.display = 'none';
+    document.getElementById('completedMessage').style.display = 'block';
+  }
 }
 
 function prevQuestion(){
-  if(currentQuestion>0) showQuestion(currentQuestion-1);
+  if(currentQuestion>0) {
+    isLastQuestionReached = false;
+    document.getElementById('nextQuestion').style.display = 'block';
+    document.getElementById('completedMessage').style.display = 'none';
+    showQuestion(currentQuestion-1);
+  }
 }
 
 function submitHomework(){ generateResult(false); }
