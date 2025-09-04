@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>هدية المولد مع فيصوله - عجلة الحظ</title>
+  <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+<script>
+  window.OneSignalDeferred = window.OneSignalDeferred || [];
+  OneSignalDeferred.push(async function(OneSignal) {
+    await OneSignal.init({
+      appId: "8e36161f-8906-41f3-b0b8-3e272167065b",
+    });
+  });
+</script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #fce4ec, #f8bbd0);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            color: #880e4f;
+        }
+        
+        .container {
+            max-width: 900px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        header {
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #d81b60;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #880e4f;
+            margin-bottom: 20px;
+        }
+        
+        .wheel-container {
+            position: relative;
+            width: 400px;
+            height: 400px;
+            margin: 0 auto 30px;
+        }
+        
+        .wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            position: relative;
+            overflow: hidden;
+            border: 10px solid #f8bbd0;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            transition: transform 4s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+        }
+        
+        .section {
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            transform-origin: bottom right;
+            left: 0;
+            top: 0;
+            text-align: center;
+            padding-top: 10px;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+        }
+        
+        .pointer {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 60px;
+            background: #d81b60;
+            clip-path: polygon(50% 100%, 0 0, 100% 0);
+            z-index: 10;
+        }
+        
+        .spin-btn {
+            background: linear-gradient(to bottom, #d81b60, #880e4f);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-top: 20px;
+            box-shadow: 0 5px 15px rgba(136, 14, 79, 0.4);
+            transition: all 0.3s;
+        }
+        
+        .spin-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(136, 14, 79, 0.6);
+        }
+        
+        .spin-btn:active {
+            transform: translateY(1px);
+        }
+        
+        .result {
+            margin-top: 30px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #880e4f;
+            min-height: 40px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .sweets-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 40px;
+        }
+        
+        .sweet-item {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        
+        .sweet-item:hover {
+            transform: translateY(-5px);
+        }
+        
+        .emoji {
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+        
+        @media (max-width: 600px) {
+            .wheel-container {
+                width: 300px;
+                height: 300px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>هدية المولد 🎁</h1>
+            <p class="subtitle">العجلة الحلوة لحظك في مولد النبي</p>
+        </header>
+        
+        <div class="wheel-container">
+            <div class="pointer"></div>
+            <canvas id="wheelCanvas" width="400" height="400" class="wheel"></canvas>
+        </div>
+        
+        <button id="spinBtn" class="spin-btn">اضغط للدوران 🎡</button>
+        
+        <div id="result" class="result"></div>
+        
+        <div class="sweets-grid">
+            <div class="sweet-item">
+                <div class="emoji">🥜</div>
+                <div>حمصية</div>
+            </div>
+            <div class="sweet-item">
+                <div class="emoji">🌰</div>
+                <div>سودانية</div>
+            </div>
+            <div class="sweet-item">
+                <div class="emoji">🍯</div>
+                <div>سمسمية</div>
+            </div>
+            <div class="sweet-item">
+                <div class="emoji">🥥</div>
+                <div>جوز هندية</div>
+            </div>
+            <div class="sweet-item">
+                <div class="emoji">🌰</div>
+                <div>بندقية</div>
+            </div>
+            <div class="sweet-item">
+                <div class="emoji">🌰</div>
+                <div>فستقية</div>
+            </div>
+            <div class="sweet-item">
+                <div class="emoji">🍬</div>
+                <div>ملبن سادة</div>
+            </div>
+            <div class="sweet-item">
+                <div class="emoji">🍬</div>
+                <div>ملبن بعين جمل</div>
+            </div>
+            <div class="sweet-item">
+                <div class="emoji">🍬</div>
+                <div>ملبن بالمكسرات</div>
+            </div>
+            <div class="sweet-item">
+                <div class="emoji">🍬</div>
+                <div>ملبن بجوز الهند</div>
+            </div>
+            <div class="sweet-item">
+                <div class="emoji">🍬</div>
+                <div>ملبن محشي ملبن</div>
+            </div>
+            <div class="sweet-item">
+                <div class="emoji">🌸</div>
+                <div>عروسة المولد</div>
+            </div>
+            <div class="sweet-item">
+                <div class="emoji">🐴</div>
+                <div>حصان المولد</div>
+            </div>
+            <div class="sweet-item">
+                <div class="emoji">🍬</div>
+                <div>نوجا</div>
+            </div>
+            <div class="sweet-item">
+                <div class="emoji">🍫</div>
+                <div>بسبوسة بالمكسرات</div>
+            </div>
+            <div class="sweet-item">
+                <div class="emoji">🥥</div>
+                <div>كوكوسية</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const canvas = document.getElementById('wheelCanvas');
+            const ctx = canvas.getContext('2d');
+            const spinBtn = document.getElementById('spinBtn');
+            const resultElement = document.getElementById('result');
+            
+            const sweets = [
+                { name: "🥜 حمصية", color: "#F44336" },
+                { name: "🌰 سودانية", color: "#E91E63" },
+                { name: "🍯 سمسمية", color: "#9C27B0" },
+                { name: "🥥 جوز هندية", color: "#673AB7" },
+                { name: "🌰 بندقية", color: "#3F51B5" },
+                { name: "🌰 فستقية", color: "#2196F3" },
+                { name: "🍬 ملبن سادة", color: "#03A9F4" },
+                { name: "🍬 ملبن بعين جمل", color: "#00BCD4" },
+                { name: "🍬 ملبن بالمكسرات", color: "#009688" },
+                { name: "🍬 ملبن بجوز الهند", color: "#4CAF50" },
+                { name: "🍬 ملبن محشي ملبن", color: "#8BC34A" },
+                { name: "🌸 عروسة المولد", color: "#CDDC39" },
+                { name: "🐴 حصان المولد", color: "#FFEB3B" },
+                { name: "🍬 نوجا", color: "#FFC107" },
+                { name: "🍫 بسبوسة بالمكسرات", color: "#FF9800" },
+                { name: "🥥 كوكوسية", color: "#FF5722" }
+            ];
+            
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const radius = centerX - 10;
+            let rotation = 0;
+            let spinning = false;
+            
+            // رسم عجلة الحظ
+            function drawWheel() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                const anglePerSweets = (2 * Math.PI) / sweets.length;
+                
+                for (let i = 0; i < sweets.length; i++) {
+                    const startAngle = i * anglePerSweets + rotation;
+                    const endAngle = (i + 1) * anglePerSweets + rotation;
+                    
+                    // رسم القطاع
+                    ctx.beginPath();
+                    ctx.moveTo(centerX, centerY);
+                    ctx.arc(centerX, centerY, radius, startAngle, endAngle);
+                    ctx.closePath();
+                    ctx.fillStyle = sweets[i].color;
+                    ctx.fill();
+                    ctx.stroke();
+                    
+                    // كتابة النص
+                    ctx.save();
+                    ctx.translate(centerX, centerY);
+                    ctx.rotate(startAngle + anglePerSweets / 2);
+                    ctx.textAlign = 'right';
+                    ctx.fillStyle = '#fff';
+                    ctx.font = '14px Arial';
+                    ctx.fillText(sweets[i].name, radius - 15, 5);
+                    ctx.restore();
+                }
+                
+                // رسم المركز
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, 20, 0, 2 * Math.PI);
+                ctx.fillStyle = '#880e4f';
+                ctx.fill();
+                ctx.stroke();
+            }
+            
+            // تدوير العجلة
+            function spinWheel() {
+                if (spinning) return;
+                
+                spinning = true;
+                resultElement.textContent = "";
+                
+                const spinAngle = 5 + Math.random() * 5; // عدد الدورانات
+                const targetRotation = rotation + (Math.PI * 2 * spinAngle);
+                
+                const spinTime = 4000; // مدة الدوران
+                const startTime = Date.now();
+                
+                function animate() {
+                    const currentTime = Date.now();
+                    const elapsed = currentTime - startTime;
+                    
+                    if (elapsed < spinTime) {
+                        const progress = elapsed / spinTime;
+                        const easeOut = 1 - Math.pow(1 - progress, 3); // تأثير تباطؤ
+                        rotation = targetRotation * easeOut;
+                        
+                        drawWheel();
+                        requestAnimationFrame(animate);
+                    } else {
+                        rotation = targetRotation % (Math.PI * 2);
+                        drawWheel();
+                        finishSpin();
+                    }
+                }
+                
+                animate();
+            }
+            
+            // تحديد النتيجة بعد التوقف
+            function finishSpin() {
+                spinning = false;
+                
+                const anglePerSweets = (2 * Math.PI) / sweets.length;
+                const normalizedRotation = (rotation % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2);
+                
+                // حساب القطاع الذي تشير إليه المؤشر
+                const pointerAngle = Math.PI; // زاوية المؤشر (أعلى)
+                let winningIndex = sweets.length - Math.floor((pointerAngle - normalizedRotation) / anglePerSweets) - 1;
+                winningIndex = winningIndex % sweets.length;
+                
+                resultElement.textContent = `مبروك! فزت بـ: ${sweets[winningIndex].name}`;
+            }
+            
+            // تهيئة العجلة
+            drawWheel();
+            
+            // إضافة مستمع الحدث للزر
+            spinBtn.addEventListener('click', spinWheel);
+        });
+    </script>
+</body>
+</html>
