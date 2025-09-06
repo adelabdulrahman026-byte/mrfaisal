@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>جوائز عزيزة من فيصوله</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4efe9 100%);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .turtle-header {
+            position: relative;
+            height: 180px;
+            overflow: hidden;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        
+        .turtle-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://adelabdulrahman026-byte.github.io/dashboard/assets_task_01k4dfa1c7epwvc83drxbngs0y_1757093932_img_0.jpg') center/cover no-repeat;
+            opacity: 0.15;
+        }
+        
+        header {
+            position: relative;
+            color: white;
+            padding: 25px 0;
+            text-align: center;
+            z-index: 2;
+        }
+        
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+            max-width: 80%;
+            margin: 0 auto;
+        }
+        
+        .turtle-icon {
+            position: absolute;
+            top: 20px;
+            left: 30px;
+            width: 100px;
+            height: 100px;
+            background: white;
+            border-radius: 50%;
+            padding: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 3;
+        }
+        
+        .turtle-icon img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        
+        .main-content {
+            padding: 30px;
+        }
+        
+        .section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .section.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        h2 {
+            color: #4facfe;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+            position: relative;
+        }
+        
+        h2:after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            right: 0;
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            border-radius: 3px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 14px 18px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s;
+            background: #f9f9f9;
+        }
+        
+        input:focus, select:focus {
+            border-color: #4facfe;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.2);
+            background: white;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(79, 172, 254, 0.3);
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(79, 172, 254, 0.4);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        button i {
+            margin-left: 8px;
+        }
+        
+        .student-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .info-card {
+            background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+            padding: 20px;
+            border-radius: 15px;
+            color: #333;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+        
+        .info-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: #2c5282;
+        }
+        
+        .info-card p {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #2c5282;
+        }
+        
+        .awards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+        
+        .award-card {
+            background-color: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+            border: 1px solid #eee;
+            position: relative;
+        }
+        
+        .award-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .award-header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 18px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .award-header:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            right: 50%;
+            transform: translateX(50%);
+            width: 20px;
+            height: 20px;
+            background: #4facfe;
+            border-radius: 50%;
+        }
+        
+        .award-body {
+            padding: 20px;
+        }
+        
+        .award-points {
+            display: inline-block;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            color: #fff;
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-weight: 700;
+            margin: 10px 0;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .award-footer {
+            padding: 18px;
+            text-align: center;
+            border-top: 1px solid #f0f0f0;
+        }
+        
+        .receipt {
+            background: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%);
+            border: 2px dashed #c2b8a9;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 25px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .receipt h3 {
+            color: #4facfe;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+        
+        .receipt-code {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #4facfe;
+            letter-spacing: 5px;
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f7f7f7;
+            border-radius: 10px;
+            border: 2px solid #e6e6e6;
+            font-family: monospace;
+        }
+        
+        .print-btn {
+            background: linear-gradient(135deg, #36d1dc 0%, #5b86e5 100%);
+            margin-top: 15px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .message {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .error {
+            background-color: #ffebee;
+            color: #d32f2f;
+            border: 1px solid #ffcdd2;
+        }
+        
+        .success {
+            background-color: #e8f5e9;
+            color: #388e3c;
+            border: 1px solid #c8e6c9;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 30px;
+        }
+        
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #4facfe;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #f55656 0%, #e10000 100%);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #4facfe;
+            color: #4facfe;
+        }
+        
+        .turtle-decoration {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            width: 60px;
+            height: 60px;
+            opacity: 0.1;
+            z-index: 1;
+        }
+        
+        @media (max-width: 768px) {
+            .student-info {
+                grid-template-columns: 1fr;
+            }
+            
+            .awards-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .turtle-icon {
+                position: relative;
+                top: 0;
+                left: 0;
+                margin: 0 auto 15px;
+            }
+            
+            .turtle-header {
+                height: auto;
+                padding: 20px 0;
+            }
+            
+            .btn-group {
+                flex-direction: column;
+            }
+            
+            button {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="turtle-header">
+            <div class="turtle-overlay"></div>
+            <div class="turtle-icon">
+                <img src="https://adelabdulrahman026-byte.github.io/dashboard/assets_task_01k4dfa1c7epwvc83drxbngs0y_1757093932_img_0.jpg" alt="سلحفاة عزيزة">
+            </div>
+            <header>
+                <h1>جوائز عزيزة من فيصوله</h1>
+                <p>سجل دخولك باستخدام كود الطالب واستبدل نقاطك بجوائز قيمة</p>
+            </header>
+        </div>
+        
+        <div class="main-content">
+            <!-- قسم تسجيل الدخول -->
+            <section id="login-section" class="section active">
+                <h2>تسجيل الدخول</h2>
+                <div class="form-group">
+                    <label for="student-code"><i class="fas fa-user-graduate"></i> كود الطالب</label>
+                    <input type="text" id="student-code" placeholder="أدخل كود الطالب الخاص بك">
+                </div>
+                <button id="login-btn"><i class="fas fa-sign-in-alt"></i> تسجيل الدخول</button>
+                <div id="login-message" class="message hidden"></div>
+                <img src="https://adelabdulrahman026-byte.github.io/dashboard/assets_task_01k4dfa1c7epwvc83drxbngs0y_1757093932_img_0.jpg" class="turtle-decoration" alt="زينة سلحفاة">
+            </section>
+            
+            <!-- قسم بيانات الطالب -->
+            <section id="student-section" class="section">
+                <h2>بيانات الطالب</h2>
+                <div class="student-info">
+                    <div class="info-card">
+                        <h3><i class="fas fa-user"></i> اسم الطالب</h3>
+                        <p id="student-name">-</p>
+                    </div>
+                    <div class="info-card">
+                        <h3><i class="fas fa-star"></i> النقاط المتاحة</h3>
+                        <p id="student-points">0</p>
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <button id="show-awards-btn"><i class="fas fa-gift"></i> عرض الجوائز المتاحة</button>
+                    <button id="logout-btn" class="btn-secondary"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</button>
+                </div>
+                <img src="https://adelabdulrahman026-byte.github.io/dashboard/assets_task_01k4dfa1c7epwvc83drxbngs0y_1757093932_img_0.jpg" class="turtle-decoration" alt="زينة سلحفاة">
+            </section>
+            
+            <!-- قسم الجوائز -->
+            <section id="awards-section" class="section">
+                <h2>الجوائز المتاحة</h2>
+                <p>يمكنك استبدل نقاطك بأي من الجوائز التالية:</p>
+                
+                <div id="awards-container" class="awards-grid">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>جاري تحميل الجوائز...</p>
+                    </div>
+                </div>
+                
+                <button id="back-to-student-btn" class="btn-outline"><i class="fas fa-arrow-right"></i> العودة إلى بياناتي</button>
+                <img src="https://adelabdulrahman026-byte.github.io/dashboard/assets_task_01k4dfa1c7epwvc83drxbngs0y_1757093932_img_0.jpg" class="turtle-decoration" alt="زينة سلحفاة">
+            </section>
+            
+            <!-- قسم شراء الجائزة -->
+            <section id="purchase-section" class="section">
+                <h2>شراء الجائزة</h2>
+                <div class="form-group">
+                    <label for="full-name"><i class="fas fa-user"></i> الاسم بالكامل</label>
+                    <input type="text" id="full-name" placeholder="أدخل اسمك بالكامل">
+                </div>
+                <div class="form-group">
+                    <label for="phone"><i class="fas fa-phone"></i> رقم الهاتف</label>
+                    <input type="tel" id="phone" placeholder="أدخل رقم هاتفك">
+                </div>
+                <div class="form-group">
+                    <label for="grade"><i class="fas fa-graduation-cap"></i> الصف الدراسي</label>
+                    <select id="grade">
+                        <option value="">اختر الصف الدراسي</option>
+                        <option value="ثانية">ثانية</option>
+                        <option value="تالته">تالته</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="study-type"><i class="fas fa-book"></i> نوع الدراسة</label>
+                    <select id="study-type">
+                        <option value="">اختر نوع الدراسة</option>
+                        <option value="سنتر">سنتر</option>
+                        <option value="اونلاين">اونلاين</option>
+                    </select>
+                </div>
+                
+                <div id="purchase-message" class="message hidden"></div>
+                
+                <div class="btn-group">
+                    <button id="confirm-purchase"><i class="fas fa-check-circle"></i> تأكيد الشراء</button>
+                    <button id="back-to-awards-btn" class="btn-outline"><i class="fas fa-arrow-right"></i> العودة إلى الجوائز</button>
+                </div>
+                <img src="https://adelabdulrahman026-byte.github.io/dashboard/assets_task_01k4dfa1c7epwvc83drxbngs0y_1757093932_img_0.jpg" class="turtle-decoration" alt="زينة سلحفاة">
+            </section>
+            
+            <!-- قسم الإيصال -->
+            <section id="receipt-section" class="section">
+                <h2>تم الشراء بنجاح!</h2>
+                <p>تم شراء الجائزة بنجاح. يرجى حفظ هذا الكود لتقديمه في المركز</p>
+                
+                <div class="receipt">
+                    <h3><i class="fas fa-receipt"></i> إيصال الشراء</h3>
+                    <p><strong>اسم الطالب:</strong> <span id="receipt-name"></span></p>
+                    <p><strong>رقم الهاتف:</strong> <span id="receipt-phone"></span></p>
+                    <p><strong>الصف الدراسي:</strong> <span id="receipt-grade"></span></p>
+                    <p><strong>نوع الدراسة:</strong> <span id="receipt-study-type"></span></p>
+                    <p><strong>الجائزة:</strong> <span id="receipt-award"></span></p>
+                    <p><strong>كود الاستلام:</strong></p>
+                    <div class="receipt-code" id="receipt-code"></div>
+                    <p>يرجى تقديم هذا الكود في المركز لاستلام جائزتك</p>
+                    <button class="print-btn" onclick="window.print()"><i class="fas fa-print"></i> طباعة الإيصال</button>
+                </div>
+                
+                <div class="btn-group">
+                    <button id="new-purchase"><i class="fas fa-gift"></i> شراء جائزة أخرى</button>
+                    <button id="back-to-profile" class="btn-outline"><i class="fas fa-user"></i> العودة إلى الملف الشخصي</button>
+                </div>
+                <img src="https://adelabdulrahman026-byte.github.io/dashboard/assets_task_01k4dfa1c7epwvc83drxbngs0y_1757093932_img_0.jpg" class="turtle-decoration" alt="زينة سلحفاة">
+            </section>
+        </div>
+    </div>
+
+    <script>
+        // عناصر DOM الرئيسية
+        const loginSection = document.getElementById('login-section');
+        const studentSection = document.getElementById('student-section');
+        const awardsSection = document.getElementById('awards-section');
+        const purchaseSection = document.getElementById('purchase-section');
+        const receiptSection = document.getElementById('receipt-section');
+        const loginMessage = document.getElementById('login-message');
+        const purchaseMessage = document.getElementById('purchase-message');
+        const awardsContainer = document.getElementById('awards-container');
+        
+        // بيانات التطبيق
+        let studentData = null;
+        let awardsData = [];
+        let selectedAward = null;
+        
+        // رابط Google Apps Script الخاص بك
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbyXOVYn5JkEKPr5i_Ij7uluk3_g8UyI2fxRFj9oKYpJkKcze9PR6kSc7lVcVQPS4Xo8kw/exec';
+        
+        // تسجيل الدخول
+        document.getElementById('login-btn').addEventListener('click', async function() {
+            const studentCode = document.getElementById('student-code').value.trim();
+            
+            if (!studentCode) {
+                showMessage(loginMessage, 'يرجى إدخال كود الطالب', 'error');
+                return;
+            }
+            
+            showMessage(loginMessage, 'جاري التحقق من كود الطالب...', 'success');
+            
+            try {
+                // استدعاء Google Apps Script للتحقق من كود الطالب
+                const response = await fetch(`${scriptURL}?action=login&code=${studentCode}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    studentData = data.student;
+                    
+                    // عرض بيانات الطالب
+                    document.getElementById('student-name').textContent = studentData.name;
+                    document.getElementById('student-points').textContent = studentData.points;
+                    
+                    // الانتقال إلى قسم بيانات الطالب
+                    switchSection(studentSection);
+                } else {
+                    showMessage(loginMessage, data.message || 'كود الطالب غير صحيح', 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showMessage(loginMessage, 'حدث خطأ أثناء الاتصال بالخادم', 'error');
+            }
+        });
+        
+        // تسجيل الخروج
+        document.getElementById('logout-btn').addEventListener('click', function() {
+            studentData = null;
+            document.getElementById('student-code').value = '';
+            switchSection(loginSection);
+        });
+        
+        // عرض الجوائز
+        document.getElementById('show-awards-btn').addEventListener('click', async function() {
+            switchSection(awardsSection);
+            
+            // إذا لم يتم تحميل الجوائز بعد، قم بتحميلها
+            if (awardsData.length === 0) {
+                try {
+                    const response = await fetch(`${scriptURL}?action=getAwards`);
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        awardsData = data.awards;
+                        renderAwards();
+                    } else {
+                        awardsContainer.innerHTML = '<div class="message error">حدث خطأ أثناء تحميل الجوائز</div>';
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    awardsContainer.innerHTML = '<div class="message error">حدث خطأ أثناء الاتصال بالخادم</div>';
+                }
+            } else {
+                renderAwards();
+            }
+        });
+        
+        // عرض الجوائز في الواجهة
+        function renderAwards() {
+            if (awardsData.length === 0) {
+                awardsContainer.innerHTML = '<div class="message">لا توجد جوائز متاحة حالياً</div>';
+                return;
+            }
+            
+            awardsContainer.innerHTML = '';
+            
+            awardsData.forEach(award => {
+                const canPurchase = studentData.points >= award.points;
+                
+                const awardCard = document.createElement('div');
+                awardCard.className = 'award-card';
+                awardCard.innerHTML = `
+                    <div class="award-header">
+                        <h3>${award.name}</h3>
+                    </div>
+                    <div class="award-body">
+                        <p>${award.description}</p>
+                        <div class="award-points">${award.points} نقطة</div>
+                    </div>
+                    <div class="award-footer">
+                        <button class="purchase-btn" data-award='${JSON.stringify(award)}' 
+                                ${!canPurchase ? 'disabled style="background: #ccc;"' : ''}>
+                            ${canPurchase ? '<i class="fas fa-shopping-cart"></i> اشتري الآن' : 'النقاط غير كافية'}
+                        </button>
+                    </div>
+                `;
+                
+                awardsContainer.appendChild(awardCard);
+            });
+            
+            // إضافة مستمعين للأزرار
+            document.querySelectorAll('.purchase-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    if (!this.disabled) {
+                        selectedAward = JSON.parse(this.getAttribute('data-award'));
+                        
+                        // تعبئة البيانات التلقائية إذا كانت متاحة
+                        document.getElementById('full-name').value = studentData.name || '';
+                        
+                        switchSection(purchaseSection);
+                    }
+                });
+            });
+        }
+        
+        // تأكيد عملية الشراء
+        document.getElementById('confirm-purchase').addEventListener('click', async function() {
+            const fullName = document.getElementById('full-name').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const grade = document.getElementById('grade').value;
+            const studyType = document.getElementById('study-type').value;
+            
+            if (!fullName || !phone || !grade || !studyType) {
+                showMessage(purchaseMessage, 'يرجى ملء جميع الحقول المطلوبة', 'error');
+                return;
+            }
+            
+            showMessage(purchaseMessage, 'جاري معالجة طلبك...', 'success');
+            
+            try {
+                // إرسال بيانات الشراء إلى Google Apps Script
+                const formData = new FormData();
+                formData.append('action', 'purchaseAward');
+                formData.append('studentCode', studentData.code);
+                formData.append('awardId', selectedAward.id);
+                formData.append('fullName', fullName);
+                formData.append('phone', phone);
+                formData.append('grade', grade);
+                formData.append('studyType', studyType);
+                
+                const response = await fetch(scriptURL, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // تحديث نقاط الطالب
+                    studentData.points -= selectedAward.points;
+                    document.getElementById('student-points').textContent = studentData.points;
+                    
+                    // عرض الإيصال
+                    document.getElementById('receipt-name').textContent = fullName;
+                    document.getElementById('receipt-phone').textContent = phone;
+                    document.getElementById('receipt-grade').textContent = grade;
+                    document.getElementById('receipt-study-type').textContent = studyType;
+                    document.getElementById('receipt-award').textContent = selectedAward.name;
+                    document.getElementById('receipt-code').textContent = data.receiptCode;
+                    
+                    switchSection(receiptSection);
+                } else {
+                    showMessage(purchaseMessage, data.message || 'حدث خطأ أثناء معالجة الطلب', 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showMessage(purchaseMessage, 'حدث خطأ أثناء الاتصال بالخادم', 'error');
+            }
+        });
+        
+        // وظائف المساعدة
+        function switchSection(sectionToShow) {
+            // إخفاء جميع الأقسام
+            loginSection.classList.remove('active');
+            studentSection.classList.remove('active');
+            awardsSection.classList.remove('active');
+            purchaseSection.classList.remove('active');
+            receiptSection.classList.remove('active');
+            
+            // إظهار القسم المطلوب
+            sectionToShow.classList.add('active');
+        }
+        
+        function showMessage(element, message, type) {
+            element.textContent = message;
+            element.className = `message ${type}`;
+            element.classList.remove('hidden');
+        }
+        
+        // إعداد مستمعي الأحداث للأزرار الأخرى
+        document.getElementById('back-to-student-btn').addEventListener('click', function() {
+            switchSection(studentSection);
+        });
+        
+        document.getElementById('back-to-awards-btn').addEventListener('click', function() {
+            switchSection(awardsSection);
+        });
+        
+        document.getElementById('new-purchase').addEventListener('click', function() {
+            switchSection(awardsSection);
+        });
+        
+        document.getElementById('back-to-profile').addEventListener('click', function() {
+            switchSection(studentSection);
+        });
+    </script>
+</body>
+</html>
