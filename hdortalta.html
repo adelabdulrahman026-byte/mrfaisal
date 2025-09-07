@@ -132,7 +132,7 @@
   </div>
 
   <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbygOiltecPXEC2VyIbwHrfUnm_bpjl_uJ256JMCUaFry4u_zTDE7yueId8QnxjxRi7obQ/exec";
+    const API_URL = "https://script.google.com/macros/s/AKfycbw7rI9htRyZWYI3H6gOiqKCXI5tJ8qqmNbCBqNjS8I8r9wLuNiHthv-cuUyWQOkml_Nsw/exec";
     const form = document.getElementById("attendanceForm");
     const loadingScreen = document.getElementById("loadingScreen");
     const resultDiv = document.getElementById("result");
@@ -156,6 +156,7 @@
               <p><strong>🧭 السنتر:</strong> ${data.geo}</p>
               <p><strong>📅الحصه الاولي:</strong> ${data.week1}</p>
               <p><strong>📅الحصه الثانيه:</strong> ${data.week2}</p>
+              <p><strong>📅الحصه الثالثه:</strong> ${data.week3}</p>
             </div>
           `;
         } else {
