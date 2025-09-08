@@ -3,384 +3,568 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>هدية المولد مع فيصوله - عجلة الحظ</title>
-  <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-<script>
-  window.OneSignalDeferred = window.OneSignalDeferred || [];
-  OneSignalDeferred.push(async function(OneSignal) {
-    await OneSignal.init({
-      appId: "8e36161f-8906-41f3-b0b8-3e272167065b",
-    });
-  });
-</script>
+    <title>جرب حظك وورينا نسبة ذكائك</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
+        
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Cairo', sans-serif;
         }
         
         body {
-            background: linear-gradient(135deg, #fce4ec, #f8bbd0);
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
             min-height: 100vh;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
             padding: 20px;
-            color: #880e4f;
+            overflow-x: hidden;
         }
         
         .container {
-            max-width: 900px;
             width: 100%;
+            max-width: 800px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .header {
+            background: linear-gradient(90deg, #ff9a9e 0%, #fad0c4 100%);
+            padding: 25px;
             text-align: center;
+            position: relative;
+            overflow: hidden;
         }
         
-        header {
-            margin-bottom: 30px;
-        }
-        
-        h1 {
+        .title {
             font-size: 2.5rem;
+            color: #6a0dad;
+            text-shadow: 3px 3px 0 #ffcc00;
             margin-bottom: 10px;
-            color: #d81b60;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 2;
+            animation: bounce 2s infinite;
         }
         
         .subtitle {
             font-size: 1.2rem;
-            color: #880e4f;
-            margin-bottom: 20px;
+            color: #333;
+            margin-bottom: 15px;
         }
         
-        .wheel-container {
-            position: relative;
-            width: 400px;
-            height: 400px;
-            margin: 0 auto 30px;
-        }
-        
-        .wheel {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            position: relative;
-            overflow: hidden;
-            border: 10px solid #f8bbd0;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-            transition: transform 4s cubic-bezier(0.17, 0.67, 0.83, 0.67);
-        }
-        
-        .section {
-            position: absolute;
-            width: 50%;
-            height: 50%;
-            transform-origin: bottom right;
-            left: 0;
-            top: 0;
-            text-align: center;
-            padding-top: 10px;
-            font-weight: bold;
-            color: #fff;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-            display: flex;
-            align-items: flex-start;
-            justify-content: center;
-        }
-        
-        .pointer {
-            position: absolute;
-            top: -30px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 30px;
-            height: 60px;
-            background: #d81b60;
-            clip-path: polygon(50% 100%, 0 0, 100% 0);
-            z-index: 10;
-        }
-        
-        .spin-btn {
-            background: linear-gradient(to bottom, #d81b60, #880e4f);
-            color: white;
-            border: none;
-            padding: 15px 40px;
-            font-size: 1.2rem;
-            border-radius: 50px;
-            cursor: pointer;
-            margin-top: 20px;
-            box-shadow: 0 5px 15px rgba(136, 14, 79, 0.4);
-            transition: all 0.3s;
-        }
-        
-        .spin-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(136, 14, 79, 0.6);
-        }
-        
-        .spin-btn:active {
-            transform: translateY(1px);
-        }
-        
-        .result {
-            margin-top: 30px;
+        .score-display {
             font-size: 1.5rem;
             font-weight: bold;
-            color: #880e4f;
-            min-height: 40px;
-            padding: 15px;
+            color: #ff0066;
             background: rgba(255, 255, 255, 0.8);
-            border-radius: 10px;
+            padding: 10px 20px;
+            border-radius: 50px;
+            display: inline-block;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
         
-        .sweets-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 15px;
-            margin-top: 40px;
+        .game-content {
+            padding: 30px;
         }
         
-        .sweet-item {
-            background: rgba(255, 255, 255, 0.9);
+        .question-container {
+            background: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .question-number {
+            position: absolute;
+            top: -15px;
+            left: -15px;
+            background: #ff6b6b;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            animation: pulse 2s infinite;
+        }
+        
+        .question-text {
+            font-size: 1.4rem;
+            color: #333;
+            margin-bottom: 20px;
+            margin-right: 40px;
+            line-height: 1.5;
+        }
+        
+        .options-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .option {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
             padding: 15px;
             border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
             text-align: center;
-            transition: transform 0.3s;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
         
-        .sweet-item:hover {
+        .option:hover {
             transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
         }
         
-        .emoji {
-            font-size: 2rem;
-            margin-bottom: 5px;
+        .controls {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
         }
         
-        @media (max-width: 600px) {
-            .wheel-container {
-                width: 300px;
-                height: 300px;
+        .btn {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #6a0dad;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .result-container {
+            text-align: center;
+            padding: 30px;
+            display: none;
+        }
+        
+        .result-title {
+            font-size: 2.2rem;
+            color: #ff0066;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 0 #ffcc00;
+        }
+        
+        .prize-card {
+            background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+            padding: 30px;
+            border-radius: 20px;
+            margin: 20px 0;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            transform: rotate(-5deg);
+            animation: float 4s ease-in-out infinite;
+        }
+        
+        .prize-title {
+            font-size: 1.8rem;
+            color: #6a0dad;
+            margin-bottom: 15px;
+        }
+        
+        .prize-description {
+            font-size: 1.4rem;
+            color: #ff0066;
+            font-weight: bold;
+        }
+        
+        .prize-image {
+            width: 150px;
+            height: 150px;
+            margin: 20px auto;
+            background: #fff;
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 3rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .firework {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ffcc00;
+            box-shadow: 0 0 10px #ffcc00, 0 0 20px #ffcc00;
+            opacity: 0;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(-5deg); }
+            50% { transform: translateY(-15px) rotate(-5deg); }
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            opacity: 0;
+        }
+        
+        .intelligence-meter {
+            width: 100%;
+            height: 30px;
+            background: #f0f0f0;
+            border-radius: 15px;
+            margin: 20px 0;
+            overflow: hidden;
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .meter-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+            border-radius: 15px;
+            width: 0%;
+            transition: width 1s ease;
+        }
+        
+        .character {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 120px;
+            height: 120px;
+            background-image: url('https://adelabdulrahman026-byte.github.io/dashboard/assets_task_01k05v63wre6rayke660pxxj1j_1752543094_img_0.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            z-index: 1;
+        }
+        
+        @media (max-width: 768px) {
+            .options-container {
+                grid-template-columns: 1fr;
             }
             
-            h1 {
+            .title {
                 font-size: 2rem;
+            }
+            
+            .question-text {
+                font-size: 1.2rem;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>هدية المولد 🎁</h1>
-            <p class="subtitle">العجلة الحلوة لحظك في مولد النبي</p>
-        </header>
-        
-        <div class="wheel-container">
-            <div class="pointer"></div>
-            <canvas id="wheelCanvas" width="400" height="400" class="wheel"></canvas>
+        <div class="header">
+            <h1 class="title">جرب حظك وورينا نسبة ذكائك</h1>
+            <p class="subtitle">اختبر معلوماتك الجغرافية والسياسية واربح جوائز خيالية!</p>
+            <div class="score-display">النقاط: <span id="score">0</span></div>
+            <div class="character"></div>
         </div>
         
-        <button id="spinBtn" class="spin-btn">اضغط للدوران 🎡</button>
+        <div class="game-content">
+            <div class="question-container">
+                <div class="question-number">١</div>
+                <p class="question-text">بعد تفكك الاتحاد السوفيتي أصبحت دولة..... ليس لها الحق في الاستفادة من ثروات بحر قزوين</p>
+                <div class="options-container">
+                    <div class="option" onclick="checkAnswer(0)">روسيا</div>
+                    <div class="option" onclick="checkAnswer(1)">أوكرانيا</div>
+                    <div class="option" onclick="checkAnswer(2)">كازاخستان</div>
+                    <div class="option" onclick="checkAnswer(3)">أذربيجان</div>
+                </div>
+            </div>
+            
+            <div class="controls">
+                <button class="btn" onclick="nextQuestion()">السؤال التالي</button>
+            </div>
+        </div>
         
-        <div id="result" class="result"></div>
-        
-        <div class="sweets-grid">
-            <div class="sweet-item">
-                <div class="emoji">🥜</div>
-                <div>حمصية</div>
+        <div class="result-container" id="result-container">
+            <h2 class="result-title">مبروك! لقد أكملت الاختبار</h2>
+            <div class="intelligence-meter">
+                <div class="meter-fill" id="meter-fill"></div>
             </div>
-            <div class="sweet-item">
-                <div class="emoji">🌰</div>
-                <div>سودانية</div>
+            <p>نسبة ذكائك: <span id="intelligence-score">0</span>%</p>
+            
+            <div class="prize-card">
+                <h3 class="prize-title">الجائزة التي ربحتها:</h3>
+                <div class="prize-image" id="prize-image">🏆</div>
+                <p class="prize-description" id="prize-description">جائزة المشاركة</p>
             </div>
-            <div class="sweet-item">
-                <div class="emoji">🍯</div>
-                <div>سمسمية</div>
-            </div>
-            <div class="sweet-item">
-                <div class="emoji">🥥</div>
-                <div>جوز هندية</div>
-            </div>
-            <div class="sweet-item">
-                <div class="emoji">🌰</div>
-                <div>بندقية</div>
-            </div>
-            <div class="sweet-item">
-                <div class="emoji">🌰</div>
-                <div>فستقية</div>
-            </div>
-            <div class="sweet-item">
-                <div class="emoji">🍬</div>
-                <div>ملبن سادة</div>
-            </div>
-            <div class="sweet-item">
-                <div class="emoji">🍬</div>
-                <div>ملبن بعين جمل</div>
-            </div>
-            <div class="sweet-item">
-                <div class="emoji">🍬</div>
-                <div>ملبن بالمكسرات</div>
-            </div>
-            <div class="sweet-item">
-                <div class="emoji">🍬</div>
-                <div>ملبن بجوز الهند</div>
-            </div>
-            <div class="sweet-item">
-                <div class="emoji">🍬</div>
-                <div>ملبن محشي ملبن</div>
-            </div>
-            <div class="sweet-item">
-                <div class="emoji">🌸</div>
-                <div>عروسة المولد</div>
-            </div>
-            <div class="sweet-item">
-                <div class="emoji">🐴</div>
-                <div>حصان المولد</div>
-            </div>
-            <div class="sweet-item">
-                <div class="emoji">🍬</div>
-                <div>نوجا</div>
-            </div>
-            <div class="sweet-item">
-                <div class="emoji">🍫</div>
-                <div>بسبوسة بالمكسرات</div>
-            </div>
-            <div class="sweet-item">
-                <div class="emoji">🥥</div>
-                <div>كوكوسية</div>
-            </div>
+            
+            <button class="btn" onclick="resetGame()">العب مرة أخرى</button>
         </div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const canvas = document.getElementById('wheelCanvas');
-            const ctx = canvas.getContext('2d');
-            const spinBtn = document.getElementById('spinBtn');
-            const resultElement = document.getElementById('result');
+        // الأسئلة والإجابات
+        const questions = [
+            {
+                question: "بعد تفكك الاتحاد السوفيتي أصبحت دولة..... ليس لها الحق في الاستفادة من ثروات بحر قزوين",
+                options: ["روسيا", "أوكرانيا", "كازاخستان", "أذربيجان"],
+                correct: 1
+            },
+            {
+                question: "اول من تحدث عن الحدود السياسية للدولة.....",
+                options: ["أرسطو", "كيلين", "ابن خلدون", "راتزل"],
+                correct: 0
+            },
+            {
+                question: "ظهور دولة طاجكستان علي خريطة اسيا يعني أنها رسمت.....",
+                options: ["بعد ظهور الجغرافيا السياسية", "عقب نهاية الحرب العالمية الثانية", "بين الحربين العالميتين الأولى والثانية", "بعد انتصار الرأسمالية علي الشيوعية"],
+                correct: 3
+            },
+            {
+                question: "بعد تفكك الاتحاد السوفيتي انتقلت الهيمنة علي العالم الي الركن....",
+                options: ["الشمال الشرقي", "الجنوب الشرقي", "الشمال الغربي", "الجنوب الغربي"],
+                correct: 2
+            },
+            {
+                question: "عرفت الجغرافيا السياسية قبل الميلاد في البحر المتوسط في جهته ....",
+                options: ["الجنوبية الغربية", "الشمالية", "الشمالية الغربية", "الجنوبية"],
+                correct: 1
+            },
+            {
+                question: "لعبت الجغرافيا السياسية دورا إيجابيا في حل بعض المشكلات السياسية في قارة...",
+                options: ["أستراليا", "أفريقيا", "أمريكا الشمالية", "أمريكا الجنوبية"],
+                correct: 1
+            },
+            {
+                question: "تنطبق عبارة ( من الاعتراف بالحدود السياسية الي محاولة تزييف الخرائط) علي مفهوم....",
+                options: ["الجغرافيا السياسية", "الهدف الداخلي للجيوبولتيك", "الهدف الخارجي للجيوبولتيك", "العولمة الثقافية"],
+                correct: 2
+            },
+            {
+                question: "اي من العلماء التاليين تناول في كتاباته عدم التزام الدولة بمساحة محدودة..",
+                options: ["ابن خلدون", "كيلين", "سيجفريد", "أرسطو"],
+                correct: 1
+            },
+            {
+                question: "اول من تحدث عن قوة الدولة المستمدة من توازن ثرواتها مع عدد سكانها ...",
+                options: ["أرسطو", "راتزل", "كيلين", "ابن خلدون"],
+                correct: 0
+            }
+        ];
+
+        // الجوائز الخيالية
+        const prizes = [
+            "شوكولاتة ذهبية!",
+            "سيارة بي أم خيالية!",
+            "مليون جنيه وهمي!",
+            "قصر بأحد الجزر الخاصة!",
+            "تذكرة سفر حول العالم!",
+            "يخت فاخر!",
+            "تاج من الماس!",
+            "مفتاح مدينة خيالية!",
+            "جائزة نوبل وهمية!",
+            "ميدالية الذكاء اللامع!"
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let userAnswers = [];
+
+        // تهيئة اللعبة
+        function initGame() {
+            document.getElementById('score').textContent = score;
+            loadQuestion();
+        }
+
+        // تحميل السؤال الحالي
+        function loadQuestion() {
+            if (currentQuestion >= questions.length) {
+                showResult();
+                return;
+            }
+
+            const q = questions[currentQuestion];
+            document.querySelector('.question-number').textContent = currentQuestion + 1;
+            document.querySelector('.question-text').textContent = q.question;
             
-            const sweets = [
-                { name: "🥜 حمصية", color: "#F44336" },
-                { name: "🌰 سودانية", color: "#E91E63" },
-                { name: "🍯 سمسمية", color: "#9C27B0" },
-                { name: "🥥 جوز هندية", color: "#673AB7" },
-                { name: "🌰 بندقية", color: "#3F51B5" },
-                { name: "🌰 فستقية", color: "#2196F3" },
-                { name: "🍬 ملبن سادة", color: "#03A9F4" },
-                { name: "🍬 ملبن بعين جمل", color: "#00BCD4" },
-                { name: "🍬 ملبن بالمكسرات", color: "#009688" },
-                { name: "🍬 ملبن بجوز الهند", color: "#4CAF50" },
-                { name: "🍬 ملبن محشي ملبن", color: "#8BC34A" },
-                { name: "🌸 عروسة المولد", color: "#CDDC39" },
-                { name: "🐴 حصان المولد", color: "#FFEB3B" },
-                { name: "🍬 نوجا", color: "#FFC107" },
-                { name: "🍫 بسبوسة بالمكسرات", color: "#FF9800" },
-                { name: "🥥 كوكوسية", color: "#FF5722" }
-            ];
+            const options = document.querySelectorAll('.option');
+            for (let i = 0; i < options.length; i++) {
+                options[i].textContent = q.options[i];
+            }
+        }
+
+        // التحقق من الإجابة
+        function checkAnswer(selected) {
+            const correct = questions[currentQuestion].correct;
+            userAnswers.push(selected);
             
-            const centerX = canvas.width / 2;
-            const centerY = canvas.height / 2;
-            const radius = centerX - 10;
-            let rotation = 0;
-            let spinning = false;
-            
-            // رسم عجلة الحظ
-            function drawWheel() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                
-                const anglePerSweets = (2 * Math.PI) / sweets.length;
-                
-                for (let i = 0; i < sweets.length; i++) {
-                    const startAngle = i * anglePerSweets + rotation;
-                    const endAngle = (i + 1) * anglePerSweets + rotation;
-                    
-                    // رسم القطاع
-                    ctx.beginPath();
-                    ctx.moveTo(centerX, centerY);
-                    ctx.arc(centerX, centerY, radius, startAngle, endAngle);
-                    ctx.closePath();
-                    ctx.fillStyle = sweets[i].color;
-                    ctx.fill();
-                    ctx.stroke();
-                    
-                    // كتابة النص
-                    ctx.save();
-                    ctx.translate(centerX, centerY);
-                    ctx.rotate(startAngle + anglePerSweets / 2);
-                    ctx.textAlign = 'right';
-                    ctx.fillStyle = '#fff';
-                    ctx.font = '14px Arial';
-                    ctx.fillText(sweets[i].name, radius - 15, 5);
-                    ctx.restore();
-                }
-                
-                // رسم المركز
-                ctx.beginPath();
-                ctx.arc(centerX, centerY, 20, 0, 2 * Math.PI);
-                ctx.fillStyle = '#880e4f';
-                ctx.fill();
-                ctx.stroke();
+            if (selected === correct) {
+                score++;
+                document.getElementById('score').textContent = score;
+                createFireworks();
             }
             
-            // تدوير العجلة
-            function spinWheel() {
-                if (spinning) return;
-                
-                spinning = true;
-                resultElement.textContent = "";
-                
-                const spinAngle = 5 + Math.random() * 5; // عدد الدورانات
-                const targetRotation = rotation + (Math.PI * 2 * spinAngle);
-                
-                const spinTime = 4000; // مدة الدوران
-                const startTime = Date.now();
-                
-                function animate() {
-                    const currentTime = Date.now();
-                    const elapsed = currentTime - startTime;
+            // تلوين الإجابات
+            const options = document.querySelectorAll('.option');
+            options[correct].style.background = "linear-gradient(135deg, #56ab2f 0%, #a8e063 100%)";
+            
+            if (selected !== correct) {
+                options[selected].style.background = "linear-gradient(135deg, #ff512f 0%, #dd2476 100%)";
+            }
+            
+            // تعطيل الخيارات بعد الاختيار
+            for (let option of options) {
+                option.onclick = null;
+            }
+        }
+
+        // الانتقال إلى السؤال التالي
+        function nextQuestion() {
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                loadQuestion();
+                resetOptions();
+            } else {
+                showResult();
+            }
+        }
+
+        // إعادة تعيين الخيارات
+        function resetOptions() {
+            const options = document.querySelectorAll('.option');
+            for (let option of options) {
+                option.style.background = "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)";
+                option.onclick = function() {
+                    checkAnswer(Array.from(options).indexOf(option));
+                };
+            }
+        }
+
+        // عرض النتائج
+        function showResult() {
+            document.querySelector('.game-content').style.display = 'none';
+            document.getElementById('result-container').style.display = 'block';
+            
+            const intelligencePercent = Math.round((score / questions.length) * 100);
+            document.getElementById('intelligence-score').textContent = intelligencePercent;
+            document.getElementById('meter-fill').style.width = `${intelligencePercent}%`;
+            
+            // تحديد الجائزة بناء على النتيجة
+            let prizeIndex = Math.min(Math.floor(score / 2), prizes.length - 1);
+            document.getElementById('prize-description').textContent = prizes[prizeIndex];
+            
+            // تغيير رمز الجائزة بناء على النتيجة
+            const prizeEmojis = ["🍫", "🚗", "💰", "🏰", "✈️", "🛥️", "👑", "🗝️", "🏆", "🎓"];
+            document.getElementById('prize-image').textContent = prizeEmojis[prizeIndex];
+            
+            createConfetti();
+        }
+
+        // إعادة تشغيل اللعبة
+        function resetGame() {
+            currentQuestion = 0;
+            score = 0;
+            userAnswers = [];
+            document.querySelector('.game-content').style.display = 'block';
+            document.getElementById('result-container').style.display = 'none';
+            initGame();
+        }
+
+        // تأثير الألعاب النارية
+        function createFireworks() {
+            for (let i = 0; i < 30; i++) {
+                setTimeout(() => {
+                    const firework = document.createElement('div');
+                    firework.classList.add('firework');
+                    firework.style.left = Math.random() * 100 + 'vw';
+                    firework.style.top = Math.random() * 100 + 'vh';
+                    document.body.appendChild(firework);
                     
-                    if (elapsed < spinTime) {
-                        const progress = elapsed / spinTime;
-                        const easeOut = 1 - Math.pow(1 - progress, 3); // تأثير تباطؤ
-                        rotation = targetRotation * easeOut;
-                        
-                        drawWheel();
-                        requestAnimationFrame(animate);
-                    } else {
-                        rotation = targetRotation % (Math.PI * 2);
-                        drawWheel();
-                        finishSpin();
+                    // تأثير الاختفاء
+                    setTimeout(() => {
+                        firework.style.opacity = 1;
+                        setTimeout(() => {
+                            firework.style.opacity = 0;
+                            setTimeout(() => {
+                                document.body.removeChild(firework);
+                            }, 1000);
+                        }, 500);
+                    }, 10);
+                }, i * 50);
+            }
+        }
+
+        // تأثير الكونفيتي
+        function createConfetti() {
+            const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9c74f', '#ffafcc', '#83e377'];
+            
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.width = (Math.random() * 15 + 5) + 'px';
+                confetti.style.height = (Math.random() * 15 + 5) + 'px';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.top = '-50px';
+                document.body.appendChild(confetti);
+                
+                // تأثير السقوط
+                const animationDuration = Math.random() * 3 + 2;
+                confetti.style.animation = `
+                    fall ${animationDuration}s linear forwards,
+                    sway ${animationDuration}s ease-in-out infinite
+                `;
+                
+                // إضافة أنيميشن بشكل ديناميكي
+                const style = document.createElement('style');
+                style.textContent = `
+                    @keyframes fall {
+                        to { top: 100vh; }
                     }
-                }
+                    @keyframes sway {
+                        0%, 100% { transform: translateX(-5px) rotate(-45deg); }
+                        50% { transform: translateX(5px) rotate(45deg); }
+                    }
+                `;
+                document.head.appendChild(style);
                 
-                animate();
+                // إظهار الكونفيتي
+                setTimeout(() => {
+                    confetti.style.opacity = 1;
+                }, 10);
+                
+                // إزالة الكونفيتي بعد انتهاء الأنيميشن
+                setTimeout(() => {
+                    document.body.removeChild(confetti);
+                }, animationDuration * 1000);
             }
-            
-            // تحديد النتيجة بعد التوقف
-            function finishSpin() {
-                spinning = false;
-                
-                const anglePerSweets = (2 * Math.PI) / sweets.length;
-                const normalizedRotation = (rotation % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2);
-                
-                // حساب القطاع الذي تشير إليه المؤشر
-                const pointerAngle = Math.PI; // زاوية المؤشر (أعلى)
-                let winningIndex = sweets.length - Math.floor((pointerAngle - normalizedRotation) / anglePerSweets) - 1;
-                winningIndex = winningIndex % sweets.length;
-                
-                resultElement.textContent = `مبروك! فزت بـ: ${sweets[winningIndex].name}`;
-            }
-            
-            // تهيئة العجلة
-            drawWheel();
-            
-            // إضافة مستمع الحدث للزر
-            spinBtn.addEventListener('click', spinWheel);
-        });
+        }
+
+        // بدء اللعبة عند تحميل الصفحة
+        window.onload = initGame;
     </script>
 </body>
 </html>
