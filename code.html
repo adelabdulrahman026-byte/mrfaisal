@@ -1,777 +1,201 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة التعلم الإلكتروني</title>
-    <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --primary-color: #4e54c8;
-            --secondary-color: #8f94fb;
-            --accent-color: #ff6b6b;
-            --dark-color: #2c2c54;
-            --light-color: #f7f7f7;
-            --success-color: #2ed573;
-        }
-        
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        body {
-            background: linear-gradient(to right, #4e54c8, #8f94fb);
-            color: #333;
-            min-height: 100vh;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .container {
-            width: 100%;
-            max-width: 1200px;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
-            margin: 20px;
-        }
-        
-        header {
-            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
-            color: white;
-            padding: 20px;
-            text-align: center;
-            position: relative;
-        }
-        
-        .logo {
-            width: 120px;
-            height: 120px;
-            margin: 0 auto 15px;
-            border-radius: 50%;
-            background: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-        
-        .logo img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        h1 {
-            font-size: 2.2rem;
-            margin-bottom: 10px;
-        }
-        
-        .page {
-            display: none;
-            padding: 30px;
-        }
-        
-        .active {
-            display: block;
-            animation: fadeIn 0.5s ease;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--dark-color);
-        }
-        
-        input, select {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: border-color 0.3s;
-        }
-        
-        input:focus, select:focus {
-            border-color: var(--primary-color);
-            outline: none;
-        }
-        
-        .btn {
-            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
-            color: white;
-            border: none;
-            padding: 15px 25px;
-            border-radius: 8px;
-            font-size: 18px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.3s, box-shadow 0.3s;
-            display: inline-block;
-            text-align: center;
-            width: 100%;
-        }
-        
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-        
-        .video-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 25px;
-            margin-top: 30px;
-        }
-        
-        .card {
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s, box-shadow 0.3s;
-            cursor: pointer;
-        }
-        
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
-        }
-        
-        .card-img {
-            height: 180px;
-            overflow: hidden;
-        }
-        
-        .card-img img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s;
-        }
-        
-        .card:hover .card-img img {
-            transform: scale(1.05);
-        }
-        
-        .card-content {
-            padding: 20px;
-        }
-        
-        .card-title {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 10px;
-            color: var(--dark-color);
-        }
-        
-        .card-description {
-            color: #666;
-            font-size: 14px;
-            margin-bottom: 15px;
-            line-height: 1.5;
-        }
-        
-        .card-meta {
-            display: flex;
-            justify-content: space-between;
-            color: #888;
-            font-size: 13px;
-        }
-        
-        .video-player-container {
-            margin-top: 20px;
-            display: none;
-        }
-        
-        .rating {
-            margin-top: 20px;
-            text-align: center;
-        }
-        
-        .stars {
-            direction: ltr;
-            unicode-bidi: bidi-override;
-        }
-        
-        .stars input {
-            display: none;
-        }
-        
-        .stars label {
-            font-size: 30px;
-            color: #ddd;
-            cursor: pointer;
-            transition: color 0.2s;
-            display: inline-block;
-        }
-        
-        .stars label:hover,
-        .stars label:hover ~ label,
-        .stars input:checked ~ label {
-            color: #ffc107;
-        }
-        
-        .back-btn {
-            background: var(--accent-color);
-            margin-top: 20px;
-        }
-        
-        .code-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .modal-content {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            width: 90%;
-            max-width: 500px;
-            text-align: center;
-        }
-        
-        .purchase-success {
-            background: var(--success-color);
-            color: white;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 20px;
-            display: none;
-        }
-        
-        footer {
-            text-align: center;
-            padding: 20px;
-            color: white;
-            margin-top: 30px;
-        }
-        
-        .loading {
-            display: none;
-            text-align: center;
-            margin: 10px 0;
-        }
-        
-        .loading i {
-            animation: spin 1s linear infinite;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        .message {
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: none;
-        }
-        
-        .success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        
-        .error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        
-        @media (max-width: 768px) {
-            .video-cards {
-                grid-template-columns: 1fr;
-            }
-            
-            h1 {
-                font-size: 1.8rem;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تسجيل الطلاب</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;700;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    body {
+      font-family: 'Cairo', sans-serif;
+      margin: 0;
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .container {
+      background: #fff;
+      padding: 30px;
+      border-radius: 25px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      text-align: center;
+      width: 95%;
+      max-width: 420px;
+      animation: fadeInUp 1s ease;
+    }
+    h1 {
+      margin-bottom: 20px;
+      font-size: 26px;
+      color: #2575fc;
+    }
+    .input-group {
+      margin-bottom: 15px;
+      text-align: right;
+    }
+    input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 12px;
+      border: 2px solid #eee;
+      font-size: 16px;
+      outline: none;
+      transition: 0.3s;
+    }
+    input:focus {
+      border-color: #2575fc;
+    }
+    button {
+      width: 100%;
+      padding: 14px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+      color: #fff;
+    }
+    .btn-login { background: #2575fc; }
+    .btn-login:hover { background: #1a5ed0; }
+    .btn-register { background: #6a11cb; }
+    .btn-register:hover { background: #520fa3; }
+
+    /* كروت الفيديو */
+    .video-page {
+      display: none;
+      text-align: center;
+    }
+    .card-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+    .card {
+      background: #fff;
+      padding: 20px;
+      border-radius: 20px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .card:hover {
+      transform: scale(1.05);
+      background: #f1f5ff;
+    }
+
+    @keyframes fadeInUp {
+      from { transform: translateY(50px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <div class="logo">
-                <img src="https://adelabdulrahman026-byte.github.io/dashboard/aifaceswap-2977554008634f44744322ff4d45ac5d.jpg" alt="Logo">
-            </div>
-            <h1>منصة التعلم الإلكتروني</h1>
-            <p>استمتع بتجربة تعليمية فريدة مع أفضل المدربين</p>
-        </header>
-        
-        <!-- صفحة تسجيل الدخول -->
-        <section id="login-page" class="page active">
-            <h2>تسجيل الدخول</h2>
-            <p>ادخل رقم هاتفك للدخول إلى المنصة</p>
-            
-            <div class="form-group">
-                <label for="phone">رقم الهاتف</label>
-                <input type="tel" id="phone" placeholder="ادخل رقم هاتفك">
-            </div>
-            
-            <button class="btn" onclick="checkLogin()">دخول</button>
-            
-            <p style="text-align: center; margin-top: 20px;">
-                ليس لديك حساب؟ <a href="#" onclick="showPage('register-page')">سجل الآن</a>
-            </p>
-        </section>
-        
-        <!-- صفحة التسجيل -->
-        <section id="register-page" class="page">
-            <h2>تسجيل جديد</h2>
-            <p>املأ البيانات التالية لتسجيل حساب جديد</p>
-            
-            <div class="form-group">
-                <label for="name">الاسم بالكامل</label>
-                <input type="text" id="name" placeholder="ادخل اسمك بالكامل">
-            </div>
-            
-            <div class="form-group">
-                <label for="new-phone">رقم الهاتف</label>
-                <input type="tel" id="new-phone" placeholder="ادخل رقم هاتفك">
-            </div>
-            
-            <div class="form-group">
-                <label for="study-type">نوع الدراسة</label>
-                <select id="study-type">
-                    <option value="">اختر نوع الدراسة</option>
-                    <option value="مركز">مركز</option>
-                    <option value="أونلاين">أونلاين</option>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label for="governorate">المحافظة</label>
-                <select id="governorate">
-                    <option value="">اختر محافظتك</option>
-                    <option value="القاهرة">القاهرة</option>
-                    <option value="الجيزة">الجيزة</option>
-                    <option value="الإسكندرية">الإسكندرية</option>
-                    <option value="الدقهلية">الدقهلية</option>
-                    <option value="البحر الأحمر">البحر الأحمر</option>
-                    <option value="البحيرة">البحيرة</option>
-                    <option value="الفيوم">الفيوم</option>
-                    <option value="الغربية">الغربية</option>
-                    <option value="الإسماعيلية">الإسماعيلية</option>
-                    <option value="المنوفية">المنوفية</option>
-                    <option value="المنيا">المنيا</option>
-                    <option value="القليوبية">القليوبية</option>
-                    <option value="الوادي الجديد">الوادي الجديد</option>
-                    <option value="السويس">السويس</option>
-                    <option value="أسوان">أسوان</option>
-                    <option value="أسيوط">أسيوط</option>
-                    <option value="بني سويف">بني سويف</option>
-                    <option value="بورسعيد">بورسعيد</option>
-                    <option value="دمياط">دمياط</option>
-                    <option value="جنوب سيناء">جنوب سيناء</option>
-                    <option value="كفر الشيخ">كفر الشيخ</option>
-                    <option value="مطروح">مطروح</option>
-                    <option value="الأقصر">الأقصر</option>
-                    <option value="قنا">قنا</option>
-                    <option value="شمال سيناء">شمال سيناء</option>
-                    <option value="سوهاج">سوهاج</option>
-                </select>
-            </div>
-            
-            <div class="loading" id="register-loading">
-                <i class="fas fa-spinner"></i> جاري التسجيل...
-            </div>
-            
-            <button class="btn" onclick="registerUser()">تسجيل</button>
-            
-            <p style="text-align: center; margin-top: 20px;">
-                لديك حساب بالفعل؟ <a href="#" onclick="showPage('login-page')">سجل دخول</a>
-            </p>
-        </section>
-        
-        <!-- صفحة اختيار الكورس -->
-        <section id="courses-page" class="page">
-            <h2>مرحباً, <span id="user-name">المستخدم</span></h2>
-            <p>اختر الورشة التي تريد مشاهدتها</p>
-            
-            <div class="video-cards">
-                <div class="card" onclick="openVideoWithCode('video1', 'الورشة الأولى مع مستر فيصل', 'هذه الورشة تتناول أساسيات البرمجة بلغة JavaScript', 'CODE123')">
-                    <div class="card-img">
-                        <img src="https://adelabdulrahman026-byte.github.io/dashboard/aifaceswap-2977554008634f44744322ff4d45ac5d.jpg" alt="الورشة الأولى">
-                    </div>
-                    <div class="card-content">
-                        <h3 class="card-title">الورشة الأولى</h3>
-                        <p class="card-description">هذه الورشة تتناول أساسيات البرمجة بلغة JavaScript</p>
-                        <div class="card-meta">
-                            <span>مستر فيصل</span>
-                            <span>120 دقيقة</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="card" onclick="openVideoWithCode('video2', 'الورشة الثانية مع مستر فيصل', 'هذه الورشة تتناول أساسيات تصميم الويب باستخدام HTML و CSS', 'CODE456')">
-                    <div class="card-img">
-                        <img src="https://adelabdulrahman026-byte.github.io/dashboard/aifaceswap-2977554008634f44744322ff4d45ac5d.jpg" alt="الورشة الثانية">
-                    </div>
-                    <div class="card-content">
-                        <h3 class="card-title">الورشة الثانية</h3>
-                        <p class="card-description">هذه الورشة تتناول أساسيات تصميم الويب باستخدام HTML و CSS</p>
-                        <div class="card-meta">
-                            <span>مستر فيصل</span>
-                            <span>90 دقيقة</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="card" onclick="openVideoWithCode('video3', 'الورشة الثالثة مع مستر فيصل', 'هذه الورشة تتناول أساسيات قواعد البيانات MySQL', 'CODE789')">
-                    <div class="card-img">
-                        <img src="https://adelabdulrahman026-byte.github.io/dashboard/aifaceswap-2977554008634f44744322ff4d45ac5d.jpg" alt="الورشة الثالثة">
-                    </div>
-                    <div class="card-content">
-                        <h3 class="card-title">الورشة الثالثة</h3>
-                        <p class="card-description">هذه الورشة تتناول أساسيات قواعد البيانات MySQL</p>
-                        <div class="card-meta">
-                            <span>مستر فيصل</span>
-                            <span>150 دقيقة</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <button class="btn back-btn" onclick="showPage('login-page')">خروج</button>
-        </section>
-        
-        <!-- صفحة الفيديو -->
-        <section id="video-page" class="page">
-            <h2 id="video-title">عنوان الفيديو</h2>
-            <p id="video-description">وصف الفيديو</p>
-            
-            <div class="video-player-container" id="video-player">
-                <video
-                    id="my-video"
-                    class="video-js vjs-big-play-centered"
-                    controls
-                    preload="auto"
-                    width="100%"
-                    height="400"
-                    poster="https://adelabdulrahman026-byte.github.io/dashboard/aifaceswap-2977554008634f44744322ff4d45ac5d.jpg"
-                    data-setup="{}"
-                >
-                    <source src="" type="video/mp4" />
-                    <p class="vjs-no-js">
-                        لإعادة تشغيل الفيديو يرجى تفعيل الجافاسكريبت، أو consider upgrading to a web browser that
-                        <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
-                    </p>
-                </video>
-            </div>
-            
-            <div class="rating">
-                <h3>قيم هذه الورشة</h3>
-                <div class="stars">
-                    <input type="radio" id="star5" name="rating" value="5" />
-                    <label for="star5">&#9733;</label>
-                    <input type="radio" id="star4" name="rating" value="4" />
-                    <label for="star4">&#9733;</label>
-                    <input type="radio" id="star3" name="rating" value="3" />
-                    <label for="star3">&#9733;</label>
-                    <input type="radio" id="star2" name="rating" value="2" />
-                    <label for="star2">&#9733;</label>
-                    <input type="radio" id="star1" name="rating" value="1" />
-                    <label for="star1">&#9733;</label>
-                </div>
-            </div>
-            
-            <button class="btn back-btn" onclick="showPage('courses-page')">العودة إلى الورشات</button>
-        </section>
-    </div>
-    
-    <!-- نافذة إدخال الكود -->
-    <div class="code-modal" id="code-modal">
-        <div class="modal-content">
-            <h2>أدخل كود الدخول</h2>
-            <p>يجب إدخال الكود الصحيح لمشاهدة هذه الورشة</p>
-            
-            <div class="form-group">
-                <input type="text" id="video-code" placeholder="أدخل الكود هنا">
-            </div>
-            
-            <div class="loading" id="code-loading">
-                <i class="fas fa-spinner"></i> جاري التحقق...
-            </div>
-            
-            <button class="btn" onclick="validateCode()">تحقق من الكود</button>
-            
-            <div class="purchase-success" id="purchase-success">
-                <i class="fas fa-check-circle"></i>
-                <span>تم الشراء بنجاح! الكود: <span id="generated-code"></span></span>
-            </div>
-        </div>
-    </div>
-    
-    <footer>
-        <p>جميع الحقوق محفوظة &copy; 2023 منصة التعلم الإلكتروني</p>
-    </footer>
 
-    <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
-    <script>
-        // بيانات المستخدمين (سيتم تخزينها في localStorage)
-        let users = JSON.parse(localStorage.getItem('users')) || [
-            { phone: "01012345678", name: "أحمد محمد", studyType: "أونلاين", governorate: "القاهرة" },
-            { phone: "01198765432", name: "محمود عبدالله", studyType: "مركز", governorate: "الجيزة" }
-        ];
-        
-        // بيانات الفيديوهات
-        const videos = {
-            video1: {
-                title: "الورشة الأولى مع مستر فيصل",
-                description: "هذه الورشة تتناول أساسيات البرمجة بلغة JavaScript",
-                src: "https://vjs.zencdn.net/v/oceans.mp4",
-                code: "CODE123"
-            },
-            video2: {
-                title: "الورشة الثانية مع مستر فيصل",
-                description: "هذه الورشة تتناول أساسيات تصميم الويب باستخدام HTML و CSS",
-                src: "https://vjs.zencdn.net/v/oceans.mp4",
-                code: "CODE456"
-            },
-            video3: {
-                title: "الورشة الثالثة مع مستر فيصل",
-                description: "هذه الورشة تتناول أساسيات قواعد البيانات MySQL",
-                src: "https://vjs.zencdn.net/v/oceans.mp4",
-                code: "CODE789"
-            }
-        };
-        
-        // رابط Google Apps Script
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbxQorZtlK8MVkLIbpts4z5vKQ5cLwdoMBmLF-0MbhqT4rW6D8r1J3l01eNs531pFLgD/exec';
-        
-        // المتغيرات العامة
-        let currentUser = null;
-        let currentVideoId = null;
-        let usedCodes = JSON.parse(localStorage.getItem('usedCodes')) || [];
-        
-        // إظهار صفحة معينة وإخفاء الآخرين
-        function showPage(pageId) {
-            document.querySelectorAll('.page').forEach(page => {
-                page.classList.remove('active');
-            });
-            document.getElementById(pageId).classList.add('active');
-        }
-        
-        // إظهار/إخفاء نافذة الكود
-        function showCodeModal(show) {
-            document.getElementById('code-modal').style.display = show ? 'flex' : 'none';
-            document.getElementById('purchase-success').style.display = 'none';
-            document.getElementById('video-code').value = '';
-        }
-        
-        // إظهار/إخفاء تحميل
-        function showLoading(id, show) {
-            document.getElementById(id).style.display = show ? 'block' : 'none';
-        }
-        
-        // التحقق من تسجيل الدخول
-        function checkLogin() {
-            const phone = document.getElementById('phone').value;
-            const user = users.find(u => u.phone === phone);
-            
-            if (user) {
-                currentUser = user;
-                document.getElementById('user-name').textContent = user.name;
-                showPage('courses-page');
-            } else {
-                alert('رقم الهاتف غير مسجل. يرجى التسجيل أولاً.');
-                showPage('register-page');
-            }
-        }
-        
-        // تسجيل مستخدم جديد
-        function registerUser() {
-            const name = document.getElementById('name').value;
-            const phone = document.getElementById('new-phone').value;
-            const studyType = document.getElementById('study-type').value;
-            const governorate = document.getElementById('governorate').value;
-            
-            if (!name || !phone || !studyType || !governorate) {
-                alert('يرجى ملء جميع الحقول');
-                return;
-            }
-            
-            showLoading('register-loading', true);
-            
-            // إرسال البيانات إلى Google Apps Script (بدون كود دخول)
-            sendToGoogleSheets(name, phone, studyType, governorate)
-                .then(() => {
-                    users.push({ phone, name, studyType, governorate });
-                    localStorage.setItem('users', JSON.stringify(users));
-                    currentUser = { phone, name, studyType, governorate };
-                    
-                    alert('تم تسجيلك بنجاح! يمكنك الآن الدخول إلى المنصة.');
-                    document.getElementById('user-name').textContent = name;
-                    showPage('courses-page');
-                })
-                .catch(error => {
-                    // في حالة فشل الاتصال، نستخدم التخزين المحلي فقط
-                    console.error('Error connecting to Google Sheets:', error);
-                    users.push({ phone, name, studyType, governorate });
-                    localStorage.setItem('users', JSON.stringify(users));
-                    currentUser = { phone, name, studyType, governorate };
-                    
-                    alert('تم التسجيل محلياً بنجاح! يمكنك الآن الدخول إلى المنصة.');
-                    document.getElementById('user-name').textContent = name;
-                    showPage('courses-page');
-                })
-                .finally(() => {
-                    showLoading('register-loading', false);
-                });
-        }
-        
-        // إرسال البيانات إلى Google Sheets (بدون كود دخول)
-        function sendToGoogleSheets(name, phone, studyType, governorate) {
-            return new Promise((resolve, reject) => {
-                fetch(scriptURL, {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        name: name,
-                        phone: phone,
-                        studyType: studyType,
-                        governorate: governorate
-                    }),
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.result === 'success') {
-                        resolve(data);
-                    } else {
-                        reject(new Error(data.message));
-                    }
-                })
-                .catch(error => {
-                    reject(error);
-                });
-            });
-        }
-        
-        // فتح الفيديو بعد التحقق من الكود
-        function openVideoWithCode(videoId, title, description, requiredCode) {
-            currentVideoId = videoId;
-            
-            document.getElementById('video-title').textContent = title;
-            document.getElementById('video-description').textContent = description;
-            
-            // إذا كان الكود مستخدم من قبل، اسمح بالدخول مباشرة
-            if (usedCodes.includes(requiredCode)) {
-                openVideoDirectly();
-            } else {
-                // وإلا، اطلب إدخال الكود
-                showCodeModal(true);
-            }
-        }
-        
-        // التحقق من صحة الكود
-        function validateCode() {
-            const enteredCode = document.getElementById('video-code').value;
-            const video = videos[currentVideoId];
-            
-            if (!enteredCode) {
-                alert('يرجى إدخال الكود');
-                return;
-            }
-            
-            showLoading('code-loading', true);
-            
-            if (enteredCode === video.code) {
-                // إظهار رسالة النجاح وتوليد كود فريد
-                const generatedCode = generateUniqueCode();
-                document.getElementById('generated-code').textContent = generatedCode;
-                document.getElementById('purchase-success').style.display = 'block';
-                
-                // إضافة الكود إلى القائمة المستخدمة
-                usedCodes.push(video.code);
-                localStorage.setItem('usedCodes', JSON.stringify(usedCodes));
-                
-                // تسجيل عملية الشراء
-                sendPurchaseToGoogleSheets(currentUser, currentVideoId, generatedCode)
-                    .catch(error => {
-                        console.error('Error sending purchase data:', error);
-                    })
-                    .finally(() => {
-                        // فتح الفيديو بعد تأخير بسيط
-                        setTimeout(openVideoDirectly, 2000);
-                    });
-            } else {
-                alert('الكود غير صحيح. يرجى المحاولة مرة أخرى.');
-                showLoading('code-loading', false);
-            }
-        }
-        
-        // إرسال بيانات الشراء إلى Google Sheets
-        function sendPurchaseToGoogleSheets(user, videoId, generatedCode) {
-            return fetch(scriptURL, {
-                method: 'POST',
-                body: JSON.stringify({
-                    action: 'purchase',
-                    user: user.name,
-                    phone: user.phone,
-                    video: videoId,
-                    code: generatedCode
-                }),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-            .then(response => response.json());
-        }
-        
-        // فتح الفيديو مباشرة
-        function openVideoDirectly() {
-            const video = videos[currentVideoId];
-            if (video) {
-                const videoPlayer = document.getElementById('my-video');
-                const videoSource = videoPlayer.querySelector('source');
-                videoSource.src = video.src;
-                
-                // إعادة تحميل الفيديو بمصدر جديد
-                videoPlayer.load();
-                
-                document.getElementById('video-player').style.display = 'block';
-                showCodeModal(false);
-                showPage('video-page');
-            }
-        }
-        
-        // توليد كود فريد (محاكاة)
-        function generateUniqueCode() {
-            return 'UNIQUE-' + Math.random().toString(36).substr(2, 9).toUpperCase();
-        }
-    </script>
+<div class="container" id="authPage">
+  <h1>👋 أهلا بيك</h1>
+  <div class="input-group">
+    <input type="text" id="name" placeholder="✍️ الاسم (ثنائي)">
+  </div>
+  <div class="input-group">
+    <input type="tel" id="phone" placeholder="📱 رقم الموبايل">
+  </div>
+  <button class="btn-register" onclick="register()">📝 تسجيل جديد</button>
+  <button class="btn-login" onclick="login()">🔑 تسجيل دخول</button>
+</div>
+
+<div class="container video-page" id="videoPage">
+  <h1>🎬 ورش الفيديو</h1>
+  <div class="card-container">
+    <div class="card" onclick="openWorkshop('الورشة الأولى','https://www.youtube.com/embed/tgbNymZ7vqY')">الورشة الأولى</div>
+    <div class="card" onclick="openWorkshop('الورشة الثانية','https://www.youtube.com/embed/aqz-KE-bpKQ')">الورشة الثانية</div>
+    <div class="card" onclick="openWorkshop('الورشة الثالثة','https://www.youtube.com/embed/sBws8MSXN7A')">الورشة الثالثة</div>
+  </div>
+  <div id="videoFrame" style="margin-top:20px;display:none;">
+    <iframe id="videoPlayer" width="100%" height="250" frameborder="0" allowfullscreen></iframe>
+  </div>
+</div>
+
+<script>
+  const API_URL = "https://script.google.com/macros/s/AKfycbxT4UckSnVfvVPdj_rPVr0uMOMcDXDxeUouLhZawxaqCjT1dmvWhwfuFoHDgZOaNqPY/exec";
+
+  async function register() {
+    let name = document.getElementById("name").value.trim();
+    let phone = document.getElementById("phone").value.trim();
+
+    if (!name || !phone) {
+      return Swal.fire("⚠️ خطأ", "من فضلك اكتب الاسم والرقم", "error");
+    }
+
+    if (!/^01[0-9]{9}$/.test(phone)) {
+      return Swal.fire("❌", "لازم رقم مصري صحيح", "error");
+    }
+
+    let res = await fetch(API_URL, {
+      method: "POST",
+      body: JSON.stringify({ action: "register", name, phone }),
+    });
+
+    let data = await res.json();
+    if (data.success) {
+      Swal.fire("✅", "تم تسجيلك بنجاح", "success");
+    } else {
+      Swal.fire("⚠️", data.message || "خطأ", "error");
+    }
+  }
+
+  async function login() {
+    let phone = document.getElementById("phone").value.trim();
+
+    if (!/^01[0-9]{9}$/.test(phone)) {
+      return Swal.fire("❌", "رقم غير صحيح", "error");
+    }
+
+    let res = await fetch(API_URL + "?action=login&phone=" + phone);
+    let data = await res.json();
+
+    if (data.success) {
+      document.getElementById("authPage").style.display = "none";
+      document.getElementById("videoPage").style.display = "block";
+    } else {
+      Swal.fire("⚠️", "الرقم غير مسجل", "error");
+    }
+  }
+
+  async function openWorkshop(title, videoUrl) {
+    const { value: code } = await Swal.fire({
+      title: "🔑 كود الورشة",
+      input: "text",
+      inputLabel: "ادخل الكود لمشاهدة " + title,
+      showCancelButton: true,
+      inputValidator: (value) => {
+        if (!value) return "لازم تدخل كود";
+      }
+    });
+
+    if (code) {
+      let phone = document.getElementById("phone").value.trim();
+      let res = await fetch(API_URL, {
+        method: "POST",
+        body: JSON.stringify({ action: "validateCode", phone, code, workshop: title })
+      });
+
+      let data = await res.json();
+      if (data.success) {
+        Swal.fire("🎉", "مبروك! الكود صحيح", "success");
+        document.getElementById("videoFrame").style.display = "block";
+        document.getElementById("videoPlayer").src = videoUrl;
+      } else {
+        Swal.fire("❌", data.message || "كود غير صحيح", "error");
+      }
+    }
+  }
+</script>
+
 </body>
 </html>
