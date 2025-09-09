@@ -1,29 +1,188 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>  امتحاناتنا</title>
+  <title>  الامتحان</title>
+
+  <!-- خط عربي أنيق -->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+
   <style>
-    body, html {
-      margin: 0; padding: 0; height: 100%;
-      direction: rtl;
+    :root{
+      --card-bg: rgba(255,255,255,0.14);
+      --card-border: rgba(255,255,255,0.25);
+      --shadow: 0 10px 30px rgba(0,0,0,0.18);
+      --accent: #22c1c3;
+      --accent2: #4b7bec;
     }
-    iframe {
-      width: 100%;
-      height: 100vh;
-      border: none;
+
+    /* خلفية متدرجة متحركة */
+    body{
+      margin:0;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background: linear-gradient(120deg,#0f172a,#0a192f,#1b3358);
+      background-size: 200% 200%;
+      animation: bgMove 16s ease-in-out infinite;
+      font-family: "Cairo", system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji";
+      color:#fff;
+      overflow:hidden;
+    }
+    @keyframes bgMove{
+      0%,100%{ background-position: 0% 50%;}
+      50%{ background-position: 100% 50%;}
+    }
+
+    /* كارت أنيق (جلاس مورفزم) */
+    .card{
+      position:relative;
+      width:min(92vw, 720px);
+      padding: clamp(18px, 3.5vw, 34px);
+      border-radius: 22px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      text-align:center;
+    }
+
+    /* عنوان مع لمعان خفيف */
+    .title{
+      font-weight: 900;
+      font-size: clamp(22px, 4.6vw, 38px);
+      line-height:1.25;
+      margin: 6px 0 10px;
+      background: linear-gradient(90deg, #fff, #bfe9ff, #fff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: shimmer 4.8s linear infinite;
+    }
+    @keyframes shimmer{
+      0%{ filter: drop-shadow(0 0 0 rgba(255,255,255,0));}
+      50%{ filter: drop-shadow(0 0 10px rgba(255,255,255,0.25));}
+      100%{ filter: drop-shadow(0 0 0 rgba(255,255,255,0));}
+    }
+
+    /* وصف صغير */
+    .subtitle{
+      font-size: clamp(14px, 2.8vw, 18px);
+      opacity:.9;
+      margin-bottom: 10px;
+    }
+
+    /* إطار للّوتي مع نبضة خفيفة */
+    .lottie-wrap{
+      margin-inline:auto;
+      width:min(300px, 70vw);
+      aspect-ratio: 1 / 1;
+      display:grid;
+      place-items:center;
+      border-radius: 18px;
+      border: 1px dashed rgba(255,255,255,0.25);
+      padding: 6px;
+      animation: pulse 3.8s ease-in-out infinite;
+    }
+    @keyframes pulse{
+      0%,100%{ transform: scale(1); box-shadow: 0 0 0 rgba(255,255,255,0);}
+      50%{ transform: scale(1.02); box-shadow: 0 10px 30px rgba(0,0,0,0.18);}
+    }
+
+    /* شريط صغير جميل تحت الرسالة */
+    .tag{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      margin-top: 14px;
+      padding:8px 14px;
+      border-radius: 999px;
+      font-size: clamp(12px, 2.4vw, 14px);
+      background: linear-gradient(90deg, rgba(34,193,195,.25), rgba(75,126,236,.25));
+      border:1px solid rgba(255,255,255,0.22);
+    }
+
+    /* فقاعات/ايموجيز طايرة */
+    .floaters span{
+      position:absolute; 
+      font-size: clamp(18px, 4vw, 28px);
+      opacity:.3;
+      animation: float 12s linear infinite;
+      user-select:none;
+      filter: drop-shadow(0 4px 10px rgba(0,0,0,.25));
+    }
+    @keyframes float{
+      0%{ transform: translateY(60vh) rotate(0deg); opacity:.0;}
+      10%{ opacity:.25;}
+      90%{ opacity:.25;}
+      100%{ transform: translateY(-20vh) rotate(360deg); opacity:0;}
+    }
+    .floaters span:nth-child(1){ left:6vw; animation-delay:0s;}
+    .floaters span:nth-child(2){ left:20vw; animation-delay:2s;}
+    .floaters span:nth-child(3){ left:35vw; animation-delay:4s;}
+    .floaters span:nth-child(4){ left:55vw; animation-delay:1s;}
+    .floaters span:nth-child(5){ left:72vw; animation-delay:3s;}
+    .floaters span:nth-child(6){ left:85vw; animation-delay:5s;}
+
+    /* زر لطيف اختياري */
+    .btn{
+      display:inline-block;
+      margin-top:18px;
+      padding:12px 18px;
+      border-radius:12px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color:#fff; 
+      font-weight:700; 
+      text-decoration:none;
+      box-shadow: 0 6px 18px rgba(0,0,0,.25);
+      transition: transform .15s ease, filter .15s ease;
+    }
+    .btn:hover{ transform: translateY(-2px); filter: brightness(1.07);}
+    .btn:active{ transform: translateY(0); }
+
+    /* احترام تفضيل تقليل الحركة */
+    @media (prefers-reduced-motion: reduce){
+      *{ animation: none !important; transition: none !important;}
     }
   </style>
 </head>
 <body>
-  <iframe src="https://script.google.com/macros/s/AKfycbyDTYXSoyn2dzSOm96GnAdjLPL6Xx3j2AY429h2ea6ueheLwLBWfaYFpouCg1njS8PrFA/exec" 
-          allowfullscreen>
-  </iframe>
-  <script>
-  document.addEventListener('contextmenu', function(e) {
-    e.preventDefault();
-  });
-</script>
+
+  <!-- ايموجيز طايرة في الخلفية -->
+  <div class="floaters" aria-hidden="true">
+    <span>📚</span>
+    <span>📝</span>
+    <span>⏳</span>
+    <span>✨</span>
+    <span>📘</span>
+    <span>🎯</span>
+  </div>
+
+  <main class="card" role="main" aria-live="polite">
+    <div class="lottie-wrap">
+      <!-- مكتبة Lottie + الأنيميشن -->
+      <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.6.2/dist/dotlottie-wc.js" type="module"></script>
+      <dotlottie-wc
+        src="https://lottie.host/e230c999-9beb-417f-9942-e6b20ddeaafd/92qcMwMDan.lottie"
+        style="width: 100%; height: 100%"
+        speed="1"
+        autoplay
+        loop
+        aria-label="أنيميشن انتظار الواجب">
+      </dotlottie-wc>
+    </div>
+
+    <h1 class="title">لسّه معندكش امتحان دلوقتي</h1>
+    <p class="subtitle">ارجعلنا في وقت تاني — هينزل امتحان جديد قريب بإذن الله 😊</p>
+
+    <div class="tag">⏰ تلميح: تابع الصفحة كل فترة علشان ما يفوتكش الجديد</div>
+
+    <!-- زر اختياري: غير الرابط حسب ما تحب -->
+    <!-- <a class="btn" href="/">رجوع للصفحة الرئيسية</a> -->
+  </main>
+
 </body>
 </html>
