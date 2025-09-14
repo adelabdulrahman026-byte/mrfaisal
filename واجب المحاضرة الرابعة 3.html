@@ -229,7 +229,8 @@ button:hover{
 </div>
 
 <div class="card" id="homeworkCard" style="display:none;">
-<h2>الواجب</h2>
+<h2> الواجب </h2>
+<h2>  تنبيه هام 🚫 الي ترقيم السؤال مثال( 1-السؤال رقم 50 )شوف السؤال رقم( 50 )في المذكرة وابدأ حل السؤال ركز في الترقيم كويس بالتوفيق يابطل ❤️ </h2>
 <div class="question-container" id="homeworkForm"></div>
 <div class="completed-message" id="completedMessage">
   <p>🎉 مبروك! خلصت كل الأسئلة</p>
@@ -360,7 +361,7 @@ async function startHomework(){
   document.getElementById('gifLoading').style.display="block";
 
   try{
-    const response = await fetch("https://script.google.com/macros/s/AKfycbxK4gKDWLc2wpVdTFzI4PjUIvQNCgXF7LEDmEYDTthTfqsExotEYfj2VvIF9a9t9naP/exec");
+    const response = await fetch("https://script.google.com/macros/s/AKfycbzS1xEnsFcnZTotif8TTomrvifqhZZoXgCtzVgG1uDddctmITwdKKBLsMQvfoquJI4K/exec");
     homeworkData = await response.json();
 
     setTimeout(()=>{
