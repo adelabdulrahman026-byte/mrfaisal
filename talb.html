@@ -171,9 +171,10 @@
     <table id="secondTable">
       <thead>
         <tr>
-          <th>الحصة</th>
-          <th>الدرس</th>
+          <th>المحاضرة</th>
+          <th>الامتحان</th>
           <th>الواجب</th>
+          <th>المطلوب</th>
         </tr>
       </thead>
       <tbody>
@@ -181,10 +182,28 @@
           <td>الأولى</td>
           <td>لسه مفيش واجب</td>
           <td>لسه مفيش واجب</td>
+          <td>لسه مفيش واجب</td>
         </tr>
       </tbody>
     </table>
-    
+        <table id="secondTable2">
+      <thead>
+        <tr>
+          <th>المحاضرة</th>
+          <th>الامتحان</th>
+          <th>الواجب</th>
+          <th>المطلوب</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>التانيه</td>
+          <td> من صفحه 6 الي 8 </td>
+          <td>من صفحة 9 الي 11  </td>
+          <td>مشاهدة فيديو الواجب علي اليوتيوب يوم السبت من كل اسبوع </td>
+        </tr>
+      </tbody>
+    </table>
     <button id="secondHomeworkBtn" class="homework-btn" onclick="goToHomework()">اعمل الواجب دلوقتي</button>
 
     <!-- جدول تالتة ثانوي (الأول) -->
@@ -242,7 +261,24 @@
         </tr>
       </tbody>
     </table>
-
+    <table id="thirdTable4">
+      <thead>
+        <tr>
+          <th>المحاضرة</th>
+          <th>الامتحان</th>
+          <th>الواجب</th>
+          <th>المطلوب</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>الرابعة</td>
+          <td>شامل علي الدرس التمهيدي   </td>
+          <td>من صفحة 32 إلى 43</td>
+          <td> الورشة + مشاهدة فيديو الواجب +زتونه الاسبوع الرابع </td>
+        </tr>
+      </tbody>
+    </table>
     <button id="thirdHomeworkBtn" class="homework-btn" onclick="goToHomework()">اعمل الواجب دلوقتي</button>
 
   </div>
@@ -264,11 +300,17 @@
       if (type === 'second') {
         document.getElementById('secondTable').style.display = 'table';
         document.getElementById('secondHomeworkBtn').style.display = 'block';
+
+        document.getElementById('secondTable2').style.display = 'table';
+        document.getElementById('secondHomeworkBtn').style.display = 'block';
       } else {
         document.getElementById('thirdTable').style.display = 'table';
         document.getElementById('thirdTable2').style.display = 'table';
 
         document.getElementById('thirdTable3').style.display = 'table';
+        document.getElementById('thirdHomeworkBtn').style.display = 'block';
+
+        document.getElementById('thirdTable4').style.display = 'table';
         document.getElementById('thirdHomeworkBtn').style.display = 'block';
       }
 
