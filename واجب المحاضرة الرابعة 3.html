@@ -4,194 +4,488 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>3 ثانوي تسليم الواجب - مستر فيصل</title>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
-body{
-  font-family:'Cairo',sans-serif;
-  background:linear-gradient(to bottom,#fef9f3,#f1f0eb);
-  margin:0;padding:0;
-  display:flex;
-  justify-content:center;
-  align-items:flex-start;
-  min-height:100vh;
-  user-select:none;
+:root {
+  --primary: #6a11cb;
+  --secondary: #2575fc;
+  --accent: #ff6b6b;
+  --success: #1dd1a1;
+  --warning: #feca57;
+  --light: #f8f9fa;
+  --dark: #343a40;
+  --card-bg: #ffffff;
+  --text-primary: #2d3436;
+  --text-secondary: #636e72;
+  --shadow: 0 10px 30px rgba(0,0,0,0.1);
+  --gradient: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
 }
-.container{
-  width:95%;
-  max-width:850px;
-  margin-top:20px;
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
-.card{
-  background:#fff;
-  border-radius:20px;
-  padding:20px;
-  margin-bottom:20px;
-  box-shadow:0 15px 40px rgba(0,0,0,0.12);
-  animation:fadeIn 0.6s;
-}
-h2{
-  text-align:center;
-  color:#4a148c;
-  margin-bottom:15px;
-  font-size:24px;
-}
-input{
-  width:100%;
-  padding:14px;
-  margin:10px 0;
-  border-radius:12px;
-  border:1px solid #ccc;
-  font-size:16px;
-  transition:0.3s;
-}
-input:focus{
-  border-color:#4a148c;
-  outline:none;
-}
-button{
-  width:100%;
-  padding:14px;
-  margin:10px 0;
-  background:#4a148c;
-  color:#fff;
-  border:none;
-  border-radius:12px;
-  font-size:17px;
-  cursor:pointer;
-  transition:0.3s;
-  box-shadow:0 5px 15px rgba(0,0,0,0.1);
-}
-button:hover{
-  background:#6a1b9a;
-}
-#onlineSubmit{
-  background:#25D366;font-weight:bold;
-}
-#onlineSubmit:hover{
-  background:#1ebe5d;
-}
-#centerSubmit{
-  background:#4a148c;
-}
-#centerSubmit:hover{
-  background:#6a1b9a;
-}
-.question-container{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  flex-direction:column;
-  min-height:500px;
-}
-.question-card{
-  border:2px solid #d1c4e9;
-  background:#f9f5ff;
-  padding:20px;
-  border-radius:15px;
-  width:100%;
-  max-width:700px;
-  display:none;
-}
-.question-card.active{display:block;}
-.options label{
-  display:block;
-  margin:8px 0;
-  padding:10px;
-  background:#ede7f6;
-  border-radius:8px;
-  cursor:pointer;
-  transition:0.2s;
-}
-.options input{margin-left:10px;}
-.options input:checked + span{
-  background:#d1c4e9;
-  transform:scale(1.05);
-}
-.nav-buttons{
-  display:flex;
-  justify-content:space-between;
-  margin-top:15px;
-}
-#resultCard{display:none;}
-#qrContainer{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  margin-top:15px;
-  width:260px;
-  height:260px;
-  margin-left:auto;
-  margin-right:auto;
-}
-#studentInfo{
-  margin-top:10px;
-  font-size:16px;
-  text-align:center;
-  white-space:pre-line;
-}
-.correct{color:green;font-weight:bold;}
-.wrong{color:red;font-weight:bold;}
-#gifStart,#gifLoading{
-  display:none;
-  width:300px;
-  height:300px;
-  margin:0 auto;
-  text-align:center;
-}
-#gifMessage{
-  text-align:center;
-  font-weight:bold;
-  color:#4a148c;
-  margin-top:10px;
-  font-size:18px;
-}
-.privacy-container{
-  display:flex;
-  align-items:center;
-  margin:10px 0;
-}
-.privacy-container input[type=checkbox]{
-  margin-left:10px;
-  transform:scale(1.3);
-  cursor:pointer;
-}
-.privacy-container a{
-  color:#4a148c;
-  font-weight:bold;
-  text-decoration:none;
-}
-.exam-info {
-  text-align: center;
-  margin-top: 15px;
-  padding: 10px;
-  background-color: #f3e5f5;
-  border-radius: 10px;
-  font-weight: bold;
-}
-.exam-info p {
-  margin: 5px 0;
-  color: #4a148c;
-}
-.completed-message {
-  text-align: center;
+
+body {
+  font-family: 'Cairo', sans-serif;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  margin: 0;
   padding: 20px;
-  background-color: #e8f5e9;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  user-select: none;
+  color: var(--text-primary);
+  line-height: 1.6;
+}
+
+.container {
+  width: 100%;
+  max-width: 900px;
+  margin: 20px auto;
+}
+
+.card {
+  background: var(--card-bg);
+  border-radius: 20px;
+  padding: 30px;
+  margin-bottom: 25px;
+  box-shadow: var(--shadow);
+  animation: fadeIn 0.6s;
+  transition: transform 0.3s, box-shadow 0.3s;
+  border: none;
+  overflow: hidden;
+  position: relative;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: var(--gradient);
+}
+
+h2 {
+  text-align: center;
+  color: var(--primary);
+  margin-bottom: 20px;
+  font-size: 28px;
+  font-weight: 700;
+  position: relative;
+  padding-bottom: 15px;
+}
+
+h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 4px;
+  background: var(--gradient);
+  border-radius: 2px;
+}
+
+.input-group {
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.input-group i {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-secondary);
+  font-size: 18px;
+}
+
+input {
+  width: 100%;
+  padding: 16px 20px 16px 50px;
+  margin: 8px 0;
+  border-radius: 12px;
+  border: 2px solid #e0e0e0;
+  font-size: 16px;
+  transition: all 0.3s;
+  background: #f8f9fa;
+}
+
+input:focus {
+  border-color: var(--primary);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.1);
+  background: #fff;
+}
+
+button {
+  width: 100%;
+  padding: 16px;
+  margin: 10px 0;
+  background: var(--gradient);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: 0.5s;
+}
+
+button:hover::before {
+  left: 100%;
+}
+
+button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+#onlineSubmit {
+  background: linear-gradient(135deg, #25D366 0%, #1ebe5d 100%);
+}
+
+#onlineSubmit:hover {
+  background: linear-gradient(135deg, #1ebe5d 0%, #169c4b 100%);
+}
+
+#centerSubmit {
+  background: linear-gradient(135deg, var(--primary) 0%, #4a148c 100%);
+}
+
+#centerSubmit:hover {
+  background: linear-gradient(135deg, #4a148c 0%, #380a6d 100%);
+}
+
+.question-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  min-height: 500px;
+}
+
+.question-card {
+  border: 2px solid #d1c4e9;
+  background: #f9f5ff;
+  padding: 25px;
   border-radius: 15px;
-  margin: 20px 0;
+  width: 100%;
+  max-width: 700px;
+  display: none;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+  transition: all 0.3s;
+}
+
+.question-card.active {
+  display: block;
+  animation: slideIn 0.5s;
+}
+
+.question-card p {
+  font-size: 18px;
+  margin-bottom: 20px;
+  color: var(--text-primary);
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.options label {
+  display: flex;
+  align-items: center;
+  margin: 8px 0;
+  padding: 15px;
+  background: #ede7f6;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s;
+  border: 2px solid transparent;
+}
+
+.options label:hover {
+  background: #e1d5f7;
+  transform: translateX(5px);
+}
+
+.options input {
+  margin-left: 10px;
+  width: 20px;
+  height: 20px;
+}
+
+.options input:checked + span {
+  background: #d1c4e9;
+  transform: scale(1.02);
+  border-color: var(--primary);
+}
+
+.options span {
+  padding: 5px 10px;
+  border-radius: 8px;
+  transition: all 0.2s;
+  flex-grow: 1;
+}
+
+.nav-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 25px;
+  gap: 15px;
+}
+
+.nav-buttons button {
+  width: auto;
+  flex: 1;
+}
+
+#resultCard {
   display: none;
 }
+
+#qrContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 20px auto;
+  width: 260px;
+  height: 260px;
+  background: #fff;
+  border-radius: 15px;
+  padding: 15px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  border: 2px solid #e0e0e0;
+}
+
+#studentInfo {
+  margin-top: 15px;
+  font-size: 16px;
+  text-align: center;
+  white-space: pre-line;
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 12px;
+  line-height: 1.8;
+}
+
+.correct {
+  color: #1dd1a1;
+  font-weight: bold;
+}
+
+.wrong {
+  color: #ff6b6b;
+  font-weight: bold;
+}
+
+#gifStart, #gifLoading {
+  display: none;
+  width: 300px;
+  height: 300px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+#gifMessage {
+  text-align: center;
+  font-weight: bold;
+  color: var(--primary);
+  margin-top: 15px;
+  font-size: 20px;
+}
+
+.privacy-container {
+  display: flex;
+  align-items: center;
+  margin: 15px 0;
+  padding: 10px;
+  background: #f8f9fa;
+  border-radius: 10px;
+}
+
+.privacy-container input[type=checkbox] {
+  margin-left: 10px;
+  transform: scale(1.5);
+  cursor: pointer;
+}
+
+.privacy-container a {
+  color: var(--primary);
+  font-weight: bold;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+
+.privacy-container a:hover {
+  color: var(--secondary);
+  text-decoration: underline;
+}
+
+.exam-info {
+  text-align: center;
+  margin-top: 20px;
+  padding: 15px;
+  background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+  border-radius: 15px;
+  font-weight: bold;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.exam-info p {
+  margin: 8px 0;
+  color: var(--primary);
+  font-size: 16px;
+}
+
+.completed-message {
+  text-align: center;
+  padding: 25px;
+  background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+  border-radius: 15px;
+  margin: 25px 0;
+  display: none;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+  border: 2px solid #c5e1a5;
+}
+
 .completed-message p {
-  font-size: 18px;
+  font-size: 20px;
   color: #2e7d32;
   font-weight: bold;
   margin-bottom: 15px;
 }
+
 .submit-button-container {
   display: none;
-  margin-top: 20px;
+  margin-top: 25px;
 }
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+.important-note {
+  background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+  padding: 20px;
+  border-radius: 15px;
+  margin: 20px 0;
+  border: 2px solid #ffcc80;
+  text-align: center;
+  font-weight: 600;
+  color: #e65100;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.important-note h3 {
+  color: #e65100;
+  margin-bottom: 10px;
+  font-size: 20px;
+}
+
+.progress-bar {
+  width: 100%;
+  background: #e0e0e0;
+  height: 10px;
+  border-radius: 5px;
+  margin: 15px 0;
+  overflow: hidden;
+}
+
+.progress {
+  height: 100%;
+  background: var(--gradient);
+  border-radius: 5px;
+  transition: width 0.5s;
+}
+
+.question-counter {
+  text-align: center;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 15px;
+  font-size: 16px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { 
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+@media (max-width: 768px) {
+  .container {
+    width: 95%;
+    margin: 10px auto;
+  }
+  
+  .card {
+    padding: 20px;
+  }
+  
+  h2 {
+    font-size: 24px;
+  }
+  
+  .nav-buttons {
+    flex-direction: column;
+  }
+  
+  .question-card {
+    padding: 20px;
+  }
+}
 </style>
 </head>
 <body oncontextmenu="return false;">
@@ -212,37 +506,59 @@ button:hover{
 
 <div class="card" id="startCard">
 <h2>اختر نوع الطالب</h2>
-<button onclick="selectType('online')">📱 اونلاين</button>
-<button onclick="selectType('center')">🏫 سنتر</button>
+<button onclick="selectType('online')"><i class="fas fa-mobile-alt"></i> 📱 اونلاين</button>
+<button onclick="selectType('center')"><i class="fas fa-school"></i> 🏫 سنتر</button>
 </div>
 
 <div class="card" id="formCard" style="display:none;">
 <h2>املأ بياناتك</h2>
-<input type="text" id="studentName" placeholder="الاسم">
-<input type="text" id="studentMobile" placeholder="رقم الموبايل">
-<input type="text" id="centerCode" placeholder="كود السنتر" style="display:none;">
-<div class="privacy-container">
-<input type="checkbox" id="privacyCheck">
-<label for="privacyCheck">أوافق على <a href="https://www.mrfaisal.net/privacy.html" target="_blank">سياسة الخصوصية</a></label>
+<div class="input-group">
+  <i class="fas fa-user"></i>
+  <input type="text" id="studentName" placeholder="الاسم">
 </div>
-<button onclick="startHomework()">ابدأ الواجب</button>
+<div class="input-group">
+  <i class="fas fa-phone"></i>
+  <input type="text" id="studentMobile" placeholder="رقم الموبايل">
+</div>
+<div class="input-group" id="centerCodeGroup" style="display:none;">
+  <i class="fas fa-key"></i>
+  <input type="text" id="centerCode" placeholder="كود السنتر">
+</div>
+<div class="privacy-container">
+  <input type="checkbox" id="privacyCheck">
+  <label for="privacyCheck">أوافق على <a href="https://www.mrfaisal.net/privacy.html" target="_blank">سياسة الخصوصية</a></label>
+</div>
+<button onclick="startHomework()"><i class="fas fa-play"></i> ابدأ الواجب</button>
 </div>
 
 <div class="card" id="homeworkCard" style="display:none;">
 <h2> الواجب </h2>
-<h2>  تنبيه هام 🚫 الي ترقيم السؤال مثال( 1-السؤال رقم 50 )شوف السؤال رقم( 50 )في المذكرة وابدأ حل السؤال ركز في الترقيم كويس بالتوفيق يابطل ❤️ </h2>
+  
+<div class="important-note">
+  <h3><i class="fas fa-exclamation-circle"></i> تنبيه هام</h3>
+  <p>🚫 الي ترقيم السؤال مثال( 1-السؤال رقم 50 )شوف السؤال رقم( 50 )في المذكرة وابدأ حل السؤال ركز في الترقيم كويس بالتوفيق يابطل ❤️</p>
+</div>
+
+<div class="question-counter" id="questionCounter">السؤال 1 من 10</div>
+<div class="progress-bar">
+  <div class="progress" id="progressBar" style="width: 10%"></div>
+</div>
+
 <div class="question-container" id="homeworkForm"></div>
+
 <div class="completed-message" id="completedMessage">
-  <p>🎉 مبروك! خلصت كل الأسئلة</p>
-  <p>دلوقتي تقدر تسلم واجبك اضغط علي سلم الواجب علشان تاخد qr بتاعك </p>
+  <p><i class="fas fa-trophy"></i> مبروك! خلصت كل الأسئلة</p>
+  <p>دلوقتي تقدر تسلم واجبك اضغط علي سلم الواجب علشان تاخد qr بتاعك</p>
 </div>
+
 <div class="nav-buttons">
-  <button id="prevQuestion" onclick="prevQuestion()">السؤال السابق</button>
-  <button id="nextQuestion" onclick="nextQuestion()">التالي</button>
+  <button id="prevQuestion" onclick="prevQuestion()"><i class="fas fa-arrow-right"></i> السؤال السابق</button>
+  <button id="nextQuestion" onclick="nextQuestion()">التالي <i class="fas fa-arrow-left"></i></button>
 </div>
+
 <div class="submit-button-container" id="submitButtonContainer">
-  <button id="centerSubmit" style="display:none;" onclick="submitHomework()">سلم الواجب</button>
-  <button id="onlineSubmit" style="display:none;" onclick="submitOnline()">سلم واجبك أونلاين</button>
+  <button id="centerSubmit" style="display:none;" onclick="submitHomework()"><i class="fas fa-paper-plane"></i> سلم الواجب</button>
+  <button id="onlineSubmit" style="display:none;" onclick="submitOnline()"><i class="fas fa-laptop"></i> سلم واجبك أونلاين</button>
 </div>
 </div>
 
@@ -254,12 +570,14 @@ button:hover{
 
 <!-- معلومات ميعاد الامتحان -->
 <div class="exam-info">
-  <p>📅 تاريخ ووقت تسليم الواجب:</p>
+  <p><i class="far fa-calendar-alt"></i> تاريخ ووقت تسليم الواجب:</p>
   <p id="submissionDate"></p>
   <p id="submissionTime"></p>
 </div>
 
-<p style="text-align:center;font-weight:bold;color:#4a148c;margin-top:10px;"> ده QR بتاعك خده اسكرين شوت ضروري علشان لو انت طالب سنتر مش هتدخل الحصه الا بيه ولو انت طالب اونلاين انزل اخر الصفحة وابعتلنا الاسكرين علي الواتس اب ملحوظة خد ال QR سكرين شوت📱</p>
+<p style="text-align:center;font-weight:bold;color:var(--primary);margin-top:15px; line-height:1.6;">
+  <i class="fas fa-qrcode"></i> ده QR بتاعك خده اسكرين شوت ضروري علشان لو انت طالب سنتر مش هتدخل الحصه الا بيه ولو انت طالب اونلاين انزل اخر الصفحة وابعتلنا الاسكرين علي الواتس اب ملحوظة خد ال QR سكرين شوت📱
+</p>
 
 <!-- تصحيح الأسئلة -->
 <div id="answersReview"></div>
@@ -268,7 +586,7 @@ button:hover{
 <div id="studentInfo"></div>
 
 <!-- نصيحة الطالب -->
-<div id="advice" style="text-align:center;font-size:18px;margin-top:15px;color:#4a148c;font-weight:bold"></div>
+<div id="advice" style="text-align:center;font-size:18px;margin-top:15px;color:var(--primary);font-weight:bold"></div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/kjua@0.1.1/dist/kjua.min.js"></script>
@@ -345,7 +663,7 @@ function selectType(type){
   setTimeout(()=>{
     document.getElementById('gifStart').style.display="none";
     document.getElementById('formCard').style.display="block";
-    document.getElementById('centerCode').style.display = (type=="center")?"block":"none";
+    document.getElementById('centerCodeGroup').style.display = (type=="center")?"block":"none";
   },2000);
 }
 
@@ -383,6 +701,7 @@ async function startHomework(){
       document.getElementById('homeworkCard').style.display="block";
       showQuestion(0);
       updateNavigationButtons();
+      updateProgressBar();
     },800);
 
   }catch(e){
@@ -399,7 +718,14 @@ function showQuestion(index){
     cards[index].classList.add('active');
     currentQuestion=index;
     updateNavigationButtons();
+    updateProgressBar();
   }
+}
+
+function updateProgressBar() {
+  const progress = ((currentQuestion + 1) / homeworkData.length) * 100;
+  document.getElementById('progressBar').style.width = `${progress}%`;
+  document.getElementById('questionCounter').textContent = `السؤال ${currentQuestion + 1} من ${homeworkData.length}`;
 }
 
 function updateNavigationButtons() {
@@ -461,16 +787,21 @@ function generateResult(isOnline){
   const egyptDateTime = getEgyptDateTime();
 
   let score=0;
-  let reviewHTML="";
+  let reviewHTML="<h3 style='text-align:center; margin-bottom:20px;'>نتيجة التصحيح</h3>";
   homeworkData.forEach(q=>{
     let sel=document.querySelector(`input[name="q${q.number}"]:checked`);
     let studentAnswer=sel?sel.value:"لم تجب";
     let correct=q.correct;
     let correctClass=(studentAnswer===correct)?"correct":"wrong";
     if(correctClass==="correct") score++;
-    reviewHTML+=`<p><b>${q.number}.</b> ${q.text} <br>
-      اختيارك: <span class="${correctClass}">${studentAnswer}</span> | 
-      الإجابة الصحيحة: ${correct}</p>`;
+    
+    reviewHTML+=`
+      <div style="padding:15px; margin:10px 0; border-radius:10px; background:#f8f9fa;">
+        <p><b>${q.number}.</b> ${q.text}</p>
+        <p>اختيارك: <span class="${correctClass}">${studentAnswer}</span></p>
+        <p>الإجابة الصحيحة: <span style="color:green; font-weight:bold">${correct}</span></p>
+      </div>
+    `;
   });
 
   // إضافة معلومات التاريخ والوقت إلى QR Code
