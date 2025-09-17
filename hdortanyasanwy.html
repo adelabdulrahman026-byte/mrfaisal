@@ -5,94 +5,337 @@
   <title>عرض الحضور</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.6.2/dist/dotlottie-wc.js" type="module"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap');
+    
+    :root {
+      --primary: #7b1fa2;
+      --primary-light: #ba68c8;
+      --primary-dark: #4a0072;
+      --secondary: #f3e5f5;
+      --accent: #e1bee7;
+      --text: #4a4a4a;
+      --success: #4caf50;
+      --warning: #ff9800;
+      --error: #f44336;
+      --card-bg: #ffffff;
+      --card-shadow: rgba(123, 31, 162, 0.3);
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
     body {
       margin: 0;
       padding: 0;
       font-family: 'Cairo', sans-serif;
-      background: linear-gradient(145deg, #e0f7fa, #b2ebf2); /* أزرق سماوي */
+      background: linear-gradient(135deg, #8e24aa 0%, #7b1fa2 50%, #4a0072 100%);
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      overflow: hidden;
+      overflow-x: hidden;
+      color: var(--text);
+      position: relative;
     }
+    
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" opacity="0.05"><circle cx="50" cy="50" r="40" fill="white"/></svg>');
+      opacity: 0.1;
+    }
+    
     .top-lottie {
       width: 90%;
       max-width: 420px;
-      margin-bottom: -20px;
+      margin-bottom: -50px;
       position: relative;
       z-index: 3;
     }
+    
     .container {
-      background: #fff;
-      padding: 25px 20px;
-      border-radius: 20px;
-      box-shadow: 0 8px 24px rgba(0, 150, 136, 0.25); /* ظل أزرق مخضر */
+      background: var(--card-bg);
+      padding: 40px 25px 25px;
+      border-radius: 24px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.2);
       text-align: center;
       width: 90%;
-      max-width: 420px;
+      max-width: 450px;
       z-index: 2;
-      animation: popIn 1s ease;
+      animation: popIn 0.8s ease;
+      position: relative;
+      overflow: hidden;
     }
+    
+    .container::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 100%;
+      height: 5px;
+      background: linear-gradient(to right, var(--primary-light), var(--primary), var(--primary-dark));
+    }
+    
     @keyframes popIn {
-      from { transform: scale(0.9); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
+      0% { transform: scale(0.95) translateY(10px); opacity: 0; }
+      100% { transform: scale(1) translateY(0); opacity: 1; }
     }
-    h2 { 
-      color: #00796b; /* أزرق مخضر */
-      margin-bottom: 15px; 
-      font-size: 22px;
+    
+    .header {
+      margin-bottom: 20px;
+      position: relative;
     }
+    
+    .header::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      right: 50%;
+      transform: translateX(50%);
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(to right, var(--primary-light), var(--primary), var(--primary-light));
+      border-radius: 3px;
+    }
+    
+    h2 {
+      color: var(--primary-dark);
+      margin-bottom: 15px;
+      font-size: 24px;
+      font-weight: 700;
+    }
+    
+    .teacher-name {
+      color: var(--primary);
+      background: rgba(186, 104, 200, 0.15);
+      padding: 8px 18px;
+      border-radius: 50px;
+      display: inline-block;
+      margin-top: 5px;
+      font-weight: 600;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    }
+    
+    .input-group {
+      position: relative;
+      margin: 25px 0;
+    }
+    
     input[type="text"] {
       width: 100%;
-      padding: 12px;
-      margin: 15px 0;
-      border-radius: 12px;
-      border: 2px solid #4dd0e1; /* سماوي فاتح */
+      padding: 16px 20px 16px 45px;
+      border-radius: 14px;
+      border: 2px solid var(--primary-light);
       font-size: 16px;
+      font-family: 'Cairo', sans-serif;
+      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
     }
-    input[type="submit"] {
-      background: #0097a7; /* أزرق سماوي داكن */
+    
+    input[type="text"]:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(123, 31, 162, 0.2);
+    }
+    
+    .input-icon {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--primary-light);
+      font-size: 18px;
+    }
+    
+    button {
+      background: linear-gradient(to left, var(--primary), var(--primary-dark));
       color: white;
       border: none;
-      padding: 12px;
-      border-radius: 12px;
+      padding: 16px 24px;
+      border-radius: 14px;
       font-size: 17px;
+      font-weight: 600;
       cursor: pointer;
-      transition: background 0.3s ease;
+      transition: all 0.3s ease;
+      width: 100%;
+      font-family: 'Cairo', sans-serif;
+      box-shadow: 0 6px 12px rgba(123, 31, 162, 0.3);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
     }
-    input[type="submit"]:hover { background: #00796b; }
+    
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(123, 31, 162, 0.4);
+    }
+    
+    button:active {
+      transform: translateY(0);
+    }
+    
     .loading-screen {
       position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: #ffffffee;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.95);
       display: none;
       justify-content: center;
       align-items: center;
       z-index: 9999;
       flex-direction: column;
+      backdrop-filter: blur(5px);
     }
+    
     .loading-text {
       font-size: 20px;
-      color: #00695c;
+      color: var(--primary-dark);
       font-weight: bold;
-      margin-top: 10px;
+      margin-top: 15px;
     }
+    
     .result-card {
-      background: #e0f2f1; /* أزرق مخضر فاتح */
-      padding: 20px;
-      border-radius: 15px;
-      margin-top: 20px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      background: linear-gradient(to bottom, #f3e5f5, #e8f5e9);
+      padding: 25px;
+      border-radius: 18px;
+      margin-top: 25px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
       animation: fadeIn 0.5s ease;
+      text-align: right;
+      border: 1px solid rgba(186, 104, 200, 0.3);
     }
+    
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
+      from { opacity: 0; transform: translateY(15px); }
       to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .result-header {
+      color: var(--primary-dark);
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px dashed var(--primary-light);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      justify-content: center;
+    }
+    
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(186, 104, 200, 0.2);
+    }
+    
+    .info-row:last-child {
+      border-bottom: none;
+    }
+    
+    .info-label {
+      font-weight: 600;
+      color: var(--primary-dark);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .info-value {
+      font-weight: 700;
+      color: var(--text);
+    }
+    
+    .attendance-badge {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    
+    .present {
+      background: rgba(76, 175, 80, 0.15);
+      color: var(--success);
+    }
+    
+    .absent {
+      background: rgba(244, 67, 54, 0.15);
+      color: var(--error);
+    }
+    
+    .error-card {
+      background: rgba(244, 67, 54, 0.08);
+      border: 1px solid rgba(244, 67, 54, 0.2);
+      color: var(--error);
+      padding: 20px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-weight: 600;
+    }
+    
+    .connection-error {
+      background: rgba(255, 152, 0, 0.08);
+      border: 1px solid rgba(255, 152, 0, 0.2);
+      color: var(--warning);
+    }
+    
+    .footer {
+      margin-top: 20px;
+      font-size: 14px;
+      color: var(--primary-light);
+    }
+    
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+    
+    @media (max-width: 480px) {
+      .container {
+        padding: 35px 20px 20px;
+      }
+      
+      h2 {
+        font-size: 22px;
+      }
+      
+      input[type="text"] {
+        padding: 14px 16px 14px 40px;
+      }
+      
+      .result-card {
+        padding: 20px;
+      }
+      
+      .info-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+      }
     }
   </style>
 </head>
@@ -109,23 +352,39 @@
   </div>
 
   <div class="container">
-    <h2>الحضور خاص بـ <strong>مستر فيصل</strong></h2>
+    <div class="header">
+      <h2>نظام متابعة الحضور والغياب</h2>
+      <div class="teacher-name">مستر فيصل</div>
+    </div>
+    
     <form id="attendanceForm">
-      <input type="text" id="studentId" placeholder="🔑 أدخل كود الطالب" required>
-      <input type="submit" value="📊 عرض الحضور">
+      <div class="input-group">
+        <i class="input-icon fas fa-key"></i>
+        <input type="text" id="studentId" placeholder="أدخل كود الطالب" required>
+      </div>
+      
+      <button type="submit" class="pulse">
+        <i class="fas fa-chart-bar"></i>
+        عرض الحضور
+      </button>
     </form>
+    
     <div id="result"></div>
+    
+    <div class="footer">
+      نظام آمن لحماية بيانات الطلاب © 2026
+    </div>
   </div>
 
   <div class="loading-screen" id="loadingScreen">
     <dotlottie-wc
       src="https://lottie.host/5094a892-ffb3-4075-b0eb-3434638a0404/ZLCk22UywK.lottie"
-      style="width: 100%; max-width: 300px; margin: 0 auto;"
+      style="width: 100%; max-width: 280px; margin: 0 auto;"
       speed="1"
       autoplay
       loop>
     </dotlottie-wc>
-    <div class="loading-text">جاري تحميل الحضور... ✅</div>
+    <div class="loading-text">جاري تحميل بيانات الحضور...</div>
   </div>
 
   <script>
@@ -140,27 +399,68 @@
       loadingScreen.style.display = "flex";
 
       const id = document.getElementById("studentId").value.trim();
+      
       try {
+        // إضافة تأخير بسيط لإظهار رسالة التحميل (لأغراض العرض)
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        
         const res = await fetch(`${API_URL}?id=${encodeURIComponent(id)}`);
         const data = await res.json();
         loadingScreen.style.display = "none";
 
         if (data.found) {
+          // دالة مساعدة لتحديد حالة الحضور وإرجاع الكلاس المناسب
+          const getAttendanceStatus = (status) => {
+            return status && status.toLowerCase().includes('حاضر') ? 'present' : 'absent';
+          };
+          
+          // دالة مساعدة لإنشاء عنصر الحضور
+          const createAttendanceBadge = (status, text) => {
+            const statusClass = getAttendanceStatus(status);
+            return `<span class="attendance-badge ${statusClass}">${text || 'لم تسجل'}</span>`;
+          };
+
           resultDiv.innerHTML = `
             <div class="result-card">
-              <h3>📋 حضور الطالب</h3>
-              <p><strong>👦 اسم الطالب:</strong> ${data.name}</p>
-              <p><strong>🧭 السنتر:</strong> ${data.geo}</p>
-              <p><strong>📅الحصه الاولي:</strong> ${data.week1}</p>
-              <p><strong>📅الحصه الثانيه:</strong> ${data.week2}</p>
+              <h3 class="result-header"><i class="fas fa-user-graduate"></i> سجل حضور الطالب</h3>
+              
+              <div class="info-row">
+                <span class="info-label"><i class="fas fa-user"></i> اسم الطالب:</span>
+                <span class="info-value">${data.name}</span>
+              </div>
+              
+              <div class="info-row">
+                <span class="info-label"><i class="fas fa-map-marker-alt"></i> السنتر:</span>
+                <span class="info-value">${data.geo}</span>
+              </div>
+              
+              <div class="info-row">
+                <span class="info-label"><i class="fas fa-calendar-week"></i> الحصة الأولى:</span>
+                ${createAttendanceBadge(data.week1, data.week1)}
+              </div>
+              
+              <div class="info-row">
+                <span class="info-label"><i class="fas fa-calendar-week"></i> الحصة الثانية:</span>
+                ${createAttendanceBadge(data.week2, data.week2)}
+              </div>
             </div>
           `;
         } else {
-          resultDiv.innerHTML = `<div class="result-card" style="color:red;">❌ ${data.error}</div>`;
+          resultDiv.innerHTML = `
+            <div class="error-card">
+              <i class="fas fa-exclamation-circle"></i>
+              ${data.error || 'كود الطالب غير صحيح'}
+            </div>
+          `;
         }
       } catch (err) {
         loadingScreen.style.display = "none";
-        resultDiv.innerHTML = `<div class="result-card" style="color:red;">⚠️ خطأ في الاتصال</div>`;
+        resultDiv.innerHTML = `
+          <div class="error-card connection-error">
+            <i class="fas fa-wifi"></i>
+            خطأ في الاتصال بالشبكة
+          </div>
+        `;
       }
     });
   </script>
