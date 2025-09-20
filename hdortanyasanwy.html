@@ -388,7 +388,7 @@
   </div>
 
   <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbwTtbhc9rO9FAkPoeHIq3VwI0rkE8lb1j_cRafZdAG6U-GUvoAQiLZ3iis-U_GHh2_rqg/exec";
+    const API_URL = "https://script.google.com/macros/s/AKfycbzpnzC1OHXoa3hC5IbDX37DSfc6jIc5JJ3-WcI9o-LwPAel2Yj624jMi8uspZSXxzugfQ/exec";
     const form = document.getElementById("attendanceForm");
     const loadingScreen = document.getElementById("loadingScreen");
     const resultDiv = document.getElementById("result");
@@ -436,14 +436,23 @@
               
               <div class="info-row">
                 <span class="info-label"><i class="fas fa-calendar-week"></i> الحصة الأولى:</span>
-                ${createAttendanceBadge(data.week1, data.week1)}
+                ${createAttendanceBadge(data.week1, data.week1 || 'لم تسجل')}
               </div>
               
               <div class="info-row">
                 <span class="info-label"><i class="fas fa-calendar-week"></i> الحصة الثانية:</span>
-                ${createAttendanceBadge(data.week2, data.week2)}
+                ${createAttendanceBadge(data.week2, data.week2 || 'لم تسجل')}
               </div>
-            </div>
+              
+              <div class="info-row">
+                <span class="info-label"><i class="fas fa-calendar-week"></i> الحصة الثالثة:</span>
+                ${createAttendanceBadge(data.week3, data.week3 || 'لم تسجل')}
+              </div>
+              
+              <div class="info-row">
+                <span class="info-label"><i class="fas fa-calendar-week"></i> الحصة الرابعة:</span>
+                ${createAttendanceBadge(data.week4, data.week4 || 'لم تسجل')}
+              </div>
           `;
         } else {
           resultDiv.innerHTML = `
