@@ -167,139 +167,165 @@
       <button class="option-btn" onclick="showTable('third')">تالتة ثانوي</button>
     </div>
 
-    <!-- جدول تانية ثانوي -->
-    <table id="secondTable">
-      <thead>
-        <tr>
-          <th>المحاضرة</th>
-          <th>الامتحان</th>
-          <th>الواجب</th>
-          <th>المطلوب</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>الأولى</td>
-          <td>لسه مفيش واجب</td>
-          <td>لسه مفيش واجب</td>
-          <td>لسه مفيش واجب</td>
-        </tr>
-      </tbody>
-    </table>
-        <table id="secondTable2">
-      <thead>
-        <tr>
-          <th>المحاضرة</th>
-          <th>الامتحان</th>
-          <th>الواجب</th>
-          <th>المطلوب</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>التانيه</td>
-          <td> من صفحه 6 الي 8 </td>
-          <td>من صفحة 9 الي 11  </td>
-          <td>مشاهدة فيديو الواجب علي اليوتيوب يوم السبت من كل اسبوع </td>
-        </tr>
-      </tbody>
-    </table>
-    <button id="secondHomeworkBtn" class="homework-btn" onclick="goToHomework()">اعمل الواجب دلوقتي</button>
+    <!-- قسم تانية ثانوي -->
+    <div id="secondSection" style="display: none;">
+      <table id="secondTable">
+        <thead>
+          <tr>
+            <th>المحاضرة</th>
+            <th>الامتحان</th>
+            <th>الواجب</th>
+            <th>المطلوب</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>الأولى</td>
+            <td>لسه مفيش واجب</td>
+            <td>لسه مفيش واجب</td>
+            <td>لسه مفيش واجب</td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <table id="secondTable2">
+        <thead>
+          <tr>
+            <th>المحاضرة</th>
+            <th>الامتحان</th>
+            <th>الواجب</th>
+            <th>المطلوب</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>التانية</td>
+            <td> من صفحه 6 الي 8 </td>
+            <td>من صفحة 9 الي 11  </td>
+            <td>مشاهدة فيديو الواجب علي اليوتيوب يوم السبت من كل اسبوع </td>
+          </tr>
+        </tbody>
+      </table>
 
-    <!-- جدول تالتة ثانوي (الأول) -->
-    <table id="thirdTable">
-      <thead>
-        <tr>
-          <th>المحاضرة</th>
-          <th>الامتحان</th>
-          <th>الواجب</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>الأولى</td>
-          <td>علي ما تم اخذه في الحصه</td>
-          <td>من صفحة 2 إلى 14</td>
-        </tr>
-      </tbody>
-    </table>
+      <table id="secondTable3">
+        <thead>
+          <tr>
+            <th>المحاضرة</th>
+            <th>الامتحان</th>
+            <th>الواجب</th>
+            <th>المطلوب</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>الثالثه</td>
+            <td> من اول الدرس الاول صفحه 13 </td>
+            <td>من صفحة 14 الي 18  </td>
+            <td>مشاهدة فيديو الواجب علي اليوتيوب يوم السبت من كل اسبوع </td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <button id="secondHomeworkBtn" class="homework-btn" onclick="goToHomework()">اعمل الواجب دلوقتي</button>
+    </div>
 
-    <table id="thirdTable2">
-      <thead>
-        <tr>
-          <th>المحاضرة</th>
-          <th>الامتحان</th>
-          <th>الواجب</th>
-          <th>المطلوب</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>الثانية</td>
-          <td>من اول الدرس التمهيدي حتي نهاية راتزل  </td>
-          <td>من صفحة 15 إلى 22</td>
-          <td>   مشاهدة فيديو الواجب +زتونه الاسبوع الثاني </td>
-        </tr>
-      </tbody>
-    </table>
+    <!-- قسم تالتة ثانوي -->
+    <div id="thirdSection" style="display: none;">
+      <table id="thirdTable">
+        <thead>
+          <tr>
+            <th>المحاضرة</th>
+            <th>الامتحان</th>
+            <th>الواجب</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>الأولى</td>
+            <td>علي ما تم اخذه في الحصه</td>
+            <td>من صفحة 2 إلى 14</td>
+          </tr>
+        </tbody>
+      </table>
 
-    <table id="thirdTable3">
-      <thead>
-        <tr>
-          <th>المحاضرة</th>
-          <th>الامتحان</th>
-          <th>الواجب</th>
-          <th>المطلوب</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>الثالثه</td>
-          <td>من اول الدرس التمهيدي حتي نهاية الاهداف  </td>
-          <td>من صفحة 23 إلى 31</td>
-          <td>   مشاهدة فيديو الواجب +زتونه الاسبوع الثالث </td>
-        </tr>
-      </tbody>
-    </table>
-    <table id="thirdTable4">
-      <thead>
-        <tr>
-          <th>المحاضرة</th>
-          <th>الامتحان</th>
-          <th>الواجب</th>
-          <th>المطلوب</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>الرابعة</td>
-          <td>شامل علي الدرس التمهيدي   </td>
-          <td>من صفحة 32 إلى 43</td>
-          <td> الورشة + مشاهدة فيديو الواجب +زتونه الاسبوع الرابع </td>
-        </tr>
-      </tbody>
-    </table>
-    <button id="thirdHomeworkBtn" class="homework-btn" onclick="goToHomework()">اعمل الواجب دلوقتي</button>
+      <table id="thirdTable2">
+        <thead>
+          <tr>
+            <th>المحاضرة</th>
+            <th>الامتحان</th>
+            <th>الواجب</th>
+            <th>المطلوب</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>الثانية</td>
+            <td>من اول الدرس التمهيدي حتي نهاية راتزل  </td>
+            <td>من صفحة 15 إلى 22</td>
+            <td>   مشاهدة فيديو الواجب +زتونه الاسبوع الثاني </td>
+          </tr>
+        </tbody>
+      </table>
 
-    <table id="thirdTable5">
-      <thead>
-        <tr>
-          <th>المحاضرة</th>
-          <th>الامتحان</th>
-          <th>الواجب</th>
-          <th>المطلوب</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>الخامسة</td>
-          <td>علي الدولة والامة والدولة الوحدوية  </td>
-          <td>من صفحة 44 إلى 52</td>
-          <td> مشاهدة فيديو الواجب +زتونه الاسبوع الخامس </td>
-        </tr>
-      </tbody>
-    </table>
-    <button id="thirdHomeworkBtn" class="homework-btn" onclick="goToHomework()">اعمل الواجب دلوقتي</button>
+      <table id="thirdTable3">
+        <thead>
+          <tr>
+            <th>المحاضرة</th>
+            <th>الامتحان</th>
+            <th>الواجب</th>
+            <th>المطلوب</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>الثالثه</td>
+            <td>من اول الدرس التمهيدي حتي نهاية الاهداف  </td>
+            <td>من صفحة 23 إلى 31</td>
+            <td>   مشاهدة فيديو الواجب +زتونه الاسبوع الثالث </td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <table id="thirdTable4">
+        <thead>
+          <tr>
+            <th>المحاضرة</th>
+            <th>الامتحان</th>
+            <th>الواجب</th>
+            <th>المطلوب</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>الرابعة</td>
+            <td>شامل علي الدرس التمهيدي   </td>
+            <td>من صفحة 32 إلى 43</td>
+            <td> الورشة + مشاهدة فيديو الواجب +زتونه الاسبوع الرابع </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table id="thirdTable5">
+        <thead>
+          <tr>
+            <th>المحاضرة</th>
+            <th>الامتحان</th>
+            <th>الواجب</th>
+            <th>المطلوب</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>الخامسة</td>
+            <td>علي الدولة والامة والدولة الوحدوية  </td>
+            <td>من صفحة 44 إلى 52</td>
+            <td> مشاهدة فيديو الواجب +زتونه الاسبوع الخامس </td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <button id="thirdHomeworkBtn" class="homework-btn" onclick="goToHomework()">اعمل الواجب دلوقتي</button>
+    </div>
 
   </div>
 
@@ -309,45 +335,45 @@
     }
 
     function showTable(type) {
-      // إخفاء الجداول والأزرار
-      document.getElementById('secondTable').style.display = 'none';
-      document.getElementById('thirdTable').style.display = 'none';
-      document.getElementById('thirdTable2').style.display = 'none';
-      document.getElementById('secondHomeworkBtn').style.display = 'none';
-      document.getElementById('thirdHomeworkBtn').style.display = 'none';
-
-      // إظهار الجدول والزر المناسب
+      // إخفاء جميع الأقسام أولاً
+      document.getElementById('secondSection').style.display = 'none';
+      document.getElementById('thirdSection').style.display = 'none';
+      
+      // إظهار القسم المطلوب
       if (type === 'second') {
+        document.getElementById('secondSection').style.display = 'block';
+        
+        // إظهار جميع جداول تانية ثانوي
         document.getElementById('secondTable').style.display = 'table';
-        document.getElementById('secondHomeworkBtn').style.display = 'block';
-
         document.getElementById('secondTable2').style.display = 'table';
+        document.getElementById('secondTable3').style.display = 'table';
         document.getElementById('secondHomeworkBtn').style.display = 'block';
+        
+        // التمرير لأسفل لرؤية الجداول
+        setTimeout(() => {
+          document.getElementById('secondSection').scrollIntoView({ behavior: 'smooth' });
+        }, 300);
       } else {
+        document.getElementById('thirdSection').style.display = 'block';
+        
+        // إظهار جميع جداول تالتة ثانوي
         document.getElementById('thirdTable').style.display = 'table';
         document.getElementById('thirdTable2').style.display = 'table';
-
         document.getElementById('thirdTable3').style.display = 'table';
-        document.getElementById('thirdHomeworkBtn').style.display = 'block';
-
         document.getElementById('thirdTable4').style.display = 'table';
-        
         document.getElementById('thirdTable5').style.display = 'table';
-        document.getElementById('thirdHomeworkBtn').style.display = 'block';  
+        document.getElementById('thirdHomeworkBtn').style.display = 'block';
+        
+        // التمرير لأسفل لرؤية الجداول
+        setTimeout(() => {
+          document.getElementById('thirdSection').scrollIntoView({ behavior: 'smooth' });
+        }, 300);
       }
-
-      // التمرير لأسفل لرؤية الجدول
-      setTimeout(() => {
-        const element = (type === 'second') ? 
-          document.getElementById('secondTable') : 
-          document.getElementById('thirdTable');
-        element.scrollIntoView({ behavior: 'smooth' });
-      }, 300);
     }
     
     function goToHomework() {
       // الانتقال إلى صفحة الواجب
-      window.location.href = "https://www.mrfaisal.net/hw.html";
+      window.location.href = "https://www.mrfaisal.net/hw";
     }
     
     document.addEventListener('contextmenu', function(e) {
