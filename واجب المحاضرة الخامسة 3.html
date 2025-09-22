@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>3 ثانوي تسليم الواجب - مستر فيصل</title>
+<title> ثانوي تسليم الواجب - مستر فيصل</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
@@ -222,6 +222,14 @@ button:active {
   color: var(--text-primary);
   font-weight: 600;
   line-height: 1.5;
+}
+
+.question-image {
+  max-width: 100%;
+  margin: 15px 0;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  display: block;
 }
 
 .options {
@@ -689,7 +697,17 @@ async function startHomework(){
       homeworkData.forEach((q,i)=>{
         let div=document.createElement("div");
         div.className="question-card";
-        div.innerHTML=`<p><b>${q.number}.</b> ${q.text}</p>`;
+        
+        // بناء محتوى السؤال مع إمكانية وجود صورة
+        let questionContent = `<p><b>${q.number}.</b> ${q.text}</p>`;
+        
+        // إذا كان هناك رابط صورة في العمود الثالث، نضيف الصورة
+        if (q.image && q.image.trim() !== '') {
+          questionContent += `<img src="${q.image}" alt="صورة السؤال ${q.number}" class="question-image" onerror="this.style.display='none'">`;
+        }
+        
+        div.innerHTML = questionContent;
+        
         let optsDiv=document.createElement("div");
         optsDiv.className="options";
         q.options.forEach(opt=>{
@@ -795,17 +813,28 @@ function generateResult(isOnline){
     let correctClass=(studentAnswer===correct)?"correct":"wrong";
     if(correctClass==="correct") score++;
     
-    reviewHTML+=`
+    // بناء محتوى مراجعة السؤال مع إمكانية وجود صورة
+    let questionReviewContent = `
       <div style="padding:15px; margin:10px 0; border-radius:10px; background:#f8f9fa;">
         <p><b>${q.number}.</b> ${q.text}</p>
+    `;
+    
+    // إذا كان هناك صورة للسؤال، نضيفها في المراجعة
+    if (q.image && q.image.trim() !== '') {
+      questionReviewContent += `<img src="${q.image}" alt="صورة السؤال ${q.number}" style="max-width:100%; margin:10px 0; border-radius:8px;" onerror="this.style.display='none'">`;
+    }
+    
+    questionReviewContent += `
         <p>اختيارك: <span class="${correctClass}">${studentAnswer}</span></p>
         <p>الإجابة الصحيحة: <span style="color:green; font-weight:bold">${correct}</span></p>
       </div>
     `;
+    
+    reviewHTML += questionReviewContent;
   });
 
   // إضافة معلومات التاريخ والوقت إلى QR Code
-  studentQR = `📚  تالته ثانوي واجب المحاضرة الخامسة\n✅ الطالب: ${name}\n📱: ${mobile}\n🏷 النوع: ${studentType}\n📊 الدرجة: ${score}/${homeworkData.length}\n📅 تاريخ التسليم: ${egyptDateTime.date}\n⏰ ${egyptDateTime.time}\n🔖 كود فريد: ${Math.random().toString(36).substring(2,10)}`;
+  studentQR = `📚 واجب المحاضرة الخامسة تالته ثانوي\n✅ الطالب: ${name}\n📱: ${mobile}\n🏷 النوع: ${studentType}\n📊 الدرجة: ${score}/${homeworkData.length}\n📅 تاريخ التسليم: ${egyptDateTime.date}\n⏰ ${egyptDateTime.time}\n🔖 كود فريد: ${Math.random().toString(36).substring(2,10)}`;
 
   document.getElementById('homeworkCard').style.display="none";
   document.getElementById('resultCard').style.display="block";
