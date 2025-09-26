@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام الواجبات - MrFaisal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        .header {
+            background: linear-gradient(to right, #8e2de2, #4a00e0);
+            padding: 50px 30px;
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 60%);
+            transform: rotate(30deg);
+        }
+        
+        h1 {
+            font-size: 42px;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+        
+        .subtitle {
+            font-size: 18px;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+        
+        .option-card {
+            background: linear-gradient(145deg, #ffffff, #f3f3f3);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s ease;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        
+        .option-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, #ff8a00, #da1b60);
+        }
+        
+        .option-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+        
+        .option-card:nth-child(2)::before {
+            background: linear-gradient(to right, #00b4db, #0083b0);
+        }
+        
+        .option-icon {
+            font-size: 60px;
+            margin-bottom: 25px;
+            background: linear-gradient(to right, #8e2de2, #4a00e0);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .option-card:hover .option-icon {
+            transform: scale(1.1);
+        }
+        
+        .option-card:nth-child(2) .option-icon {
+            background: linear-gradient(to right, #00b4db, #0083b0);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .option-title {
+            font-size: 26px;
+            margin-bottom: 15px;
+            color: #333;
+            transition: all 0.3s ease;
+        }
+        
+        .option-card:hover .option-title {
+            background: linear-gradient(to right, #8e2de2, #4a00e0);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .option-card:nth-child(2):hover .option-title {
+            background: linear-gradient(to right, #00b4db, #0083b0);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .option-desc {
+            color: #666;
+            margin-bottom: 25px;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        
+        .option-btn {
+            display: inline-block;
+            padding: 14px 35px;
+            background: linear-gradient(to right, #8e2de2, #4a00e0);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(142, 45, 226, 0.3);
+        }
+        
+        .option-card:nth-child(2) .option-btn {
+            background: linear-gradient(to right, #00b4db, #0083b0);
+            box-shadow: 0 5px 15px rgba(0, 180, 219, 0.3);
+        }
+        
+        .option-btn:hover {
+            transform: scale(1.08);
+            box-shadow: 0 8px 20px rgba(142, 45, 226, 0.4);
+        }
+        
+        .option-card:nth-child(2) .option-btn:hover {
+            box-shadow: 0 8px 20px rgba(0, 180, 219, 0.4);
+        }
+        
+        .footer {
+            padding: 25px;
+            background: #2c0365;
+            color: white;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .footer p {
+            margin: 5px 0;
+            font-size: 15px;
+        }
+        
+        .decoration {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .decoration span {
+            position: absolute;
+            display: block;
+            width: 20px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 15s linear infinite;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100px) rotate(720deg); opacity: 0; }
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 32px;
+            }
+            
+            .content {
+                padding: 25px;
+            }
+            
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="decoration">
+        <span style="left: 5%; animation-delay: 0s;"></span>
+        <span style="left: 15%; animation-delay: 2s;"></span>
+        <span style="left: 25%; animation-delay: 4s;"></span>
+        <span style="left: 35%; animation-delay: 6s;"></span>
+        <span style="left: 45%; animation-delay: 8s;"></span>
+        <span style="left: 55%; animation-delay: 10s;"></span>
+        <span style="left: 65%; animation-delay: 12s;"></span>
+        <span style="left: 75%; animation-delay: 14s;"></span>
+        <span style="left: 85%; animation-delay: 16s;"></span>
+        <span style="left: 95%; animation-delay: 18s;"></span>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-tasks"></i> نظام الواجبات</h1>
+            <p class="subtitle">اختر الواجب </p>
+        </div>
+        
+        <div class="content">
+            <div class="options-grid">
+                <div class="option-card" onclick="window.location.href='https://www.mrfaisal.net/%D9%88%D8%A7%D8%AC%D8%A8%20%D8%A7%D9%84%D9%85%D8%AD%D8%A7%D8%B6%D8%B1%D8%A9%20%D8%A7%D9%84%D8%A7%D9%88%D9%84%D9%8A%20%D8%AA%D8%A7%D9%86%D9%8A%D9%87'">
+                    <div class="option-icon">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <h2 class="option-title">واجب المحاضرة الأولى</h2>
+                    <p class="option-desc"> من صفحه 6 الي 8  </p>
+                    <button class="option-btn">عرض الواجب</button>
+                </div>
+                
+                <div class="option-card" onclick="window.location.href='https://www.mrfaisal.net/hwwait'">
+                    <div class="option-icon">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                    </div>
+                    <h2 class="option-title">واجب المحاضرة الثانية</h2>
+                    <p class="option-desc">من صفحة 14 الي 18</p>
+                    <button class="option-btn">عرض الواجب</button>
+                </div>
+        </div>
+        
+        <div class="footer">
+            <p>جميع الحقوق محفوظة &copy; 2026 - MrFaisal</p>
+        </div>
+    </div>
+
+    <script>
+        // إنشاء فقاعات عشوائية للخلفية
+        function createBubbles() {
+            const decoration = document.querySelector('.decoration');
+            for (let i = 0; i < 15; i++) {
+                const bubble = document.createElement('span');
+                bubble.style.left = Math.random() * 100 + '%';
+                bubble.style.animationDelay = Math.random() * 20 + 's';
+                bubble.style.width = (Math.random() * 15 + 5) + 'px';
+                bubble.style.height = bubble.style.width;
+                decoration.appendChild(bubble);
+            }
+        }
+        
+        createBubbles();
+    </script>
+</body>
+</html>
