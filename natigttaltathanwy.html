@@ -329,7 +329,7 @@
   </div>
 
   <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbzX6_XgE8jIfzGtdVrUM_RaUrBXCVqIKK9wWNLxdg24oR3ewyBaBUkyHG3eaT8P7mk/exec";
+    const API_URL = "https://script.google.com/macros/s/AKfycbxS3iN1tUzCprAHjM7NoZkHyefFCnZjuNS4E3SihTCQ4dxls89wJzbPw_BsjYmsGmlM/exec";
     const form = document.getElementById("attendanceForm");
     const loadingScreen = document.getElementById("loadingScreen");
     const resultDiv = document.getElementById("result");
@@ -418,8 +418,38 @@
                   <i class="fas fa-calendar-week"></i>
                 </div>
                 <div class="result-content">
-                  <div class="result-label">امتحان الحصه الخامسة</div>
+                  <div class="result-label">امتحان الحصه الاولي في الشهر الثاني</div>
                   <div class="result-value">${data.week5} <span class="week-score"> في الامتحان الشامل</span></div>
+                </div>
+              </div>
+              
+              <div class="result-item">
+                <div class="result-icon">
+                  <i class="fas fa-calendar-week"></i>
+                </div>
+                <div class="result-content">
+                  <div class="result-label">امتحان الحصه الثانية في الشهر الثاني</div>
+                  <div class="result-value">${data.week6} <span class="week-score">في الامتحان</span></div>
+                </div>
+              </div>
+
+              <div class="result-item">
+                <div class="result-icon">
+                  <i class="fas fa-calendar-week"></i>
+                </div>
+                <div class="result-content">
+                  <div class="result-label">امتحان الحصه الثالثه في الشهر الثاني</div>
+                  <div class="result-value">${data.week7} <span class="week-score"> في الامتحان الشامل</span></div>
+                </div>
+              </div>
+              
+              <div class="result-item">
+                <div class="result-icon">
+                  <i class="fas fa-calendar-week"></i>
+                </div>
+                <div class="result-content">
+                  <div class="result-label">امتحان الحصه الرابعه في الشهر الثاني</div>
+                  <div class="result-value">${data.week8} <span class="week-score">في الامتحان</span></div>
                 </div>
               </div>
             </div>
