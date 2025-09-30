@@ -25,7 +25,7 @@
         
         .container {
             width: 100%;
-            max-width: 800px;
+            max-width: 1200px;
             background: rgba(255, 255, 255, 0.95);
             border-radius: 25px;
             overflow: hidden;
@@ -34,12 +34,13 @@
         }
         
         .header {
-            background: linear-gradient(to right, #8e2de2, #4a00e0);
+            background: linear-gradient(135deg, #8e2de2, #4a00e0);
             padding: 50px 30px;
             color: white;
             text-align: center;
             position: relative;
             overflow: hidden;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
         }
         
         .header::before {
@@ -74,7 +75,7 @@
         
         .options-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 30px;
             margin-bottom: 20px;
         }
@@ -90,6 +91,9 @@
             position: relative;
             overflow: hidden;
             cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
         
         .option-card::before {
@@ -111,6 +115,22 @@
             background: linear-gradient(to right, #00b4db, #0083b0);
         }
         
+        .option-card:nth-child(3)::before {
+            background: linear-gradient(to right, #11998e, #38ef7d);
+        }
+        
+        .option-card:nth-child(4)::before {
+            background: linear-gradient(to right, #fc466b, #3f5efb);
+        }
+        
+        .option-card:nth-child(5)::before {
+            background: linear-gradient(to right, #fdbb2d, #22c1c3);
+        }
+        
+        .option-card:nth-child(6)::before {
+            background: linear-gradient(to right, #833ab4, #fd1d1d, #fcb045);
+        }
+        
         .option-icon {
             font-size: 60px;
             margin-bottom: 25px;
@@ -127,6 +147,34 @@
         
         .option-card:nth-child(2) .option-icon {
             background: linear-gradient(to right, #00b4db, #0083b0);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .option-card:nth-child(3) .option-icon {
+            background: linear-gradient(to right, #11998e, #38ef7d);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .option-card:nth-child(4) .option-icon {
+            background: linear-gradient(to right, #fc466b, #3f5efb);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .option-card:nth-child(5) .option-icon {
+            background: linear-gradient(to right, #fdbb2d, #22c1c3);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .option-card:nth-child(6) .option-icon {
+            background: linear-gradient(to right, #833ab4, #fd1d1d, #fcb045);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
@@ -153,11 +201,40 @@
             color: transparent;
         }
         
+        .option-card:nth-child(3):hover .option-title {
+            background: linear-gradient(to right, #11998e, #38ef7d);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .option-card:nth-child(4):hover .option-title {
+            background: linear-gradient(to right, #fc466b, #3f5efb);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .option-card:nth-child(5):hover .option-title {
+            background: linear-gradient(to right, #fdbb2d, #22c1c3);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .option-card:nth-child(6):hover .option-title {
+            background: linear-gradient(to right, #833ab4, #fd1d1d, #fcb045);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
         .option-desc {
             color: #666;
             margin-bottom: 25px;
             font-size: 16px;
             line-height: 1.6;
+            flex-grow: 1;
         }
         
         .option-btn {
@@ -179,6 +256,26 @@
             box-shadow: 0 5px 15px rgba(0, 180, 219, 0.3);
         }
         
+        .option-card:nth-child(3) .option-btn {
+            background: linear-gradient(to right, #11998e, #38ef7d);
+            box-shadow: 0 5px 15px rgba(17, 153, 142, 0.3);
+        }
+        
+        .option-card:nth-child(4) .option-btn {
+            background: linear-gradient(to right, #fc466b, #3f5efb);
+            box-shadow: 0 5px 15px rgba(252, 70, 107, 0.3);
+        }
+        
+        .option-card:nth-child(5) .option-btn {
+            background: linear-gradient(to right, #fdbb2d, #22c1c3);
+            box-shadow: 0 5px 15px rgba(253, 187, 45, 0.3);
+        }
+        
+        .option-card:nth-child(6) .option-btn {
+            background: linear-gradient(to right, #833ab4, #fd1d1d, #fcb045);
+            box-shadow: 0 5px 15px rgba(131, 58, 180, 0.3);
+        }
+        
         .option-btn:hover {
             transform: scale(1.08);
             box-shadow: 0 8px 20px rgba(142, 45, 226, 0.4);
@@ -188,9 +285,25 @@
             box-shadow: 0 8px 20px rgba(0, 180, 219, 0.4);
         }
         
+        .option-card:nth-child(3) .option-btn:hover {
+            box-shadow: 0 8px 20px rgba(17, 153, 142, 0.4);
+        }
+        
+        .option-card:nth-child(4) .option-btn:hover {
+            box-shadow: 0 8px 20px rgba(252, 70, 107, 0.4);
+        }
+        
+        .option-card:nth-child(5) .option-btn:hover {
+            box-shadow: 0 8px 20px rgba(253, 187, 45, 0.4);
+        }
+        
+        .option-card:nth-child(6) .option-btn:hover {
+            box-shadow: 0 8px 20px rgba(131, 58, 180, 0.4);
+        }
+        
         .footer {
             padding: 25px;
-            background: #2c0365;
+            background: linear-gradient(to right, #2c0365, #1a023f);
             color: white;
             text-align: center;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
@@ -233,6 +346,26 @@
             100% { transform: translateY(-100px) rotate(720deg); opacity: 0; }
         }
         
+        .progress-bar {
+            height: 5px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            margin: 20px auto;
+            width: 80%;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background: linear-gradient(to right, #ff8a00, #da1b60);
+            width: 0%;
+            animation: progress 2s ease-in-out forwards;
+        }
+        
+        @keyframes progress {
+            to { width: 100%; }
+        }
+        
         @media (max-width: 768px) {
             h1 {
                 font-size: 32px;
@@ -265,7 +398,10 @@
     <div class="container">
         <div class="header">
             <h1><i class="fas fa-tasks"></i> نظام الواجبات</h1>
-            <p class="subtitle">اختر الواجب </p>
+            <p class="subtitle">اختر الواجب الذي ترغب في الاطلاع عليه</p>
+            <div class="progress-bar">
+                <div class="progress"></div>
+            </div>
         </div>
         
         <div class="content">
@@ -275,7 +411,7 @@
                         <i class="fas fa-book-open"></i>
                     </div>
                     <h2 class="option-title">واجب المحاضرة الأولى</h2>
-                    <p class="option-desc"> من صفحه 2 الي 14  </p>
+                    <p class="option-desc">من صفحة 2 إلى 14</p>
                     <button class="option-btn">عرض الواجب</button>
                 </div>
                 
@@ -284,42 +420,46 @@
                         <i class="fas fa-chalkboard-teacher"></i>
                     </div>
                     <h2 class="option-title">واجب المحاضرة الثانية</h2>
-                    <p class="option-desc">من صفحة 15 الي 22</p>
+                    <p class="option-desc">من صفحة 15 إلى 22</p>
                     <button class="option-btn">عرض الواجب</button>
                 </div>
+                
                 <div class="option-card" onclick="window.location.href='https://www.mrfaisal.net/%D9%88%D8%A7%D8%AC%D8%A8%20%D8%A7%D9%84%D9%85%D8%AD%D8%A7%D8%B6%D8%B1%D8%A9%20%D8%A7%D9%84%D8%AB%D8%A7%D9%84%D8%AB%D9%87%203'">
                     <div class="option-icon">
-                        <i class="fas fa-chalkboard-teacher"></i>
+                        <i class="fas fa-book-reader"></i>
                     </div>
-                    <h2 class="option-title">واجب المحاضرة الثالثه</h2>
-                    <p class="option-desc">  من 23 الي 31  </p>
+                    <h2 class="option-title">واجب المحاضرة الثالثة</h2>
+                    <p class="option-desc">من صفحة 23 إلى 31</p>
                     <button class="option-btn">عرض الواجب</button>
                 </div>
-                    <div class="option-card" onclick="window.location.href='https://www.mrfaisal.net/%D9%88%D8%A7%D8%AC%D8%A8%20%D8%A7%D9%84%D9%85%D8%AD%D8%A7%D8%B6%D8%B1%D8%A9%20%D8%A7%D9%84%D8%B1%D8%A7%D8%A8%D8%B9%D8%A9%203'">
+                
+                <div class="option-card" onclick="window.location.href='https://www.mrfaisal.net/%D9%88%D8%A7%D8%AC%D8%A8%20%D8%A7%D9%84%D9%85%D8%AD%D8%A7%D8%B6%D8%B1%D8%A9%20%D8%A7%D9%84%D8%B1%D8%A7%D8%A8%D8%B9%D8%A9%203'">
                     <div class="option-icon">
-                        <i class="fas fa-chalkboard-teacher"></i>
+                        <i class="fas fa-graduation-cap"></i>
                     </div>
                     <h2 class="option-title">واجب المحاضرة الرابعة</h2>
-                    <p class="option-desc">  من 32 الي 43  </p>
+                    <p class="option-desc">من صفحة 32 إلى 43</p>
+                    <button class="option-btn">عرض الواجب</button>
+                </div>
+                
+                <div class="option-card" onclick="window.location.href='https://www.mrfaisal.net/%D9%88%D8%A7%D8%AC%D8%A8%20%D8%A7%D9%84%D9%85%D8%AD%D8%A7%D8%B6%D8%B1%D8%A9%20%D8%A7%D9%84%D8%AE%D8%A7%D9%85%D8%B3%D8%A9%203'">
+                    <div class="option-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <h2 class="option-title">واجب المحاضرة الخامسة</h2>
+                    <p class="option-desc">من صفحة 44 إلى 52</p>
+                    <button class="option-btn">عرض الواجب</button>
+                </div>
+                
+                <div class="option-card" onclick="window.location.href='https://www.mrfaisal.net/%D9%88%D8%A7%D8%AC%D8%A8%20%D8%A7%D9%84%D9%85%D8%AD%D8%A7%D8%B6%D8%B1%D8%A9%20%D8%A7%D9%84%D8%B3%D8%A7%D8%AF%D8%B3%D8%A9%203%20'">
+                    <div class="option-icon">
+                        <i class="fas fa-pencil-alt"></i>
+                    </div>
+                    <h2 class="option-title">واجب المحاضرة السادسة</h2>
+                    <p class="option-desc">من صفحة 53 إلى 62</p>
                     <button class="option-btn">عرض الواجب</button>
                 </div>
             </div>
-                    <div class="option-card" onclick="window.location.href='https://www.mrfaisal.net/%D9%88%D8%A7%D8%AC%D8%A8%20%D8%A7%D9%84%D9%85%D8%AD%D8%A7%D8%B6%D8%B1%D8%A9%20%D8%A7%D9%84%D8%AE%D8%A7%D9%85%D8%B3%D8%A9%203'">
-                    <div class="option-icon">
-                        <i class="fas fa-chalkboard-teacher"></i>
-                    </div>
-                    <h2 class="option-title">واجب المحاضرة الخامسة</h2>
-                    <p class="option-desc">  من 44 الي 52  </p>
-                    <button class="option-btn">عرض الواجب</button>
-                </div>
-                    <div class="option-card" onclick="window.location.href='https://www.mrfaisal.net/%D9%88%D8%A7%D8%AC%D8%A8%20%D8%A7%D9%84%D9%85%D8%AD%D8%A7%D8%B6%D8%B1%D8%A9%20%D8%A7%D9%84%D8%B3%D8%A7%D8%AF%D8%B3%D8%A9%203%20'">
-                    <div class="option-icon">
-                        <i class="fas fa-chalkboard-teacher"></i>
-                    </div>
-                    <h2 class="option-title">واجب المحاضرة السادسة</h2>
-                    <p class="option-desc">  من 53 الي 62  </p>
-                    <button class="option-btn">عرض الواجب</button>
-                </div>
         </div>
         
         <div class="footer">
