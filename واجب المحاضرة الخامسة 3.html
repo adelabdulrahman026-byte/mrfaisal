@@ -865,13 +865,13 @@ function generateResult(isOnline){
 
   if(isOnline){
     qr.toBlob(function(blob){
-      const waUrl = `https://wa.me/201556618507?text=`;
+      const waUrl = `https://wa.me/201016699175?text=`;
       let file = new File([blob], "qr.png",{type:"image/png"});
       let reader = new FileReader();
       reader.onload = function(e){
         let imgData = e.target.result;
         let btn = document.createElement("a");
-        btn.href = `https://api.whatsapp.com/send?phone=201556618507&text=الواجب&media=${encodeURIComponent(imgData)}`;
+        btn.href = `https://api.whatsapp.com/send?phone=201016699175&text=الواجب&media=${encodeURIComponent(imgData)}`;
         btn.target="_blank";
         btn.id="waButton";
         btn.innerText="سلم واجبك أونلاين";
