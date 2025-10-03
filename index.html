@@ -3,17 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <title>موقع مستر فيصل الرسمي</title>
-<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-<script>
-  window.OneSignalDeferred = window.OneSignalDeferred || [];
-  OneSignalDeferred.push(async function(OneSignal) {
-    await OneSignal.init({
-      appId: "8e36161f-8906-41f3-b0b8-3e272167065b",
+  <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+  <script>
+    window.OneSignalDeferred = window.OneSignalDeferred || [];
+    OneSignalDeferred.push(async function(OneSignal) {
+      await OneSignal.init({
+        appId: "8e36161f-8906-41f3-b0b8-3e272167065b",
+      });
     });
-  });
-</script>
+  </script>
   <link rel="icon" href="https://adelabdulrahman026-byte.github.io/dashboard/assets_task_01k05v63wre6rayke660pxxj1j_1752543094_img_0.png" type="image/x-icon">
-<link rel="shortcut icon" href="https://adelabdulrahman026-byte.github.io/dashboard/assets_task_01k05v63wre6rayke660pxxj1j_1752543094_img_0.png" type="image/x-icon">
+  <link rel="shortcut icon" href="https://adelabdulrahman026-byte.github.io/dashboard/assets_task_01k05v63wre6rayke660pxxj1j_1752543094_img_0.png" type="image/x-icon">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" />
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -705,6 +705,100 @@
       margin-bottom: 20px;
       color: #ff5555;
     }
+
+    /* تحسينات جديدة */
+    .preloader-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+    
+    .preloader-logo {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 48px;
+      box-shadow: 0 8px 24px rgba(46,125,50,0.6);
+      animation: logoPulse 2s infinite;
+    }
+    
+    .preloader-text {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--color-primary);
+      text-align: center;
+    }
+    
+    @keyframes logoPulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+    
+    .about-section {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 40px;
+      padding: 60px 10%;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+      margin: 40px 0;
+      border-radius: 20px;
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    .about-section img {
+      width: 300px;
+      height: auto;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      animation: floatImage 3s ease-in-out infinite;
+    }
+    
+    .about-text {
+      max-width: 600px;
+      animation: fadeIn 2s ease forwards;
+    }
+    
+    .about-text h2 {
+      font-size: 32px;
+      margin-bottom: 15px;
+      color: var(--color-primary);
+    }
+    
+    .about-text p {
+      line-height: 1.9;
+      font-size: 18px;
+    }
+    
+    @keyframes floatImage {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+      100% { transform: translateY(0); }
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateX(40px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    
+    @media (max-width: 768px) {
+      .about-section {
+        flex-direction: column;
+        text-align: center;
+      }
+      .about-section img {
+        width: 220px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -779,16 +873,14 @@
     </div>
   </aside>
 
-  <!-- شاشة التحميل -->
+  <!-- شاشة التحميل المحسنة -->
   <div id="preloader" aria-label="تحميل">
-    <dotlottie-wc 
-      src="https://lottie.host/953639aa-133c-4c35-8508-c65811fe8898/jZylR2TITf.lottie" 
-      style="width: 300px; height: 300px;" 
-      speed="1" 
-      autoplay 
-      loop
-      aria-label="تحميل متحرك">
-    </dotlottie-wc>
+    <div class="preloader-content">
+      <div class="preloader-logo">
+        <i class="fas fa-globe-americas"></i>
+      </div>
+      <div class="preloader-text">جاري التحميل...</div>
+    </div>
   </div>
 
   <!-- المحتوى الرئيسي -->
@@ -821,7 +913,7 @@
     <div class="content">
       <section class="social-section" aria-label="روابط التواصل الاجتماعي">
         <div class="social-card">
-          <a href="https://www.whatsapp.com/channel/0029Vb5eotiHFxOvJuFpMI39" target="_blank" rel="noopener noreferrer">
+          <a href="https://whatsapp.com/channel/0029Vb5eotiHFxOvJuFpMI39" target="_blank" rel="noopener noreferrer">
             <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="واتساب" />
             <h3>انضم لقناة الواتساب</h3>
             <p>تابع آخر الأخبار والعروض</p>
@@ -869,96 +961,25 @@
         </div>
       </div>
     </div>
+
+    <!-- قسم النبذة المحسن -->
+    <section class="about-section">
+      <img src="https://adelabdulrahman026-byte.github.io/dashboard/IMG_6438.JPG" alt="مستر فيصل">
+      <div class="about-text">
+        <h2>من هو مستر فيصل؟</h2>
+        <p>
+          مستر فيصل هو <strong>مدرس أول جغرافيا في الإسكندرية والجمهورية</strong>، 
+          عُرف بشرحه المبسط الذي يقرّب المعلومة للطالب بشكل سهل وسلس.  
+          يؤمن أن التعليم رسالة قبل أن يكون مهنة، ويحرص دائمًا على متابعة طلابه خطوة بخطوة.
+        </p>
+        <p>
+          خبرة طويلة في مجال التدريس جعلت منه قدوة ومصدر ثقة لطلاب الثانوية العامة، 
+          حيث يجمع بين الأسلوب العصري في الشرح والالتزام بالقواعد الأكاديمية.  
+          هدفه الأساسي أن يكون مع طلابه "لحد باب اللجنة"، داعمًا ومساندًا لهم.
+        </p>
+      </div>
+    </section>
   </div>
-<html lang="ar" dir="rtl">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>من هو مستر فيصل</title>
-  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
-  <style>
-    body {
-      font-family: 'Tajawal', sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f9f9f9;
-      color: #333;
-    }
-
-    .about-section {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 40px;
-      padding: 60px 10%;
-      background: #fff;
-    }
-
-    .about-section img {
-      width: 300px;
-      height: auto;
-      border-radius: 20px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-      animation: floatImage 3s ease-in-out infinite;
-    }
-
-    .about-text {
-      max-width: 600px;
-      animation: fadeIn 2s ease forwards;
-    }
-
-    .about-text h2 {
-      font-size: 32px;
-      margin-bottom: 15px;
-      color: #0d6efd;
-    }
-
-    .about-text p {
-      line-height: 1.9;
-      font-size: 18px;
-    }
-
-    @keyframes floatImage {
-      0% { transform: translateY(0); }
-      50% { transform: translateY(-12px); }
-      100% { transform: translateY(0); }
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateX(40px); }
-      to { opacity: 1; transform: translateX(0); }
-    }
-
-    @media (max-width: 768px) {
-      .about-section {
-        flex-direction: column;
-        text-align: center;
-      }
-      .about-section img {
-        width: 220px;
-      }
-    }
-  </style>
-</head>
-<body>
-
-  <!-- قسم النبذة -->
-  <section class="about-section">
-    <img src="https://adelabdulrahman026-byte.github.io/dashboard/IMG_6438.JPG" alt="مستر فيصل">
-    <div class="about-text">
-      <h2>من هو مستر فيصل؟</h2>
-      <p>
-        مستر فيصل هو <strong>مدرس أول جغرافيا في الإسكندرية والجمهورية</strong>، 
-        عُرف بشرحه المبسط الذي يقرّب المعلومة للطالب بشكل سهل وسلس.  
-        يؤمن أن التعليم رسالة قبل أن يكون مهنة، ويحرص دائمًا على متابعة طلابه خطوة بخطوة.
-      </p>
-      <p>
-        خبرة طويلة في مجال التدريس جعلت منه قدوة ومصدر ثقة لطلاب الثانوية العامة، 
-        حيث يجمع بين الأسلوب العصري في الشرح والالتزام بالقواعد الأكاديمية.  
-        هدفه الأساسي أن يكون مع طلابه "لحد باب اللجنة"، داعمًا ومساندًا لهم.
-      </p>
-    </div>
-  </section>
 
   <!-- تذييل الحقوق -->
   <footer>
