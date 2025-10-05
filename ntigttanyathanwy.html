@@ -329,7 +329,7 @@
   </div>
 
   <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbwMeYaQOlaShwGqVoA8Rw282kfpt7WOSYhXsbBPNkqUdpAEGG3Ha9b9NLYRQKa2hneSCw/exec";
+    const API_URL = "https://script.google.com/macros/s/AKfycbzAzXzgOA-s3xbqjZGFwA5dFOjPALatiKGP6U2JmaChTXt_wlh9un6QMY__C0bUU7x3jQ/exec";
     const form = document.getElementById("attendanceForm");
     const loadingScreen = document.getElementById("loadingScreen");
     const resultDiv = document.getElementById("result");
@@ -400,6 +400,16 @@
                 <div class="result-content">
                   <div class="result-label">امتحان الحصه الثالثه</div>
                   <div class="result-value">${data.week3} <span class="week-score">في الامتحان</span></div>
+                </div>
+              </div>
+
+              <div class="result-item">
+                <div class="result-icon">
+                  <i class="fas fa-calendar-week"></i>
+                </div>
+                <div class="result-content">
+                  <div class="result-label">امتحان الحصه الرابعه</div>
+                  <div class="result-value">${data.week4} <span class="week-score">في الامتحان</span></div>
                 </div>
               </div>
             </div>
