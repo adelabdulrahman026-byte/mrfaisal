@@ -388,7 +388,7 @@
   </div>
 
   <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbzpnzC1OHXoa3hC5IbDX37DSfc6jIc5JJ3-WcI9o-LwPAel2Yj624jMi8uspZSXxzugfQ/exec";
+    const API_URL = "https://script.google.com/macros/s/AKfycbx-wXAHxYid2pAOlywPvdKgZCJEDQnhtKc9E-TPCDrUO8VnAQZhWpwu66pVRr5UUkdmQg/exec";
     const form = document.getElementById("attendanceForm");
     const loadingScreen = document.getElementById("loadingScreen");
     const resultDiv = document.getElementById("result");
@@ -452,6 +452,26 @@
               <div class="info-row">
                 <span class="info-label"><i class="fas fa-calendar-week"></i> الحصة الرابعة:</span>
                 ${createAttendanceBadge(data.week4, data.week4 || 'لم تسجل')}
+              </div>
+
+                            <div class="info-row">
+                <span class="info-label"><i class="fas fa-calendar-week"></i>  الحصة الأولى الشهر لثاني:</span>
+                ${createAttendanceBadge(data.week5, data.week5 || 'لم تسجل')}
+              </div>
+              
+              <div class="info-row">
+                <span class="info-label"><i class="fas fa-calendar-week"></i> الحصة الثانية الشهر الثاني:</span>
+                ${createAttendanceBadge(data.week6, data.week6 || 'لم تسجل')}
+              </div>
+              
+              <div class="info-row">
+                <span class="info-label"><i class="fas fa-calendar-week"></i> الحصة الثالثة الشهر الثاني:</span>
+                ${createAttendanceBadge(data.week7, data.week7 || 'لم تسجل')}
+              </div>
+              
+              <div class="info-row">
+                <span class="info-label"><i class="fas fa-calendar-week"></i> الحصة الرابعة الثاني:</span>
+                ${createAttendanceBadge(data.week8, data.week8 || 'لم تسجل')}
               </div>
           `;
         } else {
