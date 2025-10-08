@@ -75,62 +75,28 @@
         
         .controls {
             display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-bottom: 30px;
             justify-content: center;
-            align-items: center;
-        }
-        
-        .search-box {
-            flex-grow: 1;
-            max-width: 400px;
-            position: relative;
-        }
-        
-        .search-box input {
-            width: 100%;
-            padding: 15px 50px 15px 20px;
-            border: 2px solid #e0e0e0;
-            border-radius: 50px;
-            font-size: 16px;
-            transition: all 0.3s ease;
-            background: white;
-        }
-        
-        .search-box input:focus {
-            outline: none;
-            border-color: #8e2de2;
-            box-shadow: 0 0 0 3px rgba(142, 45, 226, 0.2);
-        }
-        
-        .search-box i {
-            position: absolute;
-            left: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #8e2de2;
-            font-size: 18px;
+            margin-bottom: 30px;
         }
         
         .filter-buttons {
             display: flex;
-            gap: 10px;
+            gap: 15px;
             flex-wrap: wrap;
         }
         
         .filter-btn {
-            padding: 12px 20px;
+            padding: 15px 30px;
             background: white;
             border: 2px solid #e0e0e0;
             border-radius: 50px;
-            font-size: 14px;
+            font-size: 16px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
         
         .filter-btn:hover {
@@ -446,6 +412,19 @@
             color: #888;
         }
         
+        .latest-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: linear-gradient(to right, #ff8a00, #da1b60);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            box-shadow: 0 3px 10px rgba(255, 138, 0, 0.3);
+        }
+        
         .option-btn {
             display: inline-block;
             padding: 14px 35px;
@@ -670,11 +649,11 @@
             
             .controls {
                 flex-direction: column;
-                align-items: stretch;
+                align-items: center;
             }
             
-            .search-box {
-                max-width: 100%;
+            .filter-buttons {
+                justify-content: center;
             }
             
             .stats {
@@ -709,10 +688,6 @@
         
         <div class="content">
             <div class="controls">
-                <div class="search-box">
-                    <input type="text" id="searchInput" placeholder="ابحث عن محاضرة...">
-                    <i class="fas fa-search"></i>
-                </div>
                 <div class="filter-buttons">
                     <button class="filter-btn active" data-filter="all">
                         <i class="fas fa-layer-group"></i> الكل
@@ -720,24 +695,17 @@
                     <button class="filter-btn" data-filter="recent">
                         <i class="fas fa-star"></i> الأحدث
                     </button>
-                    <button class="filter-btn" data-filter="old">
-                        <i class="fas fa-history"></i> الأقدم
-                    </button>
                 </div>
             </div>
             
             <div class="stats">
                 <div class="stat-item">
                     <i class="fas fa-book"></i>
-                    <span>إجمالي المحاضرات: <span id="totalLectures">7</span></span>
+                    <span>إجمالي المحاضرات: <span id="totalLectures">12</span></span>
                 </div>
                 <div class="stat-item">
                     <i class="fas fa-check-circle"></i>
-                    <span>أحدث محاضرة: <span id="latestLecture">المحاضرة السابعة </span></span>
-                </div>
-                <div class="stat-item">
-                    <i class="fas fa-clock"></i>
-                    <span>أقدم محاضرة: <span id="oldestLecture">المحاضرة الأولى</span></span>
+                    <span>أحدث محاضرة: <span id="latestLecture">المحاضرة الثانية عشرة</span></span>
                 </div>
             </div>
             
@@ -805,7 +773,12 @@
                 card.className = 'option-card';
                 card.onclick = () => window.location.href = lecture.url;
                 
+                // إضافة علامة "أحدث واجب" إذا كانت هذه هي آخر محاضرة
+                const isLatest = lecture.id === lectures.length;
+                const badge = isLatest ? '<div class="latest-badge">أحدث واجب</div>' : '';
+                
                 card.innerHTML = `
+                    ${badge}
                     <div class="option-icon">
                         <i class="fas fa-${lecture.icon}"></i>
                     </div>
@@ -872,32 +845,18 @@
             }
         }
 
-        // البحث عن المحاضرات
-        function searchLectures(query) {
-            if (!query) {
-                filteredLectures = [...lectures];
-            } else {
-                filteredLectures = lectures.filter(lecture => 
-                    lecture.title.includes(query) || 
-                    lecture.desc.includes(query) ||
-                    lecture.pages.includes(query)
-                );
-            }
-            
-            // تطبيق الفلتر الحالي
-            applyFilter(currentFilter);
-        }
-
         // تطبيق الفلتر
         function applyFilter(filter) {
             currentFilter = filter;
             
-            let tempLectures = [...filteredLectures];
+            let tempLectures = [...lectures];
             
             if (filter === 'recent') {
-                tempLectures.sort((a, b) => b.id - a.id);
-            } else if (filter === 'old') {
-                tempLectures.sort((a, b) => a.id - b.id);
+                // عرض آخر محاضرة فقط
+                const latestLecture = lectures.reduce((prev, current) => 
+                    (prev.id > current.id) ? prev : current
+                );
+                tempLectures = [latestLecture];
             }
             
             filteredLectures = tempLectures;
@@ -915,13 +874,6 @@
             // تحديث الإحصائيات
             document.getElementById('totalLectures').textContent = lectures.length;
             document.getElementById('latestLecture').textContent = lectures[lectures.length - 1].title;
-            document.getElementById('oldestLecture').textContent = lectures[0].title;
-            
-            // إعداد البحث
-            const searchInput = document.getElementById('searchInput');
-            searchInput.addEventListener('input', (e) => {
-                searchLectures(e.target.value);
-            });
             
             // إعداد الفلاتر
             const filterButtons = document.querySelectorAll('.filter-btn');
