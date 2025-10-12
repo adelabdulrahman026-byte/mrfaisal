@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام رفع الدرجات والحضور - الثانوية العامة</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* التنسيقات العامة */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary: #6C63FF;
+            --secondary: #4A44C6;
+            --accent1: #FF6584;
+            --accent2: #20C997;
+            --accent3: #FFC107;
+            --accent4: #17A2B8;
+            --dark: #1a1a2e;
+            --darker: #0f3460;
+            --light: #F8F9FA;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--dark) 0%, var(--darker) 100%);
+            color: var(--light);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+        
+        /* تأثيرات الخلفية المتحركة */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(108, 99, 255, 0.1);
+            animation: float 20s infinite linear;
+        }
+        
+        .bg-circle:nth-child(1) {
+            width: 100px;
+            height: 100px;
+            top: 10%;
+            left: 20%;
+            animation-delay: 0s;
+        }
+        
+        .bg-circle:nth-child(2) {
+            width: 150px;
+            height: 150px;
+            top: 70%;
+            left: 80%;
+            animation-delay: 2s;
+        }
+        
+        .bg-circle:nth-child(3) {
+            width: 80px;
+            height: 80px;
+            top: 40%;
+            left: 10%;
+            animation-delay: 4s;
+        }
+        
+        .bg-circle:nth-child(4) {
+            width: 120px;
+            height: 120px;
+            top: 20%;
+            left: 70%;
+            animation-delay: 6s;
+        }
+        
+        .bg-circle:nth-child(5) {
+            width: 110px;
+            height: 110px;
+            top: 60%;
+            left: 40%;
+            animation-delay: 8s;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1300px;
+            background: rgba(42, 45, 67, 0.85);
+            backdrop-filter: blur(15px);
+            border-radius: 25px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+            animation: fadeIn 1.2s ease-out;
+            border: 1px solid rgba(108, 99, 255, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* رأس الصفحة */
+        header {
+            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 35px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+            opacity: 0.2;
+        }
+        
+        header h1 {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+            animation: slideDown 1s ease-out;
+            position: relative;
+        }
+        
+        header p {
+            font-size: 1.4rem;
+            opacity: 0.9;
+            animation: slideUp 1s ease-out 0.3s both;
+            position: relative;
+        }
+        
+        /* منطقة الأزرار */
+        .buttons-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 35px;
+            padding: 60px;
+        }
+        
+        .button-card {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+            transition: all 0.5s ease;
+            cursor: pointer;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .button-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(108, 99, 255, 0.2) 0%, transparent 50%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        .button-card:hover {
+            transform: translateY(-20px) scale(1.05);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+            border-color: rgba(108, 99, 255, 0.5);
+        }
+        
+        .button-card:hover::before {
+            opacity: 1;
+        }
+        
+        .button-card:nth-child(1):hover {
+            background: rgba(255, 101, 132, 0.2);
+        }
+        
+        .button-card:nth-child(2):hover {
+            background: rgba(32, 201, 151, 0.2);
+        }
+        
+        .button-card:nth-child(3):hover {
+            background: rgba(255, 193, 7, 0.2);
+        }
+        
+        .button-card:nth-child(4):hover {
+            background: rgba(23, 162, 184, 0.2);
+        }
+        
+        .button-header {
+            padding: 30px;
+            color: white;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.6rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .button-card:nth-child(1) .button-header {
+            background: linear-gradient(90deg, var(--accent1), #FF8FA3);
+        }
+        
+        .button-card:nth-child(2) .button-header {
+            background: linear-gradient(90deg, var(--accent2), #4DD4AC);
+        }
+        
+        .button-card:nth-child(3) .button-header {
+            background: linear-gradient(90deg, var(--accent3), #FFD54F);
+        }
+        
+        .button-card:nth-child(4) .button-header {
+            background: linear-gradient(90deg, var(--accent4), #4FC3F7);
+        }
+        
+        .button-header i {
+            margin-left: 10px;
+            font-size: 1.8rem;
+        }
+        
+        .button-content {
+            padding: 35px 30px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .button-content h3 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--light);
+        }
+        
+        .button-content p {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.7;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px 35px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            box-shadow: 0 10px 25px rgba(108, 99, 255, 0.5);
+            position: relative;
+            overflow: hidden;
+            font-size: 1.1rem;
+            text-decoration: none;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+        
+        .btn:hover {
+            background: var(--secondary);
+            transform: scale(1.08);
+            box-shadow: 0 15px 30px rgba(108, 99, 255, 0.7);
+        }
+        
+        .btn:hover::before {
+            transform: translateX(100%);
+        }
+        
+        .btn i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+        
+        /* تأثيرات الأنيميشن */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-25px) rotate(180deg); }
+            100% { transform: translateY(0) rotate(360deg); }
+        }
+        
+        /* التكيف مع الشاشات الصغيرة */
+        @media (max-width: 1200px) {
+            .buttons-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .buttons-container {
+                grid-template-columns: 1fr;
+                padding: 40px;
+            }
+            
+            header h1 {
+                font-size: 2.4rem;
+            }
+            
+            header p {
+                font-size: 1.2rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            header h1 {
+                font-size: 2rem;
+            }
+            
+            .button-content h3 {
+                font-size: 1.6rem;
+            }
+            
+            .buttons-container {
+                padding: 25px;
+            }
+        }
+        
+        /* تأثيرات إضافية */
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            animation: particle-float 20s infinite linear;
+        }
+        
+        @keyframes particle-float {
+            0% {
+                transform: translateY(0) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-150px) translateX(30px);
+                opacity: 0;
+            }
+        }
+        
+        .glow {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background: radial-gradient(circle at center, rgba(108, 99, 255, 0.1) 0%, transparent 70%);
+            z-index: -1;
+        }
+    </style>
+</head>
+<body>
+    <!-- تأثيرات الخلفية المتحركة -->
+    <div class="bg-animation">
+        <div class="bg-circle"></div>
+        <div class="bg-circle"></div>
+        <div class="bg-circle"></div>
+        <div class="bg-circle"></div>
+        <div class="bg-circle"></div>
+    </div>
+    
+    <!-- الجسيمات المتحركة -->
+    <div class="particles" id="particles"></div>
+    
+    <!-- تأثير التوهج -->
+    <div class="glow"></div>
+    
+    <!-- المحتوى الرئيسي -->
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-graduation-cap"></i> نظام رفع الدرجات والحضور</h1>
+            <p>الثانوية العامة - إدارة شؤون الطلاب</p>
+        </header>
+        
+        <div class="buttons-container">
+            <!-- زر رفع درجات تانيه ثانوي -->
+            <div class="button-card">
+                <div class="button-header">
+                    <i class="fas fa-chart-line"></i> ثانية ثانوي
+                </div>
+                <div class="button-content">
+                    <h3>رفع درجات تانيه ثانوي</h3>
+                    <p>إدخال وتحديث درجات طلاب الصف الثاني الثانوي في جميع المواد الدراسية بشكل آمن وسريع</p>
+                    <a href="grades-second-secondary.html" class="btn"><i class="fas fa-upload"></i> بدء رفع الدرجات</a>
+                </div>
+            </div>
+            
+            <!-- زر رفع حضور تانيه ثانوي -->
+            <div class="button-card">
+                <div class="button-header">
+                    <i class="fas fa-user-check"></i> ثانية ثانوي
+                </div>
+                <div class="button-content">
+                    <h3>رفع حضور تانيه ثانوي</h3>
+                    <p>تسجيل وتعديل حضور وغياب طلاب الصف الثاني الثانوي </p>
+                    <a href="https://www.mrfaisal.net/%D8%B1%D9%81%D8%B9%20%D8%AF%D8%B1%D8%AC%D8%A7%D8%AA%20%D8%AA%D8%A7%D9%86%D9%8A%D9%87%20%D8%AB%D8%A7%D9%86%D9%88%D9%8A" class="btn"><i class="fas fa-upload"></i> بدء رفع الحضور</a>
+                </div>
+            </div>
+            
+            <!-- زر رفع درجات تالته ثانوي -->
+            <div class="button-card">
+                <div class="button-header">
+                    <i class="fas fa-chart-bar"></i> ثالثة ثانوي
+                </div>
+                <div class="button-content">
+                    <h3>رفع درجات تالته ثانوي</h3>
+                    <p>إدخال وتحديث درجات طلاب الصف الثالث الثانوي في جميع المواد الدراسية بشكل منظم</p>
+                    <a href="grades-third-secondary.html" class="btn"><i class="fas fa-upload"></i> بدء رفع الدرجات</a>
+                </div>
+            </div>
+            
+            <!-- زر رفع حضور تالته ثانوي -->
+            <div class="button-card">
+                <div class="button-header">
+                    <i class="fas fa-clipboard-list"></i> ثالثة ثانوي
+                </div>
+                <div class="button-content">
+                    <h3>رفع حضور تالته ثانوي</h3>
+                    <p>تسجيل وتعديل حضور وغياب طلاب الصف الثالث الثانوي بنظام متكامل</p>
+                    <a href="attendance-third-secondary.html" class="btn"><i class="fas fa-upload"></i> بدء رفع الحضور</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // إنشاء الجسيمات المتحركة
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 40;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // حجم عشوائي
+                const size = Math.random() * 6 + 2;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                // موقع عشوائي
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                
+                // تأخير عشوائي للحركة
+                particle.style.animationDelay = `${Math.random() * 20}s`;
+                
+                // لون عشوائي
+                const colors = ['#6C63FF', '#FF6584', '#20C997', '#FFC107', '#17A2B8'];
+                const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.background = randomColor;
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
+        // تأثيرات تفاعلية للأزرار
+        document.querySelectorAll('.button-card').forEach(card => {
+            card.addEventListener('click', function() {
+                // تأثير النقر على البطاقة
+                this.style.transform = 'scale(0.98)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 200);
+            });
+        });
+        
+        // تحميل الجسيمات عند بدء التشغيل
+        window.addEventListener('load', function() {
+            createParticles();
+        });
+    </script>
+</body>
+</html>
