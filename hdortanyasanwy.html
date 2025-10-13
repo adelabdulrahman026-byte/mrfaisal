@@ -314,6 +314,106 @@
       100% { transform: scale(1); }
     }
     
+    /* كارت أحدث محاضرة - تصميم جديد */
+    .latest-lecture-card {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 25px 20px;
+      border-radius: 20px;
+      margin-bottom: 25px;
+      box-shadow: 0 15px 35px rgba(102, 126, 234, 0.3);
+      text-align: center;
+      animation: slideDown 0.6s ease;
+      position: relative;
+      overflow: hidden;
+      border: none;
+    }
+    
+    .latest-lecture-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 50%);
+    }
+    
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .latest-lecture-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 15px;
+      font-size: 20px;
+      font-weight: 700;
+      position: relative;
+      z-index: 2;
+    }
+    
+    .latest-lecture-badge {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 10px 20px;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 18px;
+      display: inline-block;
+      margin: 8px 0;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      position: relative;
+      z-index: 2;
+    }
+    
+    .latest-lecture-status {
+      font-size: 22px;
+      font-weight: 700;
+      margin: 15px 0;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      position: relative;
+      z-index: 2;
+      padding: 12px 20px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .latest-lecture-footer {
+      font-size: 14px;
+      opacity: 0.9;
+      margin-top: 12px;
+      position: relative;
+      z-index: 2;
+    }
+    
+    .lecture-progress {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 15px;
+      position: relative;
+      z-index: 2;
+    }
+    
+    .progress-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      transition: all 0.3s ease;
+    }
+    
+    .progress-dot.active {
+      background: rgba(255, 255, 255, 0.9);
+      transform: scale(1.3);
+    }
+    
     @media (max-width: 480px) {
       .container {
         padding: 35px 20px 20px;
@@ -335,6 +435,20 @@
         flex-direction: column;
         align-items: flex-start;
         gap: 5px;
+      }
+      
+      .latest-lecture-card {
+        padding: 20px 15px;
+      }
+      
+      .latest-lecture-badge {
+        font-size: 16px;
+        padding: 8px 16px;
+      }
+      
+      .latest-lecture-status {
+        font-size: 18px;
+        padding: 10px 16px;
       }
     }
   </style>
@@ -388,7 +502,7 @@
   </div>
 
   <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbx-wXAHxYid2pAOlywPvdKgZCJEDQnhtKc9E-TPCDrUO8VnAQZhWpwu66pVRr5UUkdmQg/exec";
+    const API_URL = "https://script.google.com/macros/s/AKfycbw72lgrxyAaj4Jc0LmPwu0fYcCKZsDquVj2oPe3XTFgyvW1gOFA7MkqpxLxskm7-W3Xlw/exec";
     const form = document.getElementById("attendanceForm");
     const loadingScreen = document.getElementById("loadingScreen");
     const resultDiv = document.getElementById("result");
@@ -401,7 +515,6 @@
       const id = document.getElementById("studentId").value.trim();
       
       try {
-        // إضافة تأخير بسيط لإظهار رسالة التحميل (لأغراض العرض)
         await new Promise(resolve => setTimeout(resolve, 1500));
         
         const res = await fetch(`${API_URL}?id=${encodeURIComponent(id)}`);
@@ -409,18 +522,109 @@
         loadingScreen.style.display = "none";
 
         if (data.found) {
-          // دالة مساعدة لتحديد حالة الحضور وإرجاع الكلاس المناسب
+          console.log('بيانات الطالب:', data); // للتصحيح
+          
+          // دالة مساعدة لتحديد حالة الحضور بدقة
           const getAttendanceStatus = (status) => {
-            return status && status.toLowerCase().includes('حاضر') ? 'present' : 'absent';
+            if (!status || status.toString().trim() === '') return 'absent';
+            
+            const statusStr = status.toString().toLowerCase().trim();
+            
+            // جميع الحالات التي تعتبر حضور
+            if (
+              statusStr.includes('حاضر') || 
+              statusStr.includes('حضور') || 
+              statusStr === 'present' || 
+              statusStr === 'p' ||
+              statusStr === 'ح' ||
+              statusStr === 'true' ||
+              statusStr === '1' ||
+              statusStr === 'نعم'
+            ) {
+              return 'present';
+            }
+            
+            // جميع الحالات التي تعتبر غياب
+            if (
+              statusStr.includes('غائب') ||
+              statusStr.includes('غياب') ||
+              statusStr === 'absent' ||
+              statusStr === 'a' ||
+              statusStr === 'غ' ||
+              statusStr === 'false' ||
+              statusStr === '0' ||
+              statusStr === 'لا'
+            ) {
+              return 'absent';
+            }
+            
+            // إذا لم يكن أي من الحالات المذكورة، نعتبره غائب
+            return 'absent';
           };
           
           // دالة مساعدة لإنشاء عنصر الحضور
-          const createAttendanceBadge = (status, text) => {
+          const createAttendanceBadge = (status) => {
             const statusClass = getAttendanceStatus(status);
-            return `<span class="attendance-badge ${statusClass}">${text || 'لم تسجل'}</span>`;
+            let displayText = 'لم تسجل';
+            
+            if (status && status.toString().trim() !== '') {
+              const statusStr = status.toString().toLowerCase().trim();
+              
+              if (statusStr === 'p' || statusStr === 'ح') {
+                displayText = 'حاضر';
+              } else if (statusStr === 'a' || statusStr === 'غ') {
+                displayText = 'غائب';
+              } else {
+                displayText = status;
+              }
+            }
+            
+            return `<span class="attendance-badge ${statusClass}">${displayText}</span>`;
           };
 
-          resultDiv.innerHTML = `
+          // البحث عن أحدث محاضرة به بيانات
+          const latestLecture = findLatestLecture(data);
+          console.log('أحدث محاضرة:', latestLecture); // للتصحيح
+          
+          // عرض كارت أحدث محاضرة
+          if (latestLecture) {
+            const lectureNumber = getLectureNumber(latestLecture.name);
+            let displayStatus = latestLecture.value;
+            
+            // تحويل الرموز المختصرة إلى نص مفهوم
+            if (displayStatus && displayStatus.toString().trim() !== '') {
+              const statusStr = displayStatus.toString().toLowerCase().trim();
+              if (statusStr === 'p' || statusStr === 'ح') {
+                displayStatus = 'حاضر';
+              } else if (statusStr === 'a' || statusStr === 'غ') {
+                displayStatus = 'غائب';
+              }
+            } else {
+              displayStatus = 'لم تسجل';
+            }
+            
+            resultDiv.innerHTML += `
+              <div class="latest-lecture-card">
+                <div class="latest-lecture-header">
+                  <i class="fas fa-calendar-check"></i>
+                  أحدث محاضرة
+                </div>
+                <div class="latest-lecture-badge">${latestLecture.name}</div>
+                <div class="latest-lecture-status">
+                  ${displayStatus}
+                </div>
+                <div class="lecture-progress">
+                  ${generateProgressDots(lectureNumber)}
+                </div>
+                <div class="latest-lecture-footer">
+                  آخر تحديث للحضور
+                </div>
+              </div>
+            `;
+          }
+          
+          // عرض كارت النتائج الكاملة
+          let resultHTML = `
             <div class="result-card">
               <h3 class="result-header"><i class="fas fa-user-graduate"></i> سجل حضور الطالب</h3>
               
@@ -433,47 +637,27 @@
                 <span class="info-label"><i class="fas fa-map-marker-alt"></i> السنتر:</span>
                 <span class="info-value">${data.geo}</span>
               </div>
-              
-              <div class="info-row">
-                <span class="info-label"><i class="fas fa-calendar-week"></i> الحصة الأولى:</span>
-                ${createAttendanceBadge(data.week1, data.week1 || 'لم تسجل')}
-              </div>
-              
-              <div class="info-row">
-                <span class="info-label"><i class="fas fa-calendar-week"></i> الحصة الثانية:</span>
-                ${createAttendanceBadge(data.week2, data.week2 || 'لم تسجل')}
-              </div>
-              
-              <div class="info-row">
-                <span class="info-label"><i class="fas fa-calendar-week"></i> الحصة الثالثة:</span>
-                ${createAttendanceBadge(data.week3, data.week3 || 'لم تسجل')}
-              </div>
-              
-              <div class="info-row">
-                <span class="info-label"><i class="fas fa-calendar-week"></i> الحصة الرابعة:</span>
-                ${createAttendanceBadge(data.week4, data.week4 || 'لم تسجل')}
-              </div>
-
-                            <div class="info-row">
-                <span class="info-label"><i class="fas fa-calendar-week"></i>  الحصة الأولى الشهر لثاني:</span>
-                ${createAttendanceBadge(data.week5, data.week5 || 'لم تسجل')}
-              </div>
-              
-              <div class="info-row">
-                <span class="info-label"><i class="fas fa-calendar-week"></i> الحصة الثانية الشهر الثاني:</span>
-                ${createAttendanceBadge(data.week6, data.week6 || 'لم تسجل')}
-              </div>
-              
-              <div class="info-row">
-                <span class="info-label"><i class="fas fa-calendar-week"></i> الحصة الثالثة الشهر الثاني:</span>
-                ${createAttendanceBadge(data.week7, data.week7 || 'لم تسجل')}
-              </div>
-              
-              <div class="info-row">
-                <span class="info-label"><i class="fas fa-calendar-week"></i> الحصة الرابعة الثاني:</span>
-                ${createAttendanceBadge(data.week8, data.week8 || 'لم تسجل')}
-              </div>
           `;
+          
+          // إضافة جميع المحاضرات مرتبة
+          const lectureKeys = getOrderedLectures(data);
+          console.log('المحاضرات المرتبة:', lectureKeys); // للتصحيح
+          
+          lectureKeys.forEach(key => {
+            if (key !== 'name' && key !== 'center' && key !== 'geo' && key !== 'found') {
+              const value = data[key];
+              console.log(`المحاضرة ${key}:`, value); // للتصحيح
+              resultHTML += `
+                <div class="info-row">
+                  <span class="info-label"><i class="fas fa-calendar-week"></i> ${key}:</span>
+                  ${createAttendanceBadge(value)}
+                </div>
+              `;
+            }
+          });
+          
+          resultHTML += `</div>`;
+          resultDiv.innerHTML += resultHTML;
         } else {
           resultDiv.innerHTML = `
             <div class="error-card">
@@ -483,6 +667,7 @@
           `;
         }
       } catch (err) {
+        console.error('Error:', err);
         loadingScreen.style.display = "none";
         resultDiv.innerHTML = `
           <div class="error-card connection-error">
@@ -492,6 +677,68 @@
         `;
       }
     });
+
+    // دالة للبحث عن أحدث محاضرة به بيانات
+    function findLatestLecture(data) {
+      const lectureKeys = getOrderedLectures(data);
+      
+      // البحث من الأخير إلى الأول (أحدث محاضرة هي الأخيرة)
+      for (let i = lectureKeys.length - 1; i >= 0; i--) {
+        const key = lectureKeys[i];
+        const value = data[key];
+        // التحقق من وجود بيانات وليست فارغة
+        if (value !== undefined && value !== null && value.toString().trim() !== '') {
+          return {
+            key: key,
+            name: key,
+            value: value
+          };
+        }
+      }
+      
+      return null;
+    }
+
+    // دالة للحصول على المحاضرات مرتبة
+    function getOrderedLectures(data) {
+      // استبعاد الحقول غير المرتبطة بالمحاضرات
+      const excludedKeys = ['name', 'center', 'geo', 'found'];
+      
+      // استخراج جميع المفاتيح التي تمثل محاضرات
+      const lectureKeys = Object.keys(data).filter(key => 
+        !excludedKeys.includes(key) && 
+        (key.includes('اسبوع') || key.includes('week') || 
+         key.includes('حصة') || key.includes('الحصة') ||
+         key.includes('محاضرة') || key.includes('المحاضرة') ||
+         key.includes('حصه') || key.includes('الحصه') ||
+         key.match(/^week\d+$/i) || key.match(/^اسبوع\d+$/i))
+      );
+      
+      // ترتيب حسب الرقم الموجود في اسم المحاضرة
+      return lectureKeys.sort((a, b) => {
+        const getLectureNumber = (key) => {
+          const numMatch = key.match(/\d+/);
+          return numMatch ? parseInt(numMatch[0]) : 0;
+        };
+        return getLectureNumber(a) - getLectureNumber(b);
+      });
+    }
+
+    // دالة لاستخراج رقم المحاضرة
+    function getLectureNumber(lectureName) {
+      const numMatch = lectureName.match(/\d+/);
+      return numMatch ? parseInt(numMatch[0]) : 1;
+    }
+
+    // دالة لإنشاء نقاط التقدم
+    function generateProgressDots(currentLecture) {
+      let dots = '';
+      const totalLectures = 8; // يمكن تعديل هذا الرقم حسب عدد المحاضرات
+      for (let i = 1; i <= totalLectures; i++) {
+        dots += `<div class="progress-dot ${i === currentLecture ? 'active' : ''}"></div>`;
+      }
+      return dots;
+    }
   </script>
 </body>
 </html>
