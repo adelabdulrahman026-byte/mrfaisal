@@ -169,6 +169,82 @@
       margin-top: 20px;
     }
     
+    /* كارت أحدث امتحان */
+    .latest-exam-card {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      color: white;
+      padding: 25px;
+      border-radius: 18px;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 25px rgba(42, 107, 143, 0.3);
+      text-align: center;
+      animation: slideDown 0.6s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .latest-exam-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 50%);
+    }
+    
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .latest-exam-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 15px;
+      font-size: 20px;
+      font-weight: 700;
+      position: relative;
+      z-index: 2;
+    }
+    
+    .latest-exam-name {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 8px 20px;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 16px;
+      display: inline-block;
+      margin: 8px 0;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      position: relative;
+      z-index: 2;
+    }
+    
+    .latest-exam-grade {
+      font-size: 32px;
+      font-weight: 800;
+      margin: 15px 0;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      position: relative;
+      z-index: 2;
+      padding: 15px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+    }
+    
+    .latest-exam-footer {
+      font-size: 14px;
+      opacity: 0.9;
+      margin-top: 12px;
+      position: relative;
+      z-index: 2;
+    }
+    
     .result-card {
       background: linear-gradient(to bottom, #f9fbfd, #ffffff);
       padding: 25px;
@@ -247,15 +323,58 @@
       font-size: 16px;
     }
     
-    .week-score {
+    .grade-value {
       display: inline-block;
-      padding: 4px 10px;
+      padding: 4px 12px;
       border-radius: 20px;
-      background: rgba(56, 161, 105, 0.1);
-      color: var(--success);
       font-weight: 600;
       font-size: 14px;
       margin-top: 5px;
+      margin-right: 8px;
+      background: rgba(56, 161, 105, 0.1);
+      color: var(--success);
+    }
+    
+    .stats-card {
+      background: linear-gradient(to bottom, #e3f2fd, #f3e5f5);
+      padding: 20px;
+      border-radius: 18px;
+      margin-bottom: 20px;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+      text-align: center;
+      animation: fadeIn 0.5s ease;
+    }
+    
+    .stats-header {
+      color: var(--primary-dark);
+      margin-bottom: 15px;
+      font-weight: 700;
+    }
+    
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-top: 15px;
+    }
+    
+    .stat-item {
+      background: white;
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    }
+    
+    .stat-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--primary);
+      margin: 5px 0;
+    }
+    
+    .stat-label {
+      font-size: 14px;
+      color: var(--text);
     }
     
     .error-card {
@@ -285,6 +404,35 @@
       color: var(--text-light);
       font-size: 14px;
       text-align: center;
+    }
+    
+    @media (max-width: 480px) {
+      .container {
+        padding: 30px 20px 20px;
+      }
+      
+      h2 {
+        font-size: 22px;
+      }
+      
+      .latest-exam-grade {
+        font-size: 28px;
+      }
+      
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .result-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+      
+      .result-icon {
+        margin-left: 0;
+        margin-bottom: 8px;
+      }
     }
   </style>
 </head>
@@ -329,7 +477,7 @@
   </div>
 
   <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbzqS_aLdHrLhg7EBQGmc6CW-v26mrkwCTKL_4KDRmLEl_2RixG5rYCikNvD3UkJPJxUCA/exec";
+    const API_URL = "https://script.google.com/macros/s/AKfycbwLhrNB4Pjdr9PMw8iguC_zcgelyQKV3gCCAiq5cdJz6q6B4krG-CriCEh65hSgaGrpGQ/exec";
     const form = document.getElementById("attendanceForm");
     const loadingScreen = document.getElementById("loadingScreen");
     const resultDiv = document.getElementById("result");
@@ -340,17 +488,128 @@
       loadingScreen.style.display = "flex";
 
       const id = document.getElementById("studentId").value.trim();
+      
       try {
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        
         const res = await fetch(`${API_URL}?id=${encodeURIComponent(id)}`);
         const data = await res.json();
         loadingScreen.style.display = "none";
 
         if (data.found) {
-          resultDiv.innerHTML = `
+          // دالة لاستخراج الرقم من الدرجة (مثل "9 من 10" تعيد 9)
+          const extractGradeNumber = (grade) => {
+            if (!grade || grade.toString().trim() === '' || grade === 'لايوجد') return null;
+            
+            const gradeStr = grade.toString().trim();
+            // البحث عن رقم في النص
+            const match = gradeStr.match(/(\d+)/);
+            return match ? parseInt(match[1]) : null;
+          };
+
+          // دالة لاستخراج الدرجة الكاملة من النص
+          const extractFullGrade = (grade) => {
+            if (!grade || grade.toString().trim() === '' || grade === 'لايوجد') return 'لايوجد';
+            return grade.toString().trim();
+          };
+
+          // دالة للبحث عن أحدث امتحان به بيانات
+          const findLatestExam = (data) => {
+            const examKeys = ['week5', 'week4', 'week3', 'week2', 'week1'];
+            
+            for (const key of examKeys) {
+              const value = data[key];
+              if (value && value.toString().trim() !== '' && value !== 'لايوجد') {
+                return {
+                  key: key,
+                  name: getExamName(key),
+                  value: value
+                };
+              }
+            }
+            
+            return null;
+          };
+
+          // دالة للحصول على اسم الامتحان
+          const getExamName = (key) => {
+            const examNames = {
+              'week1': 'امتحان الحصه الأولي',
+              'week2': 'امتحان الحصه التانيه',
+              'week3': 'امتحان الحصه الثالثه',
+              'week4': 'امتحان الحصه الرابعه',
+              'week5': 'امتحان الحصه الاولي الشهر الثاني'
+            };
+            return examNames[key] || key;
+          };
+
+          // البحث عن أحدث امتحان
+          const latestExam = findLatestExam(data);
+
+          let resultHTML = '';
+          
+          // عرض كارت أحدث امتحان إذا وجد
+          if (latestExam) {
+            resultHTML += `
+              <div class="latest-exam-card">
+                <div class="latest-exam-header">
+                  <i class="fas fa-calendar-check"></i>
+                  أحدث امتحان
+                </div>
+                <div class="latest-exam-name">${latestExam.name}</div>
+                <div class="latest-exam-grade">${latestExam.value}</div>
+                <div class="latest-exam-footer">
+                  آخر امتحان تم تسجيل نتيجته
+                </div>
+              </div>
+            `;
+          }
+          
+          // إحصائيات النتائج
+          const weekKeys = ['week1', 'week2', 'week3', 'week4', 'week5'];
+          let completedExams = 0;
+          let totalScore = 0;
+          
+          weekKeys.forEach(key => {
+            const gradeNum = extractGradeNumber(data[key]);
+            if (gradeNum !== null) {
+              completedExams++;
+              totalScore += gradeNum;
+            }
+          });
+          
+          const averageScore = completedExams > 0 ? (totalScore / completedExams).toFixed(1) : 0;
+          
+          resultHTML += `
+            <div class="stats-card">
+              <h3 class="stats-header"><i class="fas fa-chart-pie"></i> إحصائيات النتائج</h3>
+              <div class="stats-grid">
+                <div class="stat-item">
+                  <div class="stat-value">${completedExams}</div>
+                  <div class="stat-label">عدد الامتحانات</div>
+                </div>
+                <div class="stat-item">
+                  <div class="stat-value">${averageScore}</div>
+                  <div class="stat-label">المتوسط الحالي</div>
+                </div>
+                <div class="stat-item">
+                  <div class="stat-value">${weekKeys.length}</div>
+                  <div class="stat-label">إجمالي الامتحانات</div>
+                </div>
+                <div class="stat-item">
+                  <div class="stat-value">${completedExams}/${weekKeys.length}</div>
+                  <div class="stat-label">نسبة الإنجاز</div>
+                </div>
+              </div>
+            </div>
+          `;
+          
+          // عرض كارت النتائج التفصيلية - بنفس البيانات الموجودة في الإكسل
+          resultHTML += `
             <div class="result-card">
               <div class="result-header">
                 <i class="fas fa-user-graduate"></i>
-                <h3>نتيجة الطالب</h3>
+                <h3>النتائج التفصيلية</h3>
               </div>
               
               <div class="result-item">
@@ -379,7 +638,10 @@
                 </div>
                 <div class="result-content">
                   <div class="result-label">امتحان الحصه الأولي</div>
-                  <div class="result-value">${data.week1} <span class="week-score">لايوجد</span></div>
+                  <div class="result-value">
+                    ${extractFullGrade(data.week1)}
+                    ${extractGradeNumber(data.week1) !== null ? `<span class="grade-value">${extractGradeNumber(data.week1)}</span>` : ''}
+                  </div>
                 </div>
               </div>
               
@@ -389,7 +651,10 @@
                 </div>
                 <div class="result-content">
                   <div class="result-label">امتحان الحصه التانيه</div>
-                  <div class="result-value">${data.week2} <span class="week-score">لايوجد</span></div>
+                  <div class="result-value">
+                    ${extractFullGrade(data.week2)}
+                    ${extractGradeNumber(data.week2) !== null ? `<span class="grade-value">${extractGradeNumber(data.week2)}</span>` : ''}
+                  </div>
                 </div>
               </div>
 
@@ -399,7 +664,10 @@
                 </div>
                 <div class="result-content">
                   <div class="result-label">امتحان الحصه الثالثه</div>
-                  <div class="result-value">${data.week3} <span class="week-score">في الامتحان</span></div>
+                  <div class="result-value">
+                    ${extractFullGrade(data.week3)}
+                    ${extractGradeNumber(data.week3) !== null ? `<span class="grade-value">${extractGradeNumber(data.week3)}</span>` : ''}
+                  </div>
                 </div>
               </div>
 
@@ -409,10 +677,12 @@
                 </div>
                 <div class="result-content">
                   <div class="result-label">امتحان الحصه الرابعه</div>
-                  <div class="result-value">${data.week4} <span class="week-score">في الامتحان</span></div>
+                  <div class="result-value">
+                    ${extractFullGrade(data.week4)}
+                    ${extractGradeNumber(data.week4) !== null ? `<span class="grade-value">${extractGradeNumber(data.week4)}</span>` : ''}
+                  </div>
                 </div>
               </div>
-            </div>
 
               <div class="result-item">
                 <div class="result-icon">
@@ -420,11 +690,16 @@
                 </div>
                 <div class="result-content">
                   <div class="result-label">امتحان الحصه الاولي الشهر الثاني</div>
-                  <div class="result-value">${data.week5} <span class="week-score">في الامتحان</span></div>
+                  <div class="result-value">
+                    ${extractFullGrade(data.week5)}
+                    ${extractGradeNumber(data.week5) !== null ? `<span class="grade-value">${extractGradeNumber(data.week5)}</span>` : ''}
+                  </div>
                 </div>
               </div>
             </div>     
           `;
+          
+          resultDiv.innerHTML = resultHTML;
         } else {
           resultDiv.innerHTML = `
             <div class="error-card">
@@ -435,6 +710,7 @@
           `;
         }
       } catch (err) {
+        console.error('Error:', err);
         loadingScreen.style.display = "none";
         resultDiv.innerHTML = `
           <div class="error-card">
