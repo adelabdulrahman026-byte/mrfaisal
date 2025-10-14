@@ -479,27 +479,6 @@
             font-size: 16px;
         }
 
-        .back-button {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
-            margin-top: 15px;
-        }
-
-        .back-button:hover {
-            background: linear-gradient(135deg, #ee5a52 0%, #d63031 100%);
-        }
-
-        .retrieve-section {
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 2px dashed #e0e0e0;
-        }
-
-        .retrieve-section h3 {
-            text-align: center;
-            color: var(--primary);
-            margin-bottom: 15px;
-        }
-
         .retrieve-note {
             background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
             padding: 15px;
@@ -539,6 +518,17 @@
             background: #fff;
             box-shadow: 0 3px 10px rgba(0,0,0,0.05);
             border-left: 4px solid var(--primary);
+        }
+
+        .warning-note {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffecb3 100%);
+            padding: 15px;
+            border-radius: 12px;
+            margin: 15px 0;
+            text-align: center;
+            font-weight: 600;
+            color: #e65100;
+            border: 2px solid #ffb74d;
         }
 
         @keyframes fadeIn {
@@ -675,45 +665,13 @@
 <body oncontextmenu="return false;">
     <div class="container">
 
-        <!-- قسم استرجاع الواجب -->
-        <div class="card" id="retrieveCard">
-            <h2><i class="fas fa-redo"></i> مراجعة الواجب مرة أخرى</h2>
-            <div class="retrieve-note">
-                <p><i class="fas fa-info-circle"></i> هذا القسم خاص باسترجاع واجب <strong>محاضرة 7</strong> فقط</p>
-                <p>إذا نسيت أخذ سكرين شوت لـ QR بتاعك، ممكن تدخل بياناتك هنا وتسترجعه</p>
-            </div>
-            
-            <div class="input-group">
-                <i class="fas fa-phone"></i>
-                <input type="text" id="retrieveMobile" placeholder="رقم الموبايل (يبدأ بـ 01)" maxlength="11">
-                <div class="error-message" id="mobileError">رقم الموبايل يجب أن يبدأ بـ 01 ويتكون من 11 رقم</div>
-            </div>
-            
-            <div class="input-group">
-                <i class="fas fa-key"></i>
-                <input type="text" id="retrieveCode" placeholder="كود السنتر (أرقام فقط)" maxlength="6">
-                <div class="error-message" id="codeError">كود السنتر يجب أن يتكون من أرقام فقط</div>
-            </div>
-            
-            <button onclick="retrieveHomework()"><i class="fas fa-search"></i> استرجاع QR والنتيجة</button>
-            
-            <div id="retrieveResult" style="display:none; margin-top:20px;">
-                <div class="two-column-layout">
-                    <div class="column">
-                        <div class="qr-section">
-                            <div class="qr-label">QR الخاص بك - خذه سكرين شوت 📱</div>
-                            <div class="qr-container" id="retrievedQR"></div>
-                        </div>
-                        <div id="retrievedInfo" class="exam-info"></div>
-                    </div>
-                    <div class="column">
-                        <div class="answers-review" id="retrievedAnswers"></div>
-                    </div>
-                </div>
-            </div>
+        <!-- قسم عمل الواجب -->
+        <div class="card" id="startCard">
+            <h2>اختر نوع الطالب</h2>
+            <button onclick="selectType('online')"><i class="fas fa-mobile-alt"></i> 📱 اونلاين</button>
+            <button onclick="selectType('center')"><i class="fas fa-school"></i> 🏫 سنتر</button>
         </div>
 
-        <!-- بقية المحتوى الأصلي -->
         <div id="gifStart">
             <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.6.2/dist/dotlottie-wc.js" type="module"></script>
             <dotlottie-wc src="https://lottie.host/6c635af3-0ee0-46cc-9591-53d8df9c6044/7cuWsYrWj2.lottie" style="width:300px;height:300px;" speed="1" autoplay loop></dotlottie-wc>
@@ -723,12 +681,6 @@
         <div id="gifLoading">
             <dotlottie-wc src="https://lottie.host/5829b1a2-22e2-4d58-ad28-3812b8290c8e/BXr2Nt8kFD.lottie" style="width:300px;height:300px;" speed="1" autoplay loop></dotlottie-wc>
             <div id="gifMessage">يلا نعمل الواجب يا بطل 🚀</div>
-        </div>
-
-        <div class="card" id="startCard">
-            <h2>اختر نوع الطالب</h2>
-            <button onclick="selectType('online')"><i class="fas fa-mobile-alt"></i> 📱 اونلاين</button>
-            <button onclick="selectType('center')"><i class="fas fa-school"></i> 🏫 سنتر</button>
         </div>
 
         <div class="card" id="formCard" style="display:none;">
@@ -817,18 +769,52 @@
                 <div class="qr-container" id="qrContainerBottom"></div>
             </div>
 
-            <!-- زر العودة للنتائج -->
-            <button class="back-button" onclick="showResultAgain()"><i class="fas fa-redo"></i> عرض النتيجة مرة أخرى</button>
-
-            <!-- قسم استرجاع الواجب -->
-            <div class="retrieve-section">
-                <h3><i class="fas fa-redo"></i> لو نسيت تأخذ سكرين شوت لـ QR</h3>
-                <p style="text-align:center; margin-bottom:15px;">ممكن ترجع لأول الصفحه في قسم "مراجعة الواجب مرة أخرى" وتدخل رقم الموبايل وكود السنتر علشان تسترجع QR بتاعك ونتيجتك</p>
-                <button onclick="goToRetrieveSection()"><i class="fas fa-arrow-up"></i> الانتقال لقسم الاسترجاع</button>
-            </div>
-
             <!-- نصيحة الطالب -->
             <div id="advice" style="text-align:center;font-size:18px;margin-top:15px;color:var(--primary);font-weight:bold"></div>
+        </div>
+
+        <!-- قسم استرجاع الواجب -->
+        <div class="card" id="retrieveCard">
+            <h2><i class="fas fa-redo"></i> مراجعة الواجب مرة أخرى</h2>
+            <div class="retrieve-note">
+                <p><i class="fas fa-info-circle"></i> هذا القسم خاص باسترجاع واجب <strong>محاضرة 7</strong> فقط</p>
+                <p>إذا نسيت أخذ سكرين شوت لـ QR بتاعك، ممكن تدخل بياناتك هنا وتسترجعه</p>
+            </div>
+
+            <div class="warning-note">
+                <p><i class="fas fa-exclamation-triangle"></i> <strong>تنبيه هام:</strong> علشان تشوف QR تاني لازم:</p>
+                <p>1. تكتب نفس بيانات اللي كتبتها وانت بتعمل الواجب</p>
+                <p>2. تكون من نفس الموبيل اللي عملت من الواجب</p>
+            </div>
+            
+            <div class="input-group">
+                <i class="fas fa-phone"></i>
+                <input type="text" id="retrieveMobile" placeholder="رقم الموبايل (يبدأ بـ 01)" maxlength="11">
+                <div class="error-message" id="mobileError">رقم الموبايل يجب أن يبدأ بـ 01 ويتكون من 11 رقم</div>
+            </div>
+            
+            <div class="input-group">
+                <i class="fas fa-key"></i>
+                <input type="text" id="retrieveCode" placeholder="كود السنتر (أرقام فقط)" maxlength="6">
+                <div class="error-message" id="codeError">كود السنتر يجب أن يتكون من أرقام فقط</div>
+            </div>
+            
+            <button onclick="retrieveHomework()"><i class="fas fa-search"></i> استرجاع QR والنتيجة</button>
+            
+            <div id="retrieveResult" style="display:none; margin-top:20px;">
+                <div class="two-column-layout">
+                    <div class="column">
+                        <div class="qr-section">
+                            <div class="qr-label">QR الخاص بك - خذه سكرين شوت 📱</div>
+                            <div class="qr-container" id="retrievedQR"></div>
+                        </div>
+                        <div id="retrievedInfo" class="exam-info"></div>
+                    </div>
+                    <div class="column">
+                        <div class="answers-review" id="retrievedAnswers"></div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -1127,6 +1113,8 @@
 
             document.getElementById('homeworkCard').style.display="none";
             document.getElementById('resultCard').style.display="block";
+            // إخفاء قسم الاسترجاع بعد عمل الواجب
+            document.getElementById('retrieveCard').style.display="none";
 
             // إنشاء QR في أعلى الصفحة
             document.getElementById('qrContainerTop').innerHTML="";
@@ -1205,46 +1193,6 @@
             }
         }
 
-        // دالة للعرض مرة أخرى للنتيجة
-        function showResultAgain() {
-            if (!studentResultData) return;
-            
-            document.getElementById('startCard').style.display = "none";
-            document.getElementById('formCard').style.display = "none";
-            document.getElementById('homeworkCard').style.display = "none";
-            document.getElementById('resultCard').style.display = "block";
-            
-            // إعادة إنشاء QR في أعلى الصفحة
-            document.getElementById('qrContainerTop').innerHTML="";
-            let qrTop = kjua({text:studentResultData.studentQR,size:250,render:'canvas',fill:'#4a148c',quiet:2,rounded:10});
-            document.getElementById('qrContainerTop').appendChild(qrTop);
-
-            // إعادة إنشاء QR في أسفل الصفحة
-            document.getElementById('qrContainerBottom').innerHTML="";
-            let qrBottom = kjua({text:studentResultData.studentQR,size:250,render:'canvas',fill:'#4a148c',quiet:2,rounded:10});
-            document.getElementById('qrContainerBottom').appendChild(qrBottom);
-
-            // إعادة تعيين البيانات الأخرى
-            document.getElementById('submissionDate').innerText = studentResultData.egyptDateTime.date;
-            document.getElementById('submissionTime').innerText = studentResultData.egyptDateTime.time;
-            document.getElementById('answersReview').innerHTML = studentResultData.reviewHTML;
-            document.getElementById('studentInfo').innerText = 
-                `الاسم: ${studentResultData.name}\nالموبايل: ${studentResultData.mobile}\nالنوع: ${studentType}\nكود السنتر: ${studentResultData.code}\nدرجتك: ${studentResultData.score}/${studentResultData.total}\nوقت التسليم: ${studentResultData.egyptDateTime.fullDateTime}`;
-
-            // نصيحة حسب الدرجة
-            const adviceDiv = document.getElementById('advice');
-            const total = studentResultData.total;
-            const score = studentResultData.score;
-            if(score < total/2){
-                adviceDiv.innerText = "😅 شد حيلك يا بطل! المرة الجاية هتكون أفضل 💪";
-            } else if(score === total/2){
-                adviceDiv.innerText = "🙂 كويس! بس ممكن تحسن شوي 👍";
-            } else if(score > total/2){
-                const phrases=["✨ أشطر شطور ✨","🐥 أشطر كتكوت 🐥","💯 ممتاز يا بطل 💯"];
-                adviceDiv.innerText = phrases[Math.floor(Math.random()*phrases.length)];
-            }
-        }
-
         // دالة استرجاع الواجب
         function retrieveHomework() {
             const mobile = document.getElementById('retrieveMobile').value.trim();
@@ -1310,12 +1258,6 @@
                 document.getElementById('retrievedInfo').innerHTML = "<p style='text-align:center;'>يرجى التأكد من رقم الموبايل وكود السنتر</p>";
                 document.getElementById('retrievedAnswers').innerHTML = "";
             }
-        }
-
-        // دالة الانتقال لقسم الاسترجاع
-        function goToRetrieveSection() {
-            document.getElementById('resultCard').style.display = 'none';
-            document.getElementById('retrieveCard').scrollIntoView({ behavior: 'smooth' });
         }
     </script>
 </body>
