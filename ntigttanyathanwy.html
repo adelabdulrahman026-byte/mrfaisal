@@ -477,7 +477,7 @@
   </div>
 
   <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbzqS_aLdHrLhg7EBQGmc6CW-v26mrkwCTKL_4KDRmLEl_2RixG5rYCikNvD3UkJPJxUCA/exec";
+    const API_URL = "https://script.google.com/macros/s/AKfycby5DQX8riNR9nVZ3yzeyQLH01Sn34dtl5o0CdIbWk3ri4TGRWqIaKlxlMqJEHF06z_XBA/exec";
     const form = document.getElementById("attendanceForm");
     const loadingScreen = document.getElementById("loadingScreen");
     const resultDiv = document.getElementById("result");
@@ -513,16 +513,39 @@
             return grade.toString().trim();
           };
 
-          // دالة للبحث عن أحدث امتحان به بيانات
+          // الحصول على جميع مفاتيح الامتحانات تلقائياً
+          const getAllExamKeys = (data) => {
+            return Object.keys(data).filter(key => 
+              (key.startsWith('week') || 
+               key.includes('حصه') || 
+               key.includes('امتحان') ||
+               key.match(/week\d+/i)) &&
+              key !== 'name' && 
+              key !== 'geo' && 
+              key !== 'found' &&
+              key !== 'center'
+            ).sort((a, b) => {
+              // ترتيب تصاعدي حسب الأرقام
+              const getNum = (str) => {
+                const match = str.match(/\d+/);
+                return match ? parseInt(match[0]) : 0;
+              };
+              return getNum(a) - getNum(b);
+            });
+          };
+
+          // دالة للبحث عن أحدث امتحان به بيانات (آخر عمود في البيانات)
           const findLatestExam = (data) => {
-            const examKeys = ['week5', 'week4', 'week3', 'week2', 'week1'];
+            const examKeys = getAllExamKeys(data);
             
-            for (const key of examKeys) {
+            // البحث من آخر عمود إلى أول عمود (أحدث امتحان هو الأخير في القائمة)
+            for (let i = examKeys.length - 1; i >= 0; i--) {
+              const key = examKeys[i];
               const value = data[key];
               if (value && value.toString().trim() !== '' && value !== 'لايوجد') {
                 return {
                   key: key,
-                  name: getExamName(key),
+                  name: key, // استخدام اسم العمود كما هو من الإكسل
                   value: value
                 };
               }
@@ -531,18 +554,8 @@
             return null;
           };
 
-          // دالة للحصول على اسم الامتحان
-          const getExamName = (key) => {
-            const examNames = {
-              'week1': 'امتحان الحصه الأولي',
-              'week2': 'امتحان الحصه التانيه',
-              'week3': 'امتحان الحصه الثالثه',
-              'week4': 'امتحان الحصه الرابعه',
-              'week5': 'امتحان الحصه الاولي الشهر الثاني'
-            };
-            return examNames[key] || key;
-          };
-
+          // الحصول على جميع مفاتيح الامتحانات
+          const examKeys = getAllExamKeys(data);
           // البحث عن أحدث امتحان
           const latestExam = findLatestExam(data);
 
@@ -566,11 +579,10 @@
           }
           
           // إحصائيات النتائج
-          const weekKeys = ['week1', 'week2', 'week3', 'week4', 'week5'];
           let completedExams = 0;
           let totalScore = 0;
           
-          weekKeys.forEach(key => {
+          examKeys.forEach(key => {
             const gradeNum = extractGradeNumber(data[key]);
             if (gradeNum !== null) {
               completedExams++;
@@ -579,6 +591,7 @@
           });
           
           const averageScore = completedExams > 0 ? (totalScore / completedExams).toFixed(1) : 0;
+          const totalExams = examKeys.length;
           
           resultHTML += `
             <div class="stats-card">
@@ -593,11 +606,11 @@
                   <div class="stat-label">المتوسط الحالي</div>
                 </div>
                 <div class="stat-item">
-                  <div class="stat-value">${weekKeys.length}</div>
+                  <div class="stat-value">${totalExams}</div>
                   <div class="stat-label">إجمالي الامتحانات</div>
                 </div>
                 <div class="stat-item">
-                  <div class="stat-value">${completedExams}/${weekKeys.length}</div>
+                  <div class="stat-value">${completedExams}/${totalExams}</div>
                   <div class="stat-label">نسبة الإنجاز</div>
                 </div>
               </div>
@@ -631,73 +644,28 @@
                   <div class="result-value">${data.geo}</div>
                 </div>
               </div>
-              
-              <div class="result-item">
-                <div class="result-icon">
-                  <i class="fas fa-calendar-week"></i>
-                </div>
-                <div class="result-content">
-                  <div class="result-label">امتحان الحصه الأولي</div>
-                  <div class="result-value">
-                    ${extractFullGrade(data.week1)}
-                    ${extractGradeNumber(data.week1) !== null ? `<span class="grade-value">${extractGradeNumber(data.week1)}</span>` : ''}
-                  </div>
-                </div>
-              </div>
-              
-              <div class="result-item">
-                <div class="result-icon">
-                  <i class="fas fa-calendar-week"></i>
-                </div>
-                <div class="result-content">
-                  <div class="result-label">امتحان الحصه التانيه</div>
-                  <div class="result-value">
-                    ${extractFullGrade(data.week2)}
-                    ${extractGradeNumber(data.week2) !== null ? `<span class="grade-value">${extractGradeNumber(data.week2)}</span>` : ''}
-                  </div>
-                </div>
-              </div>
-
-              <div class="result-item">
-                <div class="result-icon">
-                  <i class="fas fa-calendar-week"></i>
-                </div>
-                <div class="result-content">
-                  <div class="result-label">امتحان الحصه الثالثه</div>
-                  <div class="result-value">
-                    ${extractFullGrade(data.week3)}
-                    ${extractGradeNumber(data.week3) !== null ? `<span class="grade-value">${extractGradeNumber(data.week3)}</span>` : ''}
-                  </div>
-                </div>
-              </div>
-
-              <div class="result-item">
-                <div class="result-icon">
-                  <i class="fas fa-calendar-week"></i>
-                </div>
-                <div class="result-content">
-                  <div class="result-label">امتحان الحصه الرابعه</div>
-                  <div class="result-value">
-                    ${extractFullGrade(data.week4)}
-                    ${extractGradeNumber(data.week4) !== null ? `<span class="grade-value">${extractGradeNumber(data.week4)}</span>` : ''}
-                  </div>
-                </div>
-              </div>
-
-              <div class="result-item">
-                <div class="result-icon">
-                  <i class="fas fa-calendar-week"></i>
-                </div>
-                <div class="result-content">
-                  <div class="result-label">امتحان الحصه الاولي الشهر الثاني</div>
-                  <div class="result-value">
-                    ${extractFullGrade(data.week5)}
-                    ${extractGradeNumber(data.week5) !== null ? `<span class="grade-value">${extractGradeNumber(data.week5)}</span>` : ''}
-                  </div>
-                </div>
-              </div>
-            </div>     
           `;
+          
+          // إضافة جميع الامتحانات تلقائياً
+          examKeys.forEach(key => {
+            const gradeValue = data[key];
+            resultHTML += `
+              <div class="result-item">
+                <div class="result-icon">
+                  <i class="fas fa-calendar-week"></i>
+                </div>
+                <div class="result-content">
+                  <div class="result-label">${key}</div>
+                  <div class="result-value">
+                    ${extractFullGrade(gradeValue)}
+                    ${extractGradeNumber(gradeValue) !== null ? `<span class="grade-value">${extractGradeNumber(gradeValue)}</span>` : ''}
+                  </div>
+                </div>
+              </div>
+            `;
+          });
+          
+          resultHTML += `</div>`; // إغلاق result-card
           
           resultDiv.innerHTML = resultHTML;
         } else {
