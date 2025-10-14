@@ -531,6 +531,15 @@
             border: 2px solid #ffb74d;
         }
 
+        .retrieve-button {
+            background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+            margin: 10px 0;
+        }
+
+        .retrieve-button:hover {
+            background: linear-gradient(135deg, #f57c00 0%, #e65100 100%);
+        }
+
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -670,6 +679,55 @@
             <h2>اختر نوع الطالب</h2>
             <button onclick="selectType('online')"><i class="fas fa-mobile-alt"></i> 📱 اونلاين</button>
             <button onclick="selectType('center')"><i class="fas fa-school"></i> 🏫 سنتر</button>
+            
+            <!-- زر مراجعة الواجب -->
+            <button class="retrieve-button" onclick="toggleRetrieveSection()">
+                <i class="fas fa-redo"></i> مراجعة الواجب مرة أخرى
+            </button>
+        </div>
+
+        <!-- قسم استرجاع الواجب (مخفي في البداية) -->
+        <div class="card" id="retrieveCard" style="display:none;">
+            <h2><i class="fas fa-redo"></i> مراجعة الواجب مرة أخرى</h2>
+            <div class="retrieve-note">
+                <p><i class="fas fa-info-circle"></i> هذا القسم خاص باسترجاع واجب <strong>محاضرة 7</strong> فقط</p>
+                <p>إذا نسيت أخذ سكرين شوت لـ QR بتاعك، ممكن تدخل بياناتك هنا وتسترجعه</p>
+            </div>
+
+            <div class="warning-note">
+                <p><i class="fas fa-exclamation-triangle"></i> <strong>تنبيه هام:</strong> علشان تشوف QR تاني لازم:</p>
+                <p>1. تكتب نفس بيانات اللي كتبتها وانت بتعمل الواجب</p>
+                <p>2. تكون من نفس الموبيل اللي عملت من الواجب</p>
+            </div>
+            
+            <div class="input-group">
+                <i class="fas fa-phone"></i>
+                <input type="text" id="retrieveMobile" placeholder="رقم الموبايل (يبدأ بـ 01)" maxlength="11">
+                <div class="error-message" id="mobileError">رقم الموبايل يجب أن يبدأ بـ 01 ويتكون من 11 رقم</div>
+            </div>
+            
+            <div class="input-group">
+                <i class="fas fa-key"></i>
+                <input type="text" id="retrieveCode" placeholder="كود السنتر (أرقام فقط)" maxlength="6">
+                <div class="error-message" id="codeError">كود السنتر يجب أن يتكون من أرقام فقط</div>
+            </div>
+            
+            <button onclick="retrieveHomework()"><i class="fas fa-search"></i> استرجاع QR والنتيجة</button>
+            
+            <div id="retrieveResult" style="display:none; margin-top:20px;">
+                <div class="two-column-layout">
+                    <div class="column">
+                        <div class="qr-section">
+                            <div class="qr-label">QR الخاص بك - خذه سكرين شوت 📱</div>
+                            <div class="qr-container" id="retrievedQR"></div>
+                        </div>
+                        <div id="retrievedInfo" class="exam-info"></div>
+                    </div>
+                    <div class="column">
+                        <div class="answers-review" id="retrievedAnswers"></div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div id="gifStart">
@@ -772,50 +830,6 @@
             <!-- نصيحة الطالب -->
             <div id="advice" style="text-align:center;font-size:18px;margin-top:15px;color:var(--primary);font-weight:bold"></div>
         </div>
-
-        <!-- قسم استرجاع الواجب -->
-        <div class="card" id="retrieveCard">
-            <h2><i class="fas fa-redo"></i> مراجعة الواجب مرة أخرى</h2>
-            <div class="retrieve-note">
-                <p><i class="fas fa-info-circle"></i> هذا القسم خاص باسترجاع واجب <strong>محاضرة 7</strong> فقط</p>
-                <p>إذا نسيت أخذ سكرين شوت لـ QR بتاعك، ممكن تدخل بياناتك هنا وتسترجعه</p>
-            </div>
-
-            <div class="warning-note">
-                <p><i class="fas fa-exclamation-triangle"></i> <strong>تنبيه هام:</strong> علشان تشوف QR تاني لازم:</p>
-                <p>1. تكتب نفس بيانات اللي كتبتها وانت بتعمل الواجب</p>
-                <p>2. تكون من نفس الموبيل اللي عملت من الواجب</p>
-            </div>
-            
-            <div class="input-group">
-                <i class="fas fa-phone"></i>
-                <input type="text" id="retrieveMobile" placeholder="رقم الموبايل (يبدأ بـ 01)" maxlength="11">
-                <div class="error-message" id="mobileError">رقم الموبايل يجب أن يبدأ بـ 01 ويتكون من 11 رقم</div>
-            </div>
-            
-            <div class="input-group">
-                <i class="fas fa-key"></i>
-                <input type="text" id="retrieveCode" placeholder="كود السنتر (أرقام فقط)" maxlength="6">
-                <div class="error-message" id="codeError">كود السنتر يجب أن يتكون من أرقام فقط</div>
-            </div>
-            
-            <button onclick="retrieveHomework()"><i class="fas fa-search"></i> استرجاع QR والنتيجة</button>
-            
-            <div id="retrieveResult" style="display:none; margin-top:20px;">
-                <div class="two-column-layout">
-                    <div class="column">
-                        <div class="qr-section">
-                            <div class="qr-label">QR الخاص بك - خذه سكرين شوت 📱</div>
-                            <div class="qr-container" id="retrievedQR"></div>
-                        </div>
-                        <div id="retrievedInfo" class="exam-info"></div>
-                    </div>
-                    <div class="column">
-                        <div class="answers-review" id="retrievedAnswers"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/kjua@0.1.1/dist/kjua.min.js"></script>
@@ -901,9 +915,21 @@
             };
         }
 
+        // دالة لعرض/إخفاء قسم الاسترجاع
+        function toggleRetrieveSection() {
+            const retrieveCard = document.getElementById('retrieveCard');
+            if (retrieveCard.style.display === 'none') {
+                retrieveCard.style.display = 'block';
+                retrieveCard.scrollIntoView({ behavior: 'smooth' });
+            } else {
+                retrieveCard.style.display = 'none';
+            }
+        }
+
         function selectType(type){
             studentType = type;
             document.getElementById('startCard').style.display="none";
+            document.getElementById('retrieveCard').style.display="none"; // إخفاء قسم الاسترجاع
             document.getElementById('gifStart').style.display="block";
             setTimeout(()=>{
                 document.getElementById('gifStart').style.display="none";
@@ -948,6 +974,7 @@
             }
 
             document.getElementById('formCard').style.display="none";
+            document.getElementById('retrieveCard').style.display="none"; // إخفاء قسم الاسترجاع
             document.getElementById('gifLoading').style.display="block";
 
             try{
@@ -1113,8 +1140,6 @@
 
             document.getElementById('homeworkCard').style.display="none";
             document.getElementById('resultCard').style.display="block";
-            // إخفاء قسم الاسترجاع بعد عمل الواجب
-            document.getElementById('retrieveCard').style.display="none";
 
             // إنشاء QR في أعلى الصفحة
             document.getElementById('qrContainerTop').innerHTML="";
