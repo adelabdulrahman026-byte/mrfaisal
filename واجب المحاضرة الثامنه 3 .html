@@ -540,6 +540,71 @@
             background: linear-gradient(135deg, #f57c00 0%, #e65100 100%);
         }
 
+        /* تحسينات لواجهة إدخال البيانات */
+        .form-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .form-header i {
+            font-size: 48px;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .form-header h2 {
+            margin-bottom: 5px;
+        }
+
+        .form-header p {
+            color: var(--text-secondary);
+            font-size: 16px;
+        }
+
+        .input-with-icon {
+            position: relative;
+        }
+
+        .input-with-icon i {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            font-size: 18px;
+            transition: color 0.3s;
+        }
+
+        .input-with-icon input:focus + i {
+            color: var(--primary);
+        }
+
+        .form-footer {
+            margin-top: 25px;
+            text-align: center;
+        }
+
+        .form-footer p {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-top: 15px;
+        }
+
+        .auto-privacy {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            padding: 15px;
+            border-radius: 12px;
+            margin: 15px 0;
+            text-align: center;
+            font-weight: 600;
+            color: #2e7d32;
+            border: 2px solid #a5d6a7;
+        }
+
+        .auto-privacy i {
+            margin-left: 5px;
+        }
+
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -741,27 +806,39 @@
             <div id="gifMessage">يلا نعمل الواجب يا بطل 🚀</div>
         </div>
 
+        <!-- قسم إدخال البيانات مع التصميم المحسن -->
         <div class="card" id="formCard" style="display:none;">
-            <h2>املأ بياناتك</h2>
-            <div class="input-group">
-                <i class="fas fa-user"></i>
-                <input type="text" id="studentName" placeholder="الاسم">
+            <div class="form-header">
+                <i class="fas fa-user-graduate"></i>
+                <h2>املأ بياناتك</h2>
+                <p>أدخل بياناتك الشخصية للبدء في حل الواجب</p>
             </div>
-            <div class="input-group">
-                <i class="fas fa-phone"></i>
+            
+            <div class="input-group input-with-icon">
+                <input type="text" id="studentName" placeholder="الاسم الكامل">
+                <i class="fas fa-user"></i>
+            </div>
+            
+            <div class="input-group input-with-icon">
                 <input type="text" id="studentMobile" placeholder="رقم الموبايل (يبدأ بـ 01)" maxlength="11">
+                <i class="fas fa-phone"></i>
                 <div class="error-message" id="studentMobileError"> برجاء كتابة الرقم بالانجليزي و رقم الموبايل يجب أن يبدأ بـ 01 ويتكون من 11 رقم</div>
             </div>
-            <div class="input-group" id="centerCodeGroup" style="display:none;">
-                <i class="fas fa-key"></i>
+            
+            <div class="input-group input-with-icon" id="centerCodeGroup" style="display:none;">
                 <input type="text" id="centerCode" placeholder="كود السنتر (أرقام فقط)" maxlength="6">
+                <i class="fas fa-key"></i>
                 <div class="error-message" id="centerCodeError"> اكتبالكود بالانجليزي و كود السنتر يجب أن يتكون من أرقام فقط</div>
             </div>
-            <div class="privacy-container">
-                <input type="checkbox" id="privacyCheck">
-                <label for="privacyCheck">أوافق على <a href="https://www.mrfaisal.net/privacy.html" target="_blank">سياسة الخصوصية</a></label>
+            
+            <div class="auto-privacy">
+                <i class="fas fa-check-circle"></i> بمجرد بدء الواجب، أنت توافق تلقائياً على <a href="https://www.mrfaisal.net/privacy.html" target="_blank">سياسة الخصوصية</a>
             </div>
-            <button onclick="startHomework()"><i class="fas fa-play"></i> ابدأ الواجب</button>
+            
+            <div class="form-footer">
+                <button onclick="startHomework()"><i class="fas fa-play"></i> ابدأ الواجب</button>
+                <p>سيتم حفظ إجاباتك تلقائياً أثناء حل الواجب</p>
+            </div>
         </div>
 
         <div class="card" id="homeworkCard" style="display:none;">
@@ -942,7 +1019,6 @@
             const name=document.getElementById('studentName').value.trim();
             const mobile=document.getElementById('studentMobile').value.trim();
             const code=document.getElementById('centerCode').value || "-";
-            const privacyChecked=document.getElementById('privacyCheck').checked;
 
             // التحقق من صحة البيانات
             if(name=="") {
@@ -968,10 +1044,8 @@
                 document.getElementById('centerCodeError').style.display = 'none';
             }
             
-            if(!privacyChecked) {
-                alert("يجب الموافقة على سياسة الخصوصية");
-                return;
-            }
+            // موافقة الخصوصية أصبحت تلقائية عند بدء الواجب
+            // لا حاجة للتحقق من صندوق الموافقة
 
             document.getElementById('formCard').style.display="none";
             document.getElementById('retrieveCard').style.display="none"; // إخفاء قسم الاسترجاع
