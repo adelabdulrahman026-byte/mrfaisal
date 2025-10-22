@@ -605,6 +605,89 @@
             margin-left: 5px;
         }
 
+        /* تحسينات جديدة للواجهة */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        .form-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .quick-action-btn {
+            flex: 1;
+            padding: 12px;
+            background: #f0f0f0;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .quick-action-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .form-hint {
+            background: #f0f7ff;
+            padding: 12px;
+            border-radius: 10px;
+            margin: 10px 0;
+            font-size: 14px;
+            color: var(--primary);
+            border-right: 4px solid var(--primary);
+        }
+
+        .form-hint i {
+            margin-left: 5px;
+        }
+
+        .input-hint {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 5px;
+            display: block;
+        }
+
+        .input-with-validation {
+            position: relative;
+        }
+
+        .validation-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 16px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .input-with-validation.valid .validation-icon {
+            opacity: 1;
+            color: var(--success);
+        }
+
+        .input-with-validation.invalid .validation-icon {
+            opacity: 1;
+            color: var(--accent);
+        }
+
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -660,6 +743,10 @@
             
             .column {
                 min-width: 100%;
+            }
+            
+            .quick-actions {
+                flex-direction: column;
             }
         }
 
@@ -722,6 +809,11 @@
             .two-column-layout {
                 gap: 30px;
             }
+            
+            .form-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 20px;
+            }
         }
 
         /* دعم الأجهزة اللوحية */
@@ -765,15 +857,17 @@
                 <p>2. تكون من نفس الموبيل اللي عملت من الواجب</p>
             </div>
             
-            <div class="input-group">
+            <div class="input-group input-with-validation">
                 <i class="fas fa-phone"></i>
-                <input type="text" id="retrieveMobile" placeholder="رقم الموبايل (يبدأ بـ 01)" maxlength="11">
+                <input type="text" id="retrieveMobile" placeholder="رقم الموبايل (يبدأ بـ 01)" maxlength="11" oninput="validateRetrieveMobile()">
+                <i class="fas fa-check-circle validation-icon"></i>
                 <div class="error-message" id="mobileError">رقم الموبايل يجب أن يبدأ بـ 01 ويتكون من 11 رقم</div>
             </div>
             
-            <div class="input-group">
+            <div class="input-group input-with-validation">
                 <i class="fas fa-key"></i>
-                <input type="text" id="retrieveCode" placeholder="كود السنتر (أرقام فقط)" maxlength="6">
+                <input type="text" id="retrieveCode" placeholder="كود السنتر (أرقام فقط)" maxlength="6" oninput="validateRetrieveCode()">
+                <i class="fas fa-check-circle validation-icon"></i>
                 <div class="error-message" id="codeError">كود السنتر يجب أن يتكون من أرقام فقط</div>
             </div>
             
@@ -814,21 +908,38 @@
                 <p>أدخل بياناتك الشخصية للبدء في حل الواجب</p>
             </div>
             
-            <div class="input-group input-with-icon">
-                <input type="text" id="studentName" placeholder="الاسم الكامل">
-                <i class="fas fa-user"></i>
+            <div class="form-hint">
+                <i class="fas fa-lightbulb"></i> <strong>نصيحة:</strong> اكتب كل البيانات باللغة الإنجليزية لتجنب الأخطاء
             </div>
             
-            <div class="input-group input-with-icon">
-                <input type="text" id="studentMobile" placeholder="رقم الموبايل (يبدأ بـ 01)" maxlength="11">
-                <i class="fas fa-phone"></i>
-                <div class="error-message" id="studentMobileError"> برجاء كتابة الرقم بالانجليزي و رقم الموبايل يجب أن يبدأ بـ 01 ويتكون من 11 رقم</div>
+            <div class="form-grid">
+                <div class="input-group input-with-validation">
+                    <input type="text" id="studentName" placeholder="الاسم الكامل" oninput="validateName()">
+                    <i class="fas fa-user"></i>
+                    <i class="fas fa-check-circle validation-icon"></i>
+                    <span class="input-hint">اكتب اسمك الكامل كما هو مسجل</span>
+                </div>
+                
+                <div class="input-group input-with-validation">
+                    <input type="text" id="studentMobile" placeholder="رقم الموبايل (يبدأ بـ 01)" maxlength="11" oninput="validateStudentMobile()">
+                    <i class="fas fa-phone"></i>
+                    <i class="fas fa-check-circle validation-icon"></i>
+                    <span class="input-hint">مثال: 01012345678</span>
+                    <div class="error-message" id="studentMobileError"> برجاء كتابة الرقم بالانجليزي و رقم الموبايل يجب أن يبدأ بـ 01 ويتكون من 11 رقم</div>
+                </div>
+                
+                <div class="input-group input-with-validation" id="centerCodeGroup" style="display:none;">
+                    <input type="text" id="centerCode" placeholder="كود السنتر (أرقام فقط)" maxlength="6" oninput="validateCenterCodeInput()">
+                    <i class="fas fa-key"></i>
+                    <i class="fas fa-check-circle validation-icon"></i>
+                    <span class="input-hint">مثال: 123456</span>
+                    <div class="error-message" id="centerCodeError"> اكتبالكود بالانجليزي و كود السنتر يجب أن يتكون من أرقام فقط</div>
+                </div>
             </div>
-            
-            <div class="input-group input-with-icon" id="centerCodeGroup" style="display:none;">
-                <input type="text" id="centerCode" placeholder="كود السنتر (أرقام فقط)" maxlength="6">
-                <i class="fas fa-key"></i>
-                <div class="error-message" id="centerCodeError"> اكتبالكود بالانجليزي و كود السنتر يجب أن يتكون من أرقام فقط</div>
+
+                <div class="quick-action-btn" onclick="clearForm()">
+                    <i class="fas fa-eraser"></i> مسح الكل
+                </div>
             </div>
             
             <div class="auto-privacy">
@@ -836,7 +947,7 @@
             </div>
             
             <div class="form-footer">
-                <button onclick="startHomework()"><i class="fas fa-play"></i> ابدأ الواجب</button>
+                <button onclick="startHomework()" id="startHomeworkBtn" disabled><i class="fas fa-play"></i> ابدأ الواجب</button>
                 <p>سيتم حفظ إجاباتك تلقائياً أثناء حل الواجب</p>
             </div>
         </div>
@@ -920,6 +1031,11 @@
         let currentQuestion=0;
         let isLastQuestionReached = false;
         let studentResultData = null;
+        
+        // متغيرات للتحقق من صحة البيانات
+        let isNameValid = false;
+        let isMobileValid = false;
+        let isCodeValid = false;
 
         // دالة التحقق من رقم الموبايل المصري
         function validateEgyptianMobile(mobile) {
@@ -931,6 +1047,140 @@
         function validateCenterCode(code) {
             const codeRegex = /^[0-9]+$/;
             return codeRegex.test(code);
+        }
+
+        // دالة التحقق من الاسم
+        function validateName() {
+            const name = document.getElementById('studentName').value.trim();
+            const nameInput = document.getElementById('studentName').parentElement;
+            
+            if (name.length >= 2) {
+                nameInput.classList.add('valid');
+                nameInput.classList.remove('invalid');
+                isNameValid = true;
+            } else {
+                nameInput.classList.add('invalid');
+                nameInput.classList.remove('valid');
+                isNameValid = false;
+            }
+            
+            updateStartButton();
+        }
+
+        // دالة التحقق من رقم الموبايل
+        function validateStudentMobile() {
+            const mobile = document.getElementById('studentMobile').value.trim();
+            const mobileInput = document.getElementById('studentMobile').parentElement;
+            
+            if (validateEgyptianMobile(mobile)) {
+                mobileInput.classList.add('valid');
+                mobileInput.classList.remove('invalid');
+                isMobileValid = true;
+            } else {
+                mobileInput.classList.add('invalid');
+                mobileInput.classList.remove('valid');
+                isMobileValid = false;
+            }
+            
+            updateStartButton();
+        }
+
+        // دالة التحقق من كود السنتر
+        function validateCenterCodeInput() {
+            const code = document.getElementById('centerCode').value.trim();
+            const codeInput = document.getElementById('centerCode').parentElement;
+            
+            if (studentType === "center") {
+                if (validateCenterCode(code)) {
+                    codeInput.classList.add('valid');
+                    codeInput.classList.remove('invalid');
+                    isCodeValid = true;
+                } else {
+                    codeInput.classList.add('invalid');
+                    codeInput.classList.remove('valid');
+                    isCodeValid = false;
+                }
+            } else {
+                isCodeValid = true; // إذا كان طالب أونلاين، لا نحتاج للتحقق من الكود
+            }
+            
+            updateStartButton();
+        }
+
+        // دالة التحقق من رقم الموبايل في قسم الاسترجاع
+        function validateRetrieveMobile() {
+            const mobile = document.getElementById('retrieveMobile').value.trim();
+            const mobileInput = document.getElementById('retrieveMobile').parentElement;
+            
+            if (validateEgyptianMobile(mobile)) {
+                mobileInput.classList.add('valid');
+                mobileInput.classList.remove('invalid');
+            } else {
+                mobileInput.classList.add('invalid');
+                mobileInput.classList.remove('valid');
+            }
+        }
+
+        // دالة التحقق من كود السنتر في قسم الاسترجاع
+        function validateRetrieveCode() {
+            const code = document.getElementById('retrieveCode').value.trim();
+            const codeInput = document.getElementById('retrieveCode').parentElement;
+            
+            if (validateCenterCode(code)) {
+                codeInput.classList.add('valid');
+                codeInput.classList.remove('invalid');
+            } else {
+                codeInput.classList.add('invalid');
+                codeInput.classList.remove('valid');
+            }
+        }
+
+        // دالة تحديث حالة زر البدء
+        function updateStartButton() {
+            const startBtn = document.getElementById('startHomeworkBtn');
+            
+            if (isNameValid && isMobileValid && isCodeValid) {
+                startBtn.disabled = false;
+                startBtn.style.opacity = "1";
+                startBtn.style.cursor = "pointer";
+            } else {
+                startBtn.disabled = true;
+                startBtn.style.opacity = "0.6";
+                startBtn.style.cursor = "not-allowed";
+            }
+        }
+
+        // دالة لملء بيانات تجريبية
+        function fillSampleData() {
+            document.getElementById('studentName').value = "Ahmed Mohamed";
+            document.getElementById('studentMobile').value = "01012345678";
+            
+            if (studentType === "center") {
+                document.getElementById('centerCode').value = "123456";
+            }
+            
+            // تشغيل التحقق من الصحة
+            validateName();
+            validateStudentMobile();
+            validateCenterCodeInput();
+        }
+
+        // دالة لمسح النموذج
+        function clearForm() {
+            document.getElementById('studentName').value = "";
+            document.getElementById('studentMobile').value = "";
+            document.getElementById('centerCode').value = "";
+            
+            // إعادة تعيين التحقق من الصحة
+            document.getElementById('studentName').parentElement.classList.remove('valid', 'invalid');
+            document.getElementById('studentMobile').parentElement.classList.remove('valid', 'invalid');
+            document.getElementById('centerCode').parentElement.classList.remove('valid', 'invalid');
+            
+            isNameValid = false;
+            isMobileValid = false;
+            isCodeValid = false;
+            
+            updateStartButton();
         }
 
         // دالة للحصول على التاريخ والوقت الحالي لمصر مع مراعاة التوقيت الصيفي
@@ -1012,6 +1262,10 @@
                 document.getElementById('gifStart').style.display="none";
                 document.getElementById('formCard').style.display="block";
                 document.getElementById('centerCodeGroup').style.display = (type=="center")?"block":"none";
+                
+                // إعادة تعيين التحقق من الصحة
+                isCodeValid = (type !== "center");
+                updateStartButton();
             },2000);
         }
 
@@ -1021,31 +1275,10 @@
             const code=document.getElementById('centerCode').value || "-";
 
             // التحقق من صحة البيانات
-            if(name=="") {
-                alert("يرجى إدخال الاسم");
+            if(!isNameValid || !isMobileValid || !isCodeValid) {
+                alert("يرجى التأكد من صحة جميع البيانات المدخلة");
                 return;
             }
-            
-            if(!validateEgyptianMobile(mobile)) {
-                document.getElementById('studentMobile').classList.add('error');
-                document.getElementById('studentMobileError').style.display = 'block';
-                return;
-            } else {
-                document.getElementById('studentMobile').classList.remove('error');
-                document.getElementById('studentMobileError').style.display = 'none';
-            }
-            
-            if(studentType === "center" && !validateCenterCode(code)) {
-                document.getElementById('centerCode').classList.add('error');
-                document.getElementById('centerCodeError').style.display = 'block';
-                return;
-            } else if(studentType === "center") {
-                document.getElementById('centerCode').classList.remove('error');
-                document.getElementById('centerCodeError').style.display = 'none';
-            }
-            
-            // موافقة الخصوصية أصبحت تلقائية عند بدء الواجب
-            // لا حاجة للتحقق من صندوق الموافقة
 
             document.getElementById('formCard').style.display="none";
             document.getElementById('retrieveCard').style.display="none"; // إخفاء قسم الاسترجاع
