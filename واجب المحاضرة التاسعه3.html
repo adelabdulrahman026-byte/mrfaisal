@@ -8,18 +8,19 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary: #6a11cb;
-            --secondary: #2575fc;
-            --accent: #ff6b6b;
-            --success: #1dd1a1;
-            --warning: #feca57;
-            --light: #f8f9fa;
-            --dark: #343a40;
-            --card-bg: #ffffff;
-            --text-primary: #2d3436;
-            --text-secondary: #636e72;
+            --primary: #FF6B8B;
+            --secondary: #6A89CC;
+            --accent: #FF9F43;
+            --success: #1DD1A1;
+            --warning: #FECA57;
+            --light: #F9F7FE;
+            --dark: #3D3D3D;
+            --card-bg: #FFFFFF;
+            --text-primary: #2D3436;
+            --text-secondary: #636E72;
             --shadow: 0 10px 30px rgba(0,0,0,0.1);
             --gradient: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            --border-radius: 20px;
         }
 
         * {
@@ -30,7 +31,7 @@
 
         body {
             font-family: 'Cairo', sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background: linear-gradient(135deg, #F9F7FE 0%, #E2E9FF 100%);
             margin: 0;
             padding: 20px;
             display: flex;
@@ -50,7 +51,7 @@
 
         .card {
             background: var(--card-bg);
-            border-radius: 20px;
+            border-radius: var(--border-radius);
             padding: 30px;
             margin-bottom: 25px;
             box-shadow: var(--shadow);
@@ -59,6 +60,8 @@
             border: none;
             overflow: hidden;
             position: relative;
+            border: 4px solid transparent;
+            background-clip: padding-box;
         }
 
         .card:hover {
@@ -72,8 +75,9 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 5px;
+            height: 8px;
             background: var(--gradient);
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
         }
 
         h2 {
@@ -93,9 +97,9 @@
             left: 50%;
             transform: translateX(-50%);
             width: 80px;
-            height: 4px;
+            height: 6px;
             background: var(--gradient);
-            border-radius: 2px;
+            border-radius: 3px;
         }
 
         .input-group {
@@ -117,22 +121,23 @@
             padding: 16px 20px 16px 50px;
             margin: 8px 0;
             border-radius: 12px;
-            border: 2px solid #e0e0e0;
+            border: 3px solid #E0E0E0;
             font-size: 16px;
             transition: all 0.3s;
-            background: #f8f9fa;
+            background: #F8F9FA;
+            font-family: 'Cairo', sans-serif;
         }
 
         input:focus {
             border-color: var(--primary);
             outline: none;
-            box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.1);
-            background: #fff;
+            box-shadow: 0 0 0 3px rgba(255, 107, 139, 0.2);
+            background: #FFF;
         }
 
         input.error {
             border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+            box-shadow: 0 0 0 3px rgba(255, 159, 67, 0.2);
         }
 
         .error-message {
@@ -147,7 +152,7 @@
             padding: 16px;
             margin: 10px 0;
             background: var(--gradient);
-            color: #fff;
+            color: #FFF;
             border: none;
             border-radius: 12px;
             font-size: 18px;
@@ -161,6 +166,7 @@
             align-items: center;
             justify-content: center;
             gap: 10px;
+            font-family: 'Cairo', sans-serif;
         }
 
         button::before {
@@ -188,19 +194,19 @@
         }
 
         #onlineSubmit {
-            background: linear-gradient(135deg, #25D366 0%, #1ebe5d 100%);
+            background: linear-gradient(135deg, #25D366 0%, #1EBE5D 100%);
         }
 
         #onlineSubmit:hover {
-            background: linear-gradient(135deg, #1ebe5d 0%, #169c4b 100%);
+            background: linear-gradient(135deg, #1EBE5D 0%, #169C4B 100%);
         }
 
         #centerSubmit {
-            background: linear-gradient(135deg, var(--primary) 0%, #4a148c 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, #FF4757 100%);
         }
 
         #centerSubmit:hover {
-            background: linear-gradient(135deg, #4a148c 0%, #380a6d 100%);
+            background: linear-gradient(135deg, #FF4757 0%, #FF3742 100%);
         }
 
         .question-container {
@@ -212,8 +218,8 @@
         }
 
         .question-card {
-            border: 2px solid #d1c4e9;
-            background: #f9f5ff;
+            border: 4px solid #D6E4FF;
+            background: #F9F7FE;
             padding: 25px;
             border-radius: 15px;
             width: 100%;
@@ -255,15 +261,15 @@
             align-items: center;
             margin: 8px 0;
             padding: 15px;
-            background: #ede7f6;
+            background: #EDE7F6;
             border-radius: 12px;
             cursor: pointer;
             transition: all 0.3s;
-            border: 2px solid transparent;
+            border: 3px solid transparent;
         }
 
         .options label:hover {
-            background: #e1d5f7;
+            background: #E1D5F7;
             transform: translateX(5px);
         }
 
@@ -274,7 +280,7 @@
         }
 
         .options input:checked + span {
-            background: #d1c4e9;
+            background: #D1C4E9;
             transform: scale(1.02);
             border-color: var(--primary);
         }
@@ -315,11 +321,11 @@
             width: 100%;
             max-width: 300px;
             height: auto;
-            background: #fff;
+            background: #FFF;
             border-radius: 15px;
             padding: 15px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            border: 2px solid #e0e0e0;
+            border: 4px solid #E0E0E0;
             margin: 10px 0;
             display: flex;
             justify-content: center;
@@ -339,19 +345,19 @@
             font-size: 16px;
             text-align: center;
             white-space: pre-line;
-            background: #f8f9fa;
+            background: #F8F9FA;
             padding: 15px;
             border-radius: 12px;
             line-height: 1.8;
         }
 
         .correct {
-            color: #1dd1a1;
+            color: #1DD1A1;
             font-weight: bold;
         }
 
         .wrong {
-            color: #ff6b6b;
+            color: #FF6B6B;
             font-weight: bold;
         }
 
@@ -376,7 +382,7 @@
             align-items: center;
             margin: 15px 0;
             padding: 10px;
-            background: #f8f9fa;
+            background: #F8F9FA;
             border-radius: 10px;
         }
 
@@ -402,10 +408,11 @@
             text-align: center;
             margin-top: 20px;
             padding: 15px;
-            background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+            background: linear-gradient(135deg, #F3E5F5 0%, #E1BEE7 100%);
             border-radius: 15px;
             font-weight: bold;
             box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border: 3px solid #D1C4E9;
         }
 
         .exam-info p {
@@ -417,17 +424,17 @@
         .completed-message {
             text-align: center;
             padding: 25px;
-            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
             border-radius: 15px;
             margin: 25px 0;
             display: none;
             box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            border: 2px solid #c5e1a5;
+            border: 3px solid #C5E1A5;
         }
 
         .completed-message p {
             font-size: 20px;
-            color: #2e7d32;
+            color: #2E7D32;
             font-weight: bold;
             margin-bottom: 15px;
         }
@@ -438,36 +445,37 @@
         }
 
         .important-note {
-            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            background: linear-gradient(135deg, #FFF3E0 0%, #FFE0B2 100%);
             padding: 20px;
             border-radius: 15px;
             margin: 20px 0;
-            border: 2px solid #ffcc80;
+            border: 3px solid #FFCC80;
             text-align: center;
             font-weight: 600;
-            color: #e65100;
+            color: #E65100;
             box-shadow: 0 5px 15px rgba(0,0,0,0.05);
         }
 
         .important-note h3 {
-            color: #e65100;
+            color: #E65100;
             margin-bottom: 10px;
             font-size: 20px;
         }
 
         .progress-bar {
             width: 100%;
-            background: #e0e0e0;
-            height: 10px;
-            border-radius: 5px;
+            background: #E0E0E0;
+            height: 15px;
+            border-radius: 10px;
             margin: 15px 0;
             overflow: hidden;
+            border: 2px solid #D1C4E9;
         }
 
         .progress {
             height: 100%;
             background: var(--gradient);
-            border-radius: 5px;
+            border-radius: 10px;
             transition: width 0.5s;
         }
 
@@ -480,14 +488,14 @@
         }
 
         .retrieve-note {
-            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
             padding: 15px;
             border-radius: 12px;
             margin: 15px 0;
             text-align: center;
             font-weight: 600;
-            color: #1565c0;
-            border: 2px solid #90caf9;
+            color: #1565C0;
+            border: 3px solid #90CAF9;
         }
 
         .two-column-layout {
@@ -503,41 +511,42 @@
         }
 
         .answers-review {
-            background: #f8f9fa;
+            background: #F8F9FA;
             border-radius: 15px;
             padding: 20px;
             margin-top: 20px;
             max-height: 500px;
             overflow-y: auto;
+            border: 3px solid #E0E0E0;
         }
 
         .answer-item {
             padding: 15px;
             margin: 10px 0;
             border-radius: 10px;
-            background: #fff;
+            background: #FFF;
             box-shadow: 0 3px 10px rgba(0,0,0,0.05);
-            border-left: 4px solid var(--primary);
+            border-left: 6px solid var(--primary);
         }
 
         .warning-note {
-            background: linear-gradient(135deg, #fff3e0 0%, #ffecb3 100%);
+            background: linear-gradient(135deg, #FFF3E0 0%, #FFECB3 100%);
             padding: 15px;
             border-radius: 12px;
             margin: 15px 0;
             text-align: center;
             font-weight: 600;
-            color: #e65100;
-            border: 2px solid #ffb74d;
+            color: #E65100;
+            border: 3px solid #FFB74D;
         }
 
         .retrieve-button {
-            background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+            background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
             margin: 10px 0;
         }
 
         .retrieve-button:hover {
-            background: linear-gradient(135deg, #f57c00 0%, #e65100 100%);
+            background: linear-gradient(135deg, #F57C00 0%, #E65100 100%);
         }
 
         /* تحسينات لواجهة إدخال البيانات */
@@ -591,14 +600,14 @@
         }
 
         .auto-privacy {
-            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
             padding: 15px;
             border-radius: 12px;
             margin: 15px 0;
             text-align: center;
             font-weight: 600;
-            color: #2e7d32;
-            border: 2px solid #a5d6a7;
+            color: #2E7D32;
+            border: 3px solid #A5D6A7;
         }
 
         .auto-privacy i {
@@ -627,8 +636,8 @@
         .quick-action-btn {
             flex: 1;
             padding: 12px;
-            background: #f0f0f0;
-            border: 2px solid #e0e0e0;
+            background: #F0F0F0;
+            border: 3px solid #E0E0E0;
             border-radius: 10px;
             font-size: 14px;
             font-weight: 600;
@@ -644,13 +653,13 @@
         }
 
         .form-hint {
-            background: #f0f7ff;
+            background: #F0F7FF;
             padding: 12px;
             border-radius: 10px;
             margin: 10px 0;
             font-size: 14px;
             color: var(--primary);
-            border-right: 4px solid var(--primary);
+            border-right: 6px solid var(--primary);
         }
 
         .form-hint i {
@@ -688,6 +697,90 @@
             color: var(--accent);
         }
 
+        /* تأثيرات كرتونية */
+        .bounce {
+            animation: bounce 2s infinite;
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        .wiggle {
+            animation: wiggle 2s infinite;
+        }
+
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .card-header-icon {
+            font-size: 40px;
+            margin-left: 10px;
+            color: var(--primary);
+        }
+
+        .card-header-text {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .cartoon-button {
+            border-radius: 50px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 8px 0 rgba(0,0,0,0.1), 0 15px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            transform: translateY(0);
+        }
+
+        .cartoon-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 0 rgba(0,0,0,0.1), 0 20px 25px rgba(0,0,0,0.1);
+        }
+
+        .cartoon-button:active {
+            transform: translateY(0);
+            box-shadow: 0 5px 0 rgba(0,0,0,0.1), 0 10px 15px rgba(0,0,0,0.1);
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-20px);}
+            60% {transform: translateY(-10px);}
+        }
+
+        @keyframes pulse {
+            0% {transform: scale(1);}
+            50% {transform: scale(1.05);}
+            100% {transform: scale(1);}
+        }
+
+        @keyframes wiggle {
+            0%, 7% {transform: rotateZ(0);}
+            15% {transform: rotateZ(-10deg);}
+            20% {transform: rotateZ(6deg);}
+            25% {transform: rotateZ(-4deg);}
+            30% {transform: rotateZ(2deg);}
+            35% {transform: rotateZ(0);}
+            100% {transform: rotateZ(0);}
+        }
+
+        @keyframes floating {
+            0% {transform: translateY(0px);}
+            50% {transform: translateY(-10px);}
+            100% {transform: translateY(0px);}
+        }
+
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -702,12 +795,6 @@
                 opacity: 1;
                 transform: translateY(0);
             }
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
         }
 
         /* تحسينات للتوافق مع جميع الشاشات */
@@ -833,19 +920,25 @@
 
         <!-- قسم عمل الواجب -->
         <div class="card" id="startCard">
-            <h2>اختر نوع الطالب</h2>
-            <button onclick="selectType('online')"><i class="fas fa-mobile-alt"></i> 📱 اونلاين</button>
-            <button onclick="selectType('center')"><i class="fas fa-school"></i> 🏫 سنتر</button>
+            <div class="card-header">
+                <i class="fas fa-graduation-cap card-header-icon floating"></i>
+                <div class="card-header-text">اختر نوع الطالب</div>
+            </div>
+            <button class="cartoon-button" onclick="selectType('online')"><i class="fas fa-mobile-alt"></i> 📱 اونلاين</button>
+            <button class="cartoon-button" onclick="selectType('center')"><i class="fas fa-school"></i> 🏫 سنتر</button>
             
             <!-- زر مراجعة الواجب -->
-            <button class="retrieve-button" onclick="toggleRetrieveSection()">
+            <button class="retrieve-button cartoon-button" onclick="toggleRetrieveSection()">
                 <i class="fas fa-redo"></i> مراجعة الواجب مرة أخرى
             </button>
         </div>
 
         <!-- قسم استرجاع الواجب (مخفي في البداية) -->
         <div class="card" id="retrieveCard" style="display:none;">
-            <h2><i class="fas fa-redo"></i> مراجعة الواجب مرة أخرى</h2>
+            <div class="card-header">
+                <i class="fas fa-redo card-header-icon wiggle"></i>
+                <div class="card-header-text">مراجعة الواجب مرة أخرى</div>
+            </div>
             <div class="retrieve-note">
                 <p><i class="fas fa-info-circle"></i> هذا القسم خاص باسترجاع واجب <strong>محاضرة 7</strong> فقط</p>
                 <p>إذا نسيت أخذ سكرين شوت لـ QR بتاعك، ممكن تدخل بياناتك هنا وتسترجعه</p>
@@ -871,7 +964,7 @@
                 <div class="error-message" id="codeError">كود السنتر يجب أن يتكون من أرقام فقط</div>
             </div>
             
-            <button onclick="retrieveHomework()"><i class="fas fa-search"></i> استرجاع QR والنتيجة</button>
+            <button class="cartoon-button" onclick="retrieveHomework()"><i class="fas fa-search"></i> استرجاع QR والنتيجة</button>
             
             <div id="retrieveResult" style="display:none; margin-top:20px;">
                 <div class="two-column-layout">
@@ -903,7 +996,7 @@
         <!-- قسم إدخال البيانات مع التصميم المحسن -->
         <div class="card" id="formCard" style="display:none;">
             <div class="form-header">
-                <i class="fas fa-user-graduate"></i>
+                <i class="fas fa-user-graduate floating"></i>
                 <h2>املأ بياناتك</h2>
                 <p>أدخل بياناتك الشخصية للبدء في حل الواجب</p>
             </div>
@@ -937,6 +1030,7 @@
                 </div>
             </div>
 
+            <div class="quick-actions">
                 <div class="quick-action-btn" onclick="clearForm()">
                     <i class="fas fa-eraser"></i> مسح الكل
                 </div>
@@ -947,13 +1041,16 @@
             </div>
             
             <div class="form-footer">
-                <button onclick="startHomework()" id="startHomeworkBtn" disabled><i class="fas fa-play"></i> ابدأ الواجب</button>
+                <button class="cartoon-button" onclick="startHomework()" id="startHomeworkBtn" disabled><i class="fas fa-play"></i> ابدأ الواجب</button>
                 <p>سيتم حفظ إجاباتك تلقائياً أثناء حل الواجب</p>
             </div>
         </div>
 
         <div class="card" id="homeworkCard" style="display:none;">
-            <h2> الواجب </h2>
+            <div class="card-header">
+                <i class="fas fa-pencil-alt card-header-icon pulse"></i>
+                <div class="card-header-text">الواجب</div>
+            </div>
                 
             <div class="important-note">
                 <h3><i class="fas fa-exclamation-circle"></i> تنبيه هام</h3>
@@ -973,18 +1070,21 @@
             </div>
 
             <div class="nav-buttons">
-                <button id="prevQuestion" onclick="prevQuestion()"><i class="fas fa-arrow-right"></i> السؤال السابق</button>
-                <button id="nextQuestion" onclick="nextQuestion()">التالي <i class="fas fa-arrow-left"></i></button>
+                <button class="cartoon-button" id="prevQuestion" onclick="prevQuestion()"><i class="fas fa-arrow-right"></i> السؤال السابق</button>
+                <button class="cartoon-button" id="nextQuestion" onclick="nextQuestion()">التالي <i class="fas fa-arrow-left"></i></button>
             </div>
 
             <div class="submit-button-container" id="submitButtonContainer">
-                <button id="centerSubmit" style="display:none;" onclick="submitHomework()"><i class="fas fa-paper-plane"></i> سلم الواجب</button>
-                <button id="onlineSubmit" style="display:none;" onclick="submitOnline()"><i class="fas fa-laptop"></i> سلم واجبك أونلاين</button>
+                <button class="cartoon-button" id="centerSubmit" style="display:none;" onclick="submitHomework()"><i class="fas fa-paper-plane"></i> سلم الواجب</button>
+                <button class="cartoon-button" id="onlineSubmit" style="display:none;" onclick="submitOnline()"><i class="fas fa-laptop"></i> سلم واجبك أونلاين</button>
             </div>
         </div>
 
         <div class="card" id="resultCard">
-            <h2>تم التصحيح 🎉</h2>
+            <div class="card-header">
+                <i class="fas fa-trophy card-header-icon bounce"></i>
+                <div class="card-header-text">تم التصحيح 🎉</div>
+            </div>
 
             <!-- QR في أعلى الصفحة -->
             <div class="qr-section">
@@ -1148,21 +1248,6 @@
                 startBtn.style.opacity = "0.6";
                 startBtn.style.cursor = "not-allowed";
             }
-        }
-
-        // دالة لملء بيانات تجريبية
-        function fillSampleData() {
-            document.getElementById('studentName').value = "Ahmed Mohamed";
-            document.getElementById('studentMobile').value = "01012345678";
-            
-            if (studentType === "center") {
-                document.getElementById('centerCode').value = "123456";
-            }
-            
-            // تشغيل التحقق من الصحة
-            validateName();
-            validateStudentMobile();
-            validateCenterCodeInput();
         }
 
         // دالة لمسح النموذج
@@ -1450,12 +1535,12 @@
 
             // إنشاء QR في أعلى الصفحة
             document.getElementById('qrContainerTop').innerHTML="";
-            let qrTop = kjua({text:studentQR,size:250,render:'canvas',fill:'#4a148c',quiet:2,rounded:10});
+            let qrTop = kjua({text:studentQR,size:250,render:'canvas',fill:'#FF6B8B',quiet:2,rounded:10});
             document.getElementById('qrContainerTop').appendChild(qrTop);
 
             // إنشاء QR في أسفل الصفحة
             document.getElementById('qrContainerBottom').innerHTML="";
-            let qrBottom = kjua({text:studentQR,size:250,render:'canvas',fill:'#4a148c',quiet:2,rounded:10});
+            let qrBottom = kjua({text:studentQR,size:250,render:'canvas',fill:'#FF6B8B',quiet:2,rounded:10});
             document.getElementById('qrContainerBottom').appendChild(qrBottom);
 
             // عرض معلومات التاريخ والوقت
@@ -1559,7 +1644,7 @@
                 
                 // إنشاء QR
                 document.getElementById('retrievedQR').innerHTML = "";
-                let qr = kjua({text:submission.studentQR,size:250,render:'canvas',fill:'#4a148c',quiet:2,rounded:10});
+                let qr = kjua({text:submission.studentQR,size:250,render:'canvas',fill:'#FF6B8B',quiet:2,rounded:10});
                 document.getElementById('retrievedQR').appendChild(qr);
                 
                 // عرض معلومات الطالب
