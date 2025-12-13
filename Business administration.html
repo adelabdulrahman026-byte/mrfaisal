@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حجز مادة إدارة الأعمال - نظام البكالوريا</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4a00e0;
+            --secondary: #8e2de2;
+            --accent: #f80759;
+            --light: #f8f7ff;
+            --dark: #2a2a3c;
+            --success: #00b894;
+            --gradient: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            --shadow: 0 25px 60px rgba(0, 0, 0, 0.15);
+            --transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f0f2ff 0%, #e6e9ff 100%);
+            color: var(--dark);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* الصورة الرئيسية */
+        .hero-section {
+            position: relative;
+            height: 75vh;
+            border-radius: 30px;
+            overflow: hidden;
+            margin-bottom: 50px;
+            box-shadow: var(--shadow);
+            animation: heroReveal 2s ease-out;
+            border: 3px solid white;
+        }
+
+        @keyframes heroReveal {
+            0% { opacity: 0; transform: scale(1.1) rotate(-1deg); }
+            100% { opacity: 1; transform: scale(1) rotate(0); }
+        }
+
+        .hero-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 12s ease;
+            filter: brightness(0.85) contrast(1.1);
+        }
+
+        .hero-section:hover .hero-image {
+            transform: scale(1.12);
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(74, 0, 224, 0.7));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+            padding: 50px;
+        }
+
+        .hero-content {
+            color: white;
+            animation: textReveal 1.5s ease 0.7s both;
+            max-width: 900px;
+        }
+
+        @keyframes textReveal {
+            0% { opacity: 0; transform: translateY(60px) scale(0.9); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .hero-content h1 {
+            font-size: 5rem;
+            margin-bottom: 25px;
+            text-shadow: 3px 6px 20px rgba(0,0,0,0.4);
+            letter-spacing: -2px;
+            font-weight: 900;
+            line-height: 1.1;
+        }
+
+        .hero-content p {
+            font-size: 1.8rem;
+            opacity: 0.95;
+            margin: 0 auto;
+            line-height: 1.8;
+            font-weight: 300;
+        }
+
+        .hero-badge {
+            position: absolute;
+            bottom: 40px;
+            left: 40px;
+            background: var(--accent);
+            color: white;
+            padding: 15px 35px;
+            border-radius: 60px;
+            font-weight: 800;
+            font-size: 1.3rem;
+            box-shadow: 0 15px 35px rgba(248, 7, 89, 0.4);
+            animation: badgeFloat 4s infinite ease-in-out;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border: 3px solid white;
+        }
+
+        @keyframes badgeFloat {
+            0%, 100% { transform: translateY(0) rotate(0); }
+            33% { transform: translateY(-15px) rotate(2deg); }
+            66% { transform: translateY(5px) rotate(-2deg); }
+        }
+
+        /* نموذج الحجز */
+        .booking-form-section {
+            background: white;
+            border-radius: 30px;
+            padding: 60px;
+            box-shadow: var(--shadow);
+            animation: formSlideUp 1.2s ease 1s both;
+            margin-bottom: 60px;
+            position: relative;
+            overflow: hidden;
+            border: 3px solid white;
+        }
+
+        @keyframes formSlideUp {
+            0% { opacity: 0; transform: translateY(80px) scale(0.95); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .booking-form-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 8px;
+            background: var(--gradient);
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+            padding-bottom: 30px;
+        }
+
+        .section-title h2 {
+            font-size: 3.2rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-weight: 900;
+            letter-spacing: -1px;
+        }
+
+        .section-title p {
+            color: #666;
+            font-size: 1.5rem;
+            max-width: 850px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 50%;
+            transform: translateX(50%);
+            width: 150px;
+            height: 6px;
+            background: var(--gradient);
+            border-radius: 3px;
+            animation: lineExpand 1.5s ease 1.5s both;
+        }
+
+        @keyframes lineExpand {
+            0% { width: 0; opacity: 0; }
+            100% { width: 150px; opacity: 1; }
+        }
+
+        .form-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 35px;
+            position: relative;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 15px;
+            font-weight: 800;
+            color: var(--dark);
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            letter-spacing: -0.5px;
+        }
+
+        .form-label i {
+            margin-left: 15px;
+            color: var(--primary);
+            font-size: 1.5rem;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .form-input, .form-select {
+            width: 100%;
+            padding: 22px 30px;
+            border: 3px solid #e6e6ff;
+            border-radius: 18px;
+            font-size: 1.3rem;
+            transition: var(--transition);
+            background: #fafaff;
+            color: var(--dark);
+            font-weight: 500;
+        }
+
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 5px rgba(74, 0, 224, 0.15);
+            background: white;
+            transform: translateY(-5px) scale(1.02);
+        }
+
+        .form-input::placeholder {
+            color: #aaa;
+            font-weight: 400;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .radio-option {
+            flex: 1;
+        }
+
+        .radio-option input {
+            display: none;
+        }
+
+        .radio-option label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 25px;
+            background: #fafaff;
+            border: 3px solid #e6e6ff;
+            border-radius: 18px;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: #555;
+            gap: 15px;
+        }
+
+        .radio-option label:hover {
+            transform: translateY(-8px) scale(1.03);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        .radio-option input:checked + label {
+            background: var(--gradient);
+            color: white;
+            border-color: var(--primary);
+            transform: translateY(-12px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(74, 0, 224, 0.3);
+        }
+
+        .submit-btn {
+            grid-column: 1 / -1;
+            padding: 28px;
+            background: var(--gradient);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-size: 1.8rem;
+            font-weight: 900;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-top: 40px;
+            position: relative;
+            overflow: hidden;
+            letter-spacing: 1px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+            border: 3px solid white;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: 0.8s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-10px) scale(1.03);
+            box-shadow: 0 30px 60px rgba(74, 0, 224, 0.4);
+        }
+
+        .submit-btn:hover::before {
+            right: 100%;
+        }
+
+        .submit-btn:active {
+            transform: translateY(-5px) scale(1.01);
+        }
+
+        .submit-btn i {
+            font-size: 2rem;
+            animation: iconPulse 2s infinite;
+        }
+
+        @keyframes iconPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        /* الرسائل */
+        .message {
+            grid-column: 1 / -1;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            margin-top: 30px;
+            display: none;
+            animation: messagePop 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-size: 1.4rem;
+            font-weight: 700;
+            border: 3px solid white;
+        }
+
+        @keyframes messagePop {
+            0% { opacity: 0; transform: scale(0.8) rotate(-5deg); }
+            100% { opacity: 1; transform: scale(1) rotate(0); }
+        }
+
+        .success-message {
+            background: linear-gradient(135deg, var(--success) 0%, #00a085 100%);
+            color: white;
+        }
+
+        .error-message {
+            background: linear-gradient(135deg, var(--accent) 0%, #d90646 100%);
+            color: white;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 28px;
+            height: 28px;
+            border: 4px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        /* قسم الكليات */
+        .colleges-section {
+            background: white;
+            border-radius: 30px;
+            padding: 70px 60px;
+            box-shadow: var(--shadow);
+            animation: collegesReveal 1.5s ease 1.8s both;
+            position: relative;
+            overflow: hidden;
+            border: 3px solid white;
+            margin-bottom: 50px;
+        }
+
+        .colleges-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(135deg, #f80759 0%, #ffa502 100%);
+        }
+
+        @keyframes collegesReveal {
+            0% { opacity: 0; transform: translateY(100px) scale(0.95); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .colleges-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .college-card {
+            background: linear-gradient(135deg, #fafaff 0%, #f0f2ff 100%);
+            padding: 30px;
+            border-radius: 22px;
+            border-right: 8px solid var(--primary);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            animation: cardSlideIn 1s ease both;
+            animation-delay: calc(var(--i) * 0.1s);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+            position: relative;
+            overflow: hidden;
+            border: 2px solid #f0f0ff;
+        }
+
+        .college-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient);
+            opacity: 0;
+            transition: var(--transition);
+            z-index: 1;
+        }
+
+        .college-card:hover::before {
+            opacity: 0.08;
+        }
+
+        @keyframes cardSlideIn {
+            0% { opacity: 0; transform: translateX(80px) rotate(5deg); }
+            100% { opacity: 1; transform: translateX(0) rotate(0); }
+        }
+
+        .college-card:hover {
+            transform: translateY(-15px) scale(1.05) rotate(-1deg);
+            box-shadow: 0 30px 60px rgba(74, 0, 224, 0.2);
+            border-color: var(--primary);
+        }
+
+        .college-icon {
+            background: var(--gradient);
+            width: 70px;
+            height: 70px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 25px;
+            color: white;
+            font-size: 2rem;
+            flex-shrink: 0;
+            z-index: 2;
+            box-shadow: 0 15px 30px rgba(74, 0, 224, 0.25);
+            border: 3px solid white;
+        }
+
+        .college-name {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--dark);
+            z-index: 2;
+            flex: 1;
+            line-height: 1.5;
+        }
+
+        /* العناصر العائمة */
+        .floating-element {
+            position: fixed;
+            border-radius: 50%;
+            opacity: 0.1;
+            z-index: -1;
+            animation: floatAnimation 30s infinite linear;
+            filter: blur(2px);
+        }
+
+        @keyframes floatAnimation {
+            0% { transform: translate(0, 0) rotate(0deg) scale(1); }
+            25% { transform: translate(200px, 150px) rotate(90deg) scale(1.3); }
+            50% { transform: translate(-150px, 300px) rotate(180deg) scale(0.8); }
+            75% { transform: translate(100px, 200px) rotate(270deg) scale(1.1); }
+            100% { transform: translate(0, 0) rotate(360deg) scale(1); }
+        }
+
+        /* التجاوب */
+        @media (max-width: 1100px) {
+            .form-container {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            .colleges-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .hero-content h1 {
+                font-size: 4rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-section {
+                height: 65vh;
+                border-radius: 25px;
+            }
+            
+            .hero-content h1 {
+                font-size: 3rem;
+            }
+            
+            .hero-content p {
+                font-size: 1.5rem;
+            }
+            
+            .booking-form-section, .colleges-section {
+                padding: 40px 30px;
+                border-radius: 25px;
+            }
+            
+            .section-title h2 {
+                font-size: 2.5rem;
+            }
+            
+            .section-title p {
+                font-size: 1.3rem;
+            }
+            
+            .colleges-grid {
+                grid-template-columns: 1fr;
+                gap: 25px;
+            }
+            
+            .form-input, .form-select {
+                padding: 20px 25px;
+                font-size: 1.2rem;
+            }
+            
+            .radio-group {
+                flex-direction: column;
+            }
+            
+            .submit-btn {
+                padding: 25px;
+                font-size: 1.6rem;
+            }
+            
+            .hero-badge {
+                position: relative;
+                bottom: auto;
+                left: auto;
+                margin-top: 30px;
+                align-self: center;
+            }
+            
+            .hero-overlay {
+                padding: 30px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero-content p {
+                font-size: 1.2rem;
+            }
+            
+            .section-title h2 {
+                font-size: 2rem;
+            }
+            
+            .booking-form-section, .colleges-section {
+                padding: 30px 20px;
+            }
+            
+            .college-card {
+                padding: 25px;
+            }
+            
+            .college-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 1.8rem;
+            }
+            
+            .college-name {
+                font-size: 1.3rem;
+            }
+            
+            .hero-badge {
+                font-size: 1.1rem;
+                padding: 12px 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- العناصر العائمة -->
+    <div id="floatingElements"></div>
+    
+    <div class="container">
+        <!-- قسم الصورة الرئيسية -->
+        <section class="hero-section">
+            <img src="https://files.catbox.moe/raksi1.jpg" alt="مادة إدارة الأعمال" class="hero-image">
+            <div class="hero-overlay">
+                <div class="hero-content">
+                    <h1>حجز مادة إدارة الأعمال</h1>
+                    <p>حجز ماجة ادارة الاعمال  نظام البكالوريا | احجز مقعدك الآن لبداية رحلة جديده</p>
+                </div>
+                <div class="hero-badge">
+                    <i class="fas fa-graduation-cap"></i> دفعه 2027
+                </div>
+            </div>
+        </section>
+
+        <!-- نموذج الحجز -->
+        <section class="booking-form-section">
+            <div class="section-title">
+                <h2>سجل بيانات الحجز</h2>
+                <p>املأ النموذج التالي لحجز مادة إدارة الأعمال للعام الدراسي</p>
+            </div>
+            
+            <form id="bookingForm">
+                <div class="form-container">
+                    <div class="form-group">
+                        <label class="form-label" for="studentName">
+                            <i class="fas fa-user-graduate"></i> اسم الطالب/الطالبة
+                        </label>
+                        <input type="text" id="studentName" name="studentName" class="form-input" placeholder="الاسم الثلاثي الكامل" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="phone">
+                            <i class="fas fa-phone-alt"></i> رقم الهاتف (واتساب)
+                        </label>
+                        <input type="tel" id="phone" name="phone" class="form-input" placeholder="01XXXXXXXXX - رقم مصري" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="parentPhone">
+                            <i class="fas fa-user-friends"></i> رقم ولي الأمر
+                        </label>
+                        <input type="tel" id="parentPhone" name="parentPhone" class="form-input" placeholder="01XXXXXXXXX - رقم مصري" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="fas fa-chalkboard-teacher"></i> طريقة الدراسة
+                        </label>
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" id="center" name="studyType" value="الحضور في السنتر" checked>
+                                <label for="center">
+                                    <i class="fas fa-school"></i> الحضور في السنتر
+                                </label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="online" name="studyType" value="الدراسة أونلاين">
+                                <label for="online">
+                                    <i class="fas fa-laptop-house"></i> الدراسة أونلاين
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label class="form-label" for="preferredCenter">
+                            <i class="fas fa-map-marked-alt"></i> السنتر المفضل للحجز
+                        </label>
+                        <input type="text" id="preferredCenter" name="preferredCenter" class="form-input" placeholder="اكتب اسم السنتر الذي تفضل الدراسة فيه" required>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn" id="submitBtn">
+                        <span>تأكيد حجز المادة</span>
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+                
+                <div class="message success-message" id="successMessage">
+                    <i class="fas fa-check-circle"></i> تم الحجز بنجاح! سيتم التواصل معك خلال 24 ساعة.
+                </div>
+                
+                <div class="message error-message" id="errorMessage">
+                    <i class="fas fa-exclamation-circle"></i> حدث خطأ أثناء الحجز. يرجى المحاولة مرة أخرى.
+                </div>
+            </form>
+        </section>
+
+        <!-- قسم الكليات -->
+        <section class="colleges-section">
+            <div class="section-title">
+                <h2>الكليات المؤهلة بمادة إدارة الأعمال</h2>
+                <p>مادة إدارة الأعمال تفتح لك أبواباً للعديد من الكليات والتخصصات الجامعية المتميزة</p>
+            </div>
+            <div class="colleges-grid" id="collegesGrid">
+                <!-- سيتم ملؤها بالجافاسكريبت -->
+            </div>
+        </section>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        // قائمة الكليات
+        const colleges = [
+            "التجارة",
+            "تكنولوجيا الإدارة ونظم المعلومات",
+            "الآداب (باستثناء الجغرافيا وعلم النفس بنات)",
+            "التربية (باستثناء الجغرافيا وعلم النفس بنات)",
+            "الأعمال",
+            "السياحة والفنادق",
+            "الفنون الجميلة – فنون",
+            "علوم ذوي الاحتياجات الخاصة",
+            "علوم الريادة – التربية الرياضية",
+            "التربية النوعية (اقتصاد منزلي)",
+            "التربية النوعية (تكنولوجيا تعليم)",
+            "الخدمة الاجتماعية",
+            "دار العلوم",
+            "علوم الاتصال",
+            "الإعلام",
+            "الآثار",
+            "التربية للطفولة",
+            "التربية (تعليم أساليب)",
+            "التربية للطفولة المبكرة",
+            "التربية الفنية – التربية الموسيقية",
+            "التربية",
+            "علوم التربية",
+            "البنات (طفولة واقتصاد منزلي)",
+            "الحقوق",
+            "تكنولوجيا العلوم الصحية",
+            "التنمية والتكنولوجيا (مالية وإدارية)",
+            "الجامعات التكنولوجية والمعاهد العليا والمتوسطة",
+            "في نفس التخصصات"
+        ];
+
+        // رابط جوجل سكريبت (استبدله برابطك)
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyH4kSPwfpoCclATvRIVyOxTUM6zmKelTT48b1xy5rMMNLqmREanMSfK1uFEKBpOe2d/exec';
+
+        // إنشاء العناصر العائمة
+        function createFloatingElements() {
+            const container = document.getElementById('floatingElements');
+            const gradients = [
+                'linear-gradient(135deg, #4a00e0 0%, #8e2de2 100%)',
+                'linear-gradient(135deg, #f80759 0%, #ffa502 100%)',
+                'linear-gradient(135deg, #00b894 0%, #00a085 100%)',
+                'linear-gradient(135deg, #3498db 0%, #2c3e50 100%)',
+                'linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%)'
+            ];
+            
+            for (let i = 0; i < 18; i++) {
+                const element = document.createElement('div');
+                element.classList.add('floating-element');
+                
+                const size = Math.random() * 250 + 60;
+                const gradient = gradients[Math.floor(Math.random() * gradients.length)];
+                const delay = Math.random() * 8;
+                const duration = Math.random() * 25 + 20;
+                const top = Math.random() * 100;
+                const left = Math.random() * 100;
+                
+                element.style.width = `${size}px`;
+                element.style.height = `${size}px`;
+                element.style.top = `${top}%`;
+                element.style.left = `${left}%`;
+                element.style.background = gradient;
+                element.style.animationDelay = `${delay}s`;
+                element.style.animationDuration = `${duration}s`;
+                
+                container.appendChild(element);
+            }
+        }
+
+        // عرض الكليات
+        function displayColleges() {
+            const container = document.getElementById('collegesGrid');
+            
+            colleges.forEach((college, index) => {
+                const card = document.createElement('div');
+                card.className = 'college-card';
+                card.style.setProperty('--i', index);
+                
+                const icons = ['fa-university', 'fa-graduation-cap', 'fa-book-open', 'fa-landmark', 
+                              'fa-school', 'fa-building', 'fa-user-tie', 'fa-chart-line',
+                              'fa-balance-scale', 'fa-microphone', 'fa-camera', 'fa-flask'];
+                const icon = icons[index % icons.length];
+                
+                card.innerHTML = `
+                    <div class="college-icon">
+                        <i class="fas ${icon}"></i>
+                    </div>
+                    <div class="college-name">${college}</div>
+                `;
+                
+                container.appendChild(card);
+            });
+        }
+
+        // إرسال البيانات إلى جوجل شيت
+        async function submitToGoogleSheet(formData) {
+            try {
+                const response = await axios.post(SCRIPT_URL, formData, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                return response.data;
+            } catch (error) {
+                console.error('Error:', error);
+                throw error;
+            }
+        }
+
+        // التحقق من صحة رقم الهاتف المصري
+        function validateEgyptianPhone(phone) {
+            // أرقام مصر تبدأ بـ 010 أو 011 أو 012 أو 015
+            const phoneRegex = /^01[0-2,5]{1}[0-9]{8}$/;
+            return phoneRegex.test(phone);
+        }
+
+        // عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            // إنشاء العناصر العائمة
+            createFloatingElements();
+            
+            // عرض الكليات
+            displayColleges();
+            
+            // إضافة تأثيرات للبطاقات عند الظهور
+            const observerOptions = {
+                threshold: 0.05,
+                rootMargin: '0px 0px -100px 0px'
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateX(0) rotate(0)';
+                    }
+                });
+            }, observerOptions);
+            
+            document.querySelectorAll('.college-card').forEach(card => {
+                observer.observe(card);
+            });
+            
+            // معالجة إرسال الفورم
+            const form = document.getElementById('bookingForm');
+            const submitBtn = document.getElementById('submitBtn');
+            const successMessage = document.getElementById('successMessage');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                // التحقق من صحة البيانات
+                const studentName = document.getElementById('studentName').value.trim();
+                const phone = document.getElementById('phone').value.trim();
+                const parentPhone = document.getElementById('parentPhone').value.trim();
+                const studyType = document.querySelector('input[name="studyType"]:checked').value;
+                const preferredCenter = document.getElementById('preferredCenter').value.trim();
+                
+                // التحقق من صحة أرقام الهواتف المصرية
+                if (!validateEgyptianPhone(phone)) {
+                    alert('رقم الهاتف غير صحيح. يرجى إدخال رقم هاتف مصري صحيح (11 رقم يبدأ بـ 010 أو 011 أو 012 أو 015)');
+                    return;
+                }
+                
+                if (!validateEgyptianPhone(parentPhone)) {
+                    alert('رقم ولي الأمر غير صحيح. يرجى إدخال رقم هاتف مصري صحيح (11 رقم يبدأ بـ 010 أو 011 أو 012 أو 015)');
+                    return;
+                }
+                
+                // التحقق من إدخال اسم السنتر
+                if (preferredCenter.length < 3) {
+                    alert('يرجى كتابة اسم السنتر الذي تريد الحجز فيه');
+                    return;
+                }
+                
+                // إظهار حالة التحميل
+                const originalText = submitBtn.innerHTML;
+                submitBtn.innerHTML = '<span>جاري تأكيد الحجز...</span><div class="loading"></div>';
+                submitBtn.disabled = true;
+                
+                // إخفاء الرسائل السابقة
+                successMessage.style.display = 'none';
+                errorMessage.style.display = 'none';
+                
+                // تجهيز البيانات
+                const formData = {
+                    studentName: studentName,
+                    phone: phone,
+                    parentPhone: parentPhone,
+                    studyType: studyType,
+                    preferredCenter: preferredCenter,
+                    timestamp: new Date().toLocaleString('ar-EG'),
+                    course: 'إدارة الأعمال',
+                    system: 'بكالوريا',
+                    gender: 'لجميع الطلاب'
+                };
+                
+                try {
+                    // إرسال البيانات
+                    const result = await submitToGoogleSheet(formData);
+                    
+                    if (result.success) {
+                        // إظهار رسالة النجاح
+                        successMessage.style.display = 'block';
+                        successMessage.style.animation = 'messagePop 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                        
+                        // إعادة تعيين الفورم
+                        form.reset();
+                        
+                        // تحريك زر التأكيد
+                        submitBtn.innerHTML = '<span>تم الحجز بنجاح!</span><i class="fas fa-check"></i>';
+                        submitBtn.style.background = 'linear-gradient(135deg, #00b894 0%, #00a085 100%)';
+                        
+                        // إخفاء الزر بعد 3 ثواني
+                        setTimeout(() => {
+                            submitBtn.innerHTML = originalText;
+                            submitBtn.style.background = '';
+                            submitBtn.disabled = false;
+                            successMessage.style.display = 'none';
+                        }, 3000);
+                        
+                        // تحريك صفحة إلى الكليات
+                        setTimeout(() => {
+                            document.querySelector('.colleges-section').scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'start'
+                            });
+                        }, 1200);
+                    } else {
+                        throw new Error(result.message);
+                    }
+                } catch (error) {
+                    // إظهار رسالة الخطأ
+                    errorMessage.style.display = 'block';
+                    errorMessage.style.animation = 'messagePop 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                    
+                    // إعادة تعيين الزر
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                    
+                    console.error('Submission error:', error);
+                }
+            });
+            
+            // إضافة تأثيرات عند التركيز على الحقول
+            const inputs = document.querySelectorAll('.form-input');
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.parentElement.style.transform = 'translateY(-8px) scale(1.03)';
+                    this.parentElement.style.zIndex = '10';
+                });
+                
+                input.addEventListener('blur', function() {
+                    this.parentElement.style.transform = 'translateY(0) scale(1)';
+                    this.parentElement.style.zIndex = '1';
+                });
+            });
+            
+            // تأثير الكتابة في حقل السنتر
+            const centerInput = document.getElementById('preferredCenter');
+            centerInput.addEventListener('input', function() {
+                if (this.value.length > 0) {
+                    this.style.borderColor = '#00b894';
+                    this.style.boxShadow = '0 0 0 5px rgba(0, 184, 148, 0.15)';
+                } else {
+                    this.style.borderColor = '#e6e6ff';
+                    this.style.boxShadow = 'none';
+                }
+            });
+            
+            // تأثيرات عند التمرير
+            let lastScroll = 0;
+            window.addEventListener('scroll', function() {
+                const scrolled = window.pageYOffset;
+                const heroSection = document.querySelector('.hero-section');
+                
+                // تأثير التحرك البطيء للصورة
+                heroSection.style.transform = `translateY(${scrolled * 0.04}px) scale(${1 - scrolled * 0.00008}) rotate(${scrolled * 0.001}deg)`;
+                
+                // تأثير العناصر العائمة مع التمرير
+                const floatingElements = document.querySelectorAll('.floating-element');
+                floatingElements.forEach((el, index) => {
+                    const speed = 0.2 + (index * 0.02);
+                    el.style.transform = `translate(${scrolled * speed * 0.3}px, ${scrolled * speed * 0.5}px)`;
+                });
+                
+                lastScroll = scrolled;
+            });
+            
+            // تفعيل الكروت عند التحميل
+            setTimeout(() => {
+                document.querySelectorAll('.college-card').forEach(card => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateX(0) rotate(0)';
+                });
+            }, 2000);
+            
+            // تأثير الكتابة في حقول الهاتف
+            const phoneInputs = document.querySelectorAll('input[type="tel"]');
+            phoneInputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    // إضافة تلقائية لرقم 01 في البداية
+                    if (this.value.length === 1 && !this.value.startsWith('01')) {
+                        this.value = '01' + this.value;
+                    }
+                    
+                    // التحقق من صحة الرقم أثناء الكتابة
+                    if (validateEgyptianPhone(this.value)) {
+                        this.style.borderColor = '#00b894';
+                        this.style.boxShadow = '0 0 0 5px rgba(0, 184, 148, 0.15)';
+                    } else if (this.value.length >= 11) {
+                        this.style.borderColor = '#f80759';
+                        this.style.boxShadow = '0 0 0 5px rgba(248, 7, 89, 0.15)';
+                    } else {
+                        this.style.borderColor = '#e6e6ff';
+                        this.style.boxShadow = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
