@@ -651,10 +651,10 @@
             <div class="hero-overlay">
                 <div class="hero-content">
                     <h1>حجز مادة إدارة الأعمال</h1>
-                    <p>حجز ماجة ادارة الاعمال  نظام البكالوريا | احجز مقعدك الآن لبداية رحلة جديده</p>
+                    <p>للطلاب والطالبات - نظام البكالوريا | احجز مقعدك الآن للتفوق الأكاديمي والتحضير للجامعة</p>
                 </div>
                 <div class="hero-badge">
-                    <i class="fas fa-graduation-cap"></i> دفعه 2027
+                    <i class="fas fa-graduation-cap"></i> لجميع الطلاب
                 </div>
             </div>
         </section>
@@ -663,7 +663,7 @@
         <section class="booking-form-section">
             <div class="section-title">
                 <h2>سجل بيانات الحجز</h2>
-                <p>املأ النموذج التالي لحجز مادة إدارة الأعمال للعام الدراسي</p>
+                <p>املأ النموذج التالي لحجز مادة إدارة الأعمال للعام الدراسي - متاح للطلاب والطالبات</p>
             </div>
             
             <form id="bookingForm">
@@ -778,7 +778,7 @@
             "في نفس التخصصات"
         ];
 
-        // رابط جوجل سكريبت (استبدله برابطك)
+        // رابط جوجل سكريبت الخاص بك - تم إضافته هنا
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyH4kSPwfpoCclATvRIVyOxTUM6zmKelTT48b1xy5rMMNLqmREanMSfK1uFEKBpOe2d/exec';
 
         // إنشاء العناصر العائمة
@@ -843,15 +843,19 @@
         // إرسال البيانات إلى جوجل شيت
         async function submitToGoogleSheet(formData) {
             try {
+                console.log('إرسال البيانات إلى:', SCRIPT_URL);
+                console.log('البيانات المرسلة:', formData);
+                
                 const response = await axios.post(SCRIPT_URL, formData, {
                     headers: {
                         'Content-Type': 'application/json'
                     }
                 });
                 
+                console.log('الاستجابة:', response.data);
                 return response.data;
             } catch (error) {
-                console.error('Error:', error);
+                console.error('خطأ في الإرسال:', error);
                 throw error;
             }
         }
