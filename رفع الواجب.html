@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم إدارة الواجبات - MrFaisal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            min-height: 100vh;
+            color: white;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 18px;
+        }
+        
+        .main-content {
+            padding: 40px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .form-section {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .form-section h2 {
+            color: #4cc9f0;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #4cc9f0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #b8c1ec;
+            font-weight: 500;
+        }
+        
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #4cc9f0;
+            box-shadow: 0 0 0 2px rgba(76, 201, 240, 0.2);
+        }
+        
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .form-hint {
+            font-size: 12px;
+            color: #94a3b8;
+            margin-top: 5px;
+            display: block;
+        }
+        
+        .btn {
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #00b09b 0%, #96c93d 100%);
+        }
+        
+        .preview-section {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .preview-section h2 {
+            color: #f72585;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f72585;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .lecture-preview {
+            background: rgba(255, 255, 255, 0.07);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #4361ee;
+        }
+        
+        .lecture-preview h3 {
+            color: #4cc9f0;
+            margin-bottom: 10px;
+        }
+        
+        .lecture-preview p {
+            color: #b8c1ec;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        
+        .lecture-meta {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+            font-size: 13px;
+            color: #94a3b8;
+        }
+        
+        .url-display {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            word-break: break-all;
+            font-family: monospace;
+            font-size: 14px;
+            color: #7bdff2;
+        }
+        
+        .copy-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+        
+        .copy-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .alert-success {
+            background: rgba(0, 255, 128, 0.1);
+            border: 1px solid #00ff88;
+            color: #00ff88;
+        }
+        
+        .alert-error {
+            background: rgba(255, 0, 85, 0.1);
+            border: 1px solid #ff0055;
+            color: #ff0055;
+        }
+        
+        .info-section {
+            grid-column: 1 / -1;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .info-section h2 {
+            color: #7209b7;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #7209b7;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .info-card {
+            background: rgba(255, 255, 255, 0.07);
+            padding: 20px;
+            border-radius: 10px;
+        }
+        
+        .info-card h3 {
+            color: #f72585;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .info-card ul {
+            list-style: none;
+            padding-left: 20px;
+        }
+        
+        .info-card li {
+            margin-bottom: 8px;
+            color: #b8c1ec;
+            position: relative;
+        }
+        
+        .info-card li:before {
+            content: "→";
+            position: absolute;
+            left: -20px;
+            color: #4361ee;
+        }
+        
+        .instructions {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border: 1px dashed rgba(255, 255, 255, 0.2);
+        }
+        
+        .instructions h4 {
+            color: #4cc9f0;
+            margin-bottom: 10px;
+        }
+        
+        .instructions ol {
+            padding-left: 25px;
+            color: #b8c1ec;
+        }
+        
+        .instructions li {
+            margin-bottom: 10px;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #94a3b8;
+            font-size: 14px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* أنيميشن */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .form-section, .preview-section, .info-section {
+            animation: fadeIn 0.5s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-cogs"></i> لوحة تحكم إدارة الواجبات</h1>
+            <p>إضافة وإدارة واجبات المحاضرات - MrFaisal</p>
+        </div>
+        
+        <div class="alert" id="alertMessage"></div>
+        
+        <div class="main-content">
+            <div class="form-section">
+                <h2><i class="fas fa-plus-circle"></i> إضافة واجب جديد</h2>
+                
+                <div class="form-group">
+                    <label for="lectureNumber"><i class="fas fa-sort-numeric-up"></i> رقم المحاضرة</label>
+                    <input type="number" id="lectureNumber" min="1" max="50" placeholder="مثال: 1">
+                    <span class="form-hint">رقم المحاضرة كما سيظهر في القائمة الرئيسية</span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="lectureTitle"><i class="fas fa-heading"></i> عنوان الواجب</label>
+                    <input type="text" id="lectureTitle" placeholder="مثال: واجب المحاضرة الأولى">
+                    <span class="form-hint">العوان الذي سيراه الطالب في قائمة الواجبات</span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="lectureDescription"><i class="fas fa-align-left"></i> وصف الواجب</label>
+                    <textarea id="lectureDescription" placeholder="مثال: من صفحة 2 إلى 14"></textarea>
+                    <span class="form-hint">وصف مختصر يظهر تحت عنوان الواجب</span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="lecturePages"><i class="fas fa-file"></i> الصفحات</label>
+                    <input type="text" id="lecturePages" placeholder="مثال: 2-14">
+                </div>
+                
+                <div class="form-group">
+                    <label for="googleSheetUrl"><i class="fab fa-google"></i> رابط Google Sheet</label>
+                    <input type="url" id="googleSheetUrl" placeholder="https://docs.google.com/spreadsheets/d/...">
+                    <span class="form-hint">رابط جدول البيانات الذي يحتوي على الأسئلة</span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="sheetName"><i class="fas fa-table"></i> اسم الورقة في الجدول</label>
+                    <input type="text" id="sheetName" placeholder="مثال: الورقة1" value="الورقة1">
+                </div>
+                
+                <div class="form-group">
+                    <label for="iconName"><i class="fas fa-icons"></i> أيقونة الواجب</label>
+                    <select id="iconName">
+                        <option value="book-open">كتاب مفتوح</option>
+                        <option value="chalkboard-teacher">سبورة</option>
+                        <option value="book-reader">قارئ</option>
+                        <option value="graduation-cap">تخرج</option>
+                        <option value="file-alt">ملف</option>
+                        <option value="pencil-alt">قلم</option>
+                        <option value="book">كتاب</option>
+                    </select>
+                    <span class="form-hint">اختر الأيقونة التي ستظهر مع الواجب</span>
+                </div>
+                
+                <button class="btn" onclick="generateHomework()">
+                    <i class="fas fa-magic"></i> إنشاء الواجب تلقائياً
+                </button>
+                
+                <button class="btn btn-success" onclick="addToMainPage()">
+                    <i class="fas fa-plus"></i> إضافة إلى القائمة الرئيسية
+                </button>
+            </div>
+            
+            <div class="preview-section">
+                <h2><i class="fas fa-eye"></i> معاينة الواجب</h2>
+                <div id="lecturePreview"></div>
+                <div id="generatedUrl" class="url-display" style="display:none;">
+                    <strong>رابط الواجب:</strong> <span id="urlText"></span>
+                    <br>
+                    <button class="copy-btn" onclick="copyUrl()">
+                        <i class="fas fa-copy"></i> نسخ الرابط
+                    </button>
+                </div>
+            </div>
+            
+            <div class="info-section">
+                <h2><i class="fas fa-info-circle"></i> معلومات مهمة</h2>
+                <div class="info-grid">
+                    <div class="info-card">
+                        <h3><i class="fas fa-table"></i> تنسيق جدول البيانات</h3>
+                        <ul>
+                            <li>يجب أن يحتوي الجدول على 3 أعمدة على الأقل</li>
+                            <li>العمود الأول: نص السؤال</li>
+                            <li>العمود الثاني: الإجابة الصحيحة (أ/ب/ج/د)</li>
+                            <li>العمود الثالث: رابط الصورة (اختياري)</li>
+                            <li>الصف الأول يحتوي على العناوين</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="info-card">
+                        <h3><i class="fas fa-link"></i> روابط مهمة</h3>
+                        <ul>
+                            <li><a href="https://docs.google.com/spreadsheets/" target="_blank" style="color:#4cc9f0;">إنشاء جدول بيانات جديد</a></li>
+                            <li><a href="#" id="mainPageLink" target="_blank" style="color:#4cc9f0;">صفحة الواجبات الرئيسية</a></li>
+                            <li><a href="#" id="homeworkTemplate" target="_blank" style="color:#4cc9f0;">قالب Google Sheet للواجبات</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="info-card">
+                        <h3><i class="fas fa-code"></i> ملفات النظام</h3>
+                        <ul>
+                            <li>الكود 1: Apps Script لجلب البيانات</li>
+                            <li>الكود 2: صفحة حل الواجب</li>
+                            <li>الكود 3: صفحة قائمة الواجبات</li>
+                            <li>الكود 4: لوحة التحكم (هذه الصفحة)</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="instructions">
+                    <h4><i class="fas fa-graduation-cap"></i> خطوات إنشاء واجب جديد:</h4>
+                    <ol>
+                        <li>أنشئ جدول بيانات جديد في Google Sheets</li>
+                        <li>أضف الأسئلة مع الإجابات الصحيحة</li>
+                        <li>انسخ رابط الجدول وأدخله في الأعلى</li>
+                        <li>اضغط على "إنشاء الواجب تلقائياً"</li>
+                        <li>انسخ الرابط الناتج وأضفه إلى القائمة الرئيسية</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>© 2026 نظام إدارة الواجبات - MrFaisal | جميع الحقوق محفوظة</p>
+        </div>
+    </div>
+
+    <script>
+        // بيانات التخزين المحلية للواجبات
+        let allLectures = JSON.parse(localStorage.getItem('allLectures')) || [
+            { id: 1, title: "واجب المحاضرة الأولى", desc: "من صفحة 2 إلى 14", pages: "2-14", url: "https://www.mrfaisal.net/%D9%88%D8%A7%D8%AC%D8%A8%20%D8%A7%D9%84%D9%85%D8%AD%D8%A7%D8%B6%D8%B1%D8%A9%20%D8%A7%D9%84%D8%A7%D9%88%D9%84%D9%8A%20%D8%AA%D8%A7%D9%84%D8%AA%D9%87", icon: "book-open" },
+            { id: 2, title: "واجب المحاضرة الثانية", desc: "من صفحة 15 إلى 22", pages: "15-22", url: "https://www.mrfaisal.net/%D9%88%D8%A7%D8%AC%D8%A8%20%D8%A7%D9%84%D9%85%D8%AD%D8%A7%D8%B6%D8%B1%D8%A9%20%D8%A7%D9%84%D8%AB%D8%A7%D9%86%D9%8A%D8%A9%203", icon: "chalkboard-teacher" },
+            { id: 3, title: "واجب المحاضرة الثالثة", desc: "من صفحة 23 إلى 31", pages: "23-31", url: "https://www.mrfaisal.net/%D9%88%D8%A7%D8%AC%D8%A8%20%D8%A7%D9%84%D9%85%D8%AD%D8%A7%D8%B6%D8%B1%D8%A9%20%D8%A7%D9%84%D8%AB%D8%A7%D9%84%D8%AB%D9%87%203", icon: "book-reader" }
+        ];
+        
+        // تحديث الروابط
+        document.getElementById('mainPageLink').href = window.location.href.replace('admin.html', 'index.html');
+        document.getElementById('homeworkTemplate').href = 'https://docs.google.com/spreadsheets/d/1tSwpO6zQzIuuCJSLliRTMGm7i9oB4t8e_LRyFTBh4OI/copy';
+        
+        // دالة عرض المعاينة
+        function updatePreview() {
+            const lectureNumber = document.getElementById('lectureNumber').value;
+            const lectureTitle = document.getElementById('lectureTitle').value;
+            const lectureDesc = document.getElementById('lectureDescription').value;
+            const lecturePages = document.getElementById('lecturePages').value;
+            const iconName = document.getElementById('iconName').value;
+            
+            if (!lectureNumber || !lectureTitle) {
+                document.getElementById('lecturePreview').innerHTML = 
+                    '<p style="color:#94a3b8; text-align:center; padding:20px;">املأ بيانات الواجب لرؤية المعاينة</p>';
+                return;
+            }
+            
+            document.getElementById('lecturePreview').innerHTML = `
+                <div class="lecture-preview">
+                    <h3>${lectureTitle}</h3>
+                    <p>${lectureDesc}</p>
+                    <p><strong>رقم المحاضرة:</strong> ${lectureNumber}</p>
+                    <p><strong>الصفحات:</strong> ${lecturePages}</p>
+                    <div class="lecture-meta">
+                        <span><i class="fas fa-${iconName}"></i> ${iconName}</span>
+                        <span><i class="fas fa-link"></i> ${document.getElementById('googleSheetUrl').value ? 'تم إضافة الرابط' : 'لا يوجد رابط'}</span>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // تحديث المعاينة عند تغيير الحقول
+        document.querySelectorAll('#lectureNumber, #lectureTitle, #lectureDescription, #lecturePages, #googleSheetUrl, #iconName').forEach(input => {
+            input.addEventListener('input', updatePreview);
+        });
+        
+        // دالة إنشاء الواجب
+        function generateHomework() {
+            const lectureNumber = document.getElementById('lectureNumber').value;
+            const lectureTitle = document.getElementById('lectureTitle').value;
+            const lectureDesc = document.getElementById('lectureDescription').value;
+            const lecturePages = document.getElementById('lecturePages').value;
+            const googleSheetUrl = document.getElementById('googleSheetUrl').value;
+            const sheetName = document.getElementById('sheetName').value;
+            const iconName = document.getElementById('iconName').value;
+            
+            // التحقق من البيانات
+            if (!lectureNumber || !lectureTitle || !googleSheetUrl) {
+                showAlert('يرجى ملء جميع الحقول المطلوبة', 'error');
+                return;
+            }
+            
+            // استخراج ID من رابط Google Sheet
+            let sheetId = '';
+            try {
+                const match = googleSheetUrl.match(/\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/);
+                if (match && match[1]) {
+                    sheetId = match[1];
+                } else {
+                    showAlert('رابط Google Sheet غير صحيح', 'error');
+                    return;
+                }
+            } catch (e) {
+                showAlert('رابط Google Sheet غير صحيح', 'error');
+                return;
+            }
+            
+            // إنشاء رابط الواجب
+            const baseUrl = window.location.origin + window.location.pathname;
+            const homeworkUrl = baseUrl.replace('admin.html', `homework.html?sheet=${sheetId}&sheetName=${encodeURIComponent(sheetName)}&lecture=${lectureNumber}`);
+            
+            // عرض الرابط
+            document.getElementById('urlText').textContent = homeworkUrl;
+            document.getElementById('generatedUrl').style.display = 'block';
+            
+            // حفظ البيانات مؤقتاً
+            sessionStorage.setItem('tempHomework', JSON.stringify({
+                id: parseInt(lectureNumber),
+                title: lectureTitle,
+                desc: lectureDesc,
+                pages: lecturePages,
+                url: homeworkUrl,
+                icon: iconName,
+                sheetId: sheetId,
+                sheetName: sheetName
+            }));
+            
+            showAlert('تم إنشاء رابط الواجب بنجاح! يمكنك الآن نسخ الرابط وإضافته إلى القائمة الرئيسية', 'success');
+            
+            // تحديث المعاينة
+            updatePreview();
+        }
+        
+        // دالة إضافة إلى القائمة الرئيسية
+        function addToMainPage() {
+            const tempData = sessionStorage.getItem('tempHomework');
+            if (!tempData) {
+                showAlert('يجب إنشاء واجب أولاً قبل إضافته للقائمة', 'error');
+                return;
+            }
+            
+            const homework = JSON.parse(tempData);
+            
+            // التحقق من عدم تكرار رقم المحاضرة
+            const existingIndex = allLectures.findIndex(lecture => lecture.id === homework.id);
+            
+            if (existingIndex !== -1) {
+                // تحديث المحاضرة الموجودة
+                allLectures[existingIndex] = homework;
+                showAlert('تم تحديث المحاضرة في القائمة الرئيسية', 'success');
+            } else {
+                // إضافة محاضرة جديدة
+                allLectures.push(homework);
+                // ترتيب المحاضرات حسب رقمها
+                allLectures.sort((a, b) => a.id - b.id);
+                showAlert('تم إضافة المحاضرة إلى القائمة الرئيسية', 'success');
+            }
+            
+            // حفظ في التخزين المحلي
+            localStorage.setItem('allLectures', JSON.stringify(allLectures));
+            
+            // عرض تحديث للقائمة الرئيسية (في بيئة حقيقية سيتم تحديث قاعدة البيانات)
+            updateMainPageCode();
+        }
+        
+        // دالة تحديث كود القائمة الرئيسية
+        function updateMainPageCode() {
+            // في بيئة حقيقية، هنا سيتم تحديث ملف index.html
+            // لكن في هذا المثال سنعرض الكود المحدث فقط
+            
+            let lecturesCode = '';
+            allLectures.forEach(lecture => {
+                lecturesCode += `            { id: ${lecture.id}, title: "${lecture.title}", desc: "${lecture.desc}", pages: "${lecture.pages}", url: "${lecture.url}", icon: "${lecture.icon}" },\n`;
+            });
+            
+            const fullCode = `<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام الواجبات - MrFaisal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* نفس الأنماط من الكود الثالث */
+    </style>
+</head>
+<body>
+    <div class="decoration">
+        <!-- نفس الديكور -->
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-tasks"></i> نظام الواجبات</h1>
+            <p class="subtitle">اختر الواجب الذي ترغب في الاطلاع عليه</p>
+            <div class="progress-bar">
+                <div class="progress"></div>
+            </div>
+        </div>
+        
+        <div class="content">
+            <div class="controls">
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="all">
+                        <i class="fas fa-layer-group"></i> الكل
+                    </button>
+                    <button class="filter-btn" data-filter="recent">
+                        <i class="fas fa-star"></i> الأحدث
+                    </button>
+                </div>
+            </div>
+            
+            <div class="stats">
+                <div class="stat-item">
+                    <i class="fas fa-book"></i>
+                    <span>إجمالي المحاضرات: <span id="totalLectures">${allLectures.length}</span></span>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>أحدث محاضرة: <span id="latestLecture">${allLectures[allLectures.length-1]?.title || 'لا توجد'}</span></span>
+                </div>
+            </div>
+            
+            <div class="options-grid" id="lecturesGrid">
+                <!-- سيتم إضافة المحاضرات ديناميكياً -->
+            </div>
+            
+            <div class="pagination" id="pagination">
+                <!-- سيتم إضافة أزرار الترقيم ديناميكياً -->
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>جميع الحقوق محفوظة &copy; 2026 - MrFaisal</p>
+        </div>
+    </div>
+
+    <script>
+        // بيانات المحاضرات
+        const lectures = [
+${lecturesCode}        ];
+        
+        // باقي الكود من الكود الثالث...
+    </script>
+</body>
+</html>`;
+            
+            // في بيئة حقيقية، يمكن إرسال هذا الكود للخادم لحفظه
+            console.log('كود الصفحة الرئيسية المحدث:', fullCode);
+            showAlert('تم تحديث بيانات القائمة الرئيسية', 'success');
+        }
+        
+        // دالة نسخ الرابط
+        function copyUrl() {
+            const urlText = document.getElementById('urlText').textContent;
+            navigator.clipboard.writeText(urlText).then(() => {
+                showAlert('تم نسخ الرابط إلى الحافظة', 'success');
+            }).catch(err => {
+                showAlert('فشل نسخ الرابط: ' + err, 'error');
+            });
+        }
+        
+        // دالة عرض التنبيهات
+        function showAlert(message, type) {
+            const alertDiv = document.getElementById('alertMessage');
+            alertDiv.textContent = message;
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                alertDiv.style.display = 'none';
+            }, 5000);
+        }
+        
+        // تحميل البيانات عند بدء التشغيل
+        window.addEventListener('DOMContentLoaded', () => {
+            // تحديث المعاينة الأولية
+            updatePreview();
+            
+            // عرض عدد الواجبات الموجودة
+            console.log(`عدد الواجبات المخزنة: ${allLectures.length}`);
+        });
+    </script>
+</body>
+</html>
