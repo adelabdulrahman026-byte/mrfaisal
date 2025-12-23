@@ -1,38 +1,36 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <title>موقع مستر فيصل</title>
-  <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <title>موقع مستر فيصل</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+<div class="overlay"></div>
+
+<header>
+    <h1>مستر فيصل</h1>
+    <p>منصة تعليمية عصرية</p>
+</header>
+
 <div class="container">
 
-  <h1 class="title">اختر القسم</h1>
-
-  <div class="cards">
-
-    <div class="card business" onclick="goSection('business')">
-      <div class="overlay"></div>
-      <div class="content">
-        <div class="icon">📊</div>
-        <h2>إدارة أعمال</h2>
-        <p>دخول عالم الإدارة والاقتصاد</p>
-      </div>
+    <div class="card">
+        <img src="https://adelabdulrahman026-byte.github.io/dashboard/new2.jpg" alt="إدارة أعمال">
+        <div class="card-content">
+            <h2>إدارة أعمال</h2>
+            <button>دخول</button>
+        </div>
     </div>
 
-    <div class="card geo" onclick="goSection('geo')">
-      <div class="overlay"></div>
-      <div class="content">
-        <div class="icon">🌍</div>
-        <h2>جغرافيا</h2>
-        <p>استكشف العالم بشكل مبسط</p>
-      </div>
+    <div class="card geo" onclick="goGeo()">
+        <img src="https://adelabdulrahman026-byte.github.io/dashboard/new3.jpg" alt="جغرافيا">
+        <div class="card-content">
+            <h2>جغرافيا</h2>
+            <button>دخول</button>
+        </div>
     </div>
-
-  </div>
 
 </div>
 
