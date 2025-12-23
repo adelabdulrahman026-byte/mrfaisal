@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام حجز تذاكر - المباراة النهائية لدوري الفيلسوف</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(to right, #9c27b0, #673ab7);
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: "⚽";
+            position: absolute;
+            font-size: 200px;
+            opacity: 0.1;
+            top: -50px;
+            right: -30px;
+            transform: rotate(25deg);
+        }
+        
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .match-info {
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .match-details {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .match-details h2 {
+            color: #673ab7;
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .match-details h2 i {
+            color: #ff9800;
+        }
+        
+        .match-details ul {
+            list-style: none;
+        }
+        
+        .match-details li {
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .match-details i {
+            color: #673ab7;
+            width: 20px;
+        }
+        
+        .stadium-map {
+            flex: 1;
+            min-width: 300px;
+            margin-top: 20px;
+        }
+        
+        .stadium-map h2 {
+            color: #673ab7;
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .stadium-map h2 i {
+            color: #ff9800;
+        }
+        
+        .stadium-map iframe {
+            width: 100%;
+            height: 300px;
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .booking-section {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 40px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .booking-form {
+            width: 100%;
+        }
+        
+        .booking-form h2 {
+            color: #673ab7;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-align: center;
+            justify-content: center;
+        }
+        
+        .booking-form h2 i {
+            color: #ff9800;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+            font-size: 1.1rem;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            transition: border 0.3s;
+        }
+        
+        .form-group input:focus {
+            border-color: #673ab7;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(103, 58, 183, 0.1);
+        }
+        
+        .auto-seat-notice {
+            background-color: #e8f5e9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border-right: 4px solid #4caf50;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .auto-seat-notice i {
+            color: #4caf50;
+            font-size: 1.5rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 16px 32px;
+            background: linear-gradient(to right, #673ab7, #9c27b0);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-top: 10px;
+        }
+        
+        .btn:hover {
+            background: linear-gradient(to right, #5e35b1, #8e24aa);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn i {
+            margin-left: 8px;
+        }
+        
+        .ticket-section {
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 40px;
+            display: none;
+        }
+        
+        .ticket-section h2 {
+            color: #673ab7;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-align: center;
+            justify-content: center;
+        }
+        
+        .ticket-section h2 i {
+            color: #ff9800;
+        }
+        
+        .ticket {
+            background: linear-gradient(135deg, #f5f5f5, #ffffff);
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 500px;
+            margin: 0 auto;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            border: 2px solid #673ab7;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .ticket::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, rgba(103, 58, 183, 0.1), rgba(156, 39, 176, 0.1));
+            border-radius: 0 0 0 100px;
+        }
+        
+        .ticket::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, rgba(255, 152, 0, 0.1), rgba(255, 87, 34, 0.1));
+            border-radius: 0 100px 0 0;
+        }
+        
+        .ticket-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            border-bottom: 2px dashed #ccc;
+            padding-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .ticket-title {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #673ab7;
+        }
+        
+        .final-match-badge {
+            background: linear-gradient(to right, #ff9800, #ff5722);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+        
+        .ticket-qr {
+            width: 100px;
+            height: 100px;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ddd;
+            flex-direction: column;
+            padding: 5px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .ticket-qr canvas {
+            width: 90px;
+            height: 90px;
+        }
+        
+        .ticket-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .ticket-info {
+            margin-bottom: 15px;
+        }
+        
+        .ticket-info label {
+            font-weight: bold;
+            color: #555;
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .ticket-info span {
+            font-size: 1.1rem;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .ticket-code {
+            grid-column: span 2;
+            text-align: center;
+            background: linear-gradient(to right, #673ab7, #9c27b0);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            margin-top: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .download-btn {
+            display: inline-block;
+            padding: 14px 28px;
+            background: linear-gradient(to right, #4caf50, #2e7d32);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            margin-top: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-decoration: none;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            display: block;
+        }
+        
+        .download-btn:hover {
+            background: linear-gradient(to right, #43a047, #1b5e20);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .download-btn i {
+            margin-left: 8px;
+        }
+        
+        .instructions {
+            background-color: #f3e5f5;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+            border-right: 4px solid #9c27b0;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .instructions h3 {
+            color: #7b1fa2;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .instructions ul {
+            padding-right: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        
+        .instructions li i {
+            color: #7b1fa2;
+            margin-top: 3px;
+        }
+        
+        .success-message {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+            display: none;
+            border-right: 4px solid #4caf50;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+            color: #666;
+            border-top: 1px solid #eee;
+        }
+        
+        @media (max-width: 768px) {
+            .booking-section {
+                padding: 20px;
+            }
+            
+            header h1 {
+                font-size: 2rem;
+            }
+            
+            .ticket-body {
+                grid-template-columns: 1fr;
+            }
+            
+            .ticket-code {
+                grid-column: span 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-trophy"></i> المباراة النهائية - دوري الفيلسوف</h1>
+            <p>احجز تذكرتك الآن لحضور المباراة النهائية التاريخية</p>
+        </header>
+        
+        <section class="match-info">
+            <div class="match-details">
+                <h2><i class="fas fa-info-circle"></i> تفاصيل المباراة النهائية</h2>
+                <ul>
+                    <li><i class="fas fa-trophy"></i> <strong>البطولة:</strong> المباراة النهائية - دوري الفيلسوف</li>
+                    <li><i class="far fa-calendar-alt"></i> <strong>التاريخ:</strong> الخميس القادم</li>
+                    <li><i class="far fa-clock"></i> <strong>الوقت:</strong> 4:00 عصراً</li>
+                    <li><i class="fas fa-map-marker-alt"></i> <strong>الملعب:</strong> استاد المدينة الشبابية بأبي قير</li>
+                    <li><i class="fas fa-star"></i> <strong>المناسبة:</strong> نهائي الموسم - الحدث الأكبر</li>
+                </ul>
+            </div>
+            
+            <div class="stadium-map">
+                <h2><i class="fas fa-map-marked-alt"></i> موقع الاستاد</h2>
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3412.123456789012!2d29.9859968!3d31.2616791!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14f5d14b1941247b%3A0xb332497d03c17ccb!2z2YXYrdmF2K8g2KfZhNmE2Ycg2KjYp9io2KfYqiDYp9mE2LHZitin2Kog2KfZhNi52YTYp9mG2YrYqSDYp9mE2KXZitipINin2YTYs9mK2KfYqiDYp9mE2K_ZhdmG2YrYqSDYp9mE2KfZhdi52YTZg9ipINin2YTYsdmK2KfZhtmK2KkgNTUyODM0MQ!5e0!3m2!1sen!2seg!4v1691234567890!5m2!1sen!2seg" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+        </section>
+        
+        <section class="booking-section">
+            <div class="booking-form">
+                <h2><i class="fas fa-ticket-alt"></i> احجز تذكرتك الآن</h2>
+                
+                <div class="auto-seat-notice">
+                    <i class="fas fa-couch"></i>
+                    <div>
+                        <strong>ملاحظة:</strong> سوف يتم تعيين رقم مقعد لك تلقائياً بعد إتمام الحجز. 
+                        سيكون مقعدك مضموناً في أفضل منطقة متاحة.
+                    </div>
+                </div>
+                
+                <div class="success-message" id="successMessage">
+                    <i class="fas fa-check-circle"></i> تم حجز تذكرتك بنجاح! يمكنك الآن رؤية تذكرتك أدناه.
+                </div>
+                
+                <form id="bookingForm">
+                    <div class="form-group">
+                        <label for="name">الاسم الكامل للمشجع:</label>
+                        <input type="text" id="name" placeholder="أدخل اسمك الثلاثي" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone">رقم الهاتف:</label>
+                        <input type="tel" id="phone" placeholder="01XXXXXXXXX" required>
+                    </div>
+                    
+                    <button type="submit" class="btn" id="bookBtn">
+                        <i class="fas fa-ticket-alt"></i> احجز تذكرتك الآن
+                    </button>
+                </form>
+            </div>
+        </section>
+        
+        <section class="ticket-section" id="ticketSection">
+            <h2><i class="fas fa-ticket-alt"></i> تذكرتك الإلكترونية</h2>
+            <div class="ticket" id="ticket">
+                <div class="ticket-header">
+                    <div>
+                        <div class="ticket-title">تذكرة المشجع - المباراة النهائية</div>
+                        <div class="final-match-badge">المباراة النهائية</div>
+                    </div>
+                    <div class="ticket-qr" id="qrCode">
+                        <!-- سيتم إنشاء QR Code هنا -->
+                        <canvas id="qrCanvas"></canvas>
+                    </div>
+                </div>
+                <div class="ticket-body">
+                    <div class="ticket-info">
+                        <label>اسم المشجع:</label>
+                        <span id="ticketName">-</span>
+                    </div>
+                    <div class="ticket-info">
+                        <label>رقم الهاتف:</label>
+                        <span id="ticketPhone">-</span>
+                    </div>
+                    <div class="ticket-info">
+                        <label>رقم المقعد:</label>
+                        <span id="ticketSeat">-</span>
+                    </div>
+                    <div class="ticket-info">
+                        <label>منطقة الجلوس:</label>
+                        <span id="ticketZone">-</span>
+                    </div>
+                    <div class="ticket-info">
+                        <label>تاريخ المباراة:</label>
+                        <span id="ticketDate">الخميس القادم</span>
+                    </div>
+                    <div class="ticket-info">
+                        <label>وقت المباراة:</label>
+                        <span id="ticketTime">4:00 عصراً</span>
+                    </div>
+                    <div class="ticket-code" id="ticketCode">
+                        PHIL-FINAL-0000
+                    </div>
+                </div>
+            </div>
+            
+            <a href="#" class="download-btn" id="downloadBtn">
+                <i class="fas fa-download"></i> احفظ التذكرة على موبايلك
+            </a>
+            
+            <div class="instructions">
+                <h3><i class="fas fa-info-circle"></i> تعليمات الدخول للمباراة:</h3>
+                <ul>
+                    <li><i class="fas fa-check-circle"></i> احفظ هذه التذكرة على هاتفك المحمول</li>
+                    <li><i class="fas fa-check-circle"></i> اعرض QR Code عند بوابة الدخول</li>
+                    <li><i class="fas fa-check-circle"></i> احضر قبل المباراة بساعة على الأقل</li>
+                    <li><i class="fas fa-check-circle"></i> التزم بالمقعد المحدد في تذكرتك</li>
+                    <li><i class="fas fa-check-circle"></i> يمنع إعادة بيع التذكرة أو تزويرها</li>
+                </ul>
+            </div>
+        </section>
+        
+        <footer>
+            <p>نتمنى لجميع المشجعين مشاهدة ممتعة للمباراة النهائية</p>
+            <p>⚽ شكراً لدعمكم ودوري الفيلسوف ⚽</p>
+        </footer>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script>
+        // مناطق الجلوس في الملعب
+        const seatingZones = [
+            { name: "المدرج الشرقي", prefix: "E", seats: 500 },
+            { name: "المدرج الغربي", prefix: "W", seats: 500 },
+            { name: "المقصورة الشمالية", prefix: "N", seats: 300 },
+            { name: "المقصورة الجنوبية", prefix: "S", seats: 300 }
+        ];
+        
+        // تخزين المقاعد المحجوزة (محاكاة لقاعدة بيانات)
+        let bookedSeats = new Set();
+        let lastAssignedSeat = { zone: 0, number: 0 };
+        
+        // توليد بعض المقاعد المحجوزة مسبقاً (محاكاة)
+        function generateInitialBookings() {
+            // محاكاة حجز 30% من المقاعد مسبقاً
+            for (let zoneIndex = 0; zoneIndex < seatingZones.length; zoneIndex++) {
+                const zone = seatingZones[zoneIndex];
+                const seatsToBook = Math.floor(zone.seats * 0.3);
+                
+                for (let i = 0; i < seatsToBook; i++) {
+                    const seatNumber = Math.floor(Math.random() * zone.seats) + 1;
+                    const seatId = `${zone.prefix}-${seatNumber}`;
+                    bookedSeats.add(seatId);
+                }
+            }
+        }
+        
+        // تعيين مقعد تلقائياً
+        function assignSeatAutomatically() {
+            // محاولة إيجاد مقعد متاح
+            for (let zoneIndex = 0; zoneIndex < seatingZones.length; zoneIndex++) {
+                const zone = seatingZones[zoneIndex];
+                
+                for (let seatNum = 1; seatNum <= zone.seats; seatNum++) {
+                    const seatId = `${zone.prefix}-${seatNum}`;
+                    
+                    if (!bookedSeats.has(seatId)) {
+                        bookedSeats.add(seatId);
+                        lastAssignedSeat = { zone: zoneIndex, number: seatNum };
+                        return {
+                            seatNumber: seatNum,
+                            zoneName: zone.name,
+                            seatCode: seatId
+                        };
+                    }
+                }
+            }
+            
+            // إذا لم يتم العثور على مقعد متاح (نادر جداً)
+            return {
+                seatNumber: Math.floor(Math.random() * 100) + 1,
+                zoneName: "مقاعد احتياطية",
+                seatCode: `RES-${Math.floor(Math.random() * 1000) + 1}`
+            };
+        }
+        
+        // معالجة نموذج الحجز
+        document.getElementById('bookingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            
+            if (!name || !phone) {
+                alert('يرجى ملء جميع البيانات المطلوبة!');
+                return;
+            }
+            
+            // التحقق من صحة رقم الهاتف
+            const phoneRegex = /^01[0-9]{9}$/;
+            if (!phoneRegex.test(phone)) {
+                alert('يرجى إدخال رقم هاتف صحيح (11 رقم تبدأ بـ 01)');
+                return;
+            }
+            
+            // تعيين مقعد تلقائياً
+            const assignedSeat = assignSeatAutomatically();
+            
+            // تحديث بيانات التذكرة
+            document.getElementById('ticketName').textContent = name;
+            document.getElementById('ticketPhone').textContent = phone;
+            document.getElementById('ticketSeat').textContent = `${assignedSeat.seatNumber} (${assignedSeat.seatCode})`;
+            document.getElementById('ticketZone').textContent = assignedSeat.zoneName;
+            
+            // إنشاء رقم تذكرة فريد
+            const ticketId = `PHIL-FINAL-${Math.floor(1000 + Math.random() * 9000)}`;
+            document.getElementById('ticketCode').textContent = ticketId;
+            
+            // إنشاء QR Code
+            generateQRCode(ticketId, name, assignedSeat.seatCode, phone);
+            
+            // إعادة تعيين النموذج
+            document.getElementById('bookingForm').reset();
+            
+            // إظهار رسالة النجاح
+            document.getElementById('successMessage').style.display = 'block';
+            
+            // عرض التذكرة
+            document.getElementById('ticketSection').style.display = 'block';
+            
+            // تمرير إلى قسم التذكرة
+            document.getElementById('ticketSection').scrollIntoView({ behavior: 'smooth' });
+            
+            // إخفاء رسالة النجاح بعد 5 ثواني
+            setTimeout(() => {
+                document.getElementById('successMessage').style.display = 'none';
+            }, 5000);
+        });
+        
+        // دالة لإنشاء QR Code
+        function generateQRCode(ticketId, name, seatCode, phone) {
+            const qrCanvas = document.getElementById('qrCanvas');
+            const qrData = `فيلسوف نهائي|${ticketId}|${name}|${seatCode}|${phone}|الخميس 4:00م`;
+            
+            // تنظيف Canvas إذا كان موجوداً
+            const ctx = qrCanvas.getContext('2d');
+            ctx.clearRect(0, 0, qrCanvas.width, qrCanvas.height);
+            
+            // إنشاء QR Code جديد
+            const qr = new QRious({
+                element: qrCanvas,
+                value: qrData,
+                size: 90,
+                level: 'H'
+            });
+        }
+        
+        // دالة لتحميل التذكرة كصورة
+        document.getElementById('downloadBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const ticketElement = document.getElementById('ticket');
+            
+            html2canvas(ticketElement, {
+                backgroundColor: null,
+                scale: 2,
+                useCORS: true
+            }).then(canvas => {
+                // تحويل Canvas إلى صورة
+                const link = document.createElement('a');
+                const ticketCode = document.getElementById('ticketCode').textContent;
+                link.download = `تذكرة-المباراة-النهائية-${ticketCode}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                
+                alert('تم حفظ التذكرة على جهازك. يمكنك الآن عرضها من معرض الصور.');
+            });
+        });
+        
+        // تحديث تاريخ الخميس القادم
+        function getNextThursday() {
+            const today = new Date();
+            const daysUntilThursday = (4 - today.getDay() + 7) % 7 || 7;
+            const nextThursday = new Date(today);
+            nextThursday.setDate(today.getDate() + daysUntilThursday);
+            
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            return nextThursday.toLocaleDateString('ar-EG', options);
+        }
+        
+        // تهيئة النظام عند التحميل
+        document.addEventListener('DOMContentLoaded', function() {
+            // توليد المقاعد المحجوزة مسبقاً
+            generateInitialBookings();
+            
+            // تحديث التاريخ في الصفحة
+            const nextThursday = getNextThursday();
+            const dateElements = document.querySelectorAll('#ticketDate, .match-details li:nth-child(2)');
+            dateElements.forEach(el => {
+                if (el.id === 'ticketDate') {
+                    el.textContent = nextThursday;
+                } else {
+                    el.innerHTML = `<i class="far fa-calendar-alt"></i> <strong>التاريخ:</strong> ${nextThursday}`;
+                }
+            });
+            
+            // إضافة تأثير للزر عند التحميل
+            const bookBtn = document.getElementById('bookBtn');
+            setTimeout(() => {
+                bookBtn.style.transform = 'scale(1.05)';
+                setTimeout(() => {
+                    bookBtn.style.transform = '';
+                }, 500);
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
