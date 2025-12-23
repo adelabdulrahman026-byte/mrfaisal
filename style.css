@@ -1,120 +1,115 @@
 * {
-  box-sizing: border-box;
-  font-family: 'Cairo', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Cairo', sans-serif;
 }
 
 body {
-  margin: 0;
-  min-height: 100vh;
-  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #fff;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    color: #fff;
+    overflow-x: hidden;
+}
+
+header {
+    text-align: center;
+    padding: 50px 20px;
+    animation: fadeDown 1.5s ease;
+}
+
+header h1 {
+    font-size: 48px;
+    margin-bottom: 10px;
+}
+
+header p {
+    opacity: 0.8;
+    font-size: 18px;
 }
 
 .container {
-  width: 95%;
-  max-width: 1200px;
-  text-align: center;
-}
-
-.title {
-  font-size: 40px;
-  margin-bottom: 50px;
-  animation: fadeDown 1s ease;
-}
-
-.cards {
-  display: flex;
-  gap: 40px;
-  justify-content: center;
-  flex-wrap: wrap;
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    padding: 50px 20px;
+    flex-wrap: wrap;
 }
 
 .card {
-  width: 340px;
-  height: 420px;
-  border-radius: 25px;
-  position: relative;
-  overflow: hidden;
-  cursor: pointer;
-  transform-style: preserve-3d;
-  transition: 0.6s ease;
-  animation: float 4s ease-in-out infinite;
+    width: 320px;
+    height: 420px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 25px;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    transition: 0.6s;
+    animation: float 4s infinite ease-in-out;
 }
 
 .card:hover {
-  transform: rotateY(10deg) rotateX(5deg) scale(1.05);
+    transform: scale(1.08) rotateY(8deg);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.6);
 }
 
-.business {
-  background: url("https://adelabdulrahman026-byte.github.io/dashboard/new2.jpg") center/cover;
+.card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: 0.6s;
 }
 
-.geo {
-  background: url("https://adelabdulrahman026-byte.github.io/dashboard/new3.jpg") center/cover;
+.card:hover img {
+    transform: scale(1.1);
+    filter: brightness(0.6);
 }
 
-.overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0.2));
+.card-content {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 25px;
+    background: linear-gradient(transparent, rgba(0,0,0,0.85));
+    text-align: center;
 }
 
-.content {
-  position: absolute;
-  bottom: 30px;
-  width: 100%;
-  z-index: 2;
-  padding: 20px;
+.card-content h2 {
+    font-size: 26px;
+    margin-bottom: 15px;
 }
 
-.content h2 {
-  font-size: 32px;
-  margin: 10px 0;
+button {
+    padding: 12px 30px;
+    border: none;
+    border-radius: 30px;
+    background: linear-gradient(45deg, #00c6ff, #0072ff);
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.4s;
 }
 
-.content p {
-  opacity: 0.85;
-  font-size: 16px;
+button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 20px #00c6ff;
 }
 
-/* الأيقونة */
-.icon {
-  font-size: 55px;
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.2); }
-  100% { transform: scale(1); }
+/* أنيميشن */
+@keyframes fadeDown {
+    from {
+        opacity: 0;
+        transform: translateY(-40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 @keyframes float {
-  0%,100% { transform: translateY(0); }
-  50% { transform: translateY(-12px); }
-}
-
-@keyframes fadeDown {
-  from {
-    opacity: 0;
-    transform: translateY(-30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@media (max-width: 768px) {
-  .card {
-    width: 90%;
-    height: 380px;
-  }
-
-  .title {
-    font-size: 30px;
-  }
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+    100% { transform: translateY(0); }
 }
