@@ -2,37 +2,39 @@
 <html lang="ar">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>موقع مستر فيصل</title>
+  <title>بوابة المواد</title>
   <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
 </head>
-<body oncontextmenu="return false">
+<body>
 
-<div id="sidebar" class="sidebar">
-  <span class="close" onclick="toggleMenu()">×</span>
-  <a href="#">الصفحة الرئيسية</a>
-  <a href="#">إدارة أعمال</a>
-  <a href="https://www.mrfaisal.net/start">جغرافيا</a>
-</div>
+<div class="container">
 
-<header class="header">
-  <div class="menu" onclick="toggleMenu()">☰</div>
+  <h1 class="title">اختر القسم</h1>
 
-  <div class="logo">
-    <img src="https://adelabdulrahman026-byte.github.io/dashboard/new2.jpg">
-    <span>مرحبًا بك<br>في موقع مستر فيصل</span>
+  <div class="cards">
+
+    <div class="card business" onclick="goSection('business')">
+      <div class="overlay"></div>
+      <div class="content">
+        <div class="icon">📊</div>
+        <h2>إدارة أعمال</h2>
+        <p>دخول عالم الإدارة والاقتصاد</p>
+      </div>
+    </div>
+
+    <div class="card geo" onclick="goSection('geo')">
+      <div class="overlay"></div>
+      <div class="content">
+        <div class="icon">🌍</div>
+        <h2>جغرافيا</h2>
+        <p>استكشف العالم بشكل مبسط</p>
+      </div>
+    </div>
+
   </div>
-</header>
 
-<section class="section business" onclick="goBusiness()">
-  <img src="https://adelabdulrahman026-byte.github.io/dashboard/new2.jpg">
-  <h1>إدارة أعمال</h1>
-</section>
-
-<section class="section geo" onclick="goGeo()">
-  <img src="https://adelabdulrahman026-byte.github.io/dashboard/new3.jpg">
-  <h1>جغرافيا</h1>
-</section>
+</div>
 
 <script src="script.js"></script>
 </body>
