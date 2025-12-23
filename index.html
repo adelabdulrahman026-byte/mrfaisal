@@ -1,41 +1,207 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <title>مستر فيصل</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>موقع مستر فيصل</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Cairo',sans-serif;
+}
+
+body{
+    min-height:100vh;
+    background:radial-gradient(circle at top,#1c1f2b,#0e1018);
+    color:#fff;
+}
+
+header{
+    text-align:center;
+    padding:60px 20px 30px;
+}
+
+header h1{
+    font-size:56px;
+    font-weight:800;
+    background:linear-gradient(90deg,#4facfe,#00f2fe);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+header p{
+    margin-top:12px;
+    font-size:18px;
+    opacity:.75;
+}
+
+.main{
+    display:flex;
+    justify-content:center;
+    gap:50px;
+    padding:60px 20px;
+    flex-wrap:wrap;
+}
+
+.card{
+    width:340px;
+    height:440px;
+    border-radius:26px;
+    position:relative;
+    overflow:hidden;
+    cursor:pointer;
+    background:rgba(255,255,255,.08);
+    backdrop-filter:blur(14px);
+    transition:.6s;
+    box-shadow:0 30px 70px rgba(0,0,0,.6);
+}
+
+.card:hover{
+    transform:translateY(-18px) scale(1.08);
+    box-shadow:0 50px 90px rgba(0,0,0,.8);
+}
+
+.card img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    transition:.6s;
+}
+
+.card:hover img{
+    transform:scale(1.15);
+    filter:brightness(.45);
+}
+
+.card-content{
+    position:absolute;
+    inset:0;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-end;
+    align-items:center;
+    padding:30px;
+    background:linear-gradient(transparent,rgba(0,0,0,.85));
+}
+
+.card-content h2{
+    font-size:30px;
+    margin-bottom:18px;
+}
+
+.card-content button{
+    padding:14px 42px;
+    border:none;
+    border-radius:40px;
+    font-size:16px;
+    font-weight:600;
+    cursor:pointer;
+    background:linear-gradient(135deg,#4facfe,#00f2fe);
+    color:#000;
+    transition:.4s;
+}
+
+.card-content button:hover{
+    transform:scale(1.15);
+    box-shadow:0 0 35px rgba(79,172,254,.8);
+}
+
+.tips{
+    max-width:900px;
+    margin:20px auto 60px;
+    padding:35px;
+    background:rgba(255,255,255,.06);
+    border-radius:22px;
+    backdrop-filter:blur(10px);
+    box-shadow:0 20px 50px rgba(0,0,0,.5);
+    text-align:center;
+}
+
+.tips h3{
+    font-size:28px;
+    margin-bottom:18px;
+}
+
+.tips p{
+    line-height:2;
+    opacity:.85;
+}
+
+footer{
+    text-align:center;
+    padding:25px;
+    background:#0b0d14;
+    font-size:14px;
+    opacity:.8;
+}
+
+footer span{
+    color:#4facfe;
+    cursor:pointer;
+    text-decoration:underline;
+}
+
+@media(max-width:768px){
+    header h1{font-size:42px;}
+    .card{width:90%;}
+}
+</style>
 </head>
+
 <body>
 
-<div class="overlay"></div>
-
 <header>
-    <h1>مستر فيصل</h1>
-    <p>منصة تعليمية عصرية</p>
+    <h1>موقع مستر فيصل</h1>
+    <p>أهلاً بك ✨</p>
 </header>
 
-<div class="container">
+<section class="main">
 
-    <!-- إدارة أعمال -->
-    <div class="card">
-        <img src="https://adelabdulrahman026-byte.github.io/dashboard/new2.jpg" alt="إدارة أعمال">
+    <div class="card" onclick="goBuss()">
+        <img src="https://adelabdulrahman026-byte.github.io/dashboard/new2.jpg">
         <div class="card-content">
             <h2>إدارة أعمال</h2>
-            <button>دخول</button>
+            <button>الدخول</button>
         </div>
     </div>
 
-    <!-- جغرافيا -->
-    <div class="card geo" onclick="goGeo()">
-        <img src="https://adelabdulrahman026-byte.github.io/dashboard/new3.jpg" alt="جغرافيا">
+    <div class="card" onclick="goGeo()">
+        <img src="https://adelabdulrahman026-byte.github.io/dashboard/new3.jpg">
         <div class="card-content">
             <h2>جغرافيا</h2>
-            <button>دخول</button>
+            <button>الدخول</button>
         </div>
     </div>
 
+</section>
+
+<div class="tips">
+    <h3>نصايح مهمة ليك</h3>
+    <p>
+        ركّز على الفهم قبل الحفظ • نظم وقتك • خليك مستمر حتى لو بتقدم ببطء •
+        كل مجهود بتعمله النهارده هتشوف نتيجته قدام
+    </p>
 </div>
 
-<script src="script.js"></script>
+<footer>
+    جميع الحقوق محفوظة © 
+    <span onclick="openWhats()">abdulrahman adel</span> 2026
+</footer>
+
+<script>
+function goGeo(){
+    window.location.href="https://www.mrfaisal.net/%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D9%87-%D8%A7%D9%84%D8%B1%D8%A6%D9%8A%D8%B3%D9%8A%D8%A9/";
+}
+function goBuss(){
+    window.location.href="https://www.mrfaisal.net/buss";
+}
+function openWhats(){
+    window.open("https://wa.me/201093139047","_blank");
+}
+</script>
+
 </body>
 </html>
