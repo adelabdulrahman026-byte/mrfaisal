@@ -1,23 +1,9 @@
-document.onkeydown = function(e){
-  if(
-    e.keyCode == 123 ||
-    (e.ctrlKey && e.shiftKey && e.keyCode == 73) ||
-    (e.ctrlKey && e.shiftKey && e.keyCode == 74) ||
-    (e.ctrlKey && e.keyCode == 85)
-  ){
-    return false;
+function goSection(section) {
+  if (section === "business") {
+    // تقدر تغير الرابط ده لاحقًا لقسم إدارة الأعمال
+    alert("تم الدخول إلى قسم إدارة الأعمال 📊");
+    // window.location.href = "business.html";
+  } else if (section === "geo") {
+    window.location.href = "https://www.mrfaisal.net/start";
   }
-};
-
-function toggleMenu(){
-  const s = document.getElementById("sidebar");
-  s.style.left = s.style.left === "0px" ? "-260px" : "0px";
-}
-
-function goBusiness(){
-  window.location.href = "PUT-YOUR-LINK-HERE";
-}
-
-function goGeo(){
-  window.location.href = "https://www.mrfaisal.net/start";
 }
