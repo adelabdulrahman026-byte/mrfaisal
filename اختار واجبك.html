@@ -726,19 +726,7 @@
     <script>
         // بيانات المحاضرات
         const lectures = [
-            { id: 1, title: "واجب المحاضرة الأولى", desc: "من صفحة 2 إلى 14", pages: "2-14", url: "https://www.mrfaisal.net/%D9%88%D8%A7%D8%AC%D8%A8%20%D8%A7%D9%84%D9%85%D8%AD%D8%A7%D8%B6%D8%B1%D8%A9%20%D8%A7%D9%84%D8%A7%D9%88%D9%84%D9%8A%20%D8%AA%D8%A7%D9%84%D8%AA%D9%87", icon: "book-open" },
-            { id: 2, title: "واجب المحاضرة الثانية", desc: "من صفحة 15 إلى 22", pages: "15-22", url: "https://www.mrfaisal.net/%D9%88%D8%A7%D8%AC%D8%A8%20%D8%A7%D9%84%D9%85%D8%AD%D8%A7%D8%B6%D8%B1%D8%A9%20%D8%A7%D9%84%D8%AB%D8%A7%D9%86%D9%8A%D8%A9%203", icon: "chalkboard-teacher" },
-            { id: 3, title: "واجب المحاضرة الثالثة", desc: "من صفحة 23 إلى 31", pages: "23-31", url: "https://www.mrfaisal.net/%D9%88%D8%A7%D8%AC%D8%A8%20%D8%A7%D9%84%D9%85%D8%AD%D8%A7%D8%B6%D8%B1%D8%A9%20%D8%A7%D9%84%D8%AB%D8%A7%D9%84%D8%AB%D9%87%203", icon: "book-reader" },
-            { id: 4, title: "واجب المحاضرة الرابعة", desc: "من صفحة 32 إلى 43", pages: "32-43", url: "https://www.mrfaisal.net/%D9%88%D8%A7%D8%AC%D8%A8%20%D8%A7%D9%84%D9%85%D8%AD%D8%A7%D8%B6%D8%B1%D8%A9%20%D8%A7%D9%84%D8%B1%D8%A7%D8%A8%D8%B9%D8%A9%203", icon: "graduation-cap" },
-            { id: 5, title: "واجب المحاضرة الخامسة", desc: "من صفحة 44 إلى 52", pages: "44-52", url: "https://www.mrfaisal.net/%D9%88%D8%A7%D8%AC%D8%A8%20%D8%A7%D9%84%D9%85%D8%AD%D8%A7%D8%B6%D8%B1%D8%A9%20%D8%A7%D9%84%D8%AE%D8%A7%D9%85%D8%B3%D8%A9%203", icon: "file-alt" },
-            { id: 6, title: "واجب المحاضرة السادسة", desc: "من صفحة 53 إلى 62", pages: "53-62", url: "https://www.mrfaisal.net/%D9%88%D8%A7%D8%AC%D8%A8%20%D8%A7%D9%84%D9%85%D8%AD%D8%A7%D8%B6%D8%B1%D8%A9%20%D8%A7%D9%84%D8%B3%D8%A7%D8%AF%D8%B3%D8%A9%203%20", icon: "pencil-alt" },
-            { id: 7, title: "واجب المحاضرة السابعة", desc: "من صفحة 63 إلى 70", pages: "63-70", url: "https://www.mrfaisal.net/%D9%88%D8%A7%D8%AC%D8%A8%20%D8%A7%D9%84%D9%85%D8%AD%D8%A7%D8%B6%D8%B1%D8%A9%20%D8%A7%D9%84%D8%B3%D8%A7%D8%A8%D8%B9%D8%A9%203", icon: "book" },
-            { id: 8, title: "واجب المحاضرة الثامنه", desc: "من صفحة 86 إلى 71", pages: "86-71", url: "https://www.mrfaisal.net/%D9%88%D8%A7%D8%AC%D8%A8%20%D8%A7%D9%84%D9%85%D8%AD%D8%A7%D8%B6%D8%B1%D8%A9%20%D8%A7%D9%84%D8%AB%D8%A7%D9%85%D9%86%D9%87%203%20", icon: "graduation-cap" },
-            { id: 9, title: "واجب المحاضرة التاسعه", desc: "من صفحة 87 إلى 98", pages: "87-98", url: "https://www.mrfaisal.net/%D9%88%D8%A7%D8%AC%D8%A8%20%D8%A7%D9%84%D9%85%D8%AD%D8%A7%D8%B6%D8%B1%D8%A9%20%D8%A7%D9%84%D8%AA%D8%A7%D8%B3%D8%B9%D9%873", icon: "graduation-cap" },
-            { id: 10, title: "واجب المحاضرة العاشرة", desc: "من صفحة 99 إلى 116", pages: "116-99", url: "https://www.mrfaisal.net/%D9%88%D8%A7%D8%AC%D8%A8%20%D8%A7%D9%84%D9%85%D8%AD%D8%A7%D8%B6%D8%B1%D8%A9%20%D8%A7%D9%84%D8%B9%D8%A7%D8%B4%D8%B1%D8%A9%203", icon: "graduation-cap" },
-            { id: 11, title: "واجب المحاضرة الحادي عشر", desc: "", pages: "", url: "https://www.mrfaisal.net/%D8%A7%D9%84%D9%85%D8%AD%D8%A7%D8%B6%D8%B1%D8%A9%20%D8%A7%D9%84%D8%AD%D8%A7%D8%AF%D9%8A%20%D8%B9%D8%B4%D8%B1%203", icon: "graduation-cap" },
-            { id: 12, title: "واجب المحاضرة الثاني عشر", desc: "", pages: "", url: "https://www.mrfaisal.net/%D8%A7%D9%84%D9%85%D8%AD%D8%A7%D8%B6%D8%B1%D8%A9%20%D8%A7%D9%84%D8%AB%D8%A7%D9%86%D9%8A%20%D8%B9%D8%B4%D8%B1%20%D8%AA%D8%A7%D9%84%D8%AA%D9%87%20", icon: "file-alt" },
-              { id: 12, title: "واجب المحاضرة السابع عشر", desc: "", pages: "", url: "https://www.mrfaisal.net/18tree", icon: "file-alt" }
+              { id: 12, title: "واجب المحاضرة الثامن عشر", desc: "", pages: "", url: "https://www.mrfaisal.net/18tree", icon: "file-alt" }
         ];
         
 
