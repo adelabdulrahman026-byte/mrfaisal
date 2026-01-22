@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام حضور الطلاب - مستر فيصل</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        * { font-family: 'Cairo', sans-serif; box-sizing: border-box; }
+        body { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); margin: 0; padding: 20px; min-height: 100vh; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); overflow: hidden; }
+        header { background: linear-gradient(to right, #4a6fa5, #3a5a8a); color: white; padding: 25px; text-align: center; }
+        .tabs { display: flex; background: #f8f9fa; border-bottom: 2px solid #e0e0e0; }
+        .tab { flex: 1; padding: 18px; text-align: center; cursor: pointer; font-weight: 600; font-size: 18px; transition: all 0.3s; border-right: 1px solid #e0e0e0; }
+        .tab:last-child { border-right: none; }
+        .tab.active { background: white; color: #4a6fa5; border-bottom: 3px solid #4a6fa5; margin-bottom: -2px; }
+        .tab-content { padding: 30px; display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin-bottom: 30px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; color: #333; font-size: 16px; }
+        input, select, textarea { width: 100%; padding: 14px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 16px; transition: border 0.3s; }
+        input:focus, select:focus { border-color: #4a6fa5; outline: none; }
+        .btn { background: linear-gradient(to right, #4a6fa5, #3a5a8a); color: white; border: none; padding: 15px 35px; border-radius: 10px; font-size: 18px; font-weight: 600; cursor: pointer; transition: all 0.3s; margin: 10px 5px; }
+        .btn:hover { transform: translateY(-3px); box-shadow: 0 7px 14px rgba(74, 111, 165, 0.3); }
+        .btn-scan { background: linear-gradient(to right, #00b09b, #96c93d); }
+        .btn-qr { background: linear-gradient(to right, #ff8a00, #da1b60); }
+        .btn-attendance { background: linear-gradient(to right, #2196F3, #21CBF3); }
+        .qr-container { text-align: center; padding: 25px; background: #f9f9f9; border-radius: 15px; margin: 20px 0; border: 2px dashed #ccc; }
+        #qr-reader { width: 100%; max-width: 500px; margin: 25px auto; border: 3px solid #4a6fa5 !important; border-radius: 15px; overflow: hidden; }
+        .result-box { background: #e8f5e9; padding: 20px; border-radius: 10px; margin: 20px 0; border-right: 5px solid #4CAF50; }
+        .payment-status { display: flex; align-items: center; gap: 15px; margin: 20px 0; }
+        .status-badge { padding: 8px 20px; border-radius: 20px; font-weight: 600; font-size: 14px; }
+        .status-paid { background: #d4edda; color: #155724; }
+        .status-pending { background: #f8d7da; color: #721c24; }
+        .centers-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; margin: 20px 0; }
+        .center-card { background: white; border: 2px solid #e0e0e0; border-radius: 10px; padding: 15px; cursor: pointer; transition: all 0.3s; }
+        .center-card:hover { border-color: #4a6fa5; transform: translateY(-5px); }
+        .center-card.selected { border-color: #4a6fa5; background: #f0f7ff; }
+        @media (max-width: 768px) {
+            .tabs { flex-direction: column; }
+            .tab { border-right: none; border-bottom: 1px solid #e0e0e0; }
+            .form-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 style="margin:0; font-size: 32px;">🎓 تسجيل حضور الطلاب - مستر فيصل</h1>
+            <p style="opacity:0.9; margin-top:10px;">نظام متكامل لإدارة حضور السناتر التعليمية</p>
+        </header>
+        
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab(1)">➕ إضافة طالب جديد</div>
+            <div class="tab" onclick="switchTab(2)">🎫 توليد QR Code</div>
+            <div class="tab" onclick="switchTab(3)">📱 تسجيل حضور</div>
+            <div class="tab" onclick="switchTab(4)">📊 إدارة السناتر</div>
+        </div>
+
+        <!-- تبويب 1: إضافة طالب جديد -->
+        <div id="tab1" class="tab-content active">
+            <h2>📝 بيانات الطالب الجديد</h2>
+            <div class="form-grid">
+                <div>
+                    <div class="form-group">
+                        <label>السنتر</label>
+                        <div class="centers-list" id="centersContainer">
+                            <!-- السناتر ستظهر هنا من Google Sheets -->
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>اسم الطالب بالكامل</label>
+                        <input type="text" id="studentName" placeholder="أدخل اسم الطالب">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>كود الطالب</label>
+                        <input type="text" id="studentCode" placeholder="مثل: ST2024001">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>الصف</label>
+                        <select id="studentGrade">
+                            <option value="">اختر الصف</option>
+                            <option value="أولى ثانوي">أولى ثانوي</option>
+                            <option value="ثانية ثانوي">ثانية ثانوي</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="form-group">
+                        <label>المجموعة</label>
+                        <select id="studentGroup">
+                            <option value="">اختر المجموعة</option>
+                            <option value="أ">المجموعة أ</option>
+                            <option value="ب">المجموعة ب</option>
+                            <option value="ج">المجموعة ج</option>
+                            <option value="د">المجموعة د</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>طريقة الدفع</label>
+                        <select id="paymentMethod">
+                            <option value="شهري">شهري</option>
+                            <option value="حصه">بالحصه</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>حالة الدفع</label>
+                        <div class="payment-status">
+                            <label style="display:flex; align-items:center; cursor:pointer;">
+                                <input type="radio" name="paymentStatus" value="مدفوع" checked> 
+                                <span class="status-badge status-paid">مدفوع</span>
+                            </label>
+                            <label style="display:flex; align-items:center; cursor:pointer;">
+                                <input type="radio" name="paymentStatus" value="باقي"> 
+                                <span class="status-badge status-pending">باقي عليه</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>الشهر الحالي</label>
+                        <select id="currentMonth">
+                            <option value="يناير">يناير</option>
+                            <option value="فبراير">فبراير</option>
+                            <option value="مارس">مارس</option>
+                            <option value="إبريل">إبريل</option>
+                            <option value="مايو">مايو</option>
+                            <option value="يونيو">يونيو</option>
+                            <option value="يوليو">يوليو</option>
+                            <option value="أغسطس">أغسطس</option>
+                            <option value="سبتمبر">سبتمبر</option>
+                            <option value="أكتوبر">أكتوبر</option>
+                            <option value="نوفمبر">نوفمبر</option>
+                            <option value="ديسمبر">ديسمبر</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="btn" onclick="addStudent()">💾 حفظ الطالب وتوليد QR Code</button>
+            <button class="btn btn-qr" onclick="generateQR()">🎫 توليد QR Code فقط</button>
+        </div>
+
+        <!-- تبويب 2: توليد QR Code -->
+        <div id="tab2" class="tab-content">
+            <h2>🎫 توليد QR Code للطالب</h2>
+            <div class="form-group">
+                <label>أدخل كود الطالب</label>
+                <input type="text" id="qrStudentCode" placeholder="أدخل الكود الخاص بالطالب">
+            </div>
+            <button class="btn btn-qr" onclick="generateQRForStudent()">توليد QR Code</button>
+            
+            <div id="qrResult" class="qr-container" style="display:none;">
+                <h3>QR Code للطالب</h3>
+                <div id="qrcode"></div>
+                <p id="qrStudentInfo" style="margin-top:15px;"></p>
+                <button class="btn" onclick="printQR()">🖨️ طباعة QR Code</button>
+            </div>
+        </div>
+
+        <!-- تبويب 3: تسجيل حضور -->
+        <div id="tab3" class="tab-content">
+            <h2>📱 مسح QR Code لتسجيل الحضور</h2>
+            
+            <div id="qr-reader"></div>
+            <div id="qr-reader-results" class="result-box"></div>
+            
+            <div style="text-align:center; margin:30px 0;">
+                <h3>أو التسجيل يدوياً</h3>
+                <div style="max-width:400px; margin:0 auto;">
+                    <input type="text" id="manualCode" placeholder="أدخل كود الطالب يدوياً" style="margin-bottom:15px;">
+                    <button class="btn btn-attendance" onclick="manualAttendance()">✅ تسجيل حضور يدوي</button>
+                </div>
+            </div>
+            
+            <div id="attendanceResult" class="result-box" style="display:none;"></div>
+        </div>
+
+        <!-- تبويب 4: إدارة السناتر -->
+        <div id="tab4" class="tab-content">
+            <h2>🏫 إضافة وإدارة السناتر</h2>
+            
+            <div class="form-group">
+                <label>اسم السنتر الجديد</label>
+                <input type="text" id="newCenterName" placeholder="أدخل اسم السنتر">
+            </div>
+            <button class="btn" onclick="addCenter()">➕ إضافة سنتر جديد</button>
+            
+            <h3 style="margin-top:40px;">السناتر المضافة</h3>
+            <div id="centersList" class="centers-list">
+                <!-- قائمة السناتر -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // رابط نشر Google Apps Script - ضع رابطك هنا بعد النشر
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbybPt-fRRjb1P_ViVGoPj2OnBNMnVFxTFZX-MYqkVu69YzUBdfFbwNCsqM-_FMWJ3yb/exec';
+        
+        // تحميل السناتر عند فتح الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCenters();
+        });
+        
+        // التبديل بين التبويبات
+        function switchTab(tabNumber) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            
+            document.getElementById('tab' + tabNumber).classList.add('active');
+            document.querySelectorAll('.tab')[tabNumber - 1].classList.add('active');
+        }
+        
+        // تحميل السناتر من Google Sheets
+        async function loadCenters() {
+            try {
+                const response = await fetch(`${GOOGLE_SCRIPT_URL}?action=getCenters`);
+                const centers = await response.json();
+                
+                let centersHtml = '';
+                centers.forEach(center => {
+                    centersHtml += `
+                        <div class="center-card" onclick="selectCenter('${center}')" id="center-${center}">
+                            <strong>${center}</strong>
+                        </div>
+                    `;
+                });
+                
+                document.getElementById('centersContainer').innerHTML = centersHtml;
+                document.getElementById('centersList').innerHTML = centersHtml;
+            } catch (error) {
+                console.error('Error loading centers:', error);
+            }
+        }
+        
+        let selectedCenter = '';
+        function selectCenter(centerName) {
+            selectedCenter = centerName;
+            document.querySelectorAll('.center-card').forEach(card => card.classList.remove('selected'));
+            document.getElementById('center-' + centerName).classList.add('selected');
+        }
+        
+        // إضافة طالب جديد
+        async function addStudent() {
+            const studentData = {
+                center: selectedCenter,
+                name: document.getElementById('studentName').value,
+                code: document.getElementById('studentCode').value,
+                grade: document.getElementById('studentGrade').value,
+                group: document.getElementById('studentGroup').value,
+                paymentMethod: document.getElementById('paymentMethod').value,
+                paymentStatus: document.querySelector('input[name="paymentStatus"]:checked').value,
+                month: document.getElementById('currentMonth').value,
+                attendanceCount: 0
+            };
+            
+            // التحقق من البيانات
+            if (!studentData.center || !studentData.name || !studentData.code) {
+                Swal.fire('تنبيه', 'الرجاء إدخال السنتر واسم الطالب والكود', 'warning');
+                return;
+            }
+            
+            try {
+                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({action: 'addStudent', ...studentData})
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    Swal.fire('نجاح', 'تم إضافة الطالب بنجاح', 'success');
+                    // توليد QR Code للطالب الجديد
+                    generateQRForStudent(studentData.code);
+                    switchTab(2);
+                } else {
+                    Swal.fire('خطأ', result.error || 'حدث خطأ', 'error');
+                }
+            } catch (error) {
+                Swal.fire('خطأ', 'تعذر الاتصال بالسيرفر', 'error');
+            }
+        }
+        
+        // توليد QR Code
+        function generateQRForStudent(code = null) {
+            const studentCode = code || document.getElementById('qrStudentCode').value;
+            
+            if (!studentCode) {
+                Swal.fire('تنبيه', 'الرجاء إدخال كود الطالب', 'warning');
+                return;
+            }
+            
+            // إنشاء QR Code محلياً
+            const qrValue = `ATTENDANCE-${studentCode}-${Date.now()}`;
+            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${qrValue}`;
+            
+            document.getElementById('qrResult').style.display = 'block';
+            document.getElementById('qrcode').innerHTML = `
+                <img src="${qrUrl}" alt="QR Code" style="width:200px; height:200px;">
+            `;
+            document.getElementById('qrStudentInfo').textContent = `كود الطالب: ${studentCode}`;
+            
+            // حفظ QR Code في Google Sheets
+            saveQRCode(studentCode, qrValue);
+        }
+        
+        // حفظ QR Code
+        async function saveQRCode(studentCode, qrValue) {
+            try {
+                await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: 'saveQRCode',
+                        studentCode: studentCode,
+                        qrValue: qrValue
+                    })
+                });
+            } catch (error) {
+                console.error('Error saving QR code:', error);
+            }
+        }
+        
+        // إعداد ماسح QR Code
+        function onScanSuccess(decodedText, decodedResult) {
+            document.getElementById('qr-reader-results').innerHTML = `
+                <h4>✅ تم مسح الكود بنجاح</h4>
+                <p>كود الطالب: ${decodedText}</p>
+                <button class="btn btn-attendance" onclick="registerAttendance('${decodedText}')">
+                    ✅ تأكيد تسجيل الحضور
+                </button>
+            `;
+        }
+        
+        // تسجيل الحضور
+        async function registerAttendance(studentCode) {
+            try {
+                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: 'registerAttendance',
+                        studentCode: studentCode,
+                        date: new Date().toLocaleDateString('ar-EG'),
+                        time: new Date().toLocaleTimeString('ar-EG')
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    document.getElementById('attendanceResult').style.display = 'block';
+                    document.getElementById('attendanceResult').innerHTML = `
+                        <h4>✅ تم تسجيل الحضور بنجاح</h4>
+                        <p>اسم الطالب: ${result.studentName}</p>
+                        <p>السنتر: ${result.center}</p>
+                        <p>تاريخ الحضور: ${result.date}</p>
+                        <p>وقت الحضور: ${result.time}</p>
+                        <p>عدد مرات الحضور: ${result.attendanceCount}</p>
+                    `;
+                }
+            } catch (error) {
+                Swal.fire('خطأ', 'تعذر تسجيل الحضور', 'error');
+            }
+        }
+        
+        // الحضور اليدوي
+        function manualAttendance() {
+            const code = document.getElementById('manualCode').value;
+            if (code) {
+                registerAttendance(code);
+            }
+        }
+        
+        // إضافة سنتر جديد
+        async function addCenter() {
+            const centerName = document.getElementById('newCenterName').value;
+            
+            if (!centerName) {
+                Swal.fire('تنبيه', 'الرجاء إدخال اسم السنتر', 'warning');
+                return;
+            }
+            
+            try {
+                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: 'addCenter',
+                        centerName: centerName
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    Swal.fire('نجاح', 'تم إضافة السنتر بنجاح', 'success');
+                    document.getElementById('newCenterName').value = '';
+                    loadCenters();
+                }
+            } catch (error) {
+                Swal.fire('خطأ', 'تعذر إضافة السنتر', 'error');
+            }
+        }
+        
+        // طباعة QR Code
+        function printQR() {
+            const printContent = document.getElementById('qrResult').innerHTML;
+            const originalContent = document.body.innerHTML;
+            
+            document.body.innerHTML = `
+                <div style="text-align:center; padding:50px;">
+                    <h2>🎫 كود حضور الطالب</h2>
+                    ${printContent}
+                    <p style="margin-top:30px;">نظام حضور مستر فيصل - ${new Date().toLocaleDateString('ar-EG')}</p>
+                </div>
+            `;
+            
+            window.print();
+            document.body.innerHTML = originalContent;
+        }
+        
+        // تهيئة ماسح QR Code عند فتح التبويب
+        document.querySelector('.tab[onclick="switchTab(3)"]').addEventListener('click', function() {
+            setTimeout(() => {
+                const html5QrCode = new Html5Qrcode("qr-reader");
+                html5QrCode.start(
+                    { facingMode: "environment" },
+                    { fps: 10, qrbox: 250 },
+                    onScanSuccess
+                );
+            }, 500);
+        });
+    </script>
+</body>
+</html>
