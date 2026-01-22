@@ -6,8 +6,6 @@
     <title>نظام حضور الطلاب - مستر فيصل</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://unpkg.com/html5-qrcode"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         :root {
             --primary: #4a6fa5;
@@ -15,7 +13,6 @@
             --success: #28a745;
             --warning: #ffc107;
             --danger: #dc3545;
-            --info: #17a2b8;
         }
         
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
@@ -27,7 +24,6 @@
             direction: rtl; 
         }
         
-        /* Main Container */
         .container {
             max-width: 1200px;
             margin: 20px auto;
@@ -37,7 +33,6 @@
             overflow: hidden;
         }
         
-        /* Header */
         header {
             background: linear-gradient(to right, var(--primary), var(--secondary));
             color: white;
@@ -48,6 +43,26 @@
         header h1 {
             font-size: 32px;
             margin-bottom: 10px;
+        }
+        
+        /* Connection Status */
+        .connection-status {
+            background: var(--warning);
+            color: #333;
+            padding: 12px;
+            text-align: center;
+            font-weight: bold;
+            position: relative;
+        }
+        
+        .connection-status.online {
+            background: var(--success);
+            color: white;
+        }
+        
+        .connection-status.error {
+            background: var(--danger);
+            color: white;
         }
         
         /* Tabs */
@@ -134,9 +149,15 @@
             transition: all 0.3s;
         }
         
+        .center-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+        
         .center-card.selected {
             border-color: var(--primary);
             background: #f0f7ff;
+            transform: translateY(-2px);
         }
         
         /* Buttons */
@@ -159,79 +180,143 @@
         }
         
         .btn-success { background: var(--success); }
-        .btn-warning { background: var(--warning); }
+        .btn-warning { background: var(--warning); color: #333; }
         .btn-danger { background: var(--danger); }
         
-        /* Attendance Details */
-        .attendance-details {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
-            margin: 20px 0;
+        /* Steps */
+        .step {
+            display: none;
+            animation: fadeIn 0.5s;
         }
         
-        .details-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
+        .step.active { display: block; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
+            gap: 10px;
+        }
+        
+        .step-dot {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .step-dot.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .step-dot.completed {
+            background: var(--success);
+            color: white;
         }
         
         /* Session Selection */
-        .sessions {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin: 15px 0;
-        }
-        
-        .session-btn {
-            flex: 1;
-            min-width: 120px;
-            padding: 15px;
-            background: #f8f9fa;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .session-btn.selected {
-            border-color: var(--primary);
-            background: #f0f7ff;
-        }
-        
-        /* Months */
-        .months {
+        .sessions-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            margin: 15px 0;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
         }
         
-        .month-btn {
-            padding: 12px;
+        .session-card {
             background: #f8f9fa;
             border: 2px solid #e0e0e0;
             border-radius: 8px;
+            padding: 20px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s;
         }
         
-        .month-btn.selected {
+        .session-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+        
+        .session-card.selected {
             border-color: var(--primary);
             background: #f0f7ff;
+        }
+        
+        /* Months Grid */
+        .months-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .month-card {
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .month-card:hover {
+            border-color: var(--primary);
+        }
+        
+        .month-card.selected {
+            border-color: var(--primary);
+            background: #f0f7ff;
+        }
+        
+        /* Student List */
+        .students-list {
+            max-height: 400px;
+            overflow-y: auto;
+            margin: 20px 0;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        
+        .student-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .student-card:hover {
+            border-color: var(--primary);
+            transform: translateX(-5px);
+        }
+        
+        .student-card.selected {
+            border-color: var(--success);
+            background: #f0fff4;
         }
         
         /* Status Messages */
-        .status-message {
-            padding: 15px;
+        .status-box {
+            padding: 20px;
             border-radius: 8px;
-            margin: 15px 0;
+            margin: 20px 0;
             text-align: center;
-            font-weight: 600;
+            animation: slideIn 0.5s;
         }
         
         .status-success {
@@ -246,10 +331,21 @@
             border: 2px solid #f5c6cb;
         }
         
+        .status-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 2px solid #bee5eb;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
         /* Loading */
         .loading {
             text-align: center;
-            padding: 30px;
+            padding: 40px;
         }
         
         .spinner {
@@ -272,38 +368,40 @@
             .tabs { flex-direction: column; }
             .tab { border-right: none; border-bottom: 1px solid #e0e0e0; }
             .form-grid { grid-template-columns: 1fr; }
-            .months { grid-template-columns: repeat(2, 1fr); }
+            .months-grid { grid-template-columns: repeat(2, 1fr); }
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- Connection Status -->
+        <div id="connectionStatus" class="connection-status">
+            <span id="connectionText">🔍 جاري التحقق من الاتصال...</span>
+        </div>
+        
         <header>
             <h1>🎓 نظام حضور الطلاب - مستر فيصل</h1>
-            <p>إضافة طلاب • تسجيل حضور • حفظ في Google Sheets</p>
+            <p>إضافة طلاب • تسجيل حضور • حفظ مباشر في Google Sheets</p>
         </header>
         
         <!-- Tabs -->
         <div class="tabs">
-            <button class="tab active" onclick="switchTab(1)">➕ إضافة طالب جديد</button>
-            <button class="tab" onclick="switchTab(2)">📱 تسجيل حضور</button>
-            <button class="tab" onclick="switchTab(3)">🏫 إدارة السناتر</button>
-            <button class="tab" onclick="switchTab(4)">📊 التقارير</button>
+            <button class="tab active" onclick="switchTab('addStudent')">➕ إضافة طالب</button>
+            <button class="tab" onclick="switchTab('attendance')">📱 تسجيل حضور</button>
+            <button class="tab" onclick="switchTab('centers')">🏫 السناتر</button>
+            <button class="tab" onclick="switchTab('reports')">📊 التقارير</button>
         </div>
         
         <!-- Tab 1: Add Student -->
-        <div id="tab1" class="tab-content active">
+        <div id="addStudent" class="tab-content active">
             <h2>➕ إضافة طالب جديد</h2>
             
             <div class="form-grid">
                 <div>
                     <div class="form-group">
                         <label>🏫 اختر السنتر *</label>
-                        <div class="centers-grid" id="addCentersContainer">
-                            <div class="loading">
-                                <div class="spinner"></div>
-                                <p>جاري تحميل السناتر...</p>
-                            </div>
+                        <div class="centers-grid" id="centersForAdd">
+                            <!-- Centers will be loaded here -->
                         </div>
                     </div>
                     
@@ -316,8 +414,8 @@
                         <label>🔢 كود الطالب *</label>
                         <div style="display:flex; gap:10px;">
                             <input type="text" id="studentCode" placeholder="ST2024001">
-                            <button class="btn btn-warning" onclick="generateStudentCode()" style="padding:10px 15px;">
-                                توليد كود
+                            <button type="button" class="btn btn-warning" onclick="generateStudentCode()" style="padding:10px 15px;">
+                                توليد
                             </button>
                         </div>
                     </div>
@@ -340,7 +438,6 @@
                             <option value="المجموعة أ">المجموعة أ</option>
                             <option value="المجموعة ب">المجموعة ب</option>
                             <option value="المجموعة ج">المجموعة ج</option>
-                            <option value="المجموعة د">المجموعة د</option>
                         </select>
                     </div>
                     
@@ -351,156 +448,174 @@
                             <option value="حصه">بالحصة</option>
                         </select>
                     </div>
+                    
+                    <div class="form-group">
+                        <label>📅 الشهر الحالي</label>
+                        <select id="currentMonth">
+                            <option value="">اختر الشهر</option>
+                            <option value="يناير">يناير</option>
+                            <option value="فبراير">فبراير</option>
+                            <option value="مارس">مارس</option>
+                            <option value="إبريل">إبريل</option>
+                            <option value="مايو">مايو</option>
+                            <option value="يونيو">يونيو</option>
+                            <option value="يوليو">يوليو</option>
+                            <option value="أغسطس">أغسطس</option>
+                            <option value="سبتمبر">سبتمبر</option>
+                            <option value="أكتوبر">أكتوبر</option>
+                            <option value="نوفمبر">نوفمبر</option>
+                            <option value="ديسمبر">ديسمبر</option>
+                        </select>
+                    </div>
                 </div>
             </div>
             
             <div style="text-align:center; margin-top:30px;">
-                <button class="btn btn-success btn-lg" onclick="addNewStudent()">
+                <button class="btn btn-success btn-lg" onclick="addStudent()">
                     💾 حفظ الطالب في الإكسيل
                 </button>
             </div>
             
             <!-- Status Message -->
-            <div id="addStudentStatus" class="status-message" style="display:none;"></div>
+            <div id="addStudentStatus"></div>
         </div>
         
         <!-- Tab 2: Attendance -->
-        <div id="tab2" class="tab-content">
+        <div id="attendance" class="tab-content">
             <h2>📱 تسجيل حضور الطالب</h2>
             
+            <!-- Step Indicator -->
+            <div class="step-indicator">
+                <div class="step-dot" id="step1Dot">1</div>
+                <div class="step-dot" id="step2Dot">2</div>
+                <div class="step-dot" id="step3Dot">3</div>
+                <div class="step-dot" id="step4Dot">4</div>
+            </div>
+            
             <!-- Step 1: Select Center -->
-            <div id="step1">
+            <div id="step1" class="step active">
                 <h3>الخطوة 1: اختر السنتر</h3>
-                <div class="centers-grid" id="attendanceCentersContainer">
-                    <div class="loading">
-                        <div class="spinner"></div>
-                        <p>جاري تحميل السناتر...</p>
-                    </div>
+                <p>اختر السنتر الذي تريد تسجيل الحضور له</p>
+                
+                <div class="centers-grid" id="centersForAttendance">
+                    <!-- Centers will be loaded here -->
                 </div>
                 
-                <div style="text-align:center; margin-top:20px;">
-                    <button class="btn btn-primary" onclick="nextToStep2()" id="nextToStep2Btn" disabled>
+                <div style="text-align:center; margin-top:30px;">
+                    <button class="btn btn-primary btn-lg" onclick="goToStep2()" id="nextToStep2" disabled>
                         التالي → اختيار الحصة
                     </button>
                 </div>
             </div>
             
             <!-- Step 2: Select Session -->
-            <div id="step2" style="display:none;">
+            <div id="step2" class="step">
                 <h3>الخطوة 2: اختر الحصة</h3>
-                <div class="sessions">
-                    <div class="session-btn" onclick="selectSession('الحصة 1')">الحصة 1</div>
-                    <div class="session-btn" onclick="selectSession('الحصة 2')">الحصة 2</div>
-                    <div class="session-btn" onclick="selectSession('الحصة 3')">الحصة 3</div>
-                    <div class="session-btn" onclick="selectSession('الحصة 4')">الحصة 4</div>
+                <p>اختر رقم الحصة التي تريد تسجيل الحضور لها</p>
+                
+                <div class="sessions-grid">
+                    <div class="session-card" onclick="selectSession(1)">
+                        <h4>الحصة 1</h4>
+                        <p>من 8:00 إلى 9:30</p>
+                    </div>
+                    <div class="session-card" onclick="selectSession(2)">
+                        <h4>الحصة 2</h4>
+                        <p>من 9:45 إلى 11:15</p>
+                    </div>
+                    <div class="session-card" onclick="selectSession(3)">
+                        <h4>الحصة 3</h4>
+                        <p>من 11:30 إلى 1:00</p>
+                    </div>
+                    <div class="session-card" onclick="selectSession(4)">
+                        <h4>الحصة 4</h4>
+                        <p>من 1:15 إلى 2:45</p>
+                    </div>
                 </div>
                 
-                <div style="text-align:center; margin-top:20px;">
-                    <button class="btn btn-warning" onclick="backToStep1()">
+                <div style="text-align:center; margin-top:30px;">
+                    <button class="btn btn-warning" onclick="goToStep1()">
                         ← الرجوع
                     </button>
-                    <button class="btn btn-primary" onclick="nextToStep3()" id="nextToStep3Btn" disabled>
+                    <button class="btn btn-primary btn-lg" onclick="goToStep3()" id="nextToStep3" disabled>
                         التالي → اختيار الشهر
                     </button>
                 </div>
             </div>
             
             <!-- Step 3: Select Month -->
-            <div id="step3" style="display:none;">
+            <div id="step3" class="step">
                 <h3>الخطوة 3: اختر الشهر</h3>
-                <div class="months">
-                    <div class="month-btn" onclick="selectMonth('يناير')">يناير</div>
-                    <div class="month-btn" onclick="selectMonth('فبراير')">فبراير</div>
-                    <div class="month-btn" onclick="selectMonth('مارس')">مارس</div>
-                    <div class="month-btn" onclick="selectMonth('إبريل')">إبريل</div>
-                    <div class="month-btn" onclick="selectMonth('مايو')">مايو</div>
-                    <div class="month-btn" onclick="selectMonth('يونيو')">يونيو</div>
-                    <div class="month-btn" onclick="selectMonth('يوليو')">يوليو</div>
-                    <div class="month-btn" onclick="selectMonth('أغسطس')">أغسطس</div>
-                    <div class="month-btn" onclick="selectMonth('سبتمبر')">سبتمبر</div>
-                    <div class="month-btn" onclick="selectMonth('أكتوبر')">أكتوبر</div>
-                    <div class="month-btn" onclick="selectMonth('نوفمبر')">نوفمبر</div>
-                    <div class="month-btn" onclick="selectMonth('ديسمبر')">ديسمبر</div>
+                <p>اختر الشهر الذي تريد تسجيل الحضور له</p>
+                
+                <div class="months-grid">
+                    <div class="month-card" onclick="selectMonth('يناير')">يناير</div>
+                    <div class="month-card" onclick="selectMonth('فبراير')">فبراير</div>
+                    <div class="month-card" onclick="selectMonth('مارس')">مارس</div>
+                    <div class="month-card" onclick="selectMonth('إبريل')">إبريل</div>
+                    <div class="month-card" onclick="selectMonth('مايو')">مايو</div>
+                    <div class="month-card" onclick="selectMonth('يونيو')">يونيو</div>
+                    <div class="month-card" onclick="selectMonth('يوليو')">يوليو</div>
+                    <div class="month-card" onclick="selectMonth('أغسطس')">أغسطس</div>
+                    <div class="month-card" onclick="selectMonth('سبتمبر')">سبتمبر</div>
+                    <div class="month-card" onclick="selectMonth('أكتوبر')">أكتوبر</div>
+                    <div class="month-card" onclick="selectMonth('نوفمبر')">نوفمبر</div>
+                    <div class="month-card" onclick="selectMonth('ديسمبر')">ديسمبر</div>
                 </div>
                 
-                <div style="text-align:center; margin-top:20px;">
-                    <button class="btn btn-warning" onclick="backToStep2()">
+                <div style="text-align:center; margin-top:30px;">
+                    <button class="btn btn-warning" onclick="goToStep2()">
                         ← الرجوع
                     </button>
-                    <button class="btn btn-primary" onclick="nextToStep4()" id="nextToStep4Btn" disabled>
-                        التالي → تسجيل الحضور
+                    <button class="btn btn-primary btn-lg" onclick="goToStep4()" id="nextToStep4" disabled>
+                        التالي → اختيار الطالب
                     </button>
                 </div>
             </div>
             
-            <!-- Step 4: Record Attendance -->
-            <div id="step4" style="display:none;">
-                <h3>الخطوة 4: تسجيل الحضور</h3>
+            <!-- Step 4: Select Student -->
+            <div id="step4" class="step">
+                <h3>الخطوة 4: اختر الطالب</h3>
                 
-                <!-- Attendance Details Summary -->
-                <div class="attendance-details">
-                    <h4>تفاصيل الحضور المختارة:</h4>
-                    <div class="details-grid">
-                        <div>
-                            <strong>السنتر:</strong>
-                            <span id="selectedCenterName">-</span>
-                        </div>
-                        <div>
-                            <strong>الحصة:</strong>
-                            <span id="selectedSessionName">-</span>
-                        </div>
-                        <div>
-                            <strong>الشهر:</strong>
-                            <span id="selectedMonthName">-</span>
-                        </div>
-                        <div>
-                            <strong>التاريخ:</strong>
-                            <span id="currentDate">-</span>
-                        </div>
-                    </div>
+                <!-- Selected Options Summary -->
+                <div class="status-box status-info">
+                    <p><strong>السنتر:</strong> <span id="selectedCenterText">لم يتم الاختيار</span></p>
+                    <p><strong>الحصة:</strong> <span id="selectedSessionText">لم يتم الاختيار</span></p>
+                    <p><strong>الشهر:</strong> <span id="selectedMonthText">لم يتم الاختيار</span></p>
                 </div>
                 
-                <!-- Student Search -->
+                <!-- Search Student -->
                 <div class="form-group">
                     <label>🔍 ابحث عن الطالب</label>
                     <div style="display:flex; gap:10px;">
-                        <input type="text" id="searchStudent" placeholder="أدخل اسم الطالب أو الكود" 
-                               style="flex:1;" oninput="searchStudents()">
-                        <button class="btn btn-info" onclick="searchStudents()">
+                        <input type="text" id="searchStudentInput" placeholder="أدخل اسم الطالب أو الكود" style="flex:1;">
+                        <button class="btn btn-info" onclick="searchStudent()">
                             بحث
                         </button>
                     </div>
-                    
-                    <!-- Search Results -->
-                    <div id="searchResults" style="margin-top:15px; max-height:300px; overflow-y:auto;"></div>
                 </div>
                 
-                <!-- Or QR Scanner -->
-                <div style="text-align:center; margin:30px 0;">
-                    <h4>أو استخدم ماسح QR Code</h4>
-                    <button class="btn btn-success" onclick="startQRScanner()">
-                        📷 بدء المسح بالكاميرا
-                    </button>
-                    <div id="qrScanner" style="margin-top:20px; display:none;"></div>
+                <!-- Students List -->
+                <div class="students-list" id="studentsList">
+                    <!-- Students will be loaded here -->
                 </div>
                 
                 <!-- Action Buttons -->
-                <div style="text-align:center; margin-top:20px;">
-                    <button class="btn btn-warning" onclick="backToStep3()">
+                <div style="text-align:center; margin-top:30px;">
+                    <button class="btn btn-warning" onclick="goToStep3()">
                         ← الرجوع
                     </button>
-                    <button class="btn btn-success" onclick="recordAttendanceForSelected()" id="recordBtn" disabled>
+                    <button class="btn btn-success btn-lg" onclick="recordAttendance()" id="recordAttendanceBtn" disabled>
                         ✅ تسجيل الحضور في الإكسيل
                     </button>
                 </div>
                 
                 <!-- Status Message -->
-                <div id="attendanceStatus" class="status-message" style="display:none;"></div>
+                <div id="attendanceStatus"></div>
             </div>
         </div>
         
-        <!-- Tab 3: Centers Management -->
-        <div id="tab3" class="tab-content">
+        <!-- Tab 3: Centers -->
+        <div id="centers" class="tab-content">
             <h2>🏫 إدارة السناتر</h2>
             
             <div class="form-grid">
@@ -510,7 +625,7 @@
                         <label>اسم السنتر *</label>
                         <input type="text" id="newCenterName" placeholder="أدخل اسم السنتر">
                     </div>
-                    <button class="btn btn-success" onclick="addNewCenter()" style="width:100%;">
+                    <button class="btn btn-success" onclick="addCenter()" style="width:100%;">
                         ➕ إضافة السنتر
                     </button>
                 </div>
@@ -518,17 +633,14 @@
                 <div>
                     <h3>📋 قائمة السناتر (<span id="centersCount">0</span>)</h3>
                     <div id="centersList" class="centers-grid">
-                        <div class="loading">
-                            <div class="spinner"></div>
-                            <p>جاري تحميل السناتر...</p>
-                        </div>
+                        <!-- Centers list will be loaded here -->
                     </div>
                 </div>
             </div>
         </div>
         
         <!-- Tab 4: Reports -->
-        <div id="tab4" class="tab-content">
+        <div id="reports" class="tab-content">
             <h2>📊 التقارير</h2>
             
             <div class="form-grid">
@@ -536,11 +648,11 @@
                     <h3>تقرير الحضور</h3>
                     <div class="form-group">
                         <label>اختر التاريخ</label>
-                        <input type="date" id="reportDate">
+                        <input type="date" id="reportDate" value="">
                     </div>
                     <div class="form-group">
                         <label>اختر السنتر</label>
-                        <select id="reportCenter">
+                        <select id="reportCenterSelect">
                             <option value="">جميع السناتر</option>
                         </select>
                     </div>
@@ -549,9 +661,9 @@
                     </button>
                 </div>
                 
-                <div id="reportResults">
+                <div>
                     <h3>نتيجة التقرير</h3>
-                    <div id="reportContent" style="padding:20px; background:#f8f9fa; border-radius:8px; min-height:200px;">
+                    <div id="reportResults" style="padding:20px; background:#f8f9fa; border-radius:8px; min-height:200px;">
                         <p style="text-align:center; color:#666;">اختر معايير التقرير لعرض النتائج</p>
                     </div>
                 </div>
@@ -561,76 +673,225 @@
 
     <script>
         // ============================================
-        // 🎯 رابط جوجل سكريبت الخاص بك
+        // 🔧 الإعدادات
         // ============================================
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyy9rI_XGWUXjoZiuUvQWMDQTHtW66eGxeFxNFU60UdcPKfxI3Wv0bVIlMdvIpjGlXq/exec';
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxuWFSMCwTyfa1P_fQ16IlmteyUhMADAuYVqShoxDFPWhcyKP9pIgbLS2pXSG_o0i0v/exec';
         
         // ============================================
-        // 🗄️ البيانات المحلية
+        // 📦 حالة التطبيق
         // ============================================
-        let centers = [];
-        let students = [];
-        let attendanceData = {
+        const appState = {
+            // السناتر
+            centers: [],
             selectedCenter: null,
-            selectedSession: null,
-            selectedMonth: null,
-            selectedStudent: null
+            
+            // إضافة طالب
+            addStudentData: {
+                center: null,
+                name: '',
+                code: '',
+                grade: '',
+                group: '',
+                paymentMethod: 'شهري',
+                month: ''
+            },
+            
+            // تسجيل الحضور
+            attendanceData: {
+                center: null,
+                session: null,
+                month: null,
+                student: null
+            },
+            
+            // الطلاب
+            students: [],
+            
+            // حالة الاتصال
+            connectionStatus: 'checking'
         };
         
         // ============================================
         // 🚀 تهيئة التطبيق
         // ============================================
         document.addEventListener('DOMContentLoaded', function() {
-            loadCenters();
+            // تعيين التاريخ الحالي
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('reportDate').value = today;
+            
+            // توليد كود طالب
             generateStudentCode();
-            updateCurrentDate();
+            
+            // تحميل السناتر
+            loadCenters();
+            
+            // تحديث حالة الاتصال
+            updateConnectionStatus();
+            
+            // اختبار الاتصال
+            testConnection();
         });
+        
+        // ============================================
+        // 🌐 إدارة الاتصال
+        // ============================================
+        function updateConnectionStatus() {
+            const statusElement = document.getElementById('connectionStatus');
+            const textElement = document.getElementById('connectionText');
+            
+            if (navigator.onLine) {
+                appState.connectionStatus = 'online';
+                statusElement.className = 'connection-status online';
+                textElement.textContent = '✅ متصل بالإنترنت';
+            } else {
+                appState.connectionStatus = 'offline';
+                statusElement.className = 'connection-status';
+                textElement.textContent = '⚠️ غير متصل بالإنترنت';
+            }
+        }
+        
+        // مراقبة تغيير حالة الاتصال
+        window.addEventListener('online', updateConnectionStatus);
+        window.addEventListener('offline', updateConnectionStatus);
+        
+        async function testConnection() {
+            const statusElement = document.getElementById('connectionStatus');
+            const textElement = document.getElementById('connectionText');
+            
+            try {
+                // محاولة الاتصال مع وقت انتظار قصير
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 5000);
+                
+                const response = await fetch(`${GOOGLE_SCRIPT_URL}?action=test&t=${Date.now()}`, {
+                    signal: controller.signal
+                });
+                
+                clearTimeout(timeoutId);
+                
+                if (response.ok) {
+                    appState.connectionStatus = 'online';
+                    statusElement.className = 'connection-status online';
+                    textElement.textContent = '✅ متصل بالإنترنت والسيرفر';
+                    return true;
+                } else {
+                    throw new Error('Server error');
+                }
+            } catch (error) {
+                appState.connectionStatus = 'error';
+                statusElement.className = 'connection-status error';
+                textElement.textContent = '❌ تعذر الاتصال بالسيرفر. استخدم وضع عدم الاتصال.';
+                
+                // استخدام بيانات افتراضية
+                useDefaultData();
+                return false;
+            }
+        }
         
         // ============================================
         // 🏫 تحميل وإدارة السناتر
         // ============================================
         async function loadCenters() {
+            const loadingHTML = `
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>جاري تحميل السناتر...</p>
+                </div>
+            `;
+            
+            // عرض التحميل في جميع الأماكن
+            document.getElementById('centersForAdd').innerHTML = loadingHTML;
+            document.getElementById('centersForAttendance').innerHTML = loadingHTML;
+            document.getElementById('centersList').innerHTML = loadingHTML;
+            
             try {
                 const response = await fetch(`${GOOGLE_SCRIPT_URL}?action=getCenters&t=${Date.now()}`);
-                const result = await response.json();
                 
-                centers = result || ['سنتر النصر', 'سنتر المدينة', 'سنتر الأمل'];
+                if (!response.ok) {
+                    throw new Error('Failed to fetch centers');
+                }
                 
-                // تحديث جميع أماكن عرض السناتر
-                updateCentersUI('addCentersContainer', centers, 'add');
-                updateCentersUI('attendanceCentersContainer', centers, 'attendance');
-                updateReportCenters();
+                const centers = await response.json();
                 
-                // تحديث العدد
-                document.getElementById('centersCount').textContent = centers.length;
+                if (centers && Array.isArray(centers)) {
+                    appState.centers = centers;
+                } else {
+                    // إذا لم تكن البيانات صحيحة، استخدم الافتراضية
+                    appState.centers = ['سنتر النصر', 'سنتر المدينة', 'سنتر الأمل'];
+                }
+                
+                // تحديث الواجهة
+                updateCentersUI();
                 
             } catch (error) {
-                console.error('خطأ في تحميل السناتر:', error);
-                centers = ['سنتر النصر', 'سنتر المدينة', 'سنتر الأمل'];
-                updateCentersUI('addCentersContainer', centers, 'add');
-                updateCentersUI('attendanceCentersContainer', centers, 'attendance');
+                console.warn('Using default centers due to connection error:', error);
+                appState.centers = ['سنتر النصر', 'سنتر المدينة', 'سنتر الأمل'];
+                updateCentersUI();
             }
         }
         
-        function updateCentersUI(containerId, centersList, type) {
+        function updateCentersUI() {
+            // تحديث قائمة السناتر للإضافة
+            updateCentersContainer('centersForAdd', appState.centers, 'selectCenterForAdd');
+            
+            // تحديث قائمة السناتر للحضور
+            updateCentersContainer('centersForAttendance', appState.centers, 'selectCenterForAttendance');
+            
+            // تحديث قائمة الإدارة
+            updateCentersList();
+            
+            // تحديث السناتر في التقارير
+            updateReportCenters();
+            
+            // تحديث العداد
+            document.getElementById('centersCount').textContent = appState.centers.length;
+        }
+        
+        function updateCentersContainer(containerId, centers, onClickFunction) {
             const container = document.getElementById(containerId);
             
-            if (!centersList || centersList.length === 0) {
+            if (!centers || centers.length === 0) {
+                container.innerHTML = '<p style="text-align:center; color:#666; padding:20px;">لا توجد سناتر</p>';
+                return;
+            }
+            
+            let html = '';
+            centers.forEach(center => {
+                const centerName = center.name || center;
+                const isSelected = onClickFunction === 'selectCenterForAdd' 
+                    ? appState.addStudentData.center === centerName
+                    : appState.attendanceData.center === centerName;
+                
+                html += `
+                    <div class="center-card ${isSelected ? 'selected' : ''}" 
+                         onclick="${onClickFunction}('${centerName}')">
+                        <h4>${centerName}</h4>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        function updateCentersList() {
+            const container = document.getElementById('centersList');
+            
+            if (!appState.centers || appState.centers.length === 0) {
                 container.innerHTML = '<p style="text-align:center; color:#666; padding:20px;">لا توجد سناتر مضافة</p>';
                 return;
             }
             
             let html = '';
-            centersList.forEach(center => {
+            appState.centers.forEach(center => {
                 const centerName = center.name || center;
-                const isSelected = type === 'attendance' 
-                    ? attendanceData.selectedCenter === centerName
-                    : false;
-                    
                 html += `
-                    <div class="center-card ${isSelected ? 'selected' : ''}" 
-                         onclick="selectCenterFor${type === 'add' ? 'Add' : 'Attendance'}('${centerName}')">
-                        ${centerName}
+                    <div class="center-card">
+                        <h4>${centerName}</h4>
+                        <div style="margin-top:10px;">
+                            <button class="btn btn-danger btn-sm" onclick="deleteCenter('${centerName}')">
+                                حذف
+                            </button>
+                        </div>
                     </div>
                 `;
             });
@@ -639,10 +900,10 @@
         }
         
         function updateReportCenters() {
-            const select = document.getElementById('reportCenter');
+            const select = document.getElementById('reportCenterSelect');
             let options = '<option value="">جميع السناتر</option>';
             
-            centers.forEach(center => {
+            appState.centers.forEach(center => {
                 const centerName = center.name || center;
                 options += `<option value="${centerName}">${centerName}</option>`;
             });
@@ -651,414 +912,484 @@
         }
         
         // ============================================
-        // 👤 إضافة طالب جديد
+        // 👤 إدارة الطلاب
         // ============================================
-        function generateStudentCode() {
-            const now = new Date();
-            const year = now.getFullYear();
-            const month = (now.getMonth() + 1).toString().padStart(2, '0');
-            const random = Math.floor(Math.random() * 900) + 100;
-            const studentCode = `ST${year}${month}${random}`;
-            
-            document.getElementById('studentCode').value = studentCode;
-            return studentCode;
-        }
-        
         function selectCenterForAdd(centerName) {
-            // في تبويب الإضافة، نحتاج فقط لتحديد السنتر
-            const cards = document.querySelectorAll('#addCentersContainer .center-card');
+            appState.addStudentData.center = centerName;
+            
+            // تحديث الواجهة
+            const cards = document.querySelectorAll('#centersForAdd .center-card');
             cards.forEach(card => card.classList.remove('selected'));
             
-            const selectedCard = document.querySelector(`#addCentersContainer .center-card:contains('${centerName}')`);
+            const selectedCard = [...cards].find(card => card.querySelector('h4').textContent === centerName);
             if (selectedCard) {
                 selectedCard.classList.add('selected');
             }
         }
         
-        async function addNewStudent() {
+        function generateStudentCode() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = (now.getMonth() + 1).toString().padStart(2, '0');
+            const random = Math.floor(Math.random() * 900) + 100;
+            
+            const studentCode = `ST${year}${month}${random}`;
+            appState.addStudentData.code = studentCode;
+            document.getElementById('studentCode').value = studentCode;
+            
+            return studentCode;
+        }
+        
+        async function addStudent() {
+            // جمع البيانات من النموذج
+            appState.addStudentData.name = document.getElementById('studentName').value.trim();
+            appState.addStudentData.code = document.getElementById('studentCode').value.trim();
+            appState.addStudentData.grade = document.getElementById('studentGrade').value;
+            appState.addStudentData.group = document.getElementById('studentGroup').value;
+            appState.addStudentData.paymentMethod = document.getElementById('paymentMethod').value;
+            appState.addStudentData.month = document.getElementById('currentMonth').value || getCurrentMonthArabic();
+            
             // التحقق من البيانات
-            const studentName = document.getElementById('studentName').value.trim();
-            const studentCode = document.getElementById('studentCode').value.trim();
-            const studentGrade = document.getElementById('studentGrade').value;
-            const studentGroup = document.getElementById('studentGroup').value;
-            const paymentMethod = document.getElementById('paymentMethod').value;
-            
-            // الحصول على السنتر المختار
-            const selectedCenterCard = document.querySelector('#addCentersContainer .center-card.selected');
-            if (!selectedCenterCard) {
-                showMessage('addStudentStatus', 'الرجاء اختيار السنتر أولاً', 'error');
+            if (!validateAddStudentForm()) {
                 return;
             }
             
-            const center = selectedCenterCard.textContent;
-            
-            if (!studentName || !studentCode || !studentGrade || !studentGroup) {
-                showMessage('addStudentStatus', 'الرجاء ملء جميع الحقول المطلوبة', 'error');
-                return;
-            }
-            
-            const studentData = {
-                action: 'addStudent',
-                center: center,
-                name: studentName,
-                code: studentCode,
-                grade: studentGrade,
-                group: studentGroup,
-                paymentMethod: paymentMethod,
-                paymentStatus: 'مدفوع', // حالة افتراضية
-                month: getCurrentMonthArabic(),
-                createdAt: new Date().toISOString()
-            };
-            
-            showMessage('addStudentStatus', 'جاري حفظ الطالب في الإكسيل...', 'info');
+            // عرض رسالة التحميل
+            showStatus('addStudentStatus', 'جاري حفظ الطالب في الإكسيل...', 'info');
             
             try {
+                // إرسال البيانات لجوجل سكريبت
                 const response = await fetch(GOOGLE_SCRIPT_URL, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(studentData)
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        action: 'addStudent',
+                        ...appState.addStudentData
+                    })
                 });
+                
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
                 
                 const result = await response.json();
                 
                 if (result.success) {
-                    showMessage('addStudentStatus', 
-                        `✅ تم حفظ الطالب "${studentName}" بنجاح في الإكسيل<br>كود الطالب: ${studentCode}`, 
+                    showStatus('addStudentStatus', 
+                        `✅ تم إضافة الطالب "${appState.addStudentData.name}" بنجاح<br>
+                         الكود: ${appState.addStudentData.code}<br>
+                         تم الحفظ في الصف: ${result.row}`, 
                         'success');
                     
-                    // إضافة الطالب للقائمة المحلية
-                    students.push(studentData);
-                    
                     // مسح النموذج
-                    document.getElementById('studentName').value = '';
-                    document.getElementById('studentGrade').value = '';
-                    document.getElementById('studentGroup').value = '';
-                    document.getElementById('paymentMethod').value = 'شهري';
-                    generateStudentCode();
+                    resetAddStudentForm();
+                    
+                    // إضافة الطالب للقائمة المحلية
+                    appState.students.push({
+                        name: appState.addStudentData.name,
+                        code: appState.addStudentData.code,
+                        grade: appState.addStudentData.grade,
+                        group: appState.addStudentData.group,
+                        center: appState.addStudentData.center
+                    });
                     
                 } else {
-                    showMessage('addStudentStatus', 
-                        `❌ خطأ في حفظ الطالب: ${result.error || 'حدث خطأ غير معروف'}`, 
+                    showStatus('addStudentStatus', 
+                        `❌ خطأ في إضافة الطالب: ${result.error || 'حدث خطأ غير معروف'}`, 
                         'error');
                 }
                 
             } catch (error) {
-                showMessage('addStudentStatus', 
+                console.error('Error adding student:', error);
+                showStatus('addStudentStatus', 
                     '❌ تعذر الاتصال بالسيرفر. تأكد من اتصال الإنترنت.', 
                     'error');
-                console.error('Error adding student:', error);
             }
+        }
+        
+        function validateAddStudentForm() {
+            const errors = [];
+            
+            if (!appState.addStudentData.center) {
+                errors.push('الرجاء اختيار السنتر');
+            }
+            
+            if (!appState.addStudentData.name) {
+                errors.push('الرجاء إدخال اسم الطالب');
+            }
+            
+            if (!appState.addStudentData.code) {
+                errors.push('الرجاء إدخال كود الطالب');
+            }
+            
+            if (!appState.addStudentData.grade) {
+                errors.push('الرجاء اختيار الصف');
+            }
+            
+            if (!appState.addStudentData.group) {
+                errors.push('الرجاء اختيار المجموعة');
+            }
+            
+            if (errors.length > 0) {
+                showStatus('addStudentStatus', `❌ ${errors.join('<br>')}`, 'error');
+                return false;
+            }
+            
+            return true;
+        }
+        
+        function resetAddStudentForm() {
+            document.getElementById('studentName').value = '';
+            document.getElementById('studentGrade').value = '';
+            document.getElementById('studentGroup').value = '';
+            document.getElementById('currentMonth').value = '';
+            
+            // إعادة تعيين البيانات
+            appState.addStudentData.name = '';
+            appState.addStudentData.grade = '';
+            appState.addStudentData.group = '';
+            appState.addStudentData.month = '';
+            appState.addStudentData.center = null;
+            
+            // مسح اختيار السنتر
+            const cards = document.querySelectorAll('#centersForAdd .center-card');
+            cards.forEach(card => card.classList.remove('selected'));
+            
+            // توليد كود جديد
+            generateStudentCode();
         }
         
         // ============================================
         // 📱 تسجيل الحضور (4 خطوات)
         // ============================================
         function selectCenterForAttendance(centerName) {
-            attendanceData.selectedCenter = centerName;
+            appState.attendanceData.center = centerName;
             
             // تحديث الواجهة
-            const cards = document.querySelectorAll('#attendanceCentersContainer .center-card');
+            const cards = document.querySelectorAll('#centersForAttendance .center-card');
             cards.forEach(card => card.classList.remove('selected'));
             
-            const selectedCard = document.querySelector(`#attendanceCentersContainer .center-card:contains('${centerName}')`);
+            const selectedCard = [...cards].find(card => card.querySelector('h4').textContent === centerName);
             if (selectedCard) {
                 selectedCard.classList.add('selected');
-                document.getElementById('nextToStep2Btn').disabled = false;
+                document.getElementById('nextToStep2').disabled = false;
             }
             
-            // تحديث العرض في الخطوة 4
-            document.getElementById('selectedCenterName').textContent = centerName;
+            // تحديث العرض
+            document.getElementById('selectedCenterText').textContent = centerName;
         }
         
-        function nextToStep2() {
-            if (!attendanceData.selectedCenter) {
+        function goToStep2() {
+            if (!appState.attendanceData.center) {
                 alert('الرجاء اختيار السنتر أولاً');
                 return;
             }
             
-            document.getElementById('step1').style.display = 'none';
-            document.getElementById('step2').style.display = 'block';
+            // تحديث مؤشر الخطوات
+            updateStepIndicator(2);
+            
+            // الانتقال للخطوة 2
+            document.getElementById('step1').classList.remove('active');
+            document.getElementById('step2').classList.add('active');
         }
         
-        function backToStep1() {
-            document.getElementById('step2').style.display = 'none';
-            document.getElementById('step1').style.display = 'block';
+        function goToStep1() {
+            updateStepIndicator(1);
+            document.getElementById('step2').classList.remove('active');
+            document.getElementById('step1').classList.add('active');
         }
         
-        function selectSession(sessionName) {
-            attendanceData.selectedSession = sessionName;
+        function selectSession(sessionNumber) {
+            appState.attendanceData.session = `الحصة ${sessionNumber}`;
             
             // تحديث الواجهة
-            const sessionBtns = document.querySelectorAll('.session-btn');
-            sessionBtns.forEach(btn => btn.classList.remove('selected'));
+            const cards = document.querySelectorAll('.session-card');
+            cards.forEach(card => card.classList.remove('selected'));
             
-            const selectedBtn = document.querySelector(`.session-btn:contains('${sessionName}')`);
-            if (selectedBtn) {
-                selectedBtn.classList.add('selected');
-                document.getElementById('nextToStep3Btn').disabled = false;
+            const selectedCard = document.querySelector(`.session-card:nth-child(${sessionNumber})`);
+            if (selectedCard) {
+                selectedCard.classList.add('selected');
+                document.getElementById('nextToStep3').disabled = false;
             }
             
-            // تحديث العرض في الخطوة 4
-            document.getElementById('selectedSessionName').textContent = sessionName;
+            // تحديث العرض
+            document.getElementById('selectedSessionText').textContent = `الحصة ${sessionNumber}`;
         }
         
-        function nextToStep3() {
-            if (!attendanceData.selectedSession) {
+        function goToStep3() {
+            if (!appState.attendanceData.session) {
                 alert('الرجاء اختيار الحصة أولاً');
                 return;
             }
             
-            document.getElementById('step2').style.display = 'none';
-            document.getElementById('step3').style.display = 'block';
+            updateStepIndicator(3);
+            document.getElementById('step2').classList.remove('active');
+            document.getElementById('step3').classList.add('active');
         }
         
-        function backToStep2() {
-            document.getElementById('step3').style.display = 'none';
-            document.getElementById('step2').style.display = 'block';
+        function goToStep2FromStep3() {
+            updateStepIndicator(2);
+            document.getElementById('step3').classList.remove('active');
+            document.getElementById('step2').classList.add('active');
         }
         
         function selectMonth(monthName) {
-            attendanceData.selectedMonth = monthName;
+            appState.attendanceData.month = monthName;
             
             // تحديث الواجهة
-            const monthBtns = document.querySelectorAll('.month-btn');
-            monthBtns.forEach(btn => btn.classList.remove('selected'));
+            const cards = document.querySelectorAll('.month-card');
+            cards.forEach(card => card.classList.remove('selected'));
             
-            const selectedBtn = document.querySelector(`.month-btn:contains('${monthName}')`);
-            if (selectedBtn) {
-                selectedBtn.classList.add('selected');
-                document.getElementById('nextToStep4Btn').disabled = false;
+            const selectedCard = [...cards].find(card => card.textContent === monthName);
+            if (selectedCard) {
+                selectedCard.classList.add('selected');
+                document.getElementById('nextToStep4').disabled = false;
             }
             
-            // تحديث العرض في الخطوة 4
-            document.getElementById('selectedMonthName').textContent = monthName;
+            // تحديث العرض
+            document.getElementById('selectedMonthText').textContent = monthName;
         }
         
-        function nextToStep4() {
-            if (!attendanceData.selectedMonth) {
+        function goToStep4() {
+            if (!appState.attendanceData.month) {
                 alert('الرجاء اختيار الشهر أولاً');
                 return;
             }
             
-            document.getElementById('step3').style.display = 'none';
-            document.getElementById('step4').style.display = 'block';
+            updateStepIndicator(4);
+            document.getElementById('step3').classList.remove('active');
+            document.getElementById('step4').classList.add('active');
             
-            // تحميل الطلاب للبحث
-            loadStudentsForSearch();
+            // تحميل الطلاب لهذا السنتر
+            loadStudentsForCenter();
         }
         
-        function backToStep3() {
-            document.getElementById('step4').style.display = 'none';
-            document.getElementById('step3').style.display = 'block';
+        function goToStep3FromStep4() {
+            updateStepIndicator(3);
+            document.getElementById('step4').classList.remove('active');
+            document.getElementById('step3').classList.add('active');
+        }
+        
+        function updateStepIndicator(stepNumber) {
+            // إعادة تعيين جميع النقاط
+            document.getElementById('step1Dot').className = 'step-dot';
+            document.getElementById('step2Dot').className = 'step-dot';
+            document.getElementById('step3Dot').className = 'step-dot';
+            document.getElementById('step4Dot').className = 'step-dot';
+            
+            // تحديث النقاط المكتملة
+            for (let i = 1; i < stepNumber; i++) {
+                document.getElementById(`step${i}Dot`).className = 'step-dot completed';
+            }
+            
+            // تحديث النقطة الحالية
+            document.getElementById(`step${stepNumber}Dot`).className = 'step-dot active';
         }
         
         // ============================================
         // 🔍 البحث عن الطلاب
         // ============================================
-        async function loadStudentsForSearch() {
+        async function loadStudentsForCenter() {
+            const container = document.getElementById('studentsList');
+            container.innerHTML = `
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>جاري تحميل قائمة الطلاب...</p>
+                </div>
+            `;
+            
             try {
-                const response = await fetch(`${GOOGLE_SCRIPT_URL}?action=getStudents&center=${attendanceData.selectedCenter}`);
-                const result = await response.json();
+                const response = await fetch(`${GOOGLE_SCRIPT_URL}?action=getStudents&center=${appState.attendanceData.center}`);
                 
-                if (result && result.length > 0) {
-                    students = result;
+                if (!response.ok) {
+                    throw new Error('Failed to load students');
+                }
+                
+                const students = await response.json();
+                
+                if (students && Array.isArray(students)) {
+                    appState.students = students;
+                    displayStudentsList(students);
                 } else {
-                    // إذا لم توجد بيانات، نستخدم قائمة افتراضية
-                    students = [
-                        { name: 'أحمد محمد', code: 'ST2024001', grade: 'أولى ثانوي', group: 'المجموعة أ' },
-                        { name: 'محمد علي', code: 'ST2024002', grade: 'ثانية ثانوي', group: 'المجموعة ب' },
-                        { name: 'سارة خالد', code: 'ST2024003', grade: 'أولى ثانوي', group: 'المجموعة ج' }
-                    ];
+                    throw new Error('Invalid students data');
                 }
                 
             } catch (error) {
-                console.error('Error loading students:', error);
-                students = [];
+                console.warn('Using default students:', error);
+                
+                // استخدام بيانات افتراضية
+                const defaultStudents = [
+                    { name: 'أحمد محمد', code: 'ST2024001', grade: 'أولى ثانوي', group: 'المجموعة أ' },
+                    { name: 'محمد علي', code: 'ST2024002', grade: 'ثانية ثانوي', group: 'المجموعة ب' },
+                    { name: 'سارة خالد', code: 'ST2024003', grade: 'أولى ثانوي', group: 'المجموعة ج' }
+                ];
+                
+                appState.students = defaultStudents;
+                displayStudentsList(defaultStudents);
             }
         }
         
-        function searchStudents() {
-            const searchTerm = document.getElementById('searchStudent').value.toLowerCase();
-            const resultsContainer = document.getElementById('searchResults');
+        function displayStudentsList(students) {
+            const container = document.getElementById('studentsList');
             
-            if (!searchTerm) {
-                resultsContainer.innerHTML = '<p style="text-align:center; color:#666; padding:10px;">أدخل اسم أو كود الطالب للبحث</p>';
+            if (!students || students.length === 0) {
+                container.innerHTML = '<p style="text-align:center; color:#666; padding:20px;">لا توجد طلاب في هذا السنتر</p>';
                 return;
             }
             
-            const filteredStudents = students.filter(student => 
+            let html = '';
+            students.forEach((student, index) => {
+                html += `
+                    <div class="student-card" onclick="selectStudent(${index})" id="student-${index}">
+                        <h4>${student.name}</h4>
+                        <p>الكود: ${student.code}</p>
+                        <p>الصف: ${student.grade} | المجموعة: ${student.group}</p>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        function searchStudent() {
+            const searchTerm = document.getElementById('searchStudentInput').value.toLowerCase();
+            const allStudents = appState.students;
+            
+            if (!searchTerm) {
+                displayStudentsList(allStudents);
+                return;
+            }
+            
+            const filteredStudents = allStudents.filter(student => 
                 student.name.toLowerCase().includes(searchTerm) || 
                 student.code.toLowerCase().includes(searchTerm)
             );
             
-            if (filteredStudents.length === 0) {
-                resultsContainer.innerHTML = '<p style="text-align:center; color:#666; padding:10px;">لا توجد نتائج</p>';
+            displayStudentsList(filteredStudents);
+        }
+        
+        function selectStudent(index) {
+            // إلغاء تحديد جميع الطلاب
+            const cards = document.querySelectorAll('.student-card');
+            cards.forEach(card => card.classList.remove('selected'));
+            
+            // تحديد الطالب المختار
+            const selectedCard = document.getElementById(`student-${index}`);
+            if (selectedCard) {
+                selectedCard.classList.add('selected');
+                appState.attendanceData.student = appState.students[index];
+                document.getElementById('recordAttendanceBtn').disabled = false;
+            }
+        }
+        
+        // ============================================
+        // ✅ تسجيل الحضور
+        // ============================================
+        async function recordAttendance() {
+            if (!appState.attendanceData.student) {
+                showStatus('attendanceStatus', 'الرجاء اختيار طالب أولاً', 'error');
                 return;
             }
             
-            let html = '<div class="students-list">';
-            filteredStudents.forEach(student => {
-                html += `
-                    <div class="student-card" style="background:#f8f9fa; padding:15px; margin:10px 0; border-radius:8px; cursor:pointer;"
-                         onclick="selectStudentForAttendance('${student.code}')">
-                        <strong>${student.name}</strong><br>
-                        <small>الكود: ${student.code} | الصف: ${student.grade} | المجموعة: ${student.group}</small>
-                    </div>
-                `;
-            });
-            html += '</div>';
-            
-            resultsContainer.innerHTML = html;
-        }
-        
-        function selectStudentForAttendance(studentCode) {
-            const student = students.find(s => s.code === studentCode);
-            if (student) {
-                attendanceData.selectedStudent = student;
-                document.getElementById('recordBtn').disabled = false;
-                
-                // عرض تأكيد
-                showMessage('attendanceStatus', 
-                    `✅ تم اختيار الطالب: ${student.name}<br>اضغط على "تسجيل الحضور" للتأكيد`, 
-                    'success');
-            }
-        }
-        
-        // ============================================
-        // 📷 ماسح QR Code
-        // ============================================
-        function startQRScanner() {
-            const scannerDiv = document.getElementById('qrScanner');
-            scannerDiv.style.display = 'block';
-            scannerDiv.innerHTML = '';
-            
-            const html5QrCode = new Html5Qrcode("qrScanner");
-            
-            html5QrCode.start(
-                { facingMode: "environment" },
-                {
-                    fps: 10,
-                    qrbox: { width: 250, height: 250 }
-                },
-                (decodedText) => {
-                    // عند مسح الكود بنجاح
-                    html5QrCode.stop();
-                    
-                    // البحث عن الطالب بالكود
-                    selectStudentForAttendance(decodedText);
-                    
-                    // إخفاء الماسح
-                    scannerDiv.style.display = 'none';
-                },
-                (errorMessage) => {
-                    // تجاهل الأخطاء
-                    console.log("QR scan error:", errorMessage);
-                }
-            ).catch(err => {
-                alert("تعذر تشغيل الكاميرا. تأكد من السماح باستخدام الكاميرا.");
-                scannerDiv.style.display = 'none';
-            });
-        }
-        
-        // ============================================
-        // ✅ تسجيل الحضور في الإكسيل
-        // ============================================
-        async function recordAttendanceForSelected() {
-            if (!attendanceData.selectedStudent) {
-                showMessage('attendanceStatus', 'الرجاء اختيار طالب أولاً', 'error');
-                return;
-            }
-            
-            if (!attendanceData.selectedCenter || !attendanceData.selectedSession || !attendanceData.selectedMonth) {
-                showMessage('attendanceStatus', 'الرجاء إكمال جميع خطوات اختيار الحضور', 'error');
+            // التحقق من اكتمال البيانات
+            if (!appState.attendanceData.center || !appState.attendanceData.session || !appState.attendanceData.month) {
+                showStatus('attendanceStatus', 'الرجاء إكمال جميع خطوات اختيار الحضور', 'error');
                 return;
             }
             
             const attendanceRecord = {
                 action: 'recordAttendance',
-                center: attendanceData.selectedCenter,
-                session: attendanceData.selectedSession,
-                month: attendanceData.selectedMonth,
-                studentCode: attendanceData.selectedStudent.code,
-                studentName: attendanceData.selectedStudent.name,
-                studentGrade: attendanceData.selectedStudent.grade,
-                studentGroup: attendanceData.selectedStudent.group,
+                center: appState.attendanceData.center,
+                session: appState.attendanceData.session,
+                month: appState.attendanceData.month,
+                studentCode: appState.attendanceData.student.code,
+                studentName: appState.attendanceData.student.name,
+                studentGrade: appState.attendanceData.student.grade,
+                studentGroup: appState.attendanceData.student.group,
                 date: new Date().toLocaleDateString('ar-EG'),
-                time: new Date().toLocaleTimeString('ar-EG'),
-                timestamp: new Date().toISOString()
+                time: new Date().toLocaleTimeString('ar-EG')
             };
             
-            showMessage('attendanceStatus', 'جاري تسجيل الحضور في الإكسيل...', 'info');
+            showStatus('attendanceStatus', 'جاري تسجيل الحضور في الإكسيل...', 'info');
             
             try {
                 const response = await fetch(GOOGLE_SCRIPT_URL, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
                     body: JSON.stringify(attendanceRecord)
                 });
+                
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
                 
                 const result = await response.json();
                 
                 if (result.success) {
-                    showMessage('attendanceStatus', 
-                        `✅ تم تسجيل حضور "${attendanceData.selectedStudent.name}" بنجاح<br>
-                         السنتر: ${attendanceData.selectedCenter}<br>
-                         الحصة: ${attendanceData.selectedSession}<br>
-                         الشهر: ${attendanceData.selectedMonth}<br>
+                    showStatus('attendanceStatus', 
+                        `✅ تم تسجيل حضور "${appState.attendanceData.student.name}" بنجاح<br>
+                         السنتر: ${appState.attendanceData.center}<br>
+                         الحصة: ${appState.attendanceData.session}<br>
+                         الشهر: ${appState.attendanceData.month}<br>
                          الوقت: ${attendanceRecord.time}`, 
                         'success');
                     
-                    // إعادة تعيين البيانات
+                    // إعادة تعيين بعد 3 ثواني
                     setTimeout(() => {
                         resetAttendanceData();
-                        document.getElementById('step4').style.display = 'none';
-                        document.getElementById('step1').style.display = 'block';
+                        goToStep1();
                     }, 3000);
                     
                 } else {
-                    showMessage('attendanceStatus', 
+                    showStatus('attendanceStatus', 
                         `❌ خطأ في تسجيل الحضور: ${result.error || 'حدث خطأ غير معروف'}`, 
                         'error');
                 }
                 
             } catch (error) {
-                showMessage('attendanceStatus', 
+                console.error('Error recording attendance:', error);
+                showStatus('attendanceStatus', 
                     '❌ تعذر الاتصال بالسيرفر. تأكد من اتصال الإنترنت.', 
                     'error');
-                console.error('Error recording attendance:', error);
             }
         }
         
         function resetAttendanceData() {
-            attendanceData = {
-                selectedCenter: null,
-                selectedSession: null,
-                selectedMonth: null,
-                selectedStudent: null
+            appState.attendanceData = {
+                center: null,
+                session: null,
+                month: null,
+                student: null
             };
             
             // إعادة تعيين الواجهة
+            document.getElementById('selectedCenterText').textContent = 'لم يتم الاختيار';
+            document.getElementById('selectedSessionText').textContent = 'لم يتم الاختيار';
+            document.getElementById('selectedMonthText').textContent = 'لم يتم الاختيار';
+            document.getElementById('searchStudentInput').value = '';
+            document.getElementById('attendanceStatus').innerHTML = '';
+            document.getElementById('recordAttendanceBtn').disabled = true;
+            
+            // إعادة تعيين الأزرار
+            document.getElementById('nextToStep2').disabled = true;
+            document.getElementById('nextToStep3').disabled = true;
+            document.getElementById('nextToStep4').disabled = true;
+            
+            // إعادة تعيين التحديدات
             document.querySelectorAll('.center-card.selected').forEach(c => c.classList.remove('selected'));
-            document.querySelectorAll('.session-btn.selected').forEach(s => s.classList.remove('selected'));
-            document.querySelectorAll('.month-btn.selected').forEach(m => m.classList.remove('selected'));
-            
-            document.getElementById('selectedCenterName').textContent = '-';
-            document.getElementById('selectedSessionName').textContent = '-';
-            document.getElementById('selectedMonthName').textContent = '-';
-            document.getElementById('searchStudent').value = '';
-            document.getElementById('searchResults').innerHTML = '';
-            document.getElementById('attendanceStatus').style.display = 'none';
-            
-            document.getElementById('nextToStep2Btn').disabled = true;
-            document.getElementById('nextToStep3Btn').disabled = true;
-            document.getElementById('nextToStep4Btn').disabled = true;
-            document.getElementById('recordBtn').disabled = true;
+            document.querySelectorAll('.session-card.selected').forEach(s => s.classList.remove('selected'));
+            document.querySelectorAll('.month-card.selected').forEach(m => m.classList.remove('selected'));
+            document.querySelectorAll('.student-card.selected').forEach(s => s.classList.remove('selected'));
         }
         
         // ============================================
         // 🏫 إضافة سنتر جديد
         // ============================================
-        async function addNewCenter() {
+        async function addCenter() {
             const centerName = document.getElementById('newCenterName').value.trim();
             
             if (!centerName) {
@@ -1066,17 +1397,21 @@
                 return;
             }
             
-            const centerData = {
-                action: 'addCenter',
-                name: centerName
-            };
-            
             try {
                 const response = await fetch(GOOGLE_SCRIPT_URL, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(centerData)
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        action: 'addCenter',
+                        name: centerName
+                    })
                 });
+                
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
                 
                 const result = await response.json();
                 
@@ -1102,93 +1437,99 @@
         // ============================================
         async function generateReport() {
             const date = document.getElementById('reportDate').value;
-            const center = document.getElementById('reportCenter').value;
+            const center = document.getElementById('reportCenterSelect').value;
             
-            const reportData = {
-                action: 'getReport',
-                date: date,
-                center: center
-            };
+            if (!date) {
+                alert('الرجاء اختيار تاريخ');
+                return;
+            }
             
             try {
                 const response = await fetch(GOOGLE_SCRIPT_URL, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(reportData)
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        action: 'getReport',
+                        date: date,
+                        center: center
+                    })
                 });
+                
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
                 
                 const result = await response.json();
                 
                 if (result.success) {
-                    displayReport(result.data);
+                    displayReportResults(result.data);
                 } else {
-                    document.getElementById('reportContent').innerHTML = 
-                        `<p style="color:#dc3545;">❌ ${result.error || 'حدث خطأ في إنشاء التقرير'}</p>`;
+                    document.getElementById('reportResults').innerHTML = 
+                        `<div class="status-error status-box">❌ ${result.error || 'حدث خطأ في إنشاء التقرير'}</div>`;
                 }
                 
             } catch (error) {
-                document.getElementById('reportContent').innerHTML = 
-                    `<p style="color:#dc3545;">❌ تعذر الاتصال بالسيرفر</p>`;
+                document.getElementById('reportResults').innerHTML = 
+                    `<div class="status-error status-box">❌ تعذر الاتصال بالسيرفر</div>`;
                 console.error('Error generating report:', error);
             }
         }
         
-        function displayReport(data) {
-            let html = '<h4>تقرير الحضور</h4>';
+        function displayReportResults(data) {
+            const container = document.getElementById('reportResults');
             
             if (!data || data.length === 0) {
-                html += '<p>لا توجد بيانات للعرض</p>';
-            } else {
-                html += `
+                container.innerHTML = '<div class="status-info status-box">لا توجد بيانات للعرض</div>';
+                return;
+            }
+            
+            let html = `
+                <h4>نتيجة التقرير (${data.length} سجل)</h4>
+                <div style="overflow-x:auto;">
                     <table style="width:100%; border-collapse:collapse; margin-top:15px;">
                         <thead>
                             <tr style="background:#4a6fa5; color:white;">
-                                <th style="padding:10px;">الاسم</th>
-                                <th style="padding:10px;">الكود</th>
-                                <th style="padding:10px;">السنتر</th>
-                                <th style="padding:10px;">الحصة</th>
-                                <th style="padding:10px;">التاريخ</th>
+                                <th style="padding:10px; text-align:right;">الاسم</th>
+                                <th style="padding:10px; text-align:right;">الكود</th>
+                                <th style="padding:10px; text-align:right;">السنتر</th>
+                                <th style="padding:10px; text-align:right;">الحصة</th>
+                                <th style="padding:10px; text-align:right;">التاريخ</th>
+                                <th style="padding:10px; text-align:right;">الوقت</th>
                             </tr>
                         </thead>
                         <tbody>
-                `;
-                
-                data.forEach(item => {
-                    html += `
-                        <tr style="border-bottom:1px solid #eee;">
-                            <td style="padding:10px;">${item.name || ''}</td>
-                            <td style="padding:10px;">${item.code || ''}</td>
-                            <td style="padding:10px;">${item.center || ''}</td>
-                            <td style="padding:10px;">${item.session || ''}</td>
-                            <td style="padding:10px;">${item.date || ''}</td>
-                        </tr>
-                    `;
-                });
-                
+            `;
+            
+            data.forEach(item => {
                 html += `
+                    <tr style="border-bottom:1px solid #eee;">
+                        <td style="padding:10px;">${item.name || ''}</td>
+                        <td style="padding:10px;">${item.code || ''}</td>
+                        <td style="padding:10px;">${item.center || ''}</td>
+                        <td style="padding:10px;">${item.session || ''}</td>
+                        <td style="padding:10px;">${item.date || ''}</td>
+                        <td style="padding:10px;">${item.time || ''}</td>
+                    </tr>
+                `;
+            });
+            
+            html += `
                         </tbody>
                     </table>
-                    <p style="margin-top:15px; color:#666;">عدد السجلات: ${data.length}</p>
-                `;
-            }
+                </div>
+            `;
             
-            document.getElementById('reportContent').innerHTML = html;
+            container.innerHTML = html;
         }
         
         // ============================================
         // 🛠️ دوال مساعدة
         // ============================================
-        function showMessage(elementId, message, type) {
+        function showStatus(elementId, message, type) {
             const element = document.getElementById(elementId);
-            element.innerHTML = message;
-            element.className = `status-message status-${type}`;
-            element.style.display = 'block';
-            
-            if (type === 'success') {
-                setTimeout(() => {
-                    element.style.display = 'none';
-                }, 5000);
-            }
+            element.innerHTML = `<div class="status-${type} status-box">${message}</div>`;
         }
         
         function getCurrentMonthArabic() {
@@ -1197,18 +1538,7 @@
             return months[new Date().getMonth()];
         }
         
-        function updateCurrentDate() {
-            const now = new Date();
-            const dateStr = now.toLocaleDateString('ar-EG', {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            });
-            document.getElementById('currentDate').textContent = dateStr;
-        }
-        
-        function switchTab(tabNumber) {
+        function switchTab(tabName) {
             // إخفاء جميع التبويبات
             document.querySelectorAll('.tab-content').forEach(tab => {
                 tab.classList.remove('active');
@@ -1218,16 +1548,39 @@
             });
             
             // إظهار التبويب المحدد
-            document.getElementById(`tab${tabNumber}`).classList.add('active');
-            document.querySelectorAll('.tab')[tabNumber - 1].classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+            document.querySelector(`.tab[onclick="switchTab('${tabName}')"]`).classList.add('active');
             
             // إذا كان تبويب الحضور، نبدأ من الخطوة 1
-            if (tabNumber === 2) {
+            if (tabName === 'attendance') {
                 resetAttendanceData();
-                document.getElementById('step1').style.display = 'block';
-                document.getElementById('step2').style.display = 'none';
-                document.getElementById('step3').style.display = 'none';
-                document.getElementById('step4').style.display = 'none';
+                updateStepIndicator(1);
+                
+                // إظهار الخطوة 1 وإخفاء الباقي
+                document.querySelectorAll('.step').forEach(step => {
+                    step.classList.remove('active');
+                });
+                document.getElementById('step1').classList.add('active');
+            }
+        }
+        
+        function useDefaultData() {
+            // بيانات افتراضية للسناتر
+            appState.centers = ['سنتر النصر', 'سنتر المدينة', 'سنتر الأمل'];
+            updateCentersUI();
+            
+            // بيانات افتراضية للطلاب
+            appState.students = [
+                { name: 'أحمد محمد', code: 'ST2024001', grade: 'أولى ثانوي', group: 'المجموعة أ', center: 'سنتر النصر' },
+                { name: 'محمد علي', code: 'ST2024002', grade: 'ثانية ثانوي', group: 'المجموعة ب', center: 'سنتر النصر' },
+                { name: 'سارة خالد', code: 'ST2024003', grade: 'أولى ثانوي', group: 'المجموعة ج', center: 'سنتر المدينة' }
+            ];
+        }
+        
+        // دوال للواجهة فقط
+        function deleteCenter(centerName) {
+            if (confirm(`هل تريد حقاً حذف السنتر "${centerName}"؟`)) {
+                alert('هذه الميزة تتطلب اتصال بالسيرفر. في هذا الإصجار، يمكنك فقط الإضافة.');
             }
         }
     </script>
