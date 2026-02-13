@@ -2,45 +2,79 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>واجبات تانيه ثانوي مستر فيصل</title>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>واجبات مستر فيصل</title>
   <style>
-    :root{
-      --bg:#f5f5f5;
-    }
-
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
+    body, html {
+      margin: 0; padding: 0; height: 100%;
       direction: rtl;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: var(--bg);
-      /* خليها طبيعية للموبايلات بدل hidden */
       overflow: hidden;
-      -webkit-text-size-adjust: 100%;
+      background-color: #f5f5f5;
     }
-
-    /* دعم أفضل لارتفاع الشاشة على الموبايل (خصوصًا Safari) */
-    body {
-      min-height: 100vh;
-      min-height: 100dvh;
-    }
-
+    
     iframe {
       width: 100%;
       height: 100vh;
-      height: 100dvh;
-      border: 0;
-      display: block;
-      background: white;
+      border: none;
     }
-
+    
+    /* شاشة بديلة سريعة أثناء تحميل الإطار */
+    .fallback-content {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      text-align: center;
+      z-index: 10;
+      transition: opacity 0.3s ease;
+    }
+    
+    .fallback-content.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+    
+    .logo {
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+    
+    .subtitle {
+      font-size: 1.2rem;
+      opacity: 0.9;
+      margin-bottom: 2rem;
+    }
+    
+    .loader {
+      width: 40px;
+      height: 40px;
+      border: 3px solid rgba(255,255,255,0.3);
+      border-top: 3px solid white;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
     /* نظام الحماية */
     #contentProtection {
       position: fixed;
-      inset: 0;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       background: rgba(0, 0, 0, 0.95);
       display: flex;
       justify-content: center;
@@ -49,132 +83,187 @@
       color: white;
       opacity: 0;
       visibility: hidden;
-      transition: opacity 0.3s ease, visibility 0.3s ease;
-      padding: env(safe-area-inset-top) env(safe-area-inset-right)
-               env(safe-area-inset-bottom) env(safe-area-inset-left);
+      transition: opacity 0.5s ease, visibility 0.5s;
     }
-
+    
     #contentProtection.active {
       opacity: 1;
       visibility: visible;
     }
-
+    
     .protection-message {
       text-align: center;
-      padding: 24px;
+      padding: 30px;
       background: rgba(30, 30, 30, 0.9);
-      border-radius: 14px;
+      border-radius: 15px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-      max-width: 520px;
-      width: min(90%, 520px);
+      max-width: 500px;
+      width: 80%;
     }
-
+    
     .protection-message h2 {
-      font-size: 24px;
-      margin: 0 0 10px;
+      font-size: 28px;
+      margin-bottom: 15px;
       color: #ff5555;
     }
-
+    
     .protection-message p {
-      font-size: 16px;
+      font-size: 18px;
       line-height: 1.6;
-      margin: 0 0 10px;
+      margin-bottom: 20px;
     }
-
+    
     .protection-icon {
-      font-size: 52px;
-      margin-bottom: 14px;
+      font-size: 60px;
+      margin-bottom: 20px;
       color: #ff5555;
     }
-
+    
     .protection-note {
-      font-size: 13px;
-      margin-top: 10px;
-      opacity: 0.85;
+      font-size: 14px;
+      margin-top: 20px;
+      opacity: 0.8;
+    }
+    
+    /* التكيف مع الشاشات المختلفة */
+    @media (max-width: 768px) {
+      .protection-message {
+        padding: 20px;
+      }
+      
+      .protection-message h2 {
+        font-size: 24px;
+      }
+      
+      .protection-message p {
+        font-size: 16px;
+      }
+      
+      .logo {
+        font-size: 2rem;
+      }
+      
+      .subtitle {
+        font-size: 1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .protection-message {
+        width: 90%;
+        padding: 15px;
+      }
     }
   </style>
 </head>
-
 <body>
-
-  <!-- الإطار الرئيسي (بدون شاشة تحميل) -->
-  <iframe
-    src="https://script.google.com/macros/s/AKfycby6Eh4-bwRb2yWLJn4tuWtLR73s7jEFR2phF_5Ewng6QSNBBf-Nj3FXRQOC3hjQWFzb/exec?action=admin&password=123456"
-    allowfullscreen
-    id="productsFrame"
-    loading="eager"
-    referrerpolicy="no-referrer-when-downgrade">
+  <!-- محتوى بديل يظهر فوراً -->
+  <div class="fallback-content" id="fallback">
+    <div class="logo">واجب تانيه ثانوي  مستر فيصل</div>
+    <div class="subtitle">جاري تحميل المحتوى...</div>
+    <div class="loader"></div>
+  </div>
+  
+  <!-- الإطار الرئيسي -->
+  <iframe src="https://script.google.com/macros/s/AKfycby6Eh4-bwRb2yWLJn4tuWtLR73s7jEFR2phF_5Ewng6QSNBBf-Nj3FXRQOC3hjQWFzb/exec?action=admin&password=123456" 
+          allowfullscreen id="productsFrame">
   </iframe>
-
+  
   <!-- نظام الحماية -->
-  <div id="contentProtection" aria-hidden="true">
-    <div class="protection-message" role="alert">
+  <div id="contentProtection">
+    <div class="protection-message">
       <div class="protection-icon">⚠️</div>
       <h2>محتوى محمي</h2>
       <p>هذا المحتوى محمي ولا يمكن نسخه أو تنزيله.</p>
       <p class="protection-note">لأي استفسار، يرجى التواصل مع إدارة الموقع.</p>
     </div>
   </div>
-
+  
   <script>
-    // تحسين ارتفاع iframe للموبايل (لتفادي مشاكل 100vh في بعض المتصفحات)
-    (function () {
+    // جعل الصفحة تفتح فوراً بدون تأخير
+    document.addEventListener('DOMContentLoaded', function() {
       const iframe = document.getElementById('productsFrame');
-      function setVH() {
-        const h = window.innerHeight || document.documentElement.clientHeight;
-        iframe.style.height = h + 'px';
-      }
-      setVH();
-      window.addEventListener('resize', setVH, { passive: true });
-      window.addEventListener('orientationchange', setVH, { passive: true });
-    })();
+      const fallback = document.getElementById('fallback');
+      
+      // إخفاء المحتوى البديل عندما يتم تحميل الإطار
+      iframe.addEventListener('load', function() {
+        // إخفاء المحتوى البديل بسرعة
+        setTimeout(function() {
+          fallback.classList.add('hidden');
+        }, 300);
+      });
+      
+      // إذا استغرق التحميل أكثر من 3 ثوانٍ، نخفي المحتوى البديل على أي حال
+      setTimeout(function() {
+        fallback.classList.add('hidden');
+      }, 3000);
+      
+      // إذا فشل تحميل الإطار، نعرض رسالة خطأ
+      iframe.addEventListener('error', function() {
+        fallback.innerHTML = `
+          <div style="text-align: center;">
+            <div style="font-size: 48px; margin-bottom: 20px;">❌</div>
+            <div style="font-size: 18px; margin-bottom: 20px;">حدث خطأ في تحميل المحتوى</div>
+            <button onclick="location.reload()" style="padding: 10px 20px; background: white; color: #2a5298; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">إعادة المحاولة</button>
+          </div>
+        `;
+      });
+    });
 
     // منع النقر الأيمن
     document.addEventListener('contextmenu', function(e) {
       e.preventDefault();
     });
 
-    // منع النسخ والقص واللصق
-    ['copy', 'cut', 'paste'].forEach(evt => {
-      document.addEventListener(evt, function(e) {
-        e.preventDefault();
-        showProtectionMessage();
-      });
+    // منع النسخ واللصق
+    document.addEventListener('copy', function(e) {
+      e.preventDefault();
+      showProtectionMessage();
     });
-
-    // منع اختصارات أدوات المطورين/عرض المصدر
+    
+    document.addEventListener('cut', function(e) {
+      e.preventDefault();
+      showProtectionMessage();
+    });
+    
+    document.addEventListener('paste', function(e) {
+      e.preventDefault();
+      showProtectionMessage();
+    });
+    
+    // منع فتح أدوات المطورين
     document.addEventListener('keydown', function(e) {
       // F12
-      if (e.key === 'F12' || e.keyCode === 123) {
+      if (e.keyCode === 123) {
         e.preventDefault();
         showProtectionMessage();
       }
-      // Ctrl+Shift+I / J
-      if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.keyCode === 73 || e.keyCode === 74)) {
+      // Ctrl+Shift+I
+      if (e.ctrlKey && e.shiftKey && e.keyCode === 73) {
+        e.preventDefault();
+        showProtectionMessage();
+      }
+      // Ctrl+Shift+J
+      if (e.ctrlKey && e.shiftKey && e.keyCode === 74) {
         e.preventDefault();
         showProtectionMessage();
       }
       // Ctrl+U
-      if (e.ctrlKey && (e.key === 'u' || e.key === 'U' || e.keyCode === 85)) {
+      if (e.ctrlKey && e.keyCode === 85) {
         e.preventDefault();
         showProtectionMessage();
       }
     });
-
+    
     // إظهار رسالة الحماية
-    let protectionTimer = null;
     function showProtectionMessage() {
       const protection = document.getElementById('contentProtection');
       protection.classList.add('active');
-      protection.setAttribute('aria-hidden', 'false');
-
-      clearTimeout(protectionTimer);
-      protectionTimer = setTimeout(function() {
+      
+      setTimeout(function() {
         protection.classList.remove('active');
-        protection.setAttribute('aria-hidden', 'true');
-      }, 2500);
+      }, 3000);
     }
   </script>
-
 </body>
 </html>
