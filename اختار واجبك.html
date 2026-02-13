@@ -3,890 +3,921 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام الواجبات - MrFaisal</title>
+    <title>نظام الواجبات - مستر فيصل</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
-            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(145deg, #667eea15 0%, #764ba215 100%);
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             padding: 20px;
-            color: #333;
+            color: #1e293b;
         }
         
-        .container {
+        .container { max-width: 1000px; margin: 0 auto; }
+        
+        /* شاشة التحميل */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            max-width: 1200px;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 25px;
-            overflow: hidden;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-            animation: fadeIn 0.8s ease-out;
-        }
-        
-        .header {
-            background: linear-gradient(135deg, #8e2de2, #4a00e0);
-            padding: 50px 30px;
-            color: white;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
-        }
-        
-        .header::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 60%);
-            transform: rotate(30deg);
-        }
-        
-        h1 {
-            font-size: 42px;
-            margin-bottom: 15px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-            position: relative;
-        }
-        
-        .subtitle {
-            font-size: 18px;
-            opacity: 0.9;
-            max-width: 600px;
-            margin: 0 auto;
-            position: relative;
-        }
-        
-        .content {
-            padding: 40px;
-        }
-        
-        .controls {
+            height: 100%;
+            background: white;
             display: flex;
             justify-content: center;
-            margin-bottom: 30px;
+            align-items: center;
+            z-index: 9999;
         }
         
-        .filter-buttons {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
+        .loader {
+            text-align: center;
         }
         
-        .filter-btn {
-            padding: 15px 30px;
-            background: white;
-            border: 2px solid #e0e0e0;
-            border-radius: 50px;
-            font-size: 16px;
+        .spinner {
+            width: 70px;
+            height: 70px;
+            border: 5px solid #f0f0f0;
+            border-top: 5px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 25px;
+        }
+        
+        .loader p {
+            font-size: 22px;
+            color: #334155;
             font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
         
-        .filter-btn:hover {
-            background: #f5f5f5;
-        }
-        
-        .filter-btn.active {
-            background: #8e2de2;
+        /* الهيدر */
+        .header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
-            border-color: #8e2de2;
+            padding: 30px 20px;
+            border-radius: 30px;
+            margin-bottom: 25px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.3);
+            position: relative;
+            overflow: hidden;
         }
         
-        .stats {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 15px;
-            flex-wrap: wrap;
-            gap: 10px;
+        .header h1 {
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 10px;
         }
         
-        .stat-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 15px;
-        }
-        
-        .stat-item i {
-            color: #8e2de2;
+        .header p {
             font-size: 18px;
+            opacity: 0.95;
         }
         
-        .options-grid {
+        /* بطاقات الواجبات */
+        .homework-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .homework-card {
+            background: white;
+            border-radius: 25px;
+            padding: 25px 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            text-align: center;
+        }
+        
+        .homework-card:hover {
+            transform: translateY(-8px);
+            border-color: #667eea;
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.2);
+        }
+        
+        .card-icon {
+            width: 70px;
+            height: 70px;
+            background: #f0f4ff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 30px;
+            color: #667eea;
+        }
+        
+        .homework-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 10px;
+        }
+        
+        .homework-desc {
+            color: #64748b;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        
+        .badge {
+            background: #f0f4ff;
+            color: #667eea;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            display: inline-block;
+        }
+        
+        /* شاشة البيانات */
+        .form-card {
+            background: white;
+            border-radius: 30px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .form-group {
             margin-bottom: 20px;
         }
         
-        .option-card {
-            background: linear-gradient(145deg, #ffffff, #f3f3f3);
-            border-radius: 20px;
-            padding: 30px;
-            text-align: center;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-            transition: all 0.4s ease;
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            position: relative;
-            overflow: hidden;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-        }
-        
-        .option-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 5px;
-            background: linear-gradient(to right, #ff8a00, #da1b60);
-        }
-        
-        .option-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
-        }
-        
-        .option-card:nth-child(2)::before {
-            background: linear-gradient(to right, #00b4db, #0083b0);
-        }
-        
-        .option-card:nth-child(3)::before {
-            background: linear-gradient(to right, #11998e, #38ef7d);
-        }
-        
-        .option-card:nth-child(4)::before {
-            background: linear-gradient(to right, #fc466b, #3f5efb);
-        }
-        
-        .option-card:nth-child(5)::before {
-            background: linear-gradient(to right, #fdbb2d, #22c1c3);
-        }
-        
-        .option-card:nth-child(6)::before {
-            background: linear-gradient(to right, #833ab4, #fd1d1d, #fcb045);
-        }
-        
-        .option-card:nth-child(7)::before {
-            background: linear-gradient(to right, #8e2de2, #4a00e0);
-        }
-        
-        .option-card:nth-child(8)::before {
-            background: linear-gradient(to right, #00b4db, #0083b0);
-        }
-        
-        .option-card:nth-child(9)::before {
-            background: linear-gradient(to right, #11998e, #38ef7d);
-        }
-        
-        .option-card:nth-child(10)::before {
-            background: linear-gradient(to right, #fc466b, #3f5efb);
-        }
-        
-        .option-card:nth-child(11)::before {
-            background: linear-gradient(to right, #fdbb2d, #22c1c3);
-        }
-        
-        .option-card:nth-child(12)::before {
-            background: linear-gradient(to right, #833ab4, #fd1d1d, #fcb045);
-        }
-        
-        .option-icon {
-            font-size: 60px;
-            margin-bottom: 25px;
-            background: linear-gradient(to right, #8e2de2, #4a00e0);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            transition: all 0.3s ease;
-        }
-        
-        .option-card:hover .option-icon {
-            transform: scale(1.1);
-        }
-        
-        .option-card:nth-child(2) .option-icon {
-            background: linear-gradient(to right, #00b4db, #0083b0);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        
-        .option-card:nth-child(3) .option-icon {
-            background: linear-gradient(to right, #11998e, #38ef7d);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        
-        .option-card:nth-child(4) .option-icon {
-            background: linear-gradient(to right, #fc466b, #3f5efb);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        
-        .option-card:nth-child(5) .option-icon {
-            background: linear-gradient(to right, #fdbb2d, #22c1c3);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        
-        .option-card:nth-child(6) .option-icon {
-            background: linear-gradient(to right, #833ab4, #fd1d1d, #fcb045);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        
-        .option-card:nth-child(7) .option-icon {
-            background: linear-gradient(to right, #8e2de2, #4a00e0);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        
-        .option-card:nth-child(8) .option-icon {
-            background: linear-gradient(to right, #00b4db, #0083b0);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        
-        .option-card:nth-child(9) .option-icon {
-            background: linear-gradient(to right, #11998e, #38ef7d);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        
-        .option-card:nth-child(10) .option-icon {
-            background: linear-gradient(to right, #fc466b, #3f5efb);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        
-        .option-card:nth-child(11) .option-icon {
-            background: linear-gradient(to right, #fdbb2d, #22c1c3);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        
-        .option-card:nth-child(12) .option-icon {
-            background: linear-gradient(to right, #833ab4, #fd1d1d, #fcb045);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        
-        .option-title {
-            font-size: 26px;
-            margin-bottom: 15px;
-            color: #333;
-            transition: all 0.3s ease;
-        }
-        
-        .option-card:hover .option-title {
-            background: linear-gradient(to right, #8e2de2, #4a00e0);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        
-        .option-card:nth-child(2):hover .option-title {
-            background: linear-gradient(to right, #00b4db, #0083b0);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        
-        .option-card:nth-child(3):hover .option-title {
-            background: linear-gradient(to right, #11998e, #38ef7d);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        
-        .option-card:nth-child(4):hover .option-title {
-            background: linear-gradient(to right, #fc466b, #3f5efb);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        
-        .option-card:nth-child(5):hover .option-title {
-            background: linear-gradient(to right, #fdbb2d, #22c1c3);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        
-        .option-card:nth-child(6):hover .option-title {
-            background: linear-gradient(to right, #833ab4, #fd1d1d, #fcb045);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        
-        .option-card:nth-child(7):hover .option-title {
-            background: linear-gradient(to right, #8e2de2, #4a00e0);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        
-        .option-card:nth-child(8):hover .option-title {
-            background: linear-gradient(to right, #00b4db, #0083b0);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        
-        .option-card:nth-child(9):hover .option-title {
-            background: linear-gradient(to right, #11998e, #38ef7d);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        
-        .option-card:nth-child(10):hover .option-title {
-            background: linear-gradient(to right, #fc466b, #3f5efb);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        
-        .option-card:nth-child(11):hover .option-title {
-            background: linear-gradient(to right, #fdbb2d, #22c1c3);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        
-        .option-card:nth-child(12):hover .option-title {
-            background: linear-gradient(to right, #833ab4, #fd1d1d, #fcb045);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        
-        .option-desc {
-            color: #666;
-            margin-bottom: 25px;
-            font-size: 16px;
-            line-height: 1.6;
-            flex-grow: 1;
-        }
-        
-        .option-meta {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 15px;
-            font-size: 14px;
-            color: #888;
-        }
-        
-        .latest-badge {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            background: linear-gradient(to right, #ff8a00, #da1b60);
-            color: white;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
-            box-shadow: 0 3px 10px rgba(255, 138, 0, 0.3);
-        }
-        
-        .option-btn {
-            display: inline-block;
-            padding: 14px 35px;
-            background: linear-gradient(to right, #8e2de2, #4a00e0);
-            color: white;
-            border: none;
-            border-radius: 50px;
-            font-weight: bold;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(142, 45, 226, 0.3);
-        }
-        
-        .option-card:nth-child(2) .option-btn {
-            background: linear-gradient(to right, #00b4db, #0083b0);
-            box-shadow: 0 5px 15px rgba(0, 180, 219, 0.3);
-        }
-        
-        .option-card:nth-child(3) .option-btn {
-            background: linear-gradient(to right, #11998e, #38ef7d);
-            box-shadow: 0 5px 15px rgba(17, 153, 142, 0.3);
-        }
-        
-        .option-card:nth-child(4) .option-btn {
-            background: linear-gradient(to right, #fc466b, #3f5efb);
-            box-shadow: 0 5px 15px rgba(252, 70, 107, 0.3);
-        }
-        
-        .option-card:nth-child(5) .option-btn {
-            background: linear-gradient(to right, #fdbb2d, #22c1c3);
-            box-shadow: 0 5px 15px rgba(253, 187, 45, 0.3);
-        }
-        
-        .option-card:nth-child(6) .option-btn {
-            background: linear-gradient(to right, #833ab4, #fd1d1d, #fcb045);
-            box-shadow: 0 5px 15px rgba(131, 58, 180, 0.3);
-        }
-        
-        .option-card:nth-child(7) .option-btn {
-            background: linear-gradient(to right, #8e2de2, #4a00e0);
-            box-shadow: 0 5px 15px rgba(142, 45, 226, 0.3);
-        }
-        
-        .option-card:nth-child(8) .option-btn {
-            background: linear-gradient(to right, #00b4db, #0083b0);
-            box-shadow: 0 5px 15px rgba(0, 180, 219, 0.3);
-        }
-        
-        .option-card:nth-child(9) .option-btn {
-            background: linear-gradient(to right, #11998e, #38ef7d);
-            box-shadow: 0 5px 15px rgba(17, 153, 142, 0.3);
-        }
-        
-        .option-card:nth-child(10) .option-btn {
-            background: linear-gradient(to right, #fc466b, #3f5efb);
-            box-shadow: 0 5px 15px rgba(252, 70, 107, 0.3);
-        }
-        
-        .option-card:nth-child(11) .option-btn {
-            background: linear-gradient(to right, #fdbb2d, #22c1c3);
-            box-shadow: 0 5px 15px rgba(253, 187, 45, 0.3);
-        }
-        
-        .option-card:nth-child(12) .option-btn {
-            background: linear-gradient(to right, #833ab4, #fd1d1d, #fcb045);
-            box-shadow: 0 5px 15px rgba(131, 58, 180, 0.3);
-        }
-        
-        .option-btn:hover {
-            transform: scale(1.08);
-            box-shadow: 0 8px 20px rgba(142, 45, 226, 0.4);
-        }
-        
-        .option-card:nth-child(2) .option-btn:hover {
-            box-shadow: 0 8px 20px rgba(0, 180, 219, 0.4);
-        }
-        
-        .option-card:nth-child(3) .option-btn:hover {
-            box-shadow: 0 8px 20px rgba(17, 153, 142, 0.4);
-        }
-        
-        .option-card:nth-child(4) .option-btn:hover {
-            box-shadow: 0 8px 20px rgba(252, 70, 107, 0.4);
-        }
-        
-        .option-card:nth-child(5) .option-btn:hover {
-            box-shadow: 0 8px 20px rgba(253, 187, 45, 0.4);
-        }
-        
-        .option-card:nth-child(6) .option-btn:hover {
-            box-shadow: 0 8px 20px rgba(131, 58, 180, 0.4);
-        }
-        
-        .option-card:nth-child(7) .option-btn:hover {
-            box-shadow: 0 8px 20px rgba(142, 45, 226, 0.4);
-        }
-        
-        .option-card:nth-child(8) .option-btn:hover {
-            box-shadow: 0 8px 20px rgba(0, 180, 219, 0.4);
-        }
-        
-        .option-card:nth-child(9) .option-btn:hover {
-            box-shadow: 0 8px 20px rgba(17, 153, 142, 0.4);
-        }
-        
-        .option-card:nth-child(10) .option-btn:hover {
-            box-shadow: 0 8px 20px rgba(252, 70, 107, 0.4);
-        }
-        
-        .option-card:nth-child(11) .option-btn:hover {
-            box-shadow: 0 8px 20px rgba(253, 187, 45, 0.4);
-        }
-        
-        .option-card:nth-child(12) .option-btn:hover {
-            box-shadow: 0 8px 20px rgba(131, 58, 180, 0.4);
-        }
-        
-        .footer {
-            padding: 25px;
-            background: linear-gradient(to right, #2c0365, #1a023f);
-            color: white;
-            text-align: center;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .footer p {
-            margin: 5px 0;
-            font-size: 15px;
-        }
-        
-        .decoration {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            z-index: -1;
-            overflow: hidden;
-        }
-        
-        .decoration span {
-            position: absolute;
+        .form-group label {
             display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #334155;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 15px 18px;
+            border: 2px solid #e2e8f0;
+            border-radius: 15px;
+            font-size: 16px;
+            font-family: 'Cairo', sans-serif;
+            transition: all 0.3s;
+        }
+        
+        .form-group input:focus {
+            border-color: #667eea;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .privacy {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 20px 0;
+            padding: 15px;
+            background: #f8fafc;
+            border-radius: 15px;
+        }
+        
+        .privacy input {
             width: 20px;
             height: 20px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            animation: float 15s linear infinite;
         }
         
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        .btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 15px;
+            font-size: 18px;
+            font-weight: 700;
+            font-family: 'Cairo', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
         
-        @keyframes float {
-            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { transform: translateY(-100px) rotate(720deg); opacity: 0; }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
         }
         
-        .progress-bar {
-            height: 5px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 10px;
-            margin: 20px auto;
-            width: 80%;
-            overflow: hidden;
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #334155;
+            margin-top: 10px;
+        }
+        
+        /* شاشة الأسئلة */
+        .questions-container {
+            background: white;
+            border-radius: 30px;
+            padding: 30px;
         }
         
         .progress {
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 10px;
+            margin: 15px 0 25px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
             height: 100%;
-            background: linear-gradient(to right, #ff8a00, #da1b60);
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 10px;
+            transition: width 0.4s;
             width: 0%;
-            animation: progress 2s ease-in-out forwards;
         }
         
-        @keyframes progress {
-            to { width: 100%; }
-        }
-        
-        .pagination {
+        .question-header {
             display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            color: #64748b;
+        }
+        
+        .question-card {
+            display: none;
+            margin: 20px 0;
+        }
+        
+        .question-card.active {
+            display: block;
+            animation: slide 0.3s;
+        }
+        
+        .question-text {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 25px;
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .option {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 15px;
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .option:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+        
+        .option input {
+            width: 20px;
+            height: 20px;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+        
+        .nav-btn {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 15px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
             justify-content: center;
-            margin-top: 30px;
             gap: 10px;
         }
         
-        .page-btn {
-            padding: 10px 15px;
-            background: white;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .page-btn:hover {
-            background: #f5f5f5;
-        }
-        
-        .page-btn.active {
-            background: #8e2de2;
+        .nav-btn.next {
+            background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
-            border-color: #8e2de2;
+        }
+        
+        .nav-btn.prev {
+            background: #f1f5f9;
+            color: #334155;
+        }
+        
+        .completed-msg {
+            text-align: center;
+            padding: 30px;
+            background: #e8f5e9;
+            border-radius: 20px;
+            margin: 20px 0;
+            color: #2e7d32;
+        }
+        
+        /* شاشة النتيجة */
+        .result-card {
+            background: white;
+            border-radius: 30px;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .qr-container {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 20px;
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+        }
+        
+        .student-details {
+            background: #f0f4ff;
+            padding: 20px;
+            border-radius: 20px;
+            margin: 20px 0;
+            text-align: right;
+            line-height: 2;
+        }
+        
+        .score-badge {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 50px;
+            font-size: 24px;
+            font-weight: 700;
+            margin: 15px 0;
+        }
+        
+        .advice {
+            font-size: 22px;
+            font-weight: 700;
+            color: #667eea;
+            margin: 20px 0;
+            padding: 20px;
+            background: #f0f4ff;
+            border-radius: 20px;
+        }
+        
+        /* جدول المراجعة */
+        .review-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            font-size: 15px;
+            text-align: right;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .review-table th {
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+            padding: 15px;
+        }
+        
+        .review-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .review-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .review-table tr:hover {
+            background: #f8fafc;
+        }
+        
+        .correct-answer {
+            color: #10b981;
+            font-weight: 700;
+        }
+        
+        .wrong-answer {
+            color: #ef4444;
+            font-weight: 700;
+        }
+        
+        .icon-correct {
+            color: #10b981;
+            font-size: 18px;
+            margin-left: 5px;
+        }
+        
+        .icon-wrong {
+            color: #ef4444;
+            font-size: 18px;
+            margin-left: 5px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes slide {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
         }
         
         @media (max-width: 768px) {
-            h1 {
-                font-size: 32px;
-            }
-            
-            .content {
-                padding: 25px;
-            }
-            
-            .options-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .controls {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .filter-buttons {
-                justify-content: center;
-            }
-            
-            .stats {
-                flex-direction: column;
-                align-items: flex-start;
-            }
+            .header h1 { font-size: 28px; }
+            .homework-grid { grid-template-columns: 1fr; }
+            .review-table { font-size: 13px; }
+            .review-table th, .review-table td { padding: 8px; }
         }
     </style>
 </head>
 <body>
-    <div class="decoration">
-        <span style="left: 5%; animation-delay: 0s;"></span>
-        <span style="left: 15%; animation-delay: 2s;"></span>
-        <span style="left: 25%; animation-delay: 4s;"></span>
-        <span style="left: 35%; animation-delay: 6s;"></span>
-        <span style="left: 45%; animation-delay: 8s;"></span>
-        <span style="left: 55%; animation-delay: 10s;"></span>
-        <span style="left: 65%; animation-delay: 12s;"></span>
-        <span style="left: 75%; animation-delay: 14s;"></span>
-        <span style="left: 85%; animation-delay: 16s;"></span>
-        <span style="left: 95%; animation-delay: 18s;"></span>
-    </div>
 
-    <div class="container">
-        <div class="header">
-            <h1><i class="fas fa-tasks"></i> نظام الواجبات</h1>
-            <p class="subtitle">اختر الواجب الذي ترغب في الاطلاع عليه</p>
-            <div class="progress-bar">
-                <div class="progress"></div>
-            </div>
-        </div>
-        
-        <div class="content">
-            <div class="controls">
-                <div class="filter-buttons">
-                    <button class="filter-btn active" data-filter="all">
-                        <i class="fas fa-layer-group"></i> الكل
-                    </button>
-                    <button class="filter-btn" data-filter="recent">
-                        <i class="fas fa-star"></i> الأحدث
-                    </button>
-                </div>
-            </div>
-            
-            <div class="stats">
-                <div class="stat-item">
-                    <i class="fas fa-book"></i>
-                    <span>إجمالي المحاضرات: <span id="totalLectures">11</span></span>
-                </div>
-                <div class="stat-item">
-                    <i class="fas fa-check-circle"></i>
-                    <span>أحدث محاضرة: <span id="latestLecture">المحاضرة  الثاني عشر</span></span>
-                </div>
-            </div>
-            
-            <div class="options-grid" id="lecturesGrid">
-                <!-- سيتم إضافة المحاضرات ديناميكياً -->
-            </div>
-            
-            <div class="pagination" id="pagination">
-                <!-- سيتم إضافة أزرار الترقيم ديناميكياً -->
-            </div>
-        </div>
-        
-        <div class="footer">
-            <p>جميع الحقوق محفوظة &copy; 2026 - MrFaisal</p>
+<div id="app">
+    <!-- شاشة التحميل -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loader">
+            <div class="spinner"></div>
+            <p>جاري تحميل الواجبات...</p>
         </div>
     </div>
 
-    <script>
-        // بيانات المحاضرات
-        const lectures = [
-           
+    <!-- المحتوى الرئيسي -->
+    <div id="mainContent" style="display: none;">
+        <div class="container">
+            <!-- الهيدر -->
+            <div class="header">
+                <h1><i class="fas fa-tasks"></i> نظام الواجبات</h1>
+                <p>أهلاً بك يا بطل، اختر واجبك وابدأ الحل</p>
+            </div>
 
-{ id: 14, title: "واجب المحاضرة الثاني والعشرون", desc: "", pages: "", url: "https://www.mrfaisal.net/18tree", icon: "file-alt" },  
-  { id: 13, title: "واجب المحاضرة الثالث والعشرون", desc: "", pages: "", url: "https://www.mrfaisal.net/19tree", icon: "file-alt" },
-{ id: 15, title: "واجب المحاضرة الرابع والعشرون", desc: "", pages: "", url: "https://www.mrfaisal.net/18tree", icon: "file-alt" }
-        ];
-        
+            <!-- قائمة الواجبات -->
+            <div id="homeworkListScreen">
+                <div class="homework-grid" id="homeworkGrid"></div>
+            </div>
 
-        // إعدادات التصفح
-        let currentPage = 1;
-        const lecturesPerPage = 6;
-        let filteredLectures = [...lectures];
-        let currentFilter = 'all';
+            <!-- شاشة إدخال البيانات -->
+            <div id="formScreen" style="display: none;">
+                <div class="form-card">
+                    <h2 style="text-align: center; margin-bottom: 25px;">أدخل بياناتك</h2>
+                    
+                    <div id="selectedHomeworkInfo" style="background: #f0f4ff; padding: 15px; border-radius: 15px; margin-bottom: 25px; text-align: center;">
+                        <p id="selectedHomeworkTitle" style="font-weight: 700;"></p>
+                    </div>
 
-        // إنشاء فقاعات عشوائية للخلفية
-        function createBubbles() {
-            const decoration = document.querySelector('.decoration');
-            for (let i = 0; i < 15; i++) {
-                const bubble = document.createElement('span');
-                bubble.style.left = Math.random() * 100 + '%';
-                bubble.style.animationDelay = Math.random() * 20 + 's';
-                bubble.style.width = (Math.random() * 15 + 5) + 'px';
-                bubble.style.height = bubble.style.width;
-                decoration.appendChild(bubble);
+                    <div class="form-group">
+                        <label>الاسم ثلاثي</label>
+                        <input type="text" id="studentName" placeholder="مثال: أحمد محمد علي">
+                    </div>
+
+                    <div class="form-group">
+                        <label>رقم الموبايل</label>
+                        <input type="text" id="studentMobile" placeholder="مثال: 01234567890">
+                    </div>
+
+                    <div class="form-group" id="centerCodeGroup" style="display: none;">
+                        <label>كود السنتر</label>
+                        <input type="text" id="centerCode" placeholder="أدخل كود السنتر">
+                    </div>
+
+                    <div class="privacy">
+                        <input type="checkbox" id="privacyCheck">
+                        <label>أوافق على سياسة الخصوصية</label>
+                    </div>
+
+                    <button class="btn btn-primary" onclick="startHomework()">
+                        <i class="fas fa-play"></i> ابدأ الواجب
+                    </button>
+                    <button class="btn btn-secondary" onclick="backToList()">
+                        <i class="fas fa-arrow-right"></i> رجوع
+                    </button>
+                </div>
+            </div>
+
+            <!-- شاشة الأسئلة -->
+            <div id="questionsScreen" style="display: none;">
+                <div class="questions-container">
+                    <div class="question-header">
+                        <span id="currentQuestion">السؤال 1</span>
+                        <span id="progressPercent">0%</span>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar" id="progressBar" style="width: 0%;"></div>
+                    </div>
+
+                    <div id="questionsContainer"></div>
+
+                    <div id="completedMessage" style="display: none;" class="completed-msg">
+                        <i class="fas fa-trophy" style="font-size: 40px;"></i>
+                        <h3 style="margin: 15px 0;">مبروك! خلصت كل الأسئلة</h3>
+                        <p>دلوقتي تقدر تسلم واجبك</p>
+                    </div>
+
+                    <div class="nav-buttons">
+                        <button class="nav-btn prev" id="prevBtn" onclick="prevQuestion()">
+                            <i class="fas fa-arrow-right"></i> السابق
+                        </button>
+                        <button class="nav-btn next" id="nextBtn" onclick="nextQuestion()">
+                            التالي <i class="fas fa-arrow-left"></i>
+                        </button>
+                    </div>
+
+                    <div id="submitButtons" style="display: none; margin-top: 20px;">
+                        <button class="btn btn-primary" id="submitBtn" onclick="submitHomework()">
+                            <i class="fas fa-check-circle"></i> سلم الواجب
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- شاشة النتيجة -->
+            <div id="resultScreen" style="display: none;">
+                <div class="result-card">
+                    <i class="fas fa-check-circle" style="font-size: 60px; color: #10b981;"></i>
+                    <h2 style="margin: 15px 0;">تم التصحيح بنجاح!</h2>
+                    
+                    <div class="qr-container" id="qrContainer"></div>
+                    
+                    <div class="student-details" id="studentDetails"></div>
+                    
+                    <div class="score-badge" id="scoreDisplay"></div>
+                    
+                    <!-- جدول مراجعة الإجابات -->
+                    <div style="margin: 30px 0; text-align: right;">
+                        <h3 style="margin-bottom: 15px; color: #334155;">
+                            <i class="fas fa-clipboard-check" style="margin-left: 10px;"></i>
+                            مراجعة إجاباتك:
+                        </h3>
+                        <div style="overflow-x: auto;">
+                            <table class="review-table" id="reviewTable">
+                                <thead>
+                                    <tr>
+                                        <th>السؤال</th>
+                                        <th>إجابتك</th>
+                                        <th>الإجابة الصحيحة</th>
+                                        <th>النتيجة</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="reviewTableBody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div class="advice" id="adviceText"></div>
+                    
+                    <button class="btn btn-primary" onclick="resetApp()">
+                        <i class="fas fa-home"></i> العودة للقائمة
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/kjua@0.1.1/dist/kjua.min.js"></script>
+<script>
+    // رابط التطبيق
+    const APP_URL = "https://script.google.com/macros/s/AKfycbxGgJ4WKkU-XzCyGlgiM72zxlgK57PPS4Q1LTMnrpF1P8wN1tlaVv-Ym6UZRCPjGyJULg/exec";
+    
+    // المتغيرات العامة
+    let homeworkList = [];
+    let currentHomework = null;
+    let homeworkQuestions = [];
+    let studentType = 'online';
+    let currentQuestionIndex = 0;
+    let userAnswers = {};
+
+    // بداية التحميل
+    window.onload = function() {
+        loadHomeworkList();
+    };
+
+    // تحميل قائمة الواجبات
+    async function loadHomeworkList() {
+        try {
+            const response = await fetch(`${APP_URL}?action=getHomeworkList&_=${Date.now()}`);
+            const data = await response.json();
+            
+            if (Array.isArray(data)) {
+                homeworkList = data.filter(hw => hw && hw.id);
+            } else {
+                // بيانات تجريبية إذا لم توجد بيانات
+                homeworkList = [
+                    { id: 'DEMO_1', title: 'واجب تجريبي', description: 'هذا واجب تجريبي', questionsCount: 3 }
+                ];
             }
+            
+            displayHomeworkList();
+        } catch (error) {
+            console.error('خطأ في التحميل:', error);
+            // بيانات تجريبية في حالة الخطأ
+            homeworkList = [
+                { id: 'DEMO_1', title: 'واجب تجريبي', description: 'هذا واجب تجريبي', questionsCount: 3 }
+            ];
+            displayHomeworkList();
+        }
+    }
+
+    // عرض قائمة الواجبات
+    function displayHomeworkList() {
+        const grid = document.getElementById('homeworkGrid');
+        
+        if (!homeworkList || homeworkList.length === 0) {
+            grid.innerHTML = `
+                <div style="grid-column:1/-1; text-align:center; padding:40px; background:white; border-radius:20px;">
+                    <i class="fas fa-folder-open" style="font-size:50px; color:#94a3b8;"></i>
+                    <p style="margin-top:15px; color:#64748b;">لا توجد واجبات متاحة</p>
+                </div>
+            `;
+        } else {
+            grid.innerHTML = homeworkList.map(hw => `
+                <div class="homework-card" onclick="selectHomework('${hw.id}')">
+                    <div class="card-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <div class="homework-title">${hw.title || 'واجب'}</div>
+                    <div class="homework-desc">${hw.description || 'لا يوجد وصف'}</div>
+                    <span class="badge"><i class="fas fa-question-circle"></i> ${hw.questionsCount || 0} أسئلة</span>
+                </div>
+            `).join('');
+        }
+        
+        document.getElementById('loadingScreen').style.display = 'none';
+        document.getElementById('mainContent').style.display = 'block';
+    }
+
+    // اختيار واجب
+    function selectHomework(homeworkId) {
+        currentHomework = homeworkList.find(h => h.id === homeworkId);
+        if (currentHomework) {
+            document.getElementById('selectedHomeworkTitle').innerText = currentHomework.title || 'الواجب';
+            document.getElementById('formScreen').style.display = 'block';
+            document.getElementById('homeworkListScreen').style.display = 'none';
+        }
+    }
+
+    // الرجوع للقائمة
+    function backToList() {
+        document.getElementById('formScreen').style.display = 'none';
+        document.getElementById('homeworkListScreen').style.display = 'block';
+    }
+
+    // بدء الواجب
+    async function startHomework() {
+        const name = document.getElementById('studentName').value.trim();
+        const mobile = document.getElementById('studentMobile').value.trim();
+        const privacy = document.getElementById('privacyCheck').checked;
+
+        if (!name || !mobile) {
+            alert('❌ الرجاء إدخال الاسم ورقم الموبايل');
+            return;
+        }
+        if (!privacy) {
+            alert('❌ يجب الموافقة على سياسة الخصوصية');
+            return;
+        }
+        if (!currentHomework) {
+            alert('❌ لم يتم اختيار واجب');
+            backToList();
+            return;
         }
 
-        // عرض المحاضرات
-        function displayLectures(lecturesToShow, page = 1) {
-            const grid = document.getElementById('lecturesGrid');
-            grid.innerHTML = '';
+        // إظهار شاشة التحميل
+        document.getElementById('loadingScreen').style.display = 'flex';
+        document.getElementById('mainContent').style.display = 'none';
+
+        try {
+            const response = await fetch(`${APP_URL}?action=getHomework&id=${currentHomework.id}&_=${Date.now()}`);
+            const data = await response.json();
             
-            const startIndex = (page - 1) * lecturesPerPage;
-            const endIndex = startIndex + lecturesPerPage;
-            const paginatedLectures = lecturesToShow.slice(startIndex, endIndex);
-            
-            if (paginatedLectures.length === 0) {
-                grid.innerHTML = '<p style="text-align: center; grid-column: 1/-1; padding: 40px; color: #666;">لا توجد محاضرات تطابق معايير البحث</p>';
-                return;
+            if (Array.isArray(data) && data.length > 0) {
+                homeworkQuestions = data;
+            } else {
+                // أسئلة تجريبية
+                homeworkQuestions = [
+                    { number: 1, text: "ما عاصمة مصر؟", correct: "القاهرة", options: ["القاهرة", "الإسكندرية", "الجيزة", "الأقصر"] },
+                    { number: 2, text: "كم عدد حروف اللغة العربية؟", correct: "28", options: ["26", "28", "30", "32"] },
+                    { number: 3, text: "من هو مؤسس الدولة الأموية؟", correct: "معاوية بن أبي سفيان", options: ["عمر بن الخطاب", "علي بن أبي طالب", "معاوية بن أبي سفيان", "أبو بكر الصديق"] }
+                ];
             }
             
-            paginatedLectures.forEach(lecture => {
-                const card = document.createElement('div');
-                card.className = 'option-card';
-                card.onclick = () => window.location.href = lecture.url;
-                
-                // إضافة علامة "أحدث واجب" إذا كانت هذه هي آخر محاضرة
-                const isLatest = lecture.id === lectures.length;
-                const badge = isLatest ? '<div class="latest-badge">أحدث واجب</div>' : '';
-                
-                card.innerHTML = `
-                    ${badge}
-                    <div class="option-icon">
-                        <i class="fas fa-${lecture.icon}"></i>
-                    </div>
-                    <h2 class="option-title">${lecture.title}</h2>
-                    <p class="option-desc">${lecture.desc}</p>
-                    <div class="option-meta">
-                        <span><i class="far fa-file"></i> ${lecture.pages}</span>
-                        <span><i class="far fa-calendar"></i> ${lecture.id}</span>
-                    </div>
-                    <button class="option-btn">عرض الواجب</button>
+            currentQuestionIndex = 0;
+            userAnswers = {};
+            displayQuestions();
+            showQuestion(0);
+            updateProgress();
+            
+            document.getElementById('loadingScreen').style.display = 'none';
+            document.getElementById('mainContent').style.display = 'block';
+            document.getElementById('formScreen').style.display = 'none';
+            document.getElementById('questionsScreen').style.display = 'block';
+            
+        } catch (error) {
+            console.error('خطأ:', error);
+            alert('حدث خطأ في تحميل الأسئلة، استخدام أسئلة تجريبية');
+            
+            homeworkQuestions = [
+                { number: 1, text: "ما عاصمة مصر؟", correct: "القاهرة", options: ["القاهرة", "الإسكندرية", "الجيزة", "الأقصر"] },
+                { number: 2, text: "كم عدد حروف اللغة العربية؟", correct: "28", options: ["26", "28", "30", "32"] },
+                { number: 3, text: "من هو مؤسس الدولة الأموية؟", correct: "معاوية بن أبي سفيان", options: ["عمر بن الخطاب", "علي بن أبي طالب", "معاوية بن أبي سفيان", "أبو بكر الصديق"] }
+            ];
+            
+            currentQuestionIndex = 0;
+            userAnswers = {};
+            displayQuestions();
+            showQuestion(0);
+            updateProgress();
+            
+            document.getElementById('loadingScreen').style.display = 'none';
+            document.getElementById('mainContent').style.display = 'block';
+            document.getElementById('formScreen').style.display = 'none';
+            document.getElementById('questionsScreen').style.display = 'block';
+        }
+    }
+
+    // عرض الأسئلة
+    function displayQuestions() {
+        const container = document.getElementById('questionsContainer');
+        container.innerHTML = '';
+        
+        homeworkQuestions.forEach((q, idx) => {
+            const div = document.createElement('div');
+            div.className = 'question-card';
+            div.id = `q-${idx}`;
+            
+            let html = `<div class="question-text">${idx + 1}. ${q.text || 'السؤال'}</div>`;
+            html += '<div class="options">';
+            
+            const options = q.options || ['ا', 'ب', 'ج', 'د'];
+            options.forEach((opt, optIdx) => {
+                html += `
+                    <label class="option">
+                        <input type="radio" name="q${idx}" value="${opt}" onchange="saveAnswer(${idx}, '${opt}')">
+                        <span>${opt}</span>
+                    </label>
                 `;
-                
-                grid.appendChild(card);
             });
-        }
+            
+            html += '</div>';
+            div.innerHTML = html;
+            container.appendChild(div);
+        });
+    }
 
-        // إنشاء أزرار الترقيم
-        function setupPagination(lecturesToShow, page) {
-            const pagination = document.getElementById('pagination');
-            pagination.innerHTML = '';
-            
-            const pageCount = Math.ceil(lecturesToShow.length / lecturesPerPage);
-            
-            if (pageCount <= 1) return;
-            
-            // زر الصفحة السابقة
-            if (page > 1) {
-                const prevBtn = document.createElement('button');
-                prevBtn.className = 'page-btn';
-                prevBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
-                prevBtn.addEventListener('click', () => {
-                    currentPage = page - 1;
-                    displayLectures(filteredLectures, currentPage);
-                    setupPagination(filteredLectures, currentPage);
-                });
-                pagination.appendChild(prevBtn);
-            }
-            
-            // أزرار الصفحات
-            for (let i = 1; i <= pageCount; i++) {
-                const pageBtn = document.createElement('button');
-                pageBtn.className = 'page-btn';
-                if (i === page) pageBtn.classList.add('active');
-                pageBtn.textContent = i;
-                pageBtn.addEventListener('click', () => {
-                    currentPage = i;
-                    displayLectures(filteredLectures, currentPage);
-                    setupPagination(filteredLectures, currentPage);
-                });
-                pagination.appendChild(pageBtn);
-            }
-            
-            // زر الصفحة التالية
-            if (page < pageCount) {
-                const nextBtn = document.createElement('button');
-                nextBtn.className = 'page-btn';
-                nextBtn.innerHTML = '<i class="fas fa-chevron-left"></i>';
-                nextBtn.addEventListener('click', () => {
-                    currentPage = page + 1;
-                    displayLectures(filteredLectures, currentPage);
-                    setupPagination(filteredLectures, currentPage);
-                });
-                pagination.appendChild(nextBtn);
-            }
-        }
+    // حفظ الإجابة
+    function saveAnswer(qIdx, answer) {
+        userAnswers[qIdx] = answer;
+    }
 
-        // تطبيق الفلتر
-        function applyFilter(filter) {
-            currentFilter = filter;
-            
-            let tempLectures = [...lectures];
-            
-            if (filter === 'recent') {
-                // عرض آخر محاضرة فقط
-                const latestLecture = lectures.reduce((prev, current) => 
-                    (prev.id > current.id) ? prev : current
-                );
-                tempLectures = [latestLecture];
-            }
-            
-            filteredLectures = tempLectures;
-            currentPage = 1;
-            displayLectures(filteredLectures, currentPage);
-            setupPagination(filteredLectures, currentPage);
+    // عرض سؤال
+    function showQuestion(idx) {
+        document.querySelectorAll('.question-card').forEach(q => q.classList.remove('active'));
+        document.getElementById(`q-${idx}`).classList.add('active');
+        
+        document.getElementById('prevBtn').style.visibility = idx === 0 ? 'hidden' : 'visible';
+        
+        if (idx === homeworkQuestions.length - 1) {
+            document.getElementById('nextBtn').innerHTML = 'إنهاء <i class="fas fa-check"></i>';
+        } else {
+            document.getElementById('nextBtn').innerHTML = 'التالي <i class="fas fa-arrow-left"></i>';
         }
+    }
 
-        // تهيئة الصفحة
-        function initPage() {
-            createBubbles();
-            displayLectures(lectures, currentPage);
-            setupPagination(lectures, currentPage);
+    // التالي
+    function nextQuestion() {
+        if (currentQuestionIndex < homeworkQuestions.length - 1) {
+            currentQuestionIndex++;
+            showQuestion(currentQuestionIndex);
+            updateProgress();
+        } else {
+            document.getElementById('nextBtn').style.display = 'none';
+            document.getElementById('prevBtn').style.display = 'none';
+            document.getElementById('completedMessage').style.display = 'block';
+            document.getElementById('submitButtons').style.display = 'block';
+        }
+    }
+
+    // السابق
+    function prevQuestion() {
+        if (currentQuestionIndex > 0) {
+            currentQuestionIndex--;
+            showQuestion(currentQuestionIndex);
+            updateProgress();
+            document.getElementById('nextBtn').style.display = 'block';
+            document.getElementById('prevBtn').style.display = 'block';
+            document.getElementById('completedMessage').style.display = 'none';
+            document.getElementById('submitButtons').style.display = 'none';
+        }
+    }
+
+    // تحديث التقدم
+    function updateProgress() {
+        const progress = ((currentQuestionIndex + 1) / homeworkQuestions.length) * 100;
+        document.getElementById('progressBar').style.width = `${progress}%`;
+        document.getElementById('currentQuestion').innerHTML = `السؤال ${currentQuestionIndex + 1} من ${homeworkQuestions.length}`;
+        document.getElementById('progressPercent').innerHTML = `${Math.round(progress)}%`;
+    }
+
+    // تسليم الواجب
+    function submitHomework() {
+        const name = document.getElementById('studentName').value;
+        const mobile = document.getElementById('studentMobile').value;
+        
+        let score = 0;
+        const reviewRows = [];
+        
+        homeworkQuestions.forEach((q, idx) => {
+            const userAnswer = userAnswers[idx] || 'لم يتم الإجابة';
+            const isCorrect = userAnswer === q.correct;
+            if (isCorrect) score++;
             
-            // تحديث الإحصائيات
-            document.getElementById('totalLectures').textContent = lectures.length;
-            document.getElementById('latestLecture').textContent = lectures[lectures.length - 1].title;
-            
-            // إعداد الفلاتر
-            const filterButtons = document.querySelectorAll('.filter-btn');
-            filterButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    filterButtons.forEach(btn => btn.classList.remove('active'));
-                    button.classList.add('active');
-                    applyFilter(button.dataset.filter);
-                });
+            reviewRows.push({
+                question: q.text,
+                userAnswer: userAnswer,
+                correctAnswer: q.correct,
+                isCorrect: isCorrect
             });
+        });
+        
+        const total = homeworkQuestions.length;
+        const percentage = Math.round((score / total) * 100);
+        
+        // عرض جدول المراجعة
+        const tableBody = document.getElementById('reviewTableBody');
+        tableBody.innerHTML = reviewRows.map(row => `
+            <tr>
+                <td>${row.question}</td>
+                <td class="${row.isCorrect ? 'correct-answer' : 'wrong-answer'}">${row.userAnswer}</td>
+                <td class="correct-answer">${row.correctAnswer}</td>
+                <td>
+                    ${row.isCorrect ? 
+                        '<span class="icon-correct"><i class="fas fa-check-circle"></i> صح</span>' : 
+                        '<span class="icon-wrong"><i class="fas fa-times-circle"></i> خطأ</span>'
+                    }
+                </td>
+            </tr>
+        `).join('');
+        
+        // إنشاء QR
+        const qrData = `الواجب: ${currentHomework?.title || 'الواجب'}\nالطالب: ${name}\nالدرجة: ${score}/${total} (${percentage}%)`;
+        
+        document.getElementById('qrContainer').innerHTML = '';
+        try {
+            const qr = kjua({ text: qrData, size: 200, render: 'canvas' });
+            document.getElementById('qrContainer').appendChild(qr);
+        } catch (e) {
+            document.getElementById('qrContainer').innerHTML = '<p>حدث خطأ</p>';
         }
+        
+        document.getElementById('studentDetails').innerHTML = `
+            <strong>الاسم:</strong> ${name}<br>
+            <strong>الموبايل:</strong> ${mobile}<br>
+            <strong>الواجب:</strong> ${currentHomework?.title || 'الواجب'}<br>
+            <strong>التاريخ:</strong> ${new Date().toLocaleDateString('ar-EG')}
+        `;
+        
+        document.getElementById('scoreDisplay').innerHTML = `${score}/${total} (${percentage}%)`;
+        
+        let advice = percentage >= 70 ? '🎉 ممتاز يا بطل! استمر في التألق' : '💪 حاول مرة أخرى واستمر في التعلم';
+        document.getElementById('adviceText').innerHTML = advice;
+        
+        document.getElementById('questionsScreen').style.display = 'none';
+        document.getElementById('resultScreen').style.display = 'block';
+    }
 
-        // تشغيل التهيئة عند تحميل الصفحة
-        document.addEventListener('DOMContentLoaded', initPage);
-    </script>
+    // إعادة التشغيل
+    function resetApp() {
+        document.getElementById('resultScreen').style.display = 'none';
+        document.getElementById('homeworkListScreen').style.display = 'block';
+        document.getElementById('studentName').value = '';
+        document.getElementById('studentMobile').value = '';
+        document.getElementById('privacyCheck').checked = false;
+    }
+</script>
 </body>
 </html>
