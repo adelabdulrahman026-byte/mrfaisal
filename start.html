@@ -1,442 +1,180 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>كل ما تحتاجه هنا في موقع مستر فيصل</title>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet" />
-<style>
-  body {
-    margin: 0;
-    font-family: 'Cairo', sans-serif;
-    background: #fff;
-    color: #222;
-    padding: 16px;
-    font-size: 14px;
-  }
-  main {
-    max-width: 760px;
-    margin: auto;
-  }
-  /* أحدث فيديو */
-  .card-slide {
-    position: relative;
-    border-radius: 18px;
-    overflow: hidden;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.12);
-    margin-bottom: 30px;
-  }
-  .card-slide img {
-    width: 100%;
-    height: 240px;
-    object-fit: cover;
-    display: block;
-  }
-  .slide-overlay {
-    position: absolute;
-    top:0; left:0; right:0; bottom:0;
-    background: rgba(0,0,0,0.38);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    padding: 16px;
-    text-align: center;
-  }
-  .slide-overlay h2 {
-    font-size: 27px;
-    font-weight: 900;
-    margin-bottom: 12px;
-    text-shadow: 2px 2px 6px rgba(0,0,0,0.75);
-  }
-  .slide-overlay a {
-    background: #e63946;
-    color: white;
-    padding: 12px 24px;
-    border-radius: 11px;
-    font-weight: 700;
-    font-size: 15px;
-    box-shadow: 0 5px 12px rgba(230, 57, 70, 0.5);
-    text-decoration: none;
-    transition: background 0.3s ease, transform 0.3s ease;
-    display: inline-block;
-    white-space: nowrap;
-  }
-  .slide-overlay a:hover {
-    background: #b02a34;
-    transform: scale(1.05);
-  }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>جاري التحديث | انتظرونا قريبًا</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-  /* نصايح */
-  .tips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    margin-bottom: 30px;
-    justify-content: center;
-  }
-  .tip {
-    background: linear-gradient(135deg, #fceabb, #f8b500);
-    border-radius: 14px;
-    box-shadow: 0 7px 22px rgba(248, 181, 0, 0.38);
-    padding: 14px 18px;
-    flex: 1 1 140px;
-    font-weight: 700;
-    font-size: 0.9rem;
-    position: relative;
-    color: #3a2e00;
-    animation: fadeUp 0.6s ease forwards;
-    opacity: 0;
-    transition: box-shadow 0.3s ease;
-    cursor: default;
-  }
-  .tip:hover {
-    box-shadow: 0 11px 36px rgba(248, 181, 0, 0.7);
-  }
-  .tip:nth-child(1) { animation-delay: 0.1s; }
-  .tip:nth-child(2) { animation-delay: 0.25s; }
-  .tip:nth-child(3) { animation-delay: 0.4s; }
-  .tip:nth-child(4) { animation-delay: 0.55s; }
-  .tip:nth-child(5) { animation-delay: 0.7s; }
-  .tip::before {
-    content: "✔️";
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    font-size: 18px;
-    animation: bounce 2.5s infinite;
-  }
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(18px);}
-    to { opacity: 1; transform: translateY(0);}
-  }
-  @keyframes bounce {
-    0%, 100% {transform: translateY(0);}
-    50% {transform: translateY(-6px);}
-  }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(-45deg, #0f172a, #1e1b4b, #2e1065, #3b0764);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            overflow: hidden;
+            color: #fff;
+        }
 
-  /* أزرار */
-  .buttons {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    justify-content: center;
-    margin-bottom: 30px;
-  }
-  .button-link {
-    color: white;
-    font-weight: 700;
-    text-align: center;
-    padding: 12px 16px;
-    border-radius: 11px;
-    text-decoration: none;
-    flex: 1 1 130px;
-    box-shadow: 0 5px 16px rgba(0,0,0,0.15);
-    transition: transform 0.3s ease;
-    font-size: 14px;
-    animation: pulse 3s infinite;
-  }
-  .button-link:hover {
-    transform: scale(1.08);
-  }
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
 
-  /* ألوان مختلفة لكل زر */
-  .button-link:nth-child(1) { background: #4caf50; animation-delay: 0s; } /* أخضر */
-  .button-link:nth-child(2) { background: #2196f3; animation-delay: 0.3s; } /* أزرق */
-  .button-link:nth-child(3) { background: #ff9800; animation-delay: 0.6s; } /* برتقالي */
-  .button-link:nth-child(4) { background: #9c27b0; animation-delay: 0.9s; } /* بنفسجي */
-  .button-link:nth-child(5) { background: #f44336; animation-delay: 1.2s; } /* أحمر */
-  .button-link:nth-child(6) { background: #00bcd4; animation-delay: 1.5s; } /* سماوي */
-  .button-link:nth-child(7) { background: #795548; animation-delay: 1.8s; } /* بني */
-  .button-link:nth-child(8) { background: #ff5722; animation-delay: 2.1s; } /* برتقالي محمر */
-  .button-link:nth-child(9) { background: #800080; animation-delay: 2.1s; }/* موف */
- .button-link:nth-child(10) { background: #ff9800; animation-delay: 0.6s;  /* برتقالي */                           
-}
+        .container {
+            text-align: center;
+            padding: 2rem;
+            max-width: 600px;
+            width: 90%;
+            backdrop-filter: blur(8px);
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 45 rgba(0, 0, 0, 0.2);
+            animation: fadeInUp 1.2s ease-out;
+        }
 
-  @keyframes pulse {
-    0%, 100% { box-shadow: 0 0 12px rgba(255,255,255,0.3); }
-    50% { box-shadow: 0 0 22px rgba(255,255,255,0.6); }
-  }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-  /* كارت اليوتيوب */
-  .yt-card {
-    max-width: 320px;
-    margin: 0 auto 45px;
-    box-shadow: 0 9px 30px rgba(0,0,0,0.1);
-    border-radius: 16px;
-    overflow: hidden;
-    background: white;
-    text-align: center;
-    padding-bottom: 18px;
-  }
-  .yt-card img {
-    width: 100%;
-    height: 240px;
-    object-fit: contain;
-    background: #f0f0f0;
-  }
-  .yt-card .yt-title {
-    font-size: 1.6rem;
-    color: #e63946;
-    font-weight: 900;
-    margin: 14px 0 5px;
-  }
-  .yt-card .yt-subtitle {
-    font-size: 1.15rem;
-    font-weight: 700;
-    color: #555;
-    margin-bottom: 8px;
-  }
-  .yt-card .yt-stat {
-    background: #e63946;
-    color: white;
-    display: inline-block;
-    border-radius: 25px;
-    padding: 9px 20px;
-    font-weight: 700;
-    margin: 5px 10px 0;
-    box-shadow: 0 5px 15px rgba(230, 57, 70, 0.4);
-    font-size: 0.85rem;
-  }
+        .icon-box {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 2rem;
+        }
 
-  /* كارت العرض قريباً */
-  .coming-soon-card {
-    position: relative;
-    width: 100%;
-    max-width: 760px;
-    height: 400px;
-    margin: 0 auto 45px;
-    border-radius: 20px;
-    overflow: hidden;
-    box-shadow: 0 12px 30px rgba(0,0,0,0.18);
-    cursor: default;
-  }
-  .coming-soon-card img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    display: block;
-    filter: brightness(0.65);
-    transition: filter 0.3s ease;
-  }
-  .coming-soon-card:hover img {
-    filter: brightness(0.8);
-  }
-  .coming-soon-button {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: #ff0000;
-    color: white;
-    padding: 14px 30px;
-    border-radius: 30px;
-    font-weight: 900;
-    font-size: 1.2rem;
-    box-shadow:
-      0 0 8px #ff0000,
-      0 0 20px #ff0000,
-      0 0 32px #ff0000,
-      0 0 48px #ff0000;
-    text-decoration: none;
-    transition: box-shadow 0.3s ease;
-    display: inline-block;
-    cursor: pointer;
-  }
-  .coming-soon-button:hover {
-    box-shadow:
-      0 0 16px #ff4d4d,
-      0 0 36px #ff4d4d,
-      0 0 52px #ff4d4d,
-      0 0 68px #ff4d4d;
-  }
+        .gear {
+            font-size: 5rem;
+            color: #a855f7;
+            animation: spin 4s linear infinite;
+            display: inline-block;
+            filter: drop-shadow(0 0 15px #a855f7);
+        }
 
-  /* الفوتر */
-  footer {
-    text-align: center;
-    font-size: 0.85rem;
-    color: #666;
-    margin-bottom: 18px;
-  }
-  footer a {
-    color: #e63946;
-    font-weight: 700;
-    text-decoration: none;
-  }
-  footer a:hover {
-    text-decoration: underline;
-  }
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
 
-  /* تجاوب */
-  @media (max-width: 720px) {
-    .card-slide img {
-      height: 160px;
-    }
-    .tips {
-      flex-direction: column;
-      gap: 12px;
-    }
-    .tip {
-      flex: none;
-      width: 100%;
-      font-size: 0.85rem;
-      padding: 12px 16px;
-    }
-    .buttons {
-      flex-direction: column;
-    }
-    .button-link {
-      flex: none;
-      width: 100%;
-      font-size: 13px;
-      padding: 12px 14px;
-      animation: none !important;
-    }
-    .yt-card {
-      max-width: 100%;
-    }
-    .yt-card img {
-      height: 180px;
-    }
-    .coming-soon-card {
-      height: 280px;
-    }
-    .coming-soon-button {
-      font-size: 1rem;
-      padding: 12px 24px;
-    }
-  }
-</style>
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 800;
+            background: linear-gradient(to left, #f3e8ff, #c084fc, #6366f1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 1px;
+        }
+
+        p {
+            font-size: 1.2rem;
+            color: #cbd5e1;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .progress-container {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            padding: 4px;
+            margin-bottom: 2.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .progress-bar {
+            width: 75%;
+            height: 12px;
+            background: linear-gradient(90deg, #6366f1, #a855f7);
+            border-radius: 50px;
+            position: relative;
+            animation: progressAnimation 3s ease-in-out infinite alternate;
+            box-shadow: 0 0 10px #a855f7;
+        }
+
+        @keyframes progressAnimation {
+            0% { width: 50%; }
+            100% { width: 85%; }
+        }
+
+        .glow-circle {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: rgba(168, 85, 247, 0.15);
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: -1;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .circle-1 { top: 10%; right: 15%; }
+        .circle-2 { bottom: 10%; left: 15%; animation-delay: -3s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.6rem 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50px;
+            font-size: 0.9rem;
+            color: #e2e8f0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(168, 85, 247, 0.4); }
+            70% { box-shadow: 0 0 0 15px rgba(168, 85, 247, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(168, 85, 247, 0); }
+        }
+    </style>
 </head>
 <body>
-  <main role="main" aria-label="موقع مستر فيصل">
 
-    <!-- أحدث فيديو -->
-    <section class="card-slide" aria-label="برنامج أصل الحكاية     ">
-      <img src="https://adelabdulrahman026-byte.github.io/dashboard/%D8%A7%D8%B5%D9%84-%D8%A7%D8%B5%D9%84.jpg" alt="صورة فيديو تعريفي" />
-      <div class="slide-overlay">
-        <h2>  برنامج أصل الحكاية   </h2>
-        <a href="https://youtube.com/playlist?list=PL8Efm-d8SSIFNFDO04cjzJSJJX_5aaFVT&si=HkOUldB5gMEP0tGb" target="_blank" rel="noopener" aria-label="شاهد الآن  " class="slide-overlay-link">شاهد الآن ▶</a>
-      </div>
-    </section>
+    <div class="glow-circle circle-1"></div>
+    <div class="glow-circle circle-2"></div>
 
-    <!-- نصايح -->
-    <section class="tips" aria-label="نصائح تعليمية">
-      <div class="tip">١. نظم وقتك وابتعد عن المشتتات.</div>
-      <div class="tip">٢. استخدم ملخصات وفيديوهات تعليمية.</div>
-      <div class="tip">٣. مارس حل الأسئلة بانتظام.</div>
-      <div class="tip">٤. شارك في مجموعات دراسة واطلب المساعدة.</div>
-      <div class="tip">٥. حافظ على صحتك ونومك الجيد.</div>
-    </section>
+    <div class="container">
+        
+        <div class="icon-box">
+            <span class="gear">⚙️</span>
+        </div>
 
-    <!-- أزرار التنقل -->
-    <nav class="buttons" aria-label="روابط الموقع">
-      <a href="https://www.mrfaisal.net/cors" class="button-link">منصتنا التعليمية 🏫</a>
-      <a href="https://www.mrfaisal.net/motaba" class="button-link">المتابعة 📱</a>
-      <a href="https://www.mrfaisal.net/moayed" class="button-link">مواعيدنا ⏰</a>
-      <a href="https://www.mrfaisal.net/hw" class="button-link">الواجبات 📝</a>
-      <a href="https://www.mrfaisal.net/track" class="button-link">اشتري من عندنا 🛒</a>
-      <a href="https://www.mrfaisal.net/contact" class="button-link">اسألنا سؤال 📞</a>
-      <a href="https://www.mrfaisal.net/shakwy" class="button-link">الشكاوي 📣</a>
-      <a href="https://www.mrfaisal.net/exam" class="button-link">امتحاناتنا 📚</a>
-      <a href="https://www.mrfaisal.net/%D8%A7%D9%84%D9%88%D8%B1%D8%B4%D8%A9" class="button-link">🛠️الورشة لطلاب الصف الثالث الثانوي 🌍</a>
-      <a href="https://www.mrfaisal.net/%D8%A7%D9%84%D8%AA%D9%81%D9%88%D9%8A%D9%84%D8%A9" class="button-link">🦋تفويلة لطلاب الصف الثاني الثانوي ❤️</a>
-    </nav>
+        <h1>جاري عمل تحديث للموقع</h1>
+        
+        <p>نحن نعمل خلف الكواليس لنقدم لكم تجربة مستخدم فريدة ومميزات جديدة ومبتكرة. نعود إليكم أقوى قريباً!</p>
 
-    <!-- كارت اليوتيوب -->
-    <section class="yt-card" aria-label="قناتنا على اليوتيوب">
-      <img src="https://files.catbox.moe/4mdr3d.jpeg" alt="صورة قناة مستر فيصل" />
-      <div class="yt-title">قناتنا</div>
-      <div class="yt-subtitle">على اليوتيوب</div>
-      <div class="yt-stat">📺 عدد المشتركين: 102,000</div>
-      <div class="yt-stat">👁️‍🗨️ عدد المشاهدات: 4,300,000</div>
-    </section>
+        <div class="progress-container">
+            <div class="progress-bar"></div>
+        </div>
 
-    <!-- كارت العرض قريباً -->
-    <section class="coming-soon-card" aria-label="قريباً على اليوتيوب">
-      <img src="https://files.catbox.moe/vimik0.jpg" alt="صورة العرض قريباً" />
-      <a href="https://www.youtube.com/@Mr.faisal.geography" target="_blank" rel="noopener" class="coming-soon-button" aria-label="زيارة قناة مستر فيصل على اليوتيوب">يعرض الأن</a>
-    </section>
+        <div class="badge">
+            ✨ انتظرونا قريباً جداً
+        </div>
 
-    <!-- الفوتر -->
-    <footer>
-      <a href="privacy.html">سياسة الخصوصية</a> | <span>© 2025 مستر فيصل</span>
-    </footer>
- <script>
-    // منع النقر الأيمن
-    document.addEventListener('contextmenu', function(e) {
-      e.preventDefault();
-    });
+    </div>
 
-    // نظام حماية المحتوى
-    const contentProtection = document.getElementById('contentProtection');
-    let devToolsOpen = false;
-
-    // كشف فتح أدوات المطورين
-    function detectDevTools() {
-      const widthThreshold = window.outerWidth - window.innerWidth > 160;
-      const heightThreshold = window.outerHeight - window.innerHeight > 160;
-      
-      if (widthThreshold || heightThreshold) {
-        showProtectionMessage();
-        return true;
-      }
-      
-      return false;
-    }
-
-    // كشف تغيير حجم النافذة
-    let resizeTimer;
-    window.addEventListener('resize', function() {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(function() {
-        if (detectDevTools()) {
-          showProtectionMessage();
-        }
-      }, 200);
-    });
-
-    // كشف فتح أدوات المطورين بشكل دوري
-    setInterval(function() {
-      if (detectDevTools()) {
-        showProtectionMessage();
-      }
-    }, 1000);
-
-    // كشف ضغط مفاتيح F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'F12' || 
-          (e.ctrlKey && e.shiftKey && e.key === 'I') ||
-          (e.ctrlKey && e.shiftKey && e.key === 'J') ||
-          (e.ctrlKey && e.key === 'U')) {
-        e.preventDefault();
-        showProtectionMessage();
-        return false;
-      }
-    });
-
-    // إظهار رسالة الحماية
-    function showProtectionMessage() {
-      contentProtection.classList.add('active');
-      document.body.style.overflow = 'hidden';
-      
-      // منع أي تفاعل مع المحتوى الأساسي
-      document.querySelectorAll('main, footer').forEach(el => {
-        el.style.pointerEvents = 'none';
-        el.style.opacity = '0.2';
-      });
-    }
-
-    // إخفاء رسالة الحماية عند النقر عليها (لأغراض التطوير فقط)
-    contentProtection.addEventListener('click', function() {
-      contentProtection.classList.remove('active');
-      document.body.style.overflow = 'auto';
-      document.querySelectorAll('main, footer').forEach(el => {
-        el.style.pointerEvents = 'auto';
-        el.style.opacity = '1';
-      });
-    });
-  </script>
 </body>
 </html>
