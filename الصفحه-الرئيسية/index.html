@@ -1,1036 +1,180 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <title>موقع مستر فيصل الرسمي</title>
-  <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-<script>
-  window.OneSignalDeferred = window.OneSignalDeferred || [];
-  OneSignalDeferred.push(async function(OneSignal) {
-    await OneSignal.init({
-      appId: "8e36161f-8906-41f3-b0b8-3e272167065b",
-    });
-  });
-</script>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" />
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.6.2/dist/dotlottie-wc.js" type="module"></script>
-  <style>
-    :root {
-      --color-bg: #fff;
-      --color-text: #111;
-      --color-card-bg: #f9f9f9;
-      --color-card-shadow: rgba(0,0,0,0.12);
-      --color-tip-shadow-opacity: 0.08;
-      --color-link: #4caf50;
-      --color-link-hover: #2e7d32;
-      --color-primary: #4caf50;
-      --color-primary-light: #6abf69;
-      --color-primary-dark: #2e7d32;
-      --color-accent: #ff9800;
-      --sidebar-width: 300px;
-      --header-height: 70px;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>جاري التحديث | انتظرونا قريبًا</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-    body, html {
-      margin: 0; padding: 0;
-      font-family: 'Cairo', sans-serif;
-      color: var(--color-text);
-      min-height: 100vh;
-      overflow-x: hidden;
-      scroll-behavior: smooth;
-      background: var(--color-bg);
-      transition: background-color 0.4s ease, color 0.4s ease;
-    }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(-45deg, #0f172a, #1e1b4b, #2e1065, #3b0764);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            overflow: hidden;
+            color: #fff;
+        }
 
-    #preloader {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%;
-      height: 100%;
-      background: white;
-      z-index: 9999;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    
-    /* شريط الرأس */
-    .header {
-      position: fixed;
-      top: 0;
-      right: 0;
-      left: 0;
-      height: var(--header-height);
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(10px);
-      box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 20px;
-      z-index: 9990;
-      transition: background-color 0.4s ease, box-shadow 0.4s ease;
-    }
-    
-    .header-title {
-      font-weight: 900;
-      font-size: 1.5rem;
-      color: var(--color-primary);
-      margin: 0;
-    }
-    
-    .header-controls {
-      display: flex;
-      gap: 12px;
-    }
-    
-    /* أزرار التحكم */
-    .control-btn {
-      background: var(--color-primary);
-      border: none;
-      border-radius: 50%;
-      width: 45px;
-      height: 45px;
-      color: white;
-      font-size: 1.2rem;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(76,175,80,0.4);
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    
-    .control-btn:hover {
-      background: var(--color-primary-dark);
-      transform: scale(1.1);
-      box-shadow: 0 6px 16px rgba(76,175,80,0.6);
-    }
-    
-    /* القائمة الجانبية */
-    #sidebarOverlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.5);
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.4s ease, visibility 0.4s;
-      z-index: 9995;
-    }
-    
-    #sidebarOverlay.active {
-      opacity: 1;
-      visibility: visible;
-    }
-    
-    #sidebar {
-      position: fixed;
-      top: 0;
-      right: -300px;
-      width: var(--sidebar-width);
-      height: 100%;
-      background: linear-gradient(to bottom, var(--color-primary-light), var(--color-primary));
-      box-shadow: -5px 0 25px rgba(0,0,0,0.2);
-      transition: right 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
-      z-index: 9996;
-      padding: 80px 0 20px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-    }
-    
-    #sidebar.active {
-      right: 0;
-    }
-    
-    .sidebar-header {
-      text-align: center;
-      margin-bottom: 30px;
-      padding: 0 20px;
-    }
-    
-    .sidebar-header h2 {
-      margin: 0;
-      color: white;
-      font-weight: 800;
-      font-size: 1.8rem;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    }
-    
-    .sidebar-header p {
-      color: rgba(255,255,255,0.9);
-      margin: 8px 0 0;
-      font-size: 1rem;
-    }
-    
-    .sidebar-menu {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      padding: 0 15px;
-    }
-    
-    .button-link {
-      display: flex;
-      align-items: center;
-      padding: 16px 20px;
-      background: rgba(255, 255, 255, 0.15);
-      color: white;
-      text-decoration: none;
-      border-radius: 14px;
-      font-weight: 700;
-      font-size: 1.1rem;
-      transition: all 0.3s ease;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      backdrop-filter: blur(10px);
-    }
-    
-    .button-link i {
-      margin-left: 12px;
-      font-size: 1.3rem;
-      transition: transform 0.3s ease;
-    }
-    
-    .button-link:hover {
-      background: rgba(255, 255, 255, 0.25);
-      transform: translateX(-5px);
-      box-shadow: 0 5px 15px rgba(0,0,0,0.15);
-    }
-    
-    .button-link:hover i {
-      transform: scale(1.2);
-    }
-    
-    .sidebar-footer {
-      margin-top: auto;
-      padding: 20px;
-      text-align: center;
-      color: rgba(255,255,255,0.8);
-      font-size: 0.9rem;
-      border-top: 1px solid rgba(255,255,255,0.2);
-    }
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
 
-    /* المحتوى الرئيسي */
-    .main-content {
-      margin-top: var(--header-height);
-      padding: 20px;
-    }
+        .container {
+            text-align: center;
+            padding: 2rem;
+            max-width: 600px;
+            width: 90%;
+            backdrop-filter: blur(8px);
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 45 rgba(0, 0, 0, 0.2);
+            animation: fadeInUp 1.2s ease-out;
+        }
 
-    /* كارت الفيديو */
-    #videoCard {
-      max-width: 980px;
-      margin: 30px auto 40px;
-      background: var(--color-card-bg);
-      border-radius: 18px;
-      box-shadow: 0 8px 24px var(--color-card-shadow);
-      overflow: hidden;
-      position: relative;
-      aspect-ratio: 16 / 9;
-      transition: background-color 0.4s ease, box-shadow 0.4s ease;
-    }
-    
-    #videoCard video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-      border-radius: 18px;
-      user-select: none;
-    }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-    /* حاوية النصايح */
-    #tipsContainer {
-      max-width: 480px;
-      margin: 0 auto 40px;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      transition: background-color 0.4s ease;
-    }
+        .icon-box {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 2rem;
+        }
 
-    /* كل ورقة نصيحة */
-    .tipCard {
-      border-radius: 20px;
-      padding: 22px 26px;
-      font-size: 20px;
-      font-weight: 700;
-      font-style: normal;
-      letter-spacing: 0.03em;
-      user-select: none;
-      transition: box-shadow 0.3s ease, transform 0.3s ease, background-color 0.4s ease, color 0.4s ease;
-      cursor: default;
-      color: var(--color-text);
-      box-shadow: 0 8px 20px rgba(0,0,0,var(--color-tip-shadow-opacity));
-    }
-    
-    .tipCard:hover {
-      box-shadow: 0 14px 28px rgba(0,0,0,0.15);
-      transform: translateY(-4px);
-    }
-    
-    .tip1 { background: #fff8e1; color: #665c00; box-shadow: 0 8px 20px rgba(255, 223, 93, 0.7); }
-    .tip2 { background: #e1f5fe; color: #01579b; box-shadow: 0 8px 20px rgba(41, 182, 246, 0.6); }
-    .tip3 { background: #e8f5e9; color: #2e7d32; box-shadow: 0 8px 20px rgba(102, 187, 106, 0.6); }
-    .tip4 { background: #fff3e0; color: #ef6c00; box-shadow: 0 8px 20px rgba(255, 183, 77, 0.7); }
-    .tip5 { background: #fce4ec; color: #880e4f; box-shadow: 0 8px 20px rgba(240, 98, 146, 0.7); }
-    .tip6 { background: #ede7f6; color: #311b92; box-shadow: 0 8px 20px rgba(121, 134, 203, 0.7); }
-    .tip7 { background: #f3e5f5; color: #6a1b9a; box-shadow: 0 8px 20px rgba(186, 104, 200, 0.7); }
+        .gear {
+            font-size: 5rem;
+            color: #a855f7;
+            animation: spin 4s linear infinite;
+            display: inline-block;
+            filter: drop-shadow(0 0 15px #a855f7);
+        }
 
-    /* كارت مرحباً */
-    .welcome-card {
-      max-width: 480px;
-      margin: 0 auto 30px;
-      background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
-      color: white;
-      padding: 22px 28px;
-      border-radius: 18px;
-      font-size: 24px;
-      font-weight: 800;
-      text-align: center;
-      box-shadow: 0 8px 24px rgba(46,125,50,0.6);
-      letter-spacing: 0.06em;
-      user-select: none;
-      transition: background 0.4s ease;
-    }
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
 
-    .content {
-      background: white;
-      padding: 0 16px 40px;
-      transition: background-color 0.4s ease;
-    }
-    
-    .social-section {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      max-width: 480px;
-      margin: 0 auto;
-    }
-    
-    .social-card {
-      background: white;
-      border-radius: 18px;
-      padding: 16px 14px;
-      text-align: right;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-      border: 1.5px solid #ddd;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.4s ease, border-color 0.4s ease;
-    }
-    
-    .social-card:hover {
-      transform: scale(1.04);
-      box-shadow: 0 10px 30px rgba(76,175,80,0.3);
-      border-color: var(--color-primary);
-    }
-    
-    .social-card a {
-      color: var(--color-text);
-      text-decoration: none;
-      flex: 1;
-      display: block;
-      transition: color 0.4s ease;
-    }
-    
-    .social-card img {
-      width: 56px;
-      height: 56px;
-      object-fit: contain;
-      border-radius: 50%;
-      background: white;
-      padding: 6px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.12);
-      flex-shrink: 0;
-      transition: background-color 0.4s ease;
-    }
-    
-    /* زر ابدأ الرحلة */
-    .start-journey {
-      max-width: 480px;
-      margin: 30px auto 0;
-      padding: 18px 20px;
-      background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
-      color: white;
-      font-size: 20px;
-      font-weight: bold;
-      text-align: center;
-      border-radius: 14px;
-      box-shadow: 0 6px 15px rgba(0,0,0,0.15);
-      cursor: pointer;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      animation: pulse 1.5s infinite;
-      user-select: none;
-    }
-    
-    .start-journey:hover {
-      transform: scale(1.05);
-      box-shadow: 0 8px 20px rgba(76,175,80,0.4);
-    }
-    
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.03); }
-      100% { transform: scale(1); }
-    }
-    
-    /* صورة الزتونة - محسنة */
-    .ztouna-image {
-      position: relative;
-      width: 100%;
-      height: 350px;
-      margin: 40px 0;
-      overflow: hidden;
-      background: var(--color-bg);
-      border-radius: 20px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
-      transition: all 0.5s ease;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-    }
-    
-    .ztouna-image::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: url('https://adelabdulrahman026-byte.github.io/dashboard/%D8%A7%D9%84%D8%B2%D8%AA%D9%88%D9%86%D9%87.png') center/contain no-repeat;
-      transition: transform 0.7s ease;
-      transform: scale(1.2);
-    }
-    
-    .ztouna-image:hover::before {
-      transform: rotate(15deg) scale(1.3);
-    }
-    
-    .ztouna-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.3);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      opacity: 0;
-      transition: opacity 0.5s ease;
-      border-radius: 20px;
-    }
-    
-    .ztouna-image:hover .ztouna-overlay {
-      opacity: 1;
-    }
-    
-    .ztouna-text {
-      color: white;
-      font-size: 28px;
-      font-weight: 800;
-      text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
-      transform: translateY(20px);
-      transition: transform 0.5s ease;
-      text-align: center;
-      padding: 0 20px;
-    }
-    
-    .ztouna-image:hover .ztouna-text {
-      transform: translateY(0);
-    }
-    
-    footer {
-      width: 100%;
-      padding: 12px 8px 28px;
-      text-align: center;
-      font-size: 11px;
-      color: #999;
-      background: #f9f9f9;
-      font-weight: 600;
-      font-family: 'Cairo', sans-serif;
-      box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
-      position: relative;
-      user-select: none;
-      transition: background-color 0.4s ease, color 0.4s ease;
-    }
-    
-    footer span, footer a.wa-link {
-      font-style: italic;
-      color: var(--color-link);
-      font-weight: 700;
-      cursor: pointer;
-      text-decoration: underline;
-      transition: color 0.4s ease;
-    }
-    
-    footer a.privacy-link {
-      display: block;
-      margin-top: 8px;
-      font-size: 12px;
-      color: var(--color-link);
-      text-decoration: none;
-      font-weight: 700;
-      user-select: none;
-      transition: color 0.3s ease;
-    }
-    
-    footer a.privacy-link:hover {
-      color: var(--color-link-hover);
-      text-decoration: underline;
-    }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 800;
+            background: linear-gradient(to left, #f3e8ff, #c084fc, #6366f1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 1px;
+        }
 
-    /* الوضع الليلي */
-    body.dark {
-      --color-bg: #121212;
-      --color-text: #e0e0e0;
-      --color-card-bg: #1e1e1e;
-      --color-card-shadow: rgba(0,0,0,0.8);
-      --color-tip-shadow-opacity: 0.3;
-      --color-link: #81c784;
-      --color-link-hover: #a5d6a7;
-      --color-primary: #388e3c;
-      --color-primary-light: #4caf50;
-      --color-primary-dark: #2e7d32;
-      background-color: var(--color-bg);
-      color: var(--color-text);
-    }
-    
-    body.dark .header {
-      background: rgba(30, 30, 30, 0.95);
-      box-shadow: 0 2px 20px rgba(0, 0, 0, 0.4);
-    }
-    
-    body.dark #videoCard {
-      background-color: var(--color-card-bg);
-      box-shadow: 0 8px 24px var(--color-card-shadow);
-    }
-    
-    body.dark .tipCard {
-      color: var(--color-text);
-      box-shadow: 0 8px 20px rgba(0,0,0,var(--color-tip-shadow-opacity));
-    }
-    
-    body.dark .welcome-card {
-      background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
-      box-shadow: 0 8px 24px rgba(56,142,60,0.8);
-    }
-    
-    body.dark .content {
-      background-color: var(--color-card-bg);
-    }
-    
-    body.dark .social-card {
-      background-color: var(--color-card-bg);
-      border-color: #519657;
-    }
-    
-    body.dark .social-card:hover {
-      border-color: var(--color-link-hover);
-      box-shadow: 0 10px 30px rgba(129,199,132,0.5);
-    }
-    
-    body.dark .social-card a {
-      color: var(--color-text);
-    }
-    
-    body.dark .social-card img {
-      background-color: var(--color-card-bg);
-    }
-    
-    body.dark .ztouna-image {
-      background: var(--color-bg);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-    }
-    
-    body.dark footer {
-      background-color: #1a1a1a;
-      color: #aaa;
-    }
-    
-    body.dark footer span, body.dark footer a.wa-link {
-      color: var(--color-link);
-    }
-    
-    body.dark footer a.privacy-link {
-      color: var(--color-link);
-    }
-    
-    body.dark footer a.privacy-link:hover {
-      color: var(--color-link-hover);
-    }
-    
-    body.dark #sidebar {
-      background: linear-gradient(to bottom, #2c2c2c, #1e1e1e);
-    }
-    
-    body.dark .button-link {
-      background: rgba(255, 255, 255, 0.1);
-      border-color: rgba(255, 255, 255, 0.15);
-    }
-    
-    body.dark .button-link:hover {
-      background: rgba(255, 255, 255, 0.2);
-    }
-    
-    body.dark .sidebar-footer {
-      border-top-color: rgba(255,255,255,0.15);
-    }
+        p {
+            font-size: 1.2rem;
+            color: #cbd5e1;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
 
-    /* استجابة للموبايل */
-    @media (max-width: 768px) {
-      :root {
-        --header-height: 60px;
-      }
-      
-      .header-title {
-        font-size: 1.2rem;
-      }
-      
-      .control-btn {
-        width: 40px;
-        height: 40px;
-        font-size: 1rem;
-      }
-      
-      #tipsContainer {
-        max-width: 90%;
-        gap: 14px;
-      }
-      
-      .tipCard {
-        font-size: 18px;
-        padding: 18px 20px;
-      }
-      
-      .welcome-card {
-        font-size: 20px;
-        padding: 18px 20px;
-      }
-      
-      .social-card img {
-        width: 48px;
-        height: 48px;
-      }
-      
-      .start-journey {
-        font-size: 18px;
-        padding: 14px 18px;
-      }
-      
-      #videoCard {
-        max-width: 90vw;
-        aspect-ratio: 16 / 9;
-        margin: 20px auto 30px;
-      }
-      
-      #sidebar {
-        width: 85%;
-        right: -85%;
-      }
-      
-      .button-link {
-        padding: 14px 16px;
-        font-size: 1rem;
-      }
-      
-      .ztouna-image {
-        height: 250px;
-        margin: 30px 0;
-      }
-      
-      .ztouna-text {
-        font-size: 20px;
-      }
-    }
+        .progress-container {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            padding: 4px;
+            margin-bottom: 2.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
 
-    /* حماية المحتوى */
-    #contentProtection {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.95);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 10000;
-      color: white;
-      font-family: 'Cairo', sans-serif;
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.5s ease, visibility 0.5s;
-    }
-    
-    #contentProtection.active {
-      opacity: 1;
-      visibility: visible;
-    }
-    
-    .protection-message {
-      text-align: center;
-      padding: 30px;
-      background: rgba(30, 30, 30, 0.9);
-      border-radius: 15px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-      max-width: 500px;
-      width: 80%;
-    }
-    
-    .protection-message h2 {
-      font-size: 28px;
-      margin-bottom: 15px;
-      color: #ff5555;
-    }
-    
-    .protection-message p {
-      font-size: 18px;
-      line-height: 1.6;
-      margin-bottom: 20px;
-    }
-    
-    .protection-icon {
-      font-size: 60px;
-      margin-bottom: 20px;
-      color: #ff5555;
-    }
-  </style>
+        .progress-bar {
+            width: 75%;
+            height: 12px;
+            background: linear-gradient(90deg, #6366f1, #a855f7);
+            border-radius: 50px;
+            position: relative;
+            animation: progressAnimation 3s ease-in-out infinite alternate;
+            box-shadow: 0 0 10px #a855f7;
+        }
+
+        @keyframes progressAnimation {
+            0% { width: 50%; }
+            100% { width: 85%; }
+        }
+
+        .glow-circle {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: rgba(168, 85, 247, 0.15);
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: -1;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .circle-1 { top: 10%; right: 15%; }
+        .circle-2 { bottom: 10%; left: 15%; animation-delay: -3s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.6rem 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50px;
+            font-size: 0.9rem;
+            color: #e2e8f0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(168, 85, 247, 0.4); }
+            70% { box-shadow: 0 0 0 15px rgba(168, 85, 247, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(168, 85, 247, 0); }
+        }
+    </style>
 </head>
 <body>
 
-  <!-- شاشة حماية المحتوى -->
-  <div id="contentProtection">
-    <div class="protection-message">
-      <div class="protection-icon">
-        <i class="fas fa-lock"></i>
-      </div>
-      <h2>Content unavailable</h2>
-      <p>Resource was not cached</p>
-    </div>
-  </div>
+    <div class="glow-circle circle-1"></div>
+    <div class="glow-circle circle-2"></div>
 
-  <!-- شريط الرأس -->
-  <div class="header">
-    <h1 class="header-title"> اهلا بك في موقعنا 👋  </h1>
-    <div class="header-controls">
-      <button id="toggleDarkMode" class="control-btn" aria-pressed="false" aria-label="تبديل الوضع الليلي">
-        <i class="fas fa-moon"></i>
-      </button>
-      <button id="sidebarToggle" class="control-btn" aria-label="فتح القائمة الجانبية">
-        <i class="fas fa-bars"></i>
-      </button>
-    </div>
-  </div>
-
-  <!-- القائمة الجانبية -->
-  <div id="sidebarOverlay"></div>
-  <aside id="sidebar">
-    <div class="sidebar-header">
-      <h2>موقع مستر فيصل</h2>
-      <p>نحو تعليم جغرافي متميز</p>
-    </div>
-    <nav class="sidebar-menu">
-      <a href="https://www.mrfaisal.net/cors" class="button-link">
-        <i class="fas fa-school"></i>
-        منصتنا التعليمية
-      </a>
-      <a href="https://www.mrfaisal.net/motaba" class="button-link">
-        <i class="fas fa-binoculars"></i>
-        المتابعة
-      </a>
-      <a href="https://www.mrfaisal.net/moayed" class="button-link">
-        <i class="fas fa-clock"></i>
-        مواعيدنا
-      </a>
-      <a href="https://www.mrfaisal.net/hw" class="button-link">
-        <i class="fas fa-tasks"></i>
-        الواجبات
-      </a>
-      <a href="https://www.mrfaisal.net/track" class="button-link">
-        <i class="fas fa-shopping-cart"></i>
-        اشتري من عندنا
-      </a>
-      <a href="https://www.mrfaisal.net/contact" class="button-link">
-        <i class="fas fa-question-circle"></i>
-        اسألنا سؤال
-      </a>
-      <a href="https://www.mrfaisal.net/shakwy" class="button-link">
-        <i class="fas fa-comment-dots"></i>
-        الشكاوي
-      </a>
-      <a href="https://www.mrfaisal.net/exam" class="button-link">
-        <i class="fas fa-file-alt"></i>
-        امتحاناتنا
-      </a>
-    </nav>
-    <div class="sidebar-footer">
-      <p>نسخة 2026 © جميع الحقوق محفوظة</p>
-    </div>
-  </aside>
-
-  <!-- شاشة التحميل -->
-  <div id="preloader" aria-label="تحميل">
-    <dotlottie-wc 
-      src="https://lottie.host/953639aa-133c-4c35-8508-c65811fe8898/jZylR2TITf.lottie" 
-      style="width: 300px; height: 300px;" 
-      speed="1" 
-      autoplay 
-      loop
-      aria-label="تحميل متحرك">
-    </dotlottie-wc>
-  </div>
-
-  <!-- المحتوى الرئيسي -->
-  <div class="main-content">
-    <!-- كارت الفيديو -->
-    <section id="videoCard" aria-label="فيديو تعليمي">
-      <video autoplay muted loop playsinline>
-        <source src="https://adelabdulrahman026-byte.github.io/dashboard/v2.mp4" type="video/mp4" />
-        متصفحك لا يدعم عرض الفيديو.
-      </video>
-    </section>
-
-    <!-- كارت النصايح -->
-    <section id="tipsContainer" aria-label="نصايح تعليمية">
-      <div class="tipCard tip1">📚 دراسة مستمرة تؤدي إلى النجاح!</div>
-      <div class="tipCard tip2">⏳ لا تؤجل عمل اليوم إلى الغد.</div>
-      <div class="tipCard tip3">🔄 المراجعة المنتظمة تثبت المعلومات.</div>
-      <div class="tipCard tip4">🗺️ استخدم الخرائط لفهم الجغرافيا بشكل أفضل.</div>
-      <div class="tipCard tip5">❓ اسأل دائمًا وتفاعل مع المعلم.</div>
-      <div class="tipCard tip6">👥 التعلم مع الأصدقاء يزيد من الفهم.</div>
-      <div class="tipCard tip7">🕒 خطط وقتك جيدًا لتحقيق أفضل النتائج.</div>
-    </section>
-
-    <!-- كارت مرحباً -->
-    <div class="welcome-card" aria-label="رسالة ترحيبية">
-      مرحباً بك في عالم مستر فيصل
-    </div>
-
-    <!-- محتوى الكروت -->
-    <div class="content">
-      <section class="social-section" aria-label="روابط التواصل الاجتماعي">
-        <div class="social-card">
-          <a href="https://www.whatsapp.com/channel/0029Vb5eotiHFxOvJuFpMI39" target="_blank" rel="noopener noreferrer">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="واتساب" />
-            <h3>انضم لقناة الواتساب</h3>
-            <p>تابع آخر الأخبار والعروض</p>
-          </a>
+    <div class="container">
+        
+        <div class="icon-box">
+            <span class="gear">⚙️</span>
         </div>
-        <div class="social-card">
-          <a href="https://www.facebook.com/groups/450656791778335/?locale=ar_AR" target="_blank" rel="noopener noreferrer">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="فيسبوك جروب" />
-            <h3>انضم لجروب الفيسبook</h3>
-            <p>محتوى خاص وتفاعل مباشر</p>
-          </a>
-        </div>
-        <div class="social-card">
-          <a href="https://youtube.com/@mr.faisal.geography?si=5HQdYcyREdFSKiwp" target="_blank" rel="noopener noreferrer">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/4/42/YouTube_icon_%282013-2017%29.png" alt="يوتيوب" />
-            <h3>اشترك في قناة اليوتيوب</h3>
-            <p>شروحات جغرافيا ومراجعات قوية</p>
-          </a>
-        </div>
-        <div class="social-card">
-          <a href="https://www.tiktok.com/@mr.faisal.geo?_t=ZS-8ySdp4xYApc&_r=1" target="_blank" rel="noopener noreferrer">
-            <img src="https://upload.wikimedia.org/wikipedia/en/a/a9/TikTok_logo.svg" alt="تيك توك" />
-            <h3>تابعني على تيك توك</h3>
-            <p>فيديوهات تعليمية ومراجعات</p>
-          </a>
-        </div>
-        <div class="social-card">
-          <a href="https://www.facebook.com/Mr.faisl" target="_blank" rel="noopener noreferrer">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="صفحة فيسبوك" />
-            <h3>تابع صفحتي على فيسبوك</h3>
-            <p>أحدث الأخبار والمحتوى الخاص</p>
-          </a>
-        </div>
-      </section>
 
-      <!-- زر ابدأ الرحلة -->
-      <div class="start-journey" onclick="location.href='https://www.mrfaisal.net/start'" role="button" tabindex="0" aria-label="ابدأ الرحلة الآن - اضغط هنا">
-        🚀 ابدأ الرحلة الآن - اضغط هنا
-      </div>
-      
-      <!-- صورة الزتونة المحسنة -->
-      <div class="ztouna-image" onclick="window.open('https://youtube.com/playlist?list=PL8Efm-d8SSIHqOUzOBwM2tJDHdYk6K6rG&si=F02FlMGDMekW06vF', '_blank')" aria-label="صورة الزتونة - اضغط للذهاب إلى قائمة التشغيل">
-        <div class="ztouna-overlay">
-          <div class="ztouna-text">اضغط لمشاهدة دروس الجغرافيا</div>
+        <h1>جاري عمل تحديث للموقع</h1>
+        
+        <p>نحن نعمل خلف الكواليس لنقدم لكم تجربة مستخدم فريدة ومميزات جديدة ومبتكرة. نعود إليكم أقوى قريباً!</p>
+
+        <div class="progress-container">
+            <div class="progress-bar"></div>
         </div>
-      </div>
+
+        <div class="badge">
+            ✨ انتظرونا قريباً جداً
+        </div>
+
     </div>
-  </div>
-<html lang="ar" dir="rtl">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>من هو مستر فيصل</title>
-  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
-  <style>
-    body {
-      font-family: 'Tajawal', sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f9f9f9;
-      color: #333;
-    }
 
-    .about-section {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 40px;
-      padding: 60px 10%;
-      background: #fff;
-    }
-
-    .about-section img {
-      width: 300px;
-      height: auto;
-      border-radius: 20px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-      animation: floatImage 3s ease-in-out infinite;
-    }
-
-    .about-text {
-      max-width: 600px;
-      animation: fadeIn 2s ease forwards;
-    }
-
-    .about-text h2 {
-      font-size: 32px;
-      margin-bottom: 15px;
-      color: #0d6efd;
-    }
-
-    .about-text p {
-      line-height: 1.9;
-      font-size: 18px;
-    }
-
-    @keyframes floatImage {
-      0% { transform: translateY(0); }
-      50% { transform: translateY(-12px); }
-      100% { transform: translateY(0); }
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateX(40px); }
-      to { opacity: 1; transform: translateX(0); }
-    }
-
-    @media (max-width: 768px) {
-      .about-section {
-        flex-direction: column;
-        text-align: center;
-      }
-      .about-section img {
-        width: 220px;
-      }
-    }
-  </style>
-</head>
-<body>
-
-  <!-- قسم النبذة -->
-  <section class="about-section">
-    <img src="https://adelabdulrahman026-byte.github.io/dashboard/IMG_6438.JPG" alt="مستر فيصل">
-    <div class="about-text">
-      <h2>من هو مستر فيصل؟</h2>
-      <p>
-        مستر فيصل هو <strong>مدرس أول جغرافيا في الإسكندرية والجمهورية</strong>، 
-        عُرف بشرحه المبسط الذي يقرّب المعلومة للطالب بشكل سهل وسلس.  
-        يؤمن أن التعليم رسالة قبل أن يكون مهنة، ويحرص دائمًا على متابعة طلابه خطوة بخطوة.
-      </p>
-      <p>
-        خبرة طويلة في مجال التدريس جعلت منه قدوة ومصدر ثقة لطلاب الثانوية العامة، 
-        حيث يجمع بين الأسلوب العصري في الشرح والالتزام بالقواعد الأكاديمية.  
-        هدفه الأساسي أن يكون مع طلابه "لحد باب اللجنة"، داعمًا ومساندًا لهم.
-      </p>
-    </div>
-  </section>
-
-  <!-- تذييل الحقوق -->
-  <footer>
-    جميع الحقوق محفوظة لدى 
-    <a href="https://wa.me/201093139047" target="_blank" rel="noopener noreferrer" class="wa-link">
-      abdulrahman adel
-    </a> 
-    | نسخة الموقع لدفعه 2026 &copy;
-    <a href="privacy.html" class="privacy-link" target="_blank" rel="noopener noreferrer" aria-label="صفحة سياسة الخصوصية">
-      سياسة الخصوصية
-    </a>
-  </footer>
-
-  <script>
-    // preloader
-    const preloader = document.getElementById('preloader');
-    window.addEventListener('load', () => {
-      preloader.style.transition = 'opacity 0.8s ease';
-      preloader.style.opacity = 0;
-      setTimeout(() => preloader.style.display = 'none', 800);
-    });
-
-    // dark mode toggle
-    const toggleBtn = document.getElementById('toggleDarkMode');
-    const toggleIcon = toggleBtn.querySelector('i');
-    
-    toggleBtn.addEventListener('click', () => {
-      document.body.classList.toggle('dark');
-      const isDark = document.body.classList.contains('dark');
-      
-      if (isDark) {
-        toggleIcon.classList.remove('fa-moon');
-        toggleIcon.classList.add('fa-sun');
-        toggleBtn.setAttribute('aria-label', 'تبديل الوضع النهاري');
-      } else {
-        toggleIcon.classList.remove('fa-sun');
-        toggleIcon.classList.add('fa-moon');
-        toggleBtn.setAttribute('aria-label', 'تبديل الوضع الليلي');
-      }
-      
-      toggleBtn.setAttribute('aria-pressed', isDark);
-    });
-
-    // إدارة القائمة الجانبية
-    const sidebar = document.getElementById('sidebar');
-    const sidebarOverlay = document.getElementById('sidebarOverlay');
-    const sidebarToggle = document.getElementById('sidebarToggle');
-    
-    function openSidebar() {
-      sidebar.classList.add('active');
-      sidebarOverlay.classList.add('active');
-      document.body.style.overflow = 'hidden';
-    }
-    
-    function closeSidebar() {
-      sidebar.classList.remove('active');
-      sidebarOverlay.classList.remove('active');
-      document.body.style.overflow = 'auto';
-    }
-    
-    sidebarToggle.addEventListener('click', openSidebar);
-    sidebarOverlay.addEventListener('click', closeSidebar);
-    
-    // إغلاق القائمة بالضغط على زر Escape
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && sidebar.classList.contains('active')) {
-        closeSidebar();
-      }
-    });
-
-    // منع النقر يمين
-    document.addEventListener('contextmenu', function(e) {
-      e.preventDefault();
-    });
-  </script>
 </body>
 </html>
