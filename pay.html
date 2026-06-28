@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>تسجيل الحضور</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    
+    <style>
+        :root { --main-color: #111827; --bg-color: #F3F4F6; --card-bg: #FFFFFF; --accent: #3B82F6; --border: #E5E7EB; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Tajawal', sans-serif; }
+        body { background-color: var(--bg-color); color: var(--main-color); padding: 15px; user-select: none; }
+        .container { max-width: 450px; margin: 0 auto; }
+        
+        .segment-control { display: flex; background: #E5E7EB; border-radius: 12px; padding: 4px; margin-bottom: 20px; }
+        .segment-btn { flex: 1; padding: 10px; text-align: center; border-radius: 8px; font-weight: 700; cursor: pointer; }
+        .segment-btn.active { background: var(--card-bg); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .card { background: var(--card-bg); padding: 20px; border-radius: 16px; display: none; }
+        .card.active { display: block; }
+        .input-group { margin-bottom: 15px; }
+        label { display: block; font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+        input, select { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--border); }
+        .row { display: flex; gap: 10px; }
+        .row .input-group { flex: 1; }
+        .btn { width: 100%; padding: 14px; border-radius: 10px; border: none; font-size: 16px; font-weight: 700; cursor: pointer; }
+        .btn-black { background: var(--main-color); color: #FFF; }
+        .btn-blue { background: var(--accent); color: #FFF; margin-top: 10px; }
+        
+        #reader-container { display: none; margin-top: 15px; border-radius: 12px; overflow: hidden; }
+        .payment-box { background: #F3F4F6; padding: 15px; border-radius: 12px; margin-top: 20px; display: none; }
+        
+        #loader { display: none; text-align: center; color: var(--accent); font-weight: bold; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="segment-control">
+        <div class="segment-btn active" onclick="switchTab('tab-register', this)">تسجيل طالب</div>
+        <div class="segment-btn" onclick="switchTab('tab-attendance', this)">المحاسبة والإسكانر</div>
+    </div>
+
+    <div id="tab-register" class="card active">
+        <form id="regForm" onsubmit="submitNewStudent(event)">
+            <div class="input-group"><label>الاسم بالكامل</label><input type="text" name="name" required></div>
+            <div class="row">
+                <div class="input-group"><label>رقم الطالب (واتس)</label><input type="tel" name="phone" required></div>
+                <div class="input-group"><label>رقم ولي الأمر</label><input type="tel" name="parentPhone" required></div>
+            </div>
+            <div class="row">
+                <div class="input-group"><label>النظام</label><select name="payType"><option>بالحصة</option><option>بالشهر</option></select></div>
+                <div class="input-group"><label>الصف</label><input type="text" name="grade" required></div>
+            </div>
+            <div class="row">
+                <div class="input-group"><label>المدفوع الآن</label><input type="number" name="paid" required></div>
+                <div class="input-group"><label>المبلغ الباقي</label><input type="number" name="remaining" value="0" required></div>
+            </div>
+            <button type="submit" class="btn btn-black" id="regBtn">حفظ وإرسال الكود</button>
+            <div id="loader">⏳ جاري المعالجة... يرجى الانتظار</div>
+        </form>
+    </div>
+
+    <div id="tab-attendance" class="card">
+        <button class="btn btn-black" id="startScanBtn" onclick="initScanner()">مسح الكود بالكاميرا</button>
+        <div id="reader-container"><div id="reader"></div></div>
+        
+        <div style="margin: 20px 0; text-align: center; font-weight: bold;">أو</div>
+        
+        <div class="row">
+            <div class="input-group" style="flex: 3;"><input type="text" id="manualId" placeholder="كود الطالب يدوياً..."></div>
+            <button class="btn btn-black" style="flex: 1;" onclick="fetchStudent(document.getElementById('manualId').value)">بحث</button>
+        </div>
+
+        <div style="background: #F9FAFB; padding: 15px; border-radius: 10px; margin-top: 15px;">
+            <div class="row">
+                <select id="attCenter" class="input-group"><option>ستارز</option><option>رويال</option><option>كامبردج</option><option>ميامي</option></select>
+                <input type="number" id="attSession" placeholder="رقم المحاضرة">
+            </div>
+            <input type="text" id="attMonth" placeholder="الشهر (مثال: 10)" style="margin-top: 10px;">
+        </div>
+
+        <div id="paymentModal" class="payment-box">
+            <div id="studentInfoBox"></div>
+            <div class="input-group" style="margin-top: 15px;">
+                <label>تسكين المبلغ (ثمن حصة أو تسديد باقي):</label>
+                <input type="number" id="amountPaidNow" style="font-size: 18px; font-weight: bold;" value="0">
+            </div>
+            <button class="btn btn-blue" id="confirmBtn" onclick="confirmAttendance()">تأكيد الحضور والدفع</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbxhNW24y3965NKrd92tl_qrBOTTSKjRf7rU-W5SE2mlVxKbKB6z5jKKHYSEXa73H_Kheg/exec";
+
+    /* ============================================================ */
+    /* 🛡️ أكواد الحماية (منع F12 والكليك يمين) 🛡️ */
+    /* ============================================================ */
+    document.addEventListener('contextmenu', event => event.preventDefault()); // منع الكليك يمين
+    document.onkeydown = function(e) {
+        if(e.keyCode == 123) return false; // منع F12
+        if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) return false; // منع Ctrl+Shift+I
+        if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) return false; // منع Ctrl+Shift+J
+        if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false; // منع View Source
+    };
+
+    let currentStudentData = {};
+    let html5QrcodeScanner;
+
+    function switchTab(tabId, btnElement) {
+        document.querySelectorAll('.card').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.segment-btn').forEach(el => el.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        btnElement.classList.add('active');
+        document.getElementById('paymentModal').style.display = 'none';
+        if(html5QrcodeScanner) html5QrcodeScanner.stop();
+        document.getElementById('reader-container').style.display = 'none';
+    }
+
+    // دالة الاتصال بالسيرفر عبر (Fetch API)
+    async function sendRequest(action, payload, btnId, loaderId) {
+        if(btnId) document.getElementById(btnId).disabled = true;
+        if(loaderId) document.getElementById(loaderId).style.display = 'block';
+
+        try {
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                body: JSON.stringify({ action: action, payload: payload })
+            });
+            const result = await response.json();
+            
+            if(btnId) document.getElementById(btnId).disabled = false;
+            if(loaderId) document.getElementById(loaderId).style.display = 'none';
+            return result;
+        } catch (error) {
+            if(btnId) document.getElementById(btnId).disabled = false;
+            if(loaderId) document.getElementById(loaderId).style.display = 'none';
+            alert("حدث خطأ في الاتصال بالسيرفر.");
+            return { success: false };
+        }
+    }
+
+    // تسجيل الطالب
+    async function submitNewStudent(e) {
+        e.preventDefault();
+        var formData = new FormData(document.getElementById('regForm')); var data = {}; formData.forEach((v, k) => { data[k] = v; });
+        
+        let res = await sendRequest("registerStudent", data, "regBtn", "loader");
+        if(res.success) {
+            alert(res.message);
+            document.getElementById('regForm').reset();
+        } else {
+            alert(res.message);
+        }
+    }
+
+    // الكاميرا (ستعمل الآن بدون أي قيود لأنها على GitHub)
+    function initScanner() {
+        document.getElementById('reader-container').style.display = 'block';
+        html5QrcodeScanner = new Html5Qrcode("reader");
+        html5QrcodeScanner.start({ facingMode: "environment" }, { fps: 15, qrbox: 250 }, (decodedText) => {
+            html5QrcodeScanner.stop();
+            document.getElementById('reader-container').style.display = 'none';
+            fetchStudent(decodedText);
+        }).catch(err => alert("يرجى إعطاء صلاحية الكاميرا."));
+    }
+
+    // جلب بيانات الطالب
+    async function fetchStudent(studentId) {
+        if(!studentId) return;
+        document.getElementById('paymentModal').style.display = 'none';
+        
+        let res = await sendRequest("getStudentInfo", { studentId: studentId }, null, null);
+        
+        if(res.success) {
+            currentStudentData = res;
+            document.getElementById('studentInfoBox').innerHTML = `<b>الاسم:</b> ${res.name} <br><b>الصف:</b> ${res.grade} (${res.payType}) <br><b style="color:red;">المتبقي: ${res.remaining} جنيه</b>`;
+            document.getElementById('amountPaidNow').value = res.remaining > 0 ? res.remaining : 0;
+            document.getElementById('paymentModal').style.display = 'block';
+        } else {
+            alert(res.message);
+        }
+    }
+
+    // تأكيد الدفع
+    async function confirmAttendance() {
+        let finalData = {
+            rowIndex: currentStudentData.rowIndex, studentId: currentStudentData.studentId, studentName: currentStudentData.name,
+            grade: currentStudentData.grade, center: document.getElementById('attCenter').value,
+            month: document.getElementById('attMonth').value, session: document.getElementById('attSession').value, 
+            amountPaidNow: document.getElementById('amountPaidNow').value
+        };
+
+        let res = await sendRequest("processAttendance", finalData, "confirmBtn", null);
+        if(res.success) {
+            alert(res.message);
+            document.getElementById('paymentModal').style.display = 'none';
+            document.getElementById('manualId').value = "";
+        }
+    }
+</script>
+
+</body>
+</html>
