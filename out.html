@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>متجر المنصة | الدفع الآلي</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .store-container {
+            background-color: #fff;
+            width: 100%;
+            max-width: 500px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 30px;
+            box-sizing: border-box;
+        }
+        .store-header {
+            text-align: center;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 15px;
+        }
+        .store-header h1 {
+            margin: 0;
+            color: #2c3e50;
+            font-size: 24px;
+        }
+        .store-header p {
+            color: #7f8c8d;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        .step-box {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .step-title {
+            font-weight: bold;
+            color: #e74c3c;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .vf-number {
+            font-size: 22px;
+            font-weight: bold;
+            text-align: center;
+            color: #c0392b;
+            letter-spacing: 2px;
+            margin: 10px 0;
+        }
+        .btn-copy {
+            width: 100%;
+            background-color: #34495e;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+        .btn-copy:hover {
+            background-color: #2c3e50;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #34495e;
+            font-weight: 600;
+        }
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: #e74c3c;
+            box-shadow: 0 0 5px rgba(231, 76, 60, 0.3);
+        }
+        select.form-control {
+            cursor: pointer;
+        }
+        .btn-submit {
+            width: 100%;
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+        .btn-submit:hover {
+            background-color: #219653;
+        }
+        .btn-submit:disabled {
+            background-color: #95a5a6;
+            cursor: not-allowed;
+        }
+        .loader {
+            display: none;
+            text-align: center;
+            margin-top: 10px;
+            color: #27ae60;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="store-container">
+        <div class="store-header">
+            <h1>متجر المنصة التعليمية</h1>
+            <p>احصل على أكواد الحصص والكتب أوتوماتيكياً</p>
+        </div>
+
+        <div class="step-box">
+            <div class="step-title">1. قم بتحويل قيمة المنتج أولاً</div>
+            <p style="font-size: 13px; color: #666; margin: 0 0 10px 0;">حول المبلغ (سواء 30ج، 50ج، أو ثمن الكتاب) على الرقم ده:</p>
+            <div class="vf-number" id="storeNumber">010XXXXXXXX</div> <button class="btn-copy" onclick="copyNumber()">نسخ الرقم</button>
+        </div>
+
+        <div class="step-box">
+            <div class="step-title">2. تأكيد واستلام المنتج</div>
+            
+            <div class="form-group">
+                <label>ماذا تريد أن تشتري؟</label>
+                <select id="itemType" class="form-control">
+                    <option value="code">كود حصة (عادية أو مراجعة)</option>
+                    <option value="book">شراء كتاب (شحن للمنزل)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>رقم الموبايل الذي قمت بالتحويل منه</label>
+                <input type="tel" id="customerPhone" class="form-control" placeholder="مثال: 01123456789" required>
+            </div>
+
+            <button class="btn-submit" id="submitBtn" onclick="verifyOrder()">تأكيد واستلام عبر الواتساب</button>
+            <div class="loader" id="loadingText">جاري مراجعة التحويل وإرسال طلبك... ⏳</div>
+        </div>
+    </div>
+
+    <script>
+        function copyNumber() {
+            var number = document.getElementById("storeNumber").innerText;
+            navigator.clipboard.writeText(number).then(() => {
+                alert("تم نسخ الرقم بنجاح: " + number);
+            });
+        }
+
+        function verifyOrder() {
+            var phone = document.getElementById("customerPhone").value.trim();
+            var itemType = document.getElementById("itemType").value;
+            var btn = document.getElementById("submitBtn");
+            var loader = document.getElementById("loadingText");
+
+            // التحقق من إدخال الرقم
+            if (phone === "" || phone.length < 10) {
+                alert("برجاء إدخال رقم موبايل صحيح.");
+                return;
+            }
+
+            // إظهار التحميل وتعطيل الزر عشان العميل ميدوسش مرتين
+            btn.disabled = true;
+            loader.style.display = "block";
+
+            // ===> حط رابط جوجل سكريبت بتاعك هنا <===
+            var scriptURL = "https://script.google.com/macros/s/AKfycbxELQWZAKyjVfpYSd9bjV-JTyhAhbA7qEjYNPfsKpDJ_vTgr7EDQjMR1855jbmVBOxbGQ/exec";
+
+            var payload = {
+                "action": "claim_purchase",
+                "phone": phone,
+                "itemType": itemType
+            };
+
+            fetch(scriptURL, {
+                method: "POST",
+                body: JSON.stringify(payload)
+            })
+            .then(response => response.json())
+            .then(data => {
+                btn.disabled = false;
+                loader.style.display = "none";
+                
+                if (data.status === "success") {
+                    alert("✅ نجاح: " + data.message);
+                    document.getElementById("customerPhone").value = ""; // تفريغ الخانة
+                } else {
+                    alert("❌ عذراً: " + data.message);
+                }
+            })
+            .catch(error => {
+                btn.disabled = false;
+                loader.style.display = "none";
+                alert("حدث خطأ في الاتصال بالسيرفر. تأكد من الإنترنت وجرب مرة أخرى.");
+            });
+        }
+    </script>
+</body>
+</html>
