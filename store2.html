@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>متجر فيصولة</title>
+    <title>متجر فيصل</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
     
     <style>
@@ -125,7 +125,7 @@
 
 <script>
     // حط الرابط بتاع جوجل سكريبت بتاعك هنا
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzR_qD3NLFHKZ7Ei99UDMJs0j5P3c5JOM_jLH6QdNfc_j9wkepZ2WBRIeIJ-Qy175McJQ/exec"; 
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwJOpEtcHIhlAKQxPOl3dVr0ikczLIP1CT4mzc0K_v3A-XfqrDS_J7npg21vNlmxY__JA/exec"; 
     let activePrice = 0;
 
     // دالة عرض الإشعارات الشيك (بديلة alert)
@@ -177,18 +177,12 @@
 
     function submitPurchase() {
         const phone = document.getElementById("customerPhone").value;
-        if(!phone) {
-            showToast("⚠️ يرجى كتابة رقم الموبايل أولاً", "error");
-            return;
-        }
+        if(!phone) { alert("اكتب الرقم"); return; }
 
         const btn = document.getElementById("confirmBtn");
-        
-        // تغيير شكل الزرار أثناء التحميل عشان الطالب ميدوسش مرتين
         btn.disabled = true;
-        btn.innerText = "جاري المراجعة والإرسال... ⏳";
-        showToast("جاري فحص التحويل، ثواني وتستلم الكود...", "info");
-        
+        btn.innerText = "جاري التأكيد...";
+
         fetch(SCRIPT_URL, {
             method: "POST",
             body: JSON.stringify({
@@ -199,21 +193,18 @@
         })
         .then(res => res.json())
         .then(data => {
-            // إرجاع الزرار لأصله
             btn.disabled = false;
-            btn.innerText = "تأكيد واستلام الكود ⚡";
-
+            btn.innerText = "تأكيد واستلام الكود";
             if(data.status === "success") {
-                showToast(`✅ ${data.message}`, "success");
-                setTimeout(closeModal, 1500); // قفل النافذة بعد ثانية ونص من النجاح
+                alert("✅ تم التأكيد!");
+                location.reload();
             } else {
-                showToast(`❌ ${data.message}`, "error");
+                alert("❌ " + data.message);
             }
         })
         .catch(err => {
             btn.disabled = false;
-            btn.innerText = "تأكيد واستلام الكود ⚡";
-            showToast("حدث خطأ في الاتصال، حاول مرة أخرى", "error");
+            alert("حدث خطأ في الاتصال");
         });
     }
 </script>
