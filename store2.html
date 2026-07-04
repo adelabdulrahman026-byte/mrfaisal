@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>متجر فيصل  🚀</title>
+    <title>متجر فيصولة 🚀</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
     
     <style>
@@ -84,12 +84,12 @@
 
 <div id="toast" class="toast"></div>
 
-<!-- الشريط العلوي الذكي (تم التعديل ليوجه إلى auth.html) -->
+<!-- الشريط العلوي الذكي -->
 <div class="navbar">
     <h2 class="logo">متجر فيصولة</h2>
     <div class="user-nav">
         <span class="user-name" id="navUserName">...</span>
-        <a href="store.html" class="profile-btn">حسابي 👤</a>
+        <a href="auth.html" class="profile-btn">حسابي 👤</a>
     </div>
 </div>
 
@@ -129,8 +129,7 @@
 </div>
 
 <script>
-    // ⚠️ حط الرابط بتاعك هنا ⚠️
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwoMECUWC1IKgQIxcA9dFetEVSq_waVLXqdgAyzeF4tsTyXu5KcOeHbK0rEU9MNfvVijw/exec"; 
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzR_qD3NLFHKZ7Ei99UDMJs0j5P3c5JOM_jLH6QdNfc_j9wkepZ2WBRIeIJ-Qy175McJQ/exec"; 
     
     // بيانات الطالب والمنتج الحالي
     let currentUser = null;
@@ -147,8 +146,9 @@
     window.onload = function() {
         const savedUser = localStorage.getItem('fiysula_student');
         if (!savedUser) {
+            // لو مش مسجل دخول، يوديه صفحة الدخول فوراً
             alert("يجب تسجيل الدخول أولاً لتصفح المتجر وإتمام الشراء.");
-            window.location.href = "store.html";
+            window.location.href = "auth.html";
             return;
         }
         
@@ -165,10 +165,12 @@
             container.innerHTML = ""; 
             
             products.forEach((p, index) => {
+                // تحديد شكل البادج بناءً على نوع المنتج (كتاب ولا كود)
                 const isBook = p.type === 'book';
                 const badgeHtml = isBook ? `<span class="badge book">📦 كتاب/مذكرة</span>` : `<span class="badge code">🎟️ كود حصة</span>`;
                 const btnText = isBook ? "شحن الكتاب الآن" : "استلام الكود فوراً";
 
+                // استدعاء دالة openPayment بالبيانات كلها
                 container.innerHTML += `
                     <div class="product-card" style="animation-delay: ${index * 0.1}s">
                         ${badgeHtml}
@@ -183,8 +185,7 @@
             });
         })
         .catch(err => {
-            // التعديل ده عشان لو في خطأ في جلب المنتجات يبان على الشاشة بدال ما يفضل يلف
-            document.getElementById("loader").innerHTML = `<p style='color:red; font-weight:bold;'>خطأ في الاتصال بالسيرفر: ${err.message}</p>`;
+            document.getElementById("loader").innerHTML = "<p style='color:red;'>حدث خطأ، يرجى تحديث الصفحة.</p>";
         });
     }
 
@@ -193,6 +194,7 @@
         document.getElementById("modalProductName").innerText = name;
         document.getElementById("modalProductPrice").innerText = price + " ج";
         
+        // لو المنتج كتاب، ندي للطالب تنبيه إننا هنشحنه على عنوانه
         if(type === 'book') {
             showToast(`سيتم شحن الكتاب إلى: ${currentUser.gov} - ${currentUser.address}`, 'info');
         }
@@ -205,67 +207,48 @@
         document.getElementById("transferPhone").value = ""; 
     }
 
-function submitPurchase() {
+    function submitPurchase() {
         const transferPhone = document.getElementById("transferPhone").value.trim();
         if(!transferPhone) return showToast("⚠️ اكتب الرقم الذي تم التحويل منه", "error");
 
         const btn = document.getElementById("confirmBtn");
         btn.disabled = true;
         btn.innerText = "جاري مراجعة التحويل... ⏳";
-
-        // بناء استمارة مخفية (Form) تتخطى حماية الموبايل نهائياً
-        const form = document.createElement("form");
-        form.method = "POST";
-        form.action = SCRIPT_URL;
-        form.target = "hidden_iframe"; // توجيه النتيجة لإطار مخفي عشان الصفحة متعملش ريفريش
-
-        // تجميع البيانات
-        const payload = {
-            action: "claim_purchase",
-            transferPhone: transferPhone,
-            studentWhatsApp: currentUser.whatsapp,
-            price: activeProduct.price,
-            itemType: activeProduct.type,
-            itemName: activeProduct.name,
-            studentGov: currentUser.gov || "غير مسجل",
-            studentAddress: currentUser.address || "غير مسجل"
-        };
-
-        // تحويل البيانات لمدخلات في الاستمارة
-        const input = document.createElement("input");
-        input.type = "hidden";
-        input.name = "data";
-        input.value = JSON.stringify(payload);
-        form.appendChild(input);
-
-        // إنشاء إطار مخفي (Iframe) لاستقبال رد جوجل بدون إيرور
-        let iframe = document.getElementById("hidden_iframe");
-        if (!iframe) {
-            iframe = document.createElement("iframe");
-            iframe.name = "hidden_iframe";
-            iframe.id = "hidden_iframe";
-            iframe.style.display = "none";
-            document.body.appendChild(iframe);
-        }
-
-        document.body.appendChild(form);
         
-        // إرسال الاستمارة
-        form.submit();
-
-        // بما إن الطريقة دي مبتجبش إيرور، هنفترض النجاح بعد 3 ثواني ونوجه الطالب
-        setTimeout(() => {
+        fetch(SCRIPT_URL, {
+            method: "POST",
+            body: JSON.stringify({
+                action: "claim_purchase",
+                transferPhone: transferPhone, // رقم السنترال أو الفوري
+                studentWhatsApp: currentUser.whatsapp, // رقم الطالب المتسجل من الجلسة
+                price: activeProduct.price,
+                itemType: activeProduct.type,
+                itemName: activeProduct.name,
+                studentGov: currentUser.gov, // هينبعت أوتوماتيك
+                studentAddress: currentUser.address // هينبعت أوتوماتيك
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
             btn.disabled = false;
             btn.innerText = "تأكيد واستلام الطلب 🚀";
-            showToast("✅ تم إرسال طلبك للسيرفر بنجاح!", "success");
-            
-            setTimeout(() => {
-                closeModal();
-                window.location.href = "store.html"; // توجيه الطالب للبروفايل
-            }, 1500);
-            
-            document.body.removeChild(form);
-        }, 3000);
+
+            if(data.status === "success") {
+                showToast(`✅ ${data.message}`, "success");
+                setTimeout(() => {
+                    closeModal();
+                    // نوجهه للبروفايل عشان يشوف كوده أو يتابع شحن كتابه
+                    window.location.href = "store.html";
+                }, 2000);
+            } else {
+                showToast(`❌ ${data.message}`, "error");
+            }
+        })
+        .catch(err => {
+            btn.disabled = false;
+            btn.innerText = "تأكيد واستلام الطلب 🚀";
+            showToast("حدث خطأ في الاتصال، حاول مرة أخرى", "error");
+        });
     }
 </script>
 </body>
