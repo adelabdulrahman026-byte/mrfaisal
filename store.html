@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بوابة الطالب | متجر فيصولة</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-light: #e0e7ff;
+            --dark: #0f172a;
+            --card-bg: #ffffff;
+            --gray-text: #64748b;
+            --bg: #f8fafc;
+            --success: #10b981;
+            --error: #ef4444;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        /* نظام الإشعارات (Toasts) */
+        .toast { position: fixed; top: -100px; left: 50%; transform: translateX(-50%); padding: 16px 24px; border-radius: 16px; font-size: 16px; font-weight: 700; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); z-index: 9999; transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); text-align: center; color: white; min-width: 250px; }
+        .toast.show { top: 30px; }
+        .toast.success { background: var(--success); }
+        .toast.error { background: var(--error); }
+        .toast.info { background: var(--primary); }
+
+        /* حاوية النموذج المتجاوبة */
+        .auth-container {
+            background: var(--card-bg);
+            width: 100%;
+            max-width: 550px;
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.08);
+            border: 1px solid rgba(255,255,255,0.7);
+            box-sizing: border-box;
+            animation: scaleUp 0.4s ease;
+        }
+
+        /* واجهة البروفايل العريضة لشاشات الكمبيوتر */
+        .dashboard-container {
+            background: var(--card-bg);
+            width: 100%;
+            max-width: 1000px;
+            border-radius: 24px;
+            padding: 35px;
+            box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.08);
+            display: none;
+            box-sizing: border-box;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .auth-box { display: none; }
+        .auth-box.active { display: block; }
+
+        h2 { font-size: 28px; font-weight: 800; color: var(--dark); margin: 0 0 10px 0; text-align: center; }
+        .subtitle { text-align: center; color: var(--gray-text); margin-bottom: 30px; font-size: 15px; }
+
+        /* الحقول والتنسيق */
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
+
+        .input-group { margin-bottom: 20px; text-align: right; }
+        .input-group label { display: block; font-weight: 700; font-size: 14px; margin-bottom: 8px; color: var(--dark); }
+        .input-group input, .input-group select, .input-group textarea { width: 100%; padding: 14px; border: 2px solid #e2e8f0; border-radius: 14px; box-sizing: border-box; font-family: inherit; font-size: 15px; background: #f8fafc; transition: all 0.3s ease; }
+        .input-group input:focus, .input-group select:focus, .input-group textarea:focus { border-color: var(--primary); outline: none; background: white; box-shadow: 0 0 0 4px var(--primary-light); }
+
+        .btn { background: var(--primary); color: white; border: none; padding: 16px; width: 100%; border-radius: 14px; font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.3s ease; font-family: inherit; margin-top: 10px; }
+        .btn:hover { background: #4338ca; transform: translateY(-2px); }
+        .btn:disabled { background: #cbd5e1; cursor: not-allowed; transform: none; }
+
+        .switch-link { text-align: center; margin-top: 20px; font-size: 14px; color: var(--gray-text); }
+        .switch-link a { color: var(--primary); font-weight: 700; text-decoration: none; cursor: pointer; }
+        .switch-link a:hover { text-decoration: underline; }
+
+        /* تصميم البروفايل ولوحة التحكم */
+        .user-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f1f5f9; padding-bottom: 20px; margin-bottom: 30px; }
+        .user-info h3 { margin: 0; font-size: 24px; color: var(--dark); }
+        .logout-btn { background: #fee2e2; color: #ef4444; border: none; padding: 10px 20px; border-radius: 10px; font-family: inherit; font-weight: 700; cursor: pointer; transition: 0.3s; }
+        .logout-btn:hover { background: #fca5a5; }
+
+        .grid-sections { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        @media (max-width: 850px) { .grid-sections { grid-template-columns: 1fr; } }
+
+        .data-card { background: #f8fafc; border-radius: 18px; padding: 20px; border: 1px solid #e2e8f0; }
+        .data-card h4 { margin: 0 0 15px 0; font-size: 18px; color: var(--dark); display: flex; align-items: center; gap: 8px; }
+
+        /* جداول وقوائم الأكواد والشحن */
+        .list-item { background: white; border: 1px solid #e2e8f0; padding: 15px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .code-display { font-family: monospace; font-size: 18px; font-weight: bold; color: var(--primary); background: var(--primary-light); padding: 4px 10px; border-radius: 6px; }
+        .status-badge { padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+        .status-badge.preparing { background: #fef3c7; color: #d97706; }
+        .status-badge.shipped { background: #d1fae5; color: #059669; }
+
+        /* إرشادات مهمة */
+        .warning-box { background: #fff7ed; border: 1px solid #ffedd5; border-radius: 12px; padding: 12px; font-size: 13px; color: #c2410c; margin-bottom: 20px; line-height: 1.5; }
+
+        @keyframes scaleUp { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        @keyframes fadeInUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    </style>
+</head>
+<body>
+
+<div id="toast" class="toast"></div>
+
+<div class="auth-container" id="authContainer">
+    
+    <div class="auth-box active" id="loginBox">
+        <h2>تسجيل الدخول 👋</h2>
+        <p class="subtitle">مرحباً بك مجدداً في متجر فيصولة</p>
+        <div class="input-group">
+            <label>رقم الواتساب الشخصي (اسم المستخدم)</label>
+            <input type="tel" id="loginWhatsapp" placeholder="01XXXXXXXXX">
+        </div>
+        <div class="input-group">
+            <label>كلمة المرور</label>
+            <input type="password" id="loginPassword" placeholder="••••••••">
+        </div>
+        <button class="btn" id="loginBtn" onclick="handleLogin()">دخول للمتجر 🚀</button>
+        <div class="switch-link">
+            ليس لديك حساب؟ <a onclick="switchBox('registerBox')">إنشاء حساب جديد</a><br><br>
+            <a onclick="switchBox('forgotBox')" style="color: var(--gray-text); font-weight: normal; font-size: 13px;">نسيت كلمة المرور؟</a>
+        </div>
+    </div>
+
+    <div class="auth-box" id="registerBox">
+        <h2>إنشاء حساب طالب جديد 🎓</h2>
+        <p class="subtitle">سجل بياناتك بدقة لتفعيل الأكواد وشحن المذكرات</p>
+        
+        <div class="input-group">
+            <label>الاسم ثلاثي بالكامل</label>
+            <input type="text" id="regName" placeholder="محمد احمد علي">
+        </div>
+        
+        <div class="form-row">
+            <div class="input-group">
+                <label>رقم الواتساب الشخصي</label>
+                <input type="tel" id="regWhatsapp" placeholder="تصلك عليه الأكواد">
+            </div>
+            <div class="input-group">
+                <label>رقم موبايل بديل</label>
+                <input type="tel" id="regAltPhone" placeholder="رقم ولي الأمر أو فون آخر">
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="input-group">
+                <label>المحافظة</label>
+                <select id="regGov">
+                    <option value="الإسكندرية">الإسكندرية</option>
+                    <option value="القاهرة">القاهرة</option>
+                    <option value="الجيزة">الجيزة</option>
+                    <option value="البحيرة">البحيرة</option>
+                    <option value="الغربية">الغربية</option>
+                    <option value="الدقهلية">الدقهلية</option>
+                    </select>
+            </div>
+            <div class="input-group">
+                <label>كلمة المرور</label>
+                <input type="password" id="regPassword" placeholder="اختر كلمة مرور قوية">
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label>العنوان بالتفصيل (اسم الشارع - رقم العقار - الدور - الشقة)</label>
+            <textarea id="regAddress" rows="2" placeholder="مهم جداً لشحن الكتب والمذكرات عبر البريد المصري"></textarea>
+        </div>
+
+        <button class="btn" id="regBtn" onclick="handleRegister()">تأكيد وإنشاء الحساب ✨</button>
+        <div class="switch-link">
+            لديك حساب بالفعل؟ <a onclick="switchBox('loginBox')">تسجيل الدخول</a>
+        </div>
+    </div>
+
+    <div class="auth-box" id="forgotBox">
+        <h2>استرجاع كلمة المرور 🔐</h2>
+        <p class="subtitle">اكتب رقم الواتساب وسنرسل لك كلمة المرور الخاصة بك فوراً</p>
+        <div class="input-group">
+            <label>رقم الواتساب المسجل به</label>
+            <input type="tel" id="forgotWhatsapp" placeholder="01XXXXXXXXX">
+        </div>
+        <button class="btn" id="forgotBtn" onclick="handleForgotPassword()">إرسال الباسورد على الواتساب ⚡</button>
+        <div class="switch-link">
+            <a onclick="switchBox('loginBox')">العودة لتسجيل الدخول</a>
+        </div>
+    </div>
+</div>
+
+<div class="dashboard-container" id="dashboardContainer">
+    <div class="user-header">
+        <div class="user-info">
+            <h3 id="dashUserName">مرحباً بك يا بطل</h3>
+            <span id="dashUserPhone" style="color: var(--gray-text); font-weight: bold;">012...</span>
+        </div>
+        <button class="logout-btn" onclick="handleLogout()">تسجيل الخروج 🚪</button>
+    </div>
+
+    <div class="warning-box">
+        💡 <strong>إرشادات هامة عند الشراء:</strong> عند إتمام الطلب، اكتب رقم المحفظة التي قمت بالتحويل منها بدقة. إذا قمت بالتحويل من (منفذ فوري أو سنترال)، تأكد من أخذ الرقم الصحيح الذي قام السنترال بالتحويل منه لتأكيد عمليتك أوتوماتيكياً بدون تأخير.
+    </div>
+
+    <div class="grid-sections">
+        <div class="data-card">
+            <h4>🎟️ أكواد الحصص الخاصة بك</h4>
+            <div id="codesHistoryContainer">
+                <p style="color: var(--gray-text); font-size: 14px;">لا توجد أكواد مشتراة حتى الآن.</p>
+            </div>
+        </div>
+
+        <div class="data-card">
+            <h4>📦 تتبع شحن الكتب والمذكرات (البريد المصري)</h4>
+            <div id="booksHistoryContainer">
+                <p style="color: var(--gray-text); font-size: 14px;">لا توجد طلبات شحن كتب حالياً.</p>
+            </div>
+        </div>
+    </div>
+    
+    <center>
+        <button class="btn" style="max-width: 300px; margin-top: 40px; background: var(--dark);" onclick="window.location.href='store.html'">الذهاب للتسوق بالمتجر 🛒</button>
+    </center>
+</div>
+
+<script>
+    // ضع رابط جوجل سكريبت الخارق الخاص بك هنا
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxzayOlSNGVhwpyACohD6jty7Bgr3DwRpiX824ia6NS53AHaVc6TRG3H7wmDr7rKvLTxg/exec";
+
+    function showToast(message, type = 'info') {
+        const toast = document.getElementById('toast');
+        toast.className = `toast show ${type}`;
+        toast.innerHTML = message;
+        setTimeout(() => { toast.className = 'toast'; }, 4000);
+    }
+
+    function switchBox(boxId) {
+        document.querySelectorAll('.auth-box').forEach(box => box.classList.remove('active'));
+        document.getElementById(boxId).classList.add('active');
+    }
+
+    // التحقق من وجود جلسة دخول مسجلة عند فتح الصفحة
+    window.onload = function() {
+        const savedUser = localStorage.getItem('fiysula_student');
+        if (savedUser) {
+            showDashboard(JSON.parse(savedUser));
+        }
+    }
+
+    // 1. معالجة تسجيل الحساب الجديد
+    function handleRegister() {
+        const name = document.getElementById('regName').value.trim();
+        const whatsapp = document.getElementById('regWhatsapp').value.trim();
+        const altPhone = document.getElementById('regAltPhone').value.trim();
+        const gov = document.getElementById('regGov').value;
+        const password = document.getElementById('regPassword').value;
+        const address = document.getElementById('regAddress').value.trim();
+
+        if(!name || !whatsapp || !password || !address) {
+            return showToast("⚠️ برجاء ملء جميع البيانات الأساسية", "error");
+        }
+
+        const btn = document.getElementById('regBtn');
+        btn.disabled = true;
+        btn.innerText = "جاري إنشاء الحساب... ⏳";
+
+        fetch(SCRIPT_URL, {
+            method: "POST",
+            body: JSON.stringify({ action: "register", name, whatsapp, altPhone, gov, password, address })
+        })
+        .then(res => res.json())
+        .then(data => {
+            btn.disabled = false;
+            btn.innerText = "تأكيد وإنشاء الحساب ✨";
+            if(data.status === "success") {
+                showToast(`✅ ${data.message}`, "success");
+                switchBox('loginBox');
+            } else {
+                showToast(`❌ ${data.message}`, "error");
+            }
+        }).catch(() => {
+            btn.disabled = false;
+            btn.innerText = "تأكيد وإنشاء الحساب ✨";
+            showToast("حدث خطأ في الاتصال بالسيستم", "error");
+        });
+    }
+
+    // 2. معالجة تسجيل الدخول
+    function handleLogin() {
+        const whatsapp = document.getElementById('loginWhatsapp').value.trim();
+        const password = document.getElementById('loginPassword').value;
+
+        if(!whatsapp || !password) return showToast("⚠️ اكتب رقم الواتساب والباسورد", "error");
+
+        const btn = document.getElementById('loginBtn');
+        btn.disabled = true;
+        btn.innerText = "جاري الدخول... ⏳";
+
+        fetch(SCRIPT_URL, {
+            method: "POST",
+            body: JSON.stringify({ action: "login", whatsapp, password })
+        })
+        .then(res => res.json())
+        .then(data => {
+            btn.disabled = false;
+            btn.innerText = "دخول للمتجر 🚀";
+            if(data.status === "success") {
+                showToast(`👋 أهلاً بك يا ${data.user.name}`, "success");
+                localStorage.setItem('fiysula_student', JSON.stringify(data.user));
+                showDashboard(data.user);
+            } else {
+                showToast(`❌ ${data.message}`, "error");
+            }
+        }).catch(() => {
+            btn.disabled = false;
+            btn.innerText = "دخول للمتجر 🚀";
+            showToast("حدث خطأ في الاتصال بالسيستم", "error");
+        });
+    }
+
+    // 3. معالجة نسيت الباسورد
+    function handleForgotPassword() {
+        const whatsapp = document.getElementById('forgotWhatsapp').value.trim();
+        if(!whatsapp) return showToast("⚠️ اكتب رقم الواتساب الخاص بك", "error");
+
+        const btn = document.getElementById('forgotBtn');
+        btn.disabled = true;
+        btn.innerText = "جاري الإرسال... ⏳";
+
+        fetch(SCRIPT_URL, {
+            method: "POST",
+            body: JSON.stringify({ action: "forgot_password", whatsapp })
+        })
+        .then(res => res.json())
+        .then(data => {
+            btn.disabled = false;
+            btn.innerText = "إرسال الباسورد على الواتساب ⚡";
+            if(data.status === "success") {
+                showToast(`✅ ${data.message}`, "success");
+                switchBox('loginBox');
+            } else {
+                showToast(`❌ ${data.message}`, "error");
+            }
+        }).catch(() => {
+            btn.disabled = false;
+            btn.innerText = "إرسال الباسورد على الواتساب ⚡";
+            showToast("حدث خطأ ما، حاول مجدداً", "error");
+        });
+    }
+
+    // 4. عرض لوحة تحكم الطالب وجلب الأكواد وتتبع الكتب
+    function showDashboard(user) {
+        document.getElementById('authContainer').style.display = 'none';
+        document.getElementById('dashboardContainer').style.display = 'block';
+        document.getElementById('dashUserName').innerText = `مرحباً بك يا ${user.name} 🎓`;
+        document.getElementById('dashUserPhone').innerText = `رقم الحساب الحساب: ${user.whatsapp}`;
+
+        // جلب الأكواد وحالة شحن المذكرات من السيرفر
+        fetch(`${SCRIPT_URL}?action=get_history&whatsapp=${user.whatsapp}`)
+        .then(res => res.json())
+        .then(history => {
+            // رص الأكواد
+            const codesContainer = document.getElementById('codesHistoryContainer');
+            if(history.codes.length > 0) {
+                codesContainer.innerHTML = "";
+                history.codes.forEach(c => {
+                    codesContainer.innerHTML += `
+                        <div class="list-item">
+                            <div>
+                                <span style="font-size:12px; color:var(--gray-text);">كود الحصة:</span><br>
+                                <span class="code-display">${c.code}</span>
+                            </div>
+                            <span style="font-size:11px; color:var(--gray-text); text-align:left;">
+                                ${new Date(c.date).toLocaleDateString('ar-EG')}
+                            </span>
+                        </div>`;
+                });
+            }
+
+            // رص الكتب وأوردرات الشحن
+            const booksContainer = document.getElementById('booksHistoryContainer');
+            if(history.books.length > 0) {
+                booksContainer.innerHTML = "";
+                history.books.forEach(b => {
+                    let badgeClass = b.status === "تم الشحن" ? "shipped" : "preparing";
+                    booksContainer.innerHTML += `
+                        <div class="list-item">
+                            <div>
+                                <strong>${b.name}</strong><br>
+                                <span style="font-size:11px; color:var(--gray-text);">رقم الطلب: ${b.id}</span>
+                            </div>
+                            <span class="status-badge ${badgeClass}">${b.status}</span>
+                        </div>`;
+                });
+            }
+        });
+    }
+
+    function handleLogout() {
+        localStorage.removeItem('fiysula_student');
+        window.location.reload();
+    }
+</script>
+</body>
+</html>
