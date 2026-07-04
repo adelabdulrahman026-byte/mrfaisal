@@ -124,23 +124,19 @@
 </div>
 
 <script>
-    // حط الرابط بتاع جوجل سكريبت بتاعك هنا
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzB8gn4dPVyMJynJulwvnowI1l1WAq1mufWKrwYx3kbvMqRByn5iaUWoQON0CyrA5bkzQ/exec"; 
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxzayOlSNGVhwpyACohD6jty7Bgr3DwRpiX824ia6NS53AHaVc6TRG3H7wmDr7rKvLTxg/exec"; 
     let activePrice = 0;
 
-    // دالة عرض الإشعارات الشيك (بديلة alert)
     function showToast(message, type = 'info') {
         const toast = document.getElementById('toast');
         toast.className = `toast show ${type}`;
         toast.innerHTML = message;
         
-        // اخفاء الإشعار بعد 4 ثواني
         setTimeout(() => {
             toast.className = 'toast';
         }, 4000);
     }
 
-    // جلب المنتجات أوتوماتيكياً
     fetch(SCRIPT_URL)
     .then(res => res.json())
     .then(products => {
@@ -184,7 +180,6 @@
 
         const btn = document.getElementById("confirmBtn");
         
-        // تغيير شكل الزرار أثناء التحميل عشان الطالب ميدوسش مرتين
         btn.disabled = true;
         btn.innerText = "جاري المراجعة والإرسال... ⏳";
         showToast("جاري فحص التحويل، ثواني وتستلم الكود...", "info");
