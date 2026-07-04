@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>متجر مستر فيصل 🚀</title>
+    <title>متجر مستر فيصولة 🚀</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
     
     <style>
@@ -84,7 +84,7 @@
 
 <div id="toast" class="toast"></div>
 
-<!-- الشريط العلوي الذكي -->
+<!-- الشريط العلوي الذكي (تم التعديل ليوجه إلى auth.html) -->
 <div class="navbar">
     <h2 class="logo">متجر فيصولة</h2>
     <div class="user-nav">
@@ -129,6 +129,7 @@
 </div>
 
 <script>
+    // ⚠️ حط الرابط بتاعك هنا ⚠️
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw2Fo_mk5ucpFduKMRhFr4ljnX0tJf_V0D-HOYConTduzB5DXoC6sJfhktR10_sBbuPRQ/exec"; 
     
     // بيانات الطالب والمنتج الحالي
@@ -146,7 +147,6 @@
     window.onload = function() {
         const savedUser = localStorage.getItem('fiysula_student');
         if (!savedUser) {
-            // لو مش مسجل دخول، يوديه صفحة الدخول فوراً
             alert("يجب تسجيل الدخول أولاً لتصفح المتجر وإتمام الشراء.");
             window.location.href = "auth.html";
             return;
@@ -165,12 +165,10 @@
             container.innerHTML = ""; 
             
             products.forEach((p, index) => {
-                // تحديد شكل البادج بناءً على نوع المنتج (كتاب ولا كود)
                 const isBook = p.type === 'book';
                 const badgeHtml = isBook ? `<span class="badge book">📦 كتاب/مذكرة</span>` : `<span class="badge code">🎟️ كود حصة</span>`;
                 const btnText = isBook ? "شحن الكتاب الآن" : "استلام الكود فوراً";
 
-                // استدعاء دالة openPayment بالبيانات كلها
                 container.innerHTML += `
                     <div class="product-card" style="animation-delay: ${index * 0.1}s">
                         ${badgeHtml}
@@ -185,7 +183,8 @@
             });
         })
         .catch(err => {
-            document.getElementById("loader").innerHTML = "<p style='color:red;'>حدث خطأ، يرجى تحديث الصفحة.</p>";
+            // التعديل ده عشان لو في خطأ في جلب المنتجات يبان على الشاشة بدال ما يفضل يلف
+            document.getElementById("loader").innerHTML = `<p style='color:red; font-weight:bold;'>خطأ في الاتصال بالسيرفر: ${err.message}</p>`;
         });
     }
 
@@ -194,7 +193,6 @@
         document.getElementById("modalProductName").innerText = name;
         document.getElementById("modalProductPrice").innerText = price + " ج";
         
-        // لو المنتج كتاب، ندي للطالب تنبيه إننا هنشحنه على عنوانه
         if(type === 'book') {
             showToast(`سيتم شحن الكتاب إلى: ${currentUser.gov} - ${currentUser.address}`, 'info');
         }
@@ -207,7 +205,7 @@
         document.getElementById("transferPhone").value = ""; 
     }
 
-   function submitPurchase() {
+    function submitPurchase() {
         const transferPhone = document.getElementById("transferPhone").value.trim();
         if(!transferPhone) return showToast("⚠️ اكتب الرقم الذي تم التحويل منه", "error");
 
@@ -217,9 +215,9 @@
         
         fetch(SCRIPT_URL, {
             method: "POST",
-            redirect: "follow", // التعديل ده بيمنع المتصفح إنه يقفل الاتصال فجأة
+            redirect: "follow", // مهم جداً عشان اتصال الموبايل
             headers: {
-                "Content-Type": "text/plain;charset=utf-8" // عشان نعدي من حماية جوجل (CORS)
+                "Content-Type": "text/plain;charset=utf-8"
             },
             body: JSON.stringify({
                 action: "claim_purchase",
@@ -241,8 +239,7 @@
                 showToast(`✅ ${data.message}`, "success");
                 setTimeout(() => {
                     closeModal();
-                    // التوجيه الصح لصفحة حساب الطالب
-                    window.location.href = "auth.html";
+                    window.location.href = "auth.html"; // التوجيه الصح بعد الشراء
                 }, 2000);
             } else {
                 showToast(`❌ ${data.message}`, "error");
@@ -251,15 +248,8 @@
         .catch(err => {
             btn.disabled = false;
             btn.innerText = "تأكيد واستلام الطلب 🚀";
-            // التعديل ده هيطبعلك الخطأ الحقيقي على الشاشة لو حصل
             showToast("خطأ السيرفر: " + err.message, "error");
             console.error(err);
-        });
-    }
-        .catch(err => {
-            btn.disabled = false;
-            btn.innerText = "تأكيد واستلام الطلب 🚀";
-            showToast("حدث خطأ في الاتصال، حاول مرة أخرى", "error");
         });
     }
 </script>
