@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>متجر مستر فيصولة 🚀</title>
+    <title>متجر مستر فيصل 🚀</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
     
     <style>
@@ -207,7 +207,7 @@
         document.getElementById("transferPhone").value = ""; 
     }
 
-    function submitPurchase() {
+   function submitPurchase() {
         const transferPhone = document.getElementById("transferPhone").value.trim();
         if(!transferPhone) return showToast("⚠️ اكتب الرقم الذي تم التحويل منه", "error");
 
@@ -217,15 +217,19 @@
         
         fetch(SCRIPT_URL, {
             method: "POST",
+            redirect: "follow", // التعديل ده بيمنع المتصفح إنه يقفل الاتصال فجأة
+            headers: {
+                "Content-Type": "text/plain;charset=utf-8" // عشان نعدي من حماية جوجل (CORS)
+            },
             body: JSON.stringify({
                 action: "claim_purchase",
-                transferPhone: transferPhone, // رقم السنترال أو الفوري
-                studentWhatsApp: currentUser.whatsapp, // رقم الطالب المتسجل من الجلسة
+                transferPhone: transferPhone,
+                studentWhatsApp: currentUser.whatsapp,
                 price: activeProduct.price,
                 itemType: activeProduct.type,
                 itemName: activeProduct.name,
-                studentGov: currentUser.gov, // هينبعت أوتوماتيك
-                studentAddress: currentUser.address // هينبعت أوتوماتيك
+                studentGov: currentUser.gov,
+                studentAddress: currentUser.address
             })
         })
         .then(res => res.json())
@@ -237,13 +241,21 @@
                 showToast(`✅ ${data.message}`, "success");
                 setTimeout(() => {
                     closeModal();
-                    // نوجهه للبروفايل عشان يشوف كوده أو يتابع شحن كتابه
-                    window.location.href = "store.html";
+                    // التوجيه الصح لصفحة حساب الطالب
+                    window.location.href = "auth.html";
                 }, 2000);
             } else {
                 showToast(`❌ ${data.message}`, "error");
             }
         })
+        .catch(err => {
+            btn.disabled = false;
+            btn.innerText = "تأكيد واستلام الطلب 🚀";
+            // التعديل ده هيطبعلك الخطأ الحقيقي على الشاشة لو حصل
+            showToast("خطأ السيرفر: " + err.message, "error");
+            console.error(err);
+        });
+    }
         .catch(err => {
             btn.disabled = false;
             btn.innerText = "تأكيد واستلام الطلب 🚀";
