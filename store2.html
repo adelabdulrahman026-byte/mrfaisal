@@ -125,7 +125,7 @@
 
 <script>
     // حط الرابط بتاع جوجل سكريبت بتاعك هنا
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwJOpEtcHIhlAKQxPOl3dVr0ikczLIP1CT4mzc0K_v3A-XfqrDS_J7npg21vNlmxY__JA/exec"; 
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwU52vH5LWJcyZuF_sRE5HIXBuPednriv_oZQ-sqwicBzis2C4b4tGctquSpAKUUScl/exec"; 
     let activePrice = 0;
 
     // دالة عرض الإشعارات الشيك (بديلة alert)
@@ -175,38 +175,31 @@
         document.getElementById("customerPhone").value = ""; // تفريغ الخانة
     }
 
-    function submitPurchase() {
-        const phone = document.getElementById("customerPhone").value;
-        if(!phone) { alert("اكتب الرقم"); return; }
+  function submitPurchase() {
+    const phone = document.getElementById("customerPhone").value;
+    const btn = document.getElementById("confirmBtn");
+    
+    // تحويل البيانات لـ JSON
+    const payload = JSON.stringify({
+        action: "claim_purchase",
+        phone: phone,
+        price: activePrice
+    });
 
-        const btn = document.getElementById("confirmBtn");
-        btn.disabled = true;
-        btn.innerText = "جاري التأكيد...";
+    // استخدام sendBeacon (المتصفح مبيقدرش يمنعها نهائياً)
+    const success = navigator.sendBeacon(SCRIPT_URL, new Blob([payload], {type: 'application/json'}));
 
-        fetch(SCRIPT_URL, {
-            method: "POST",
-            body: JSON.stringify({
-                action: "claim_purchase",
-                phone: phone,
-                price: activePrice
-            })
-        })
-        .then(res => res.json())
-        .then(data => {
-            btn.disabled = false;
-            btn.innerText = "تأكيد واستلام الكود";
-            if(data.status === "success") {
-                alert("✅ تم التأكيد!");
-                location.reload();
-            } else {
-                alert("❌ " + data.message);
-            }
-        })
-        .catch(err => {
-            btn.disabled = false;
-            alert("حدث خطأ في الاتصال");
-        });
+    if (success) {
+        showToast("✅ تم إرسال الطلب، جاري المعالجة..", "success");
+        // استنى 3 ثواني والعملية هتكون تمت في الشيت
+        setTimeout(() => { location.reload(); }, 3000);
+    } else {
+        // لو الـ Beacon فشل (نادر جداً)، نستخدم fetch كخطة بديلة
+        fetch(SCRIPT_URL, { method: "POST", body: payload })
+        .then(() => { location.reload(); })
+        .catch(() => { showToast("حدث خطأ تقني، حاول مرة أخرى", "error"); });
     }
+}
 </script>
 </body>
 </html>
