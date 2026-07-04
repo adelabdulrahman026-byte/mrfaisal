@@ -89,7 +89,7 @@
     <h2 class="logo">متجر فيصولة</h2>
     <div class="user-nav">
         <span class="user-name" id="navUserName">...</span>
-        <a href="auth.html" class="profile-btn">حسابي 👤</a>
+        <a href="store.html" class="profile-btn">حسابي 👤</a>
     </div>
 </div>
 
@@ -129,7 +129,7 @@
 </div>
 
 <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwM8db3dnhs_TfRUnX3EDtK3zHo20mTtY__odG1kG4vJYzsKcfz1ia5XbRcqjdQ3J_oqw/exec"; 
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzysFc02SrQkUtxzENGnCadwHDDpFwbHZrqlcTQwCj8iapUnylbTS1zGZNQX2jWGdxxiw/exec"; 
     
     // بيانات الطالب والمنتج الحالي
     let currentUser = null;
@@ -238,7 +238,7 @@
                 setTimeout(() => {
                     closeModal();
                     // نوجهه للبروفايل عشان يشوف كوده أو يتابع شحن كتابه
-                    window.location.href = "auth.html";
+                    window.location.href = "store.html";
                 }, 2000);
             } else {
                 showToast(`❌ ${data.message}`, "error");
