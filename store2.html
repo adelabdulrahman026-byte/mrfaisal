@@ -148,7 +148,7 @@
         const savedUser = localStorage.getItem('fiysula_student');
         if (!savedUser) {
             alert("يجب تسجيل الدخول أولاً لتصفح المتجر وإتمام الشراء.");
-            window.location.href = "auth.html";
+            window.location.href = "store.html";
             return;
         }
         
@@ -239,7 +239,7 @@ function submitPurchase() {
                 showToast(`✅ ${data.message}`, "success");
                 setTimeout(() => {
                     closeModal();
-                    window.location.href = "auth.html"; // التوجيه للبروفايل
+                    window.location.href = "store.html"; // التوجيه للبروفايل
                 }, 2000);
             } else {
                 showToast(`❌ ${data.message}`, "error");
