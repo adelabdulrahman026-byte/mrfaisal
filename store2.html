@@ -246,19 +246,10 @@ function submitPurchase() {
             }
         })
 .catch(err => {
-            // المتصفح هيصوت ويقول Failed to fetch
-            // بس إحنا عارفين إن جوجل استلم ونفذ العملية (زي ما لوحة التنفيذ أثبتت)
-            // فـ هنعكس الإيرور ونعتبره نجاح عشان منخضش الطالب!
-            
             btn.disabled = false;
             btn.innerText = "تأكيد واستلام الطلب 🚀";
-            
-            showToast("✅ تم إرسال طلبك بنجاح وجاري المعالجة!", "success");
-            
-            setTimeout(() => {
-                closeModal();
-                window.location.href = "store.html"; // توجيه الطالب للبروفايل
-            }, 2000);
+            // السطر ده هيخلي الموقع يقولك الخطأ الحقيقي اللي موقف السيستم
+            showToast("السيستم بيقولك: " + err.message, "error");
         });
     }
 </script>
