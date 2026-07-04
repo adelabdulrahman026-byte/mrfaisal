@@ -3,225 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>متجر 8 | الدفع الآلي</title>
+    <title>متجر الحصص والكتب الذكي</title>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f2f5;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-        .store-container {
-            background-color: #fff;
-            width: 100%;
-            max-width: 500px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            padding: 30px;
-            box-sizing: border-box;
-        }
-        .store-header {
-            text-align: center;
-            margin-bottom: 25px;
-            border-bottom: 2px solid #eee;
-            padding-bottom: 15px;
-        }
-        .store-header h1 {
-            margin: 0;
-            color: #2c3e50;
-            font-size: 24px;
-        }
-        .store-header p {
-            color: #7f8c8d;
-            font-size: 14px;
-            margin-top: 5px;
-        }
-        .step-box {
-            background-color: #f8f9fa;
-            border: 1px solid #e9ecef;
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 20px;
-        }
-        .step-title {
-            font-weight: bold;
-            color: #e74c3c;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .vf-number {
-            font-size: 22px;
-            font-weight: bold;
-            text-align: center;
-            color: #c0392b;
-            letter-spacing: 2px;
-            margin: 10px 0;
-        }
-        .btn-copy {
-            width: 100%;
-            background-color: #34495e;
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: 0.3s;
-        }
-        .btn-copy:hover {
-            background-color: #2c3e50;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: #34495e;
-            font-weight: 600;
-        }
-        .form-control {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ced4da;
-            border-radius: 8px;
-            box-sizing: border-box;
-            font-size: 16px;
-            transition: 0.3s;
-        }
-        .form-control:focus {
-            outline: none;
-            border-color: #e74c3c;
-            box-shadow: 0 0 5px rgba(231, 76, 60, 0.3);
-        }
-        select.form-control {
-            cursor: pointer;
-        }
-        .btn-submit {
-            width: 100%;
-            background-color: #27ae60;
-            color: white;
-            border: none;
-            padding: 15px;
-            border-radius: 8px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-            margin-top: 10px;
-        }
-        .btn-submit:hover {
-            background-color: #219653;
-        }
-        .btn-submit:disabled {
-            background-color: #95a5a6;
-            cursor: not-allowed;
-        }
-        .loader {
-            display: none;
-            text-align: center;
-            margin-top: 10px;
-            color: #27ae60;
-            font-weight: bold;
-        }
+        :root { --primary: #ff3333; --dark: #111827; --card-bg: rgba(255, 255, 255, 0.85); }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: linear-gradient(135deg, #f3f4f6, #e5e7eb); margin: 0; min-height: 100vh; padding: 20px; color: #333; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        h1 { text-align: center; color: var(--dark); font-size: 32px; margin-bottom: 40px; animation: fadeInDown 0.8s ease; }
+        
+        /* شبكة المنتجات الاحترافية */
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
+        .product-card { background: var(--card-bg); backdrop-filter: blur(10px); border-radius: 16px; border: 1px solid rgba(255,255,255,0.4); padding: 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.05); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); animation: fadeInUp 0.6s ease both; }
+        .product-card:hover { transform: translateY(-10px) scale(1.02); box-shadow: 0 20px 40px rgba(0,0,0,0.1); border-color: var(--primary); }
+        .product-img { width: 100%; height: 180px; object-fit: cover; border-radius: 12px; margin-bottom: 15px; background-color: #ddd; }
+        .product-title { font-size: 20px; font-weight: bold; margin: 10px 0; color: var(--dark); }
+        .product-desc { font-size: 14px; color: #666; height: 40px; overflow: hidden; margin-bottom: 15px; }
+        .product-price { font-size: 24px; font-weight: 800; color: var(--primary); margin-bottom: 15px; }
+        .buy-btn { background: var(--dark); color: white; border: none; padding: 12px 25px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.3s ease; }
+        .product-card:hover .buy-btn { background: var(--primary); box-shadow: 0 5px 15px rgba(255, 51, 51, 0.4); }
+
+        /* نافذة الدفع الأنيميشن (Modal) */
+        .modal-overlay { position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: all 0.4s ease; z-index: 999; }
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+        .modal-box { background: white; padding: 30px; border-radius: 20px; width: 90%; max-width: 450px; text-align: center; transform: scale(0.7); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 25px 50px rgba(0,0,0,0.2); }
+        .modal-overlay.active .modal-box { transform: scale(1); }
+        .close-modal { float: left; font-size: 24px; cursor: pointer; color: #999; transition: 0.3s; }
+        .close-modal:hover { color: #333; }
+        
+        .vf-box { background: #fff5f5; border: 2px dashed var(--primary); border-radius: 12px; padding: 15px; margin: 20px 0; position: relative; }
+        .vf-num { font-size: 26px; font-weight: bold; color: var(--primary); letter-spacing: 1px; }
+        .input-group { margin-bottom: 20px; text-align: right; }
+        .input-group label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 14px; }
+        .input-group input { width: 100%; padding: 12px; border: 2px solid #eee; border-radius: 8px; box-sizing: border-box; font-size: 16px; transition: 0.3s; }
+        .input-group input:focus { border-color: var(--primary); outline: none; }
+        .confirm-btn { background: #28a745; color: white; border: none; padding: 14px; width:100%; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .confirm-btn:hover { background: #218838; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4); }
+
+        /* Animations */
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-    <div class="store-container">
-        <div class="store-header">
-            <h1>متجر المنصة التعليمية</h1>
-            <p>احصل على أكواد الحصص والكتب أوتوماتيكياً</p>
-        </div>
-
-        <div class="step-box">
-            <div class="step-title">1. قم بتحويل قيمة المنتج أولاً</div>
-            <p style="font-size: 13px; color: #666; margin: 0 0 10px 0;">حول المبلغ (سواء 30ج، 50ج، أو ثمن الكتاب) على الرقم ده:</p>
-            <div class="vf-number" id="storeNumber">010XXXXXXXX</div> <button class="btn-copy" onclick="copyNumber()">نسخ الرقم</button>
-        </div>
-
-        <div class="step-box">
-            <div class="step-title">2. تأكيد واستلام المنتج</div>
-            
-            <div class="form-group">
-                <label>ماذا تريد أن تشتري؟</label>
-                <select id="itemType" class="form-control">
-                    <option value="code">كود حصة (عادية أو مراجعة)</option>
-                    <option value="book">شراء كتاب (شحن للمنزل)</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>رقم الموبايل الذي قمت بالتحويل منه</label>
-                <input type="tel" id="customerPhone" class="form-control" placeholder="مثال: 01123456789" required>
-            </div>
-
-            <button class="btn-submit" id="submitBtn" onclick="verifyOrder()">تأكيد واستلام عبر الواتساب</button>
-            <div class="loader" id="loadingText">جاري مراجعة التحويل وإرسال طلبك... ⏳</div>
-        </div>
+<div class="container">
+    <h1>🎯 متجر المبدعين للحصص والكتب</h1>
+    <div class="products-grid" id="productsContainer">
+        <p style="text-align: center; grid-column: 1/-1;">جاري تحميل المنتجات بحركات أنيميشن...</p>
     </div>
+</div>
 
-    <script>
-        function copyNumber() {
-            var number = document.getElementById("storeNumber").innerText;
-            navigator.clipboard.writeText(number).then(() => {
-                alert("تم نسخ الرقم بنجاح: " + number);
-            });
-        }
+<div class="modal-overlay" id="paymentModal">
+    <div class="modal-box">
+        <span class="close-modal" onclick="closeModal()">&times;</span>
+        <h2 style="margin-top: 0;">إتمام عملية الشراء</h2>
+        <p>قم بتحويل المبلغ التالي عبر فودافون كاش:</p>
+        <div class="product-price" id="modalProductPrice">0 ج</div>
+        
+        <div class="vf-box">
+            <span style="font-size: 12px; color: #666;">رقم محفظة المتجر</span><br>
+            <span class="vf-num">01012345678</span> </div>
 
-        function verifyOrder() {
-            var phone = document.getElementById("customerPhone").value.trim();
-            var itemType = document.getElementById("itemType").value;
-            var btn = document.getElementById("submitBtn");
-            var loader = document.getElementById("loadingText");
+        <div class="input-group">
+            <label>رقم موبايلك (اللي حولت منه)</label>
+            <input type="tel" id="customerPhone" placeholder="01XXXXXXXXX">
+        </div>
 
-            // التحقق من إدخال الرقم
-            if (phone === "" || phone.length < 10) {
-                alert("برجاء إدخال رقم موبايل صحيح.");
-                return;
-            }
+        <button class="confirm-btn" onclick="submitPurchase()">تأكيد واستلام الكود فورا ⚡</button>
+    </div>
+</div>
 
-            // إظهار التحميل وتعطيل الزر عشان العميل ميدوسش مرتين
-            btn.disabled = true;
-            loader.style.display = "block";
+<script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzB8gn4dPVyMJynJulwvnowI1l1WAq1mufWKrwYx3kbvMqRByn5iaUWoQON0CyrA5bkzQ/exec";
+    let activePrice = 0;
 
-            // ===> حط رابط جوجل سكريبت بتاعك هنا <===
-            var scriptURL = "https://script.google.com/macros/s/AKfycbwsrF03KlwpILWABGmtDOyOKKsvnEHu8YmYDf05rEGRff4o9W5efeoMM3ZzBsaiy1sipg/exec";
+    // جلب المنتجات أوتوماتيكياً من الإكسيل عند فتح الصفحة
+    fetch(SCRIPT_URL)
+    .then(res => res.json())
+    .then(products => {
+        const container = document.getElementById("productsContainer");
+        container.innerHTML = "";
+        products.forEach((p, index) => {
+            container.innerHTML += `
+                <div class="product-card" style="animation-delay: ${index * 0.1}s">
+                    <img src="${p.image}" class="product-img" alt="${p.name}">
+                    <div class="product-title">${p.name}</div>
+                    <div class="product-desc">${p.description}</div>
+                    <div class="product-price">${p.price} ج</div>
+                    <button class="buy-btn" onclick="openPayment(${p.price})">شراء الآن</button>
+                </div>`;
+        });
+    });
 
-            var payload = {
-                "action": "claim_purchase",
-                "phone": phone,
-                "itemType": itemType
-            };
+    function openPayment(price) {
+        activePrice = price;
+        document.getElementById("modalProductPrice").innerText = price + " ج";
+        document.getElementById("paymentModal").classList.add("active");
+    }
 
-            fetch(scriptURL, {
-                method: "POST",
-                body: JSON.stringify(payload)
+    function closeModal() {
+        document.getElementById("paymentModal").classList.remove("active");
+    }
+
+    function submitPurchase() {
+        const phone = document.getElementById("customerPhone").value;
+        if(!phone) return alert("اكتب رقم فونك أولاً يا بطل!");
+
+        alert("جاري فحص التحويل وإرسال الكود على الواتساب...");
+        
+        fetch(SCRIPT_URL, {
+            method: "POST",
+            body: JSON.stringify({
+                action: "claim_purchase",
+                phone: phone,
+                price: activePrice
             })
-            .then(response => response.json())
-            .then(data => {
-                btn.disabled = false;
-                loader.style.display = "none";
-                
-                if (data.status === "success") {
-                    alert("✅ نجاح: " + data.message);
-                    document.getElementById("customerPhone").value = ""; // تفريغ الخانة
-                } else {
-                    alert("❌ عذراً: " + data.message);
-                }
-            })
-            .catch(error => {
-                btn.disabled = false;
-                loader.style.display = "none";
-                alert("حدث خطأ في الاتصال بالسيرفر. تأكد من الإنترنت وجرب مرة أخرى.");
-            });
-        }
-    </script>
+        })
+        .then(res => res.json())
+        .then(data => {
+            alert(data.message);
+            if(data.status === "success") closeModal();
+        });
+    }
+</script>
 </body>
 </html>
