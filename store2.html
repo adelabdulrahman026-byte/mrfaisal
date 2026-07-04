@@ -89,7 +89,7 @@
     <h2 class="logo">متجر فيصولة</h2>
     <div class="user-nav">
         <span class="user-name" id="navUserName">...</span>
-        <a href="auth.html" class="profile-btn">حسابي 👤</a>
+        <a href="store.html" class="profile-btn">حسابي 👤</a>
     </div>
 </div>
 
@@ -213,12 +213,9 @@
         btn.disabled = true;
         btn.innerText = "جاري مراجعة التحويل... ⏳";
         
+        // شيلنا الـ headers تماماً عشان متصفح الموبايل ميعملش بلوك (CORS Error)
         fetch(SCRIPT_URL, {
             method: "POST",
-            redirect: "follow", // مهم جداً عشان اتصال الموبايل
-            headers: {
-                "Content-Type": "text/plain;charset=utf-8"
-            },
             body: JSON.stringify({
                 action: "claim_purchase",
                 transferPhone: transferPhone,
@@ -239,7 +236,7 @@
                 showToast(`✅ ${data.message}`, "success");
                 setTimeout(() => {
                     closeModal();
-                    window.location.href = "auth.html"; // التوجيه الصح بعد الشراء
+                    window.location.href = "auth.html"; // التوجيه للبروفايل
                 }, 2000);
             } else {
                 showToast(`❌ ${data.message}`, "error");
