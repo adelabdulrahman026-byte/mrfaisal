@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>متجر فيصولة 🚀</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root { 
+            --primary: #4f46e5; 
+            --primary-hover: #4338ca;
+            --dark: #1e293b; 
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+        }
+        body { font-family: 'Tajawal', sans-serif; background-color: var(--bg); margin: 0; min-height: 100vh; color: var(--dark); padding-bottom: 50px; }
+        
+        /* الناف بار (الشريط العلوي) */
+        .navbar { background: var(--card-bg); padding: 15px 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 50; border-bottom: 1px solid #e2e8f0; }
+        .logo { font-size: 22px; font-weight: 800; color: var(--primary); margin: 0; }
+        .user-nav { display: flex; align-items: center; gap: 15px; }
+        .user-name { font-weight: 700; font-size: 15px; }
+        .profile-btn { background: #f1f5f9; color: var(--dark); border: none; padding: 8px 15px; border-radius: 8px; font-weight: 700; cursor: pointer; text-decoration: none; font-size: 14px; transition: 0.3s; }
+        .profile-btn:hover { background: #e2e8f0; }
+
+        .container { max-width: 1100px; margin: 40px auto 0; padding: 0 20px; }
+        .header { text-align: center; margin-bottom: 40px; animation: fadeInDown 0.8s ease; }
+        .header h1 { font-size: 36px; font-weight: 800; margin-bottom: 10px; }
+        
+        /* علامة التحميل والشبكة */
+        .loader-container { display: flex; justify-content: center; align-items: center; height: 200px; grid-column: 1/-1; }
+        .spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
+        
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
+        .product-card { background: var(--card-bg); border-radius: 20px; padding: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); transition: all 0.3s ease; border: 1px solid #f1f5f9; animation: fadeInUp 0.5s ease both; display: flex; flex-direction: column; }
+        .product-card:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
+        .product-img { width: 100%; height: 200px; object-fit: cover; border-radius: 14px; margin-bottom: 15px; }
+        
+        /* بادج نوع المنتج */
+        .badge { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; margin-bottom: 10px; align-self: flex-start; }
+        .badge.code { background: #e0e7ff; color: #4338ca; }
+        .badge.book { background: #fef3c7; color: #d97706; }
+
+        .product-title { font-size: 20px; font-weight: 700; margin: 0 0 8px 0; }
+        .product-desc { font-size: 14px; color: #64748b; margin-bottom: 15px; flex-grow: 1; }
+        .price-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .product-price { font-size: 24px; font-weight: 800; color: var(--primary); }
+        .buy-btn { background: var(--primary); color: white; border: none; padding: 14px; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer; width: 100%; transition: 0.3s; font-family: inherit; }
+        .buy-btn:hover { background: var(--primary-hover); }
+
+        /* نافذة الدفع (Modal) */
+        .modal-overlay { position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(4px); display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: all 0.3s ease; z-index: 100; }
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+        .modal-box { background: white; padding: 30px; border-radius: 24px; width: 90%; max-width: 400px; transform: translateY(30px); transition: all 0.3s ease; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); text-align: center; position: relative; }
+        .modal-overlay.active .modal-box { transform: translateY(0); }
+        .close-modal { position: absolute; top: 15px; left: 20px; font-size: 28px; cursor: pointer; color: #94a3b8; line-height: 1; }
+        
+        .vf-box { background: #f8fafc; border: 2px dashed #cbd5e1; border-radius: 16px; padding: 15px; margin: 20px 0; }
+        .vf-title { font-size: 13px; color: #64748b; margin-bottom: 5px; display: block; }
+        .vf-num { font-size: 24px; font-weight: 800; color: #e11d48; letter-spacing: 2px; }
+        
+        .input-group { margin-bottom: 20px; text-align: right; }
+        .input-group label { display: block; font-weight: 700; margin-bottom: 8px; font-size: 14px; }
+        .input-group input { width: 100%; padding: 14px; border: 2px solid #e2e8f0; border-radius: 12px; box-sizing: border-box; font-size: 16px; font-family: inherit; transition: 0.3s; background: #f8fafc; }
+        .input-group input:focus { border-color: var(--primary); outline: none; background: white; }
+        
+        .confirm-btn { background: #10b981; color: white; border: none; padding: 16px; width:100%; border-radius: 12px; font-size: 18px; font-weight: 800; cursor: pointer; transition: 0.3s; font-family: inherit; }
+        .confirm-btn:hover { background: #059669; }
+        .confirm-btn:disabled { background: #94a3b8; cursor: not-allowed; }
+
+        /* Toasts */
+        .toast { position: fixed; top: -100px; left: 50%; transform: translateX(-50%); padding: 16px 24px; border-radius: 12px; font-size: 15px; font-weight: 700; color: white; z-index: 9999; transition: all 0.4s ease; text-align: center; min-width: 280px; }
+        .toast.show { top: 20px; }
+        .toast.success { background: #10b981; }
+        .toast.error { background: #ef4444; }
+        .toast.info { background: var(--primary); }
+
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+<div id="toast" class="toast"></div>
+
+<!-- الشريط العلوي الذكي -->
+<div class="navbar">
+    <h2 class="logo">متجر فيصولة</h2>
+    <div class="user-nav">
+        <span class="user-name" id="navUserName">...</span>
+        <a href="auth.html" class="profile-btn">حسابي 👤</a>
+    </div>
+</div>
+
+<div class="container">
+    <div class="header">
+        <h1>تصفح المذكرات والأكواد 📚</h1>
+        <p style="color: #64748b;">اختر المنتج وأتمم الدفع بكل سهولة</p>
+    </div>
+
+    <div class="products-grid" id="productsContainer">
+        <div class="loader-container" id="loader"><div class="spinner"></div></div>
+    </div>
+</div>
+
+<!-- نافذة الدفع -->
+<div class="modal-overlay" id="paymentModal">
+    <div class="modal-box">
+        <span class="close-modal" onclick="closeModal()">&times;</span>
+        
+        <h2 style="margin: 0 0 5px 0;">تأكيد الدفع ⚡</h2>
+        <p style="color: #64748b; margin: 0; font-size: 14px;" id="modalProductName">اسم المنتج</p>
+        <div style="font-size: 24px; font-weight: 800; color: var(--primary); margin-top: 10px;" id="modalProductPrice">0 ج</div>
+        
+        <div class="vf-box">
+            <span class="vf-title">رقم محفظة المتجر للتحويل</span>
+            <div class="vf-num">010XXXXXXX</div> <!-- حط رقمك هنا -->
+        </div>
+
+        <div class="input-group">
+            <label>رقم الموبايل الذي قمت بالتحويل منه (سنترال أو محفظتك)</label>
+            <input type="tel" id="transferPhone" placeholder="01X XXXX XXXX">
+            <small style="color: #ef4444; font-size: 12px; display: block; margin-top: 5px;">* تأكد من الرقم الذي تم التحويل منه فعلياً لمطابقة الدفع.</small>
+        </div>
+
+        <button class="confirm-btn" id="confirmBtn" onclick="submitPurchase()">تأكيد واستلام الطلب 🚀</button>
+    </div>
+</div>
+
+<script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwC_xdQth551a80MNAWxGyaXX6hlzJqEP4Z33c_9Pzv71UiAx-aEnu0PsrXUXQz4YOVWQ/exec"; 
+    
+    // بيانات الطالب والمنتج الحالي
+    let currentUser = null;
+    let activeProduct = { name: "", price: 0, type: "" };
+
+    function showToast(message, type = 'info') {
+        const toast = document.getElementById('toast');
+        toast.className = `toast show ${type}`;
+        toast.innerHTML = message;
+        setTimeout(() => { toast.className = 'toast'; }, 4000);
+    }
+
+    // التحقق من الجلسة أول ما الصفحة تفتح
+    window.onload = function() {
+        const savedUser = localStorage.getItem('fiysula_student');
+        if (!savedUser) {
+            // لو مش مسجل دخول، يوديه صفحة الدخول فوراً
+            alert("يجب تسجيل الدخول أولاً لتصفح المتجر وإتمام الشراء.");
+            window.location.href = "auth.html";
+            return;
+        }
+        
+        currentUser = JSON.parse(savedUser);
+        document.getElementById('navUserName').innerText = `مرحباً، ${currentUser.name.split(' ')[0]}`;
+        loadProducts();
+    }
+
+    function loadProducts() {
+        fetch(SCRIPT_URL)
+        .then(res => res.json())
+        .then(products => {
+            const container = document.getElementById("productsContainer");
+            container.innerHTML = ""; 
+            
+            products.forEach((p, index) => {
+                // تحديد شكل البادج بناءً على نوع المنتج (كتاب ولا كود)
+                const isBook = p.type === 'book';
+                const badgeHtml = isBook ? `<span class="badge book">📦 كتاب/مذكرة</span>` : `<span class="badge code">🎟️ كود حصة</span>`;
+                const btnText = isBook ? "شحن الكتاب الآن" : "استلام الكود فوراً";
+
+                // استدعاء دالة openPayment بالبيانات كلها
+                container.innerHTML += `
+                    <div class="product-card" style="animation-delay: ${index * 0.1}s">
+                        ${badgeHtml}
+                        <img src="${p.image}" class="product-img" alt="${p.name}">
+                        <h3 class="product-title">${p.name}</h3>
+                        <p class="product-desc">${p.description}</p>
+                        <div class="price-row">
+                            <span class="product-price">${p.price} ج</span>
+                        </div>
+                        <button class="buy-btn" onclick="openPayment('${p.name}', ${p.price}, '${p.type}')">${btnText}</button>
+                    </div>`;
+            });
+        })
+        .catch(err => {
+            document.getElementById("loader").innerHTML = "<p style='color:red;'>حدث خطأ، يرجى تحديث الصفحة.</p>";
+        });
+    }
+
+    function openPayment(name, price, type) {
+        activeProduct = { name, price, type };
+        document.getElementById("modalProductName").innerText = name;
+        document.getElementById("modalProductPrice").innerText = price + " ج";
+        
+        // لو المنتج كتاب، ندي للطالب تنبيه إننا هنشحنه على عنوانه
+        if(type === 'book') {
+            showToast(`سيتم شحن الكتاب إلى: ${currentUser.gov} - ${currentUser.address}`, 'info');
+        }
+
+        document.getElementById("paymentModal").classList.add("active");
+    }
+
+    function closeModal() {
+        document.getElementById("paymentModal").classList.remove("active");
+        document.getElementById("transferPhone").value = ""; 
+    }
+
+    function submitPurchase() {
+        const transferPhone = document.getElementById("transferPhone").value.trim();
+        if(!transferPhone) return showToast("⚠️ اكتب الرقم الذي تم التحويل منه", "error");
+
+        const btn = document.getElementById("confirmBtn");
+        btn.disabled = true;
+        btn.innerText = "جاري مراجعة التحويل... ⏳";
+        
+        fetch(SCRIPT_URL, {
+            method: "POST",
+            body: JSON.stringify({
+                action: "claim_purchase",
+                transferPhone: transferPhone, // رقم السنترال أو الفوري
+                studentWhatsApp: currentUser.whatsapp, // رقم الطالب المتسجل من الجلسة
+                price: activeProduct.price,
+                itemType: activeProduct.type,
+                itemName: activeProduct.name,
+                studentGov: currentUser.gov, // هينبعت أوتوماتيك
+                studentAddress: currentUser.address // هينبعت أوتوماتيك
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            btn.disabled = false;
+            btn.innerText = "تأكيد واستلام الطلب 🚀";
+
+            if(data.status === "success") {
+                showToast(`✅ ${data.message}`, "success");
+                setTimeout(() => {
+                    closeModal();
+                    // نوجهه للبروفايل عشان يشوف كوده أو يتابع شحن كتابه
+                    window.location.href = "auth.html";
+                }, 2000);
+            } else {
+                showToast(`❌ ${data.message}`, "error");
+            }
+        })
+        .catch(err => {
+            btn.disabled = false;
+            btn.innerText = "تأكيد واستلام الطلب 🚀";
+            showToast("حدث خطأ في الاتصال، حاول مرة أخرى", "error");
+        });
+    }
+</script>
+</body>
+</html>
