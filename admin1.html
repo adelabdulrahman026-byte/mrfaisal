@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم | متجر فيصولة</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #3b82f6; --dark: #0f172a; --bg: #f8fafc; --card: #ffffff; }
+        body { font-family: 'Tajawal', sans-serif; background: var(--bg); margin: 0; padding: 20px; color: #334155; }
+        .container { max-width: 900px; margin: 0 auto; }
+        .header { background: var(--dark); color: white; padding: 20px; border-radius: 16px; text-align: center; margin-bottom: 30px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+        .header h1 { margin: 0; font-size: 28px; }
+        
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        .tab-btn { flex: 1; background: #e2e8f0; border: none; padding: 15px; border-radius: 12px; font-weight: 700; font-family: inherit; font-size: 16px; cursor: pointer; transition: 0.3s; min-width: 150px; }
+        .tab-btn.active { background: var(--primary); color: white; }
+        
+        .panel { background: var(--card); padding: 30px; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); display: none; animation: fadeIn 0.4s ease; border: 1px solid #e2e8f0; }
+        .panel.active { display: block; }
+        
+        .input-group { margin-bottom: 20px; text-align: right; }
+        .input-group label { display: block; font-weight: 700; margin-bottom: 8px; }
+        .input-group input, .input-group select, .input-group textarea { width: 100%; padding: 14px; border: 2px solid #e2e8f0; border-radius: 12px; box-sizing: border-box; font-family: inherit; font-size: 15px; background: #f8fafc; }
+        .input-group input:focus, .input-group textarea:focus { border-color: var(--primary); outline: none; }
+        
+        .btn { background: var(--primary); color: white; border: none; padding: 16px; width: 100%; border-radius: 12px; font-size: 16px; font-weight: 800; cursor: pointer; transition: 0.3s; font-family: inherit; }
+        .btn:hover { background: #2563eb; }
+        .btn-success { background: #10b981; } .btn-success:hover { background: #059669; }
+
+        /* كروت الشحن */
+        .order-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin-bottom: 15px; }
+        .order-card h4 { margin: 0 0 10px 0; color: var(--dark); font-size: 18px; }
+        .order-card p { margin: 5px 0; font-size: 14px; color: #64748b; }
+        .ship-btn { background: #f59e0b; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; font-family: inherit; transition: 0.3s; }
+        .ship-btn:hover { background: #d97706; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>⚙️ مركز إدارة متجر فيصولة</h1>
+    </div>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('shippingPanel')">📦 طلبات الشحن</button>
+        <button class="tab-btn" onclick="switchTab('productPanel')">🛍️ رفع منتج جديد</button>
+        <button class="tab-btn" onclick="switchTab('codesPanel')">🎟️ شحن الأكواد</button>
+    </div>
+
+    <!-- 1. لوحة إدارة الشحن -->
+    <div class="panel active" id="shippingPanel">
+        <h2 style="margin-top: 0;">طلبات الكتب التي تنتظر الشحن</h2>
+        <button class="btn" style="margin-bottom: 20px; background: #64748b;" onclick="loadOrders()">🔄 تحديث الطلبات</button>
+        
+        <div id="ordersContainer">
+            <p style="text-align: center; color: #64748b;">جاري تحميل الطلبات...</p>
+        </div>
+    </div>
+
+    <!-- 2. إضافة منتج جديد -->
+    <div class="panel" id="productPanel">
+        <h2 style="margin-top: 0;">نشر منتج للمتجر</h2>
+        <div class="input-group">
+            <label>نوع المنتج</label>
+            <select id="pType">
+                <option value="code">🎟️ كود حصة</option>
+                <option value="book">📦 كتاب أو مذكرة (شحن)</option>
+            </select>
+        </div>
+        <div class="input-group">
+            <label>اسم المنتج</label>
+            <input type="text" id="pName" placeholder="مثال: كتاب المراجعة النهائية">
+        </div>
+        <div class="input-group">
+            <label>السعر (بالجنيه)</label>
+            <input type="number" id="pPrice" placeholder="50">
+        </div>
+        <div class="input-group">
+            <label>رابط الصورة</label>
+            <input type="text" id="pImage" placeholder="رابط صورة الغلاف">
+        </div>
+        <div class="input-group">
+            <label>وصف قصير</label>
+            <input type="text" id="pDesc" placeholder="شرح مبسط للمنتج">
+        </div>
+        <button class="btn" onclick="addProduct()">رفع المنتج للمتجر 🚀</button>
+    </div>
+
+    <!-- 3. شحن الأكواد بالجملة -->
+    <div class="panel" id="codesPanel">
+        <h2 style="margin-top: 0;">تفريغ الأكواد في المخزن</h2>
+        <div class="input-group">
+            <label>سعر الكود (لربطه بالمنتج)</label>
+            <input type="number" id="codePrice" placeholder="50">
+        </div>
+        <div class="input-group">
+            <label>ألصق الأكواد هنا (كل كود في سطر)</label>
+            <textarea id="bulkCodes" rows="8" placeholder="CODE001&#10;CODE002..."></textarea>
+        </div>
+        <button class="btn btn-success" onclick="uploadCodes()">حقن الأكواد في النظام ⚡</button>
+    </div>
+</div>
+
+<script>
+    // الرابط بتاع السكربت بتاعك
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzU0Xjhax_k08m5qJPSGPfScK16xt4soCLVjd7qwjlXFs9yPTBzX6RvUmYBw1jzpBLudA/exec";
+
+    function switchTab(panelId) {
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(panelId).classList.add('active');
+        event.target.classList.add('active');
+        if(panelId === 'shippingPanel') loadOrders();
+    }
+
+    // جلب طلبات الشحن
+    function loadOrders() {
+        const container = document.getElementById("ordersContainer");
+        container.innerHTML = "<p style='text-align: center;'>جاري التحميل...</p>";
+        
+        fetch(`${SCRIPT_URL}?action=get_admin_orders`)
+        .then(res => res.json())
+        .then(orders => {
+            if(orders.length === 0) {
+                container.innerHTML = "<p style='text-align: center; color: #10b981; font-weight: bold;'>🎉 المخزن نظيف! لا توجد طلبات معلقة.</p>";
+                return;
+            }
+            container.innerHTML = "";
+            orders.forEach(order => {
+                container.innerHTML += `
+                    <div class="order-card" id="order_${order.rowIndex}">
+                        <h4>📦 ${order.name}</h4>
+                        <p><strong>رقم الطلب:</strong> ${order.id}</p>
+                        <p><strong>رقم الطالب:</strong> ${order.phone}</p>
+                        <p><strong>عنوان الشحن:</strong> ${order.address}</p>
+                        <button class="ship-btn" onclick="markAsShipped(${order.rowIndex}, '${order.id}', '${order.phone}', '${order.name}')">✔️ تم الشحن (إرسال رسالة)</button>
+                    </div>`;
+            });
+        });
+    }
+
+    // تحديث حالة الشحن
+    function markAsShipped(rowIndex, orderId, phone, itemName) {
+        if(!confirm("هل أنت متأكد من شحن هذا الطلب؟ سيتم إرسال رسالة واتساب للطالب.")) return;
+
+        fetch(SCRIPT_URL, {
+            method: "POST",
+            body: JSON.stringify({ action: "update_order", rowIndex, orderId, phone, itemName })
+        })
+        .then(res => res.json())
+        .then(data => {
+            alert(data.message);
+            if(data.status === "success") {
+                document.getElementById(`order_${rowIndex}`).style.display = 'none';
+            }
+        });
+    }
+
+    function addProduct() {
+        const name = document.getElementById("pName").value;
+        const price = document.getElementById("pPrice").value;
+        const image = document.getElementById("pImage").value;
+        const description = document.getElementById("pDesc").value;
+        const type = document.getElementById("pType").value;
+
+        fetch(SCRIPT_URL, {
+            method: "POST",
+            body: JSON.stringify({ action: "add_product", name, price, image, description, type })
+        }).then(res => res.json()).then(data => alert(data.message));
+    }
+
+    function uploadCodes() {
+        const price = document.getElementById("codePrice").value;
+        const codes = document.getElementById("bulkCodes").value;
+        
+        fetch(SCRIPT_URL, {
+            method: "POST",
+            body: JSON.stringify({ action: "bulk_upload", price, codes })
+        }).then(res => res.json()).then(data => {
+            alert(data.message);
+            document.getElementById("bulkCodes").value = "";
+        });
+    }
+
+    // تشغيل جلب الأوردرات عند فتح الصفحة
+    window.onload = loadOrders;
+</script>
+</body>
+</html>
