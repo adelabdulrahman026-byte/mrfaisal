@@ -213,21 +213,22 @@ function submitPurchase() {
         btn.disabled = true;
         btn.innerText = "جاري مراجعة التحويل... ⏳";
         
-        // استخدام الاستمارة الآمنة (FormData) عشان نكسر حماية الموبايل (CORS)
-        const formData = new FormData();
-        formData.append("action", "claim_purchase");
-        formData.append("transferPhone", transferPhone);
-        formData.append("studentWhatsApp", currentUser.whatsapp);
-        formData.append("price", activeProduct.price);
-        formData.append("itemType", activeProduct.type);
-        formData.append("itemName", activeProduct.name);
-        formData.append("studentGov", currentUser.gov || "غير مسجل");
-        formData.append("studentAddress", currentUser.address || "غير مسجل");
+        // الطريقة الأصلية "الخام" اللي كانت شغالة معاك من غير فلكسة
+        const payload = {
+            action: "claim_purchase",
+            transferPhone: transferPhone,
+            studentWhatsApp: currentUser.whatsapp,
+            price: activeProduct.price,
+            itemType: activeProduct.type,
+            itemName: activeProduct.name,
+            studentGov: currentUser.gov || "غير مسجل",
+            studentAddress: currentUser.address || "غير مسجل"
+        };
 
-        // الفيتش هنا من غير أي headers إضافية عشان منلفتش انتباه المتصفح
+        // الـ fetch هنا "سادة" خالص عشان متصفح الموبايل ميعملوش بلوك
         fetch(SCRIPT_URL, {
             method: "POST",
-            body: formData
+            body: JSON.stringify(payload)
         })
         .then(res => res.json())
         .then(data => {
@@ -238,7 +239,7 @@ function submitPurchase() {
                 showToast(`✅ ${data.message}`, "success");
                 setTimeout(() => {
                     closeModal();
-                    window.location.href = "auth.html"; 
+                    window.location.href = "auth.html"; // التوجيه للبروفايل
                 }, 2000);
             } else {
                 showToast(`❌ ${data.message}`, "error");
@@ -247,7 +248,8 @@ function submitPurchase() {
         .catch(err => {
             btn.disabled = false;
             btn.innerText = "تأكيد واستلام الطلب 🚀";
-            showToast("حدث خطأ، يرجى المحاولة مرة أخرى", "error");
+            // السطر ده هيطبعلك سبب الإيرور لو حصل عشان منبقاش عميان
+            showToast("إيرور: " + err.message, "error");
         });
     }
 </script>
