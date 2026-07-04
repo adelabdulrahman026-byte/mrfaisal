@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>متجر مستر فيصل 🚀</title>
+    <title>متجر فيصولة  🚀</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
     
     <style>
@@ -130,7 +130,7 @@
 
 <script>
     // ⚠️ حط الرابط بتاعك هنا ⚠️
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwg5BT3Z_8CCaOvkFNaZtuKE1SwEiXXjQjwGXSX9NVbHa9MUBj2uBjvukDrVQUDh4N8jg/exec"; 
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxQp9nMezm2o2iL3ODmRR8KVlNGQchsuk54E-ro5sm2Mqokx0OG0ce3fkJkqqe955k4UQ/exec"; 
     
     // بيانات الطالب والمنتج الحالي
     let currentUser = null;
@@ -213,18 +213,22 @@ function submitPurchase() {
         btn.disabled = true;
         btn.innerText = "جاري مراجعة التحويل... ⏳";
         
-        // بناء رابط GET سحري يمر من أي حماية ومستحيل موبايل يرفضه
-        var queryUrl = SCRIPT_URL + 
-            "?action=claim_purchase" +
-            "&transferPhone=" + encodeURIComponent(transferPhone) +
-            "&studentWhatsApp=" + encodeURIComponent(currentUser.whatsapp) +
-            "&price=" + encodeURIComponent(activeProduct.price) +
-            "&itemType=" + encodeURIComponent(activeProduct.type) +
-            "&itemName=" + encodeURIComponent(activeProduct.name) +
-            "&studentGov=" + encodeURIComponent(currentUser.gov) +
-            "&studentAddress=" + encodeURIComponent(currentUser.address);
+        // استخدام الاستمارة الآمنة (FormData) عشان نكسر حماية الموبايل (CORS)
+        const formData = new FormData();
+        formData.append("action", "claim_purchase");
+        formData.append("transferPhone", transferPhone);
+        formData.append("studentWhatsApp", currentUser.whatsapp);
+        formData.append("price", activeProduct.price);
+        formData.append("itemType", activeProduct.type);
+        formData.append("itemName", activeProduct.name);
+        formData.append("studentGov", currentUser.gov || "غير مسجل");
+        formData.append("studentAddress", currentUser.address || "غير مسجل");
 
-        fetch(queryUrl, { method: "GET" }) // غيرناها لـ GET رسمياً
+        // الفيتش هنا من غير أي headers إضافية عشان منلفتش انتباه المتصفح
+        fetch(SCRIPT_URL, {
+            method: "POST",
+            body: formData
+        })
         .then(res => res.json())
         .then(data => {
             btn.disabled = false;
@@ -234,7 +238,7 @@ function submitPurchase() {
                 showToast(`✅ ${data.message}`, "success");
                 setTimeout(() => {
                     closeModal();
-                    window.location.href = "auth.html"; // توجيه لبروفايل الطالب
+                    window.location.href = "auth.html"; 
                 }, 2000);
             } else {
                 showToast(`❌ ${data.message}`, "error");
@@ -243,8 +247,7 @@ function submitPurchase() {
         .catch(err => {
             btn.disabled = false;
             btn.innerText = "تأكيد واستلام الطلب 🚀";
-            showToast("خطأ في السيرفر: " + err.message, "error");
-            console.error(err);
+            showToast("حدث خطأ، يرجى المحاولة مرة أخرى", "error");
         });
     }
 </script>
