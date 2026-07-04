@@ -130,7 +130,7 @@
 
 <script>
     // ⚠️ حط الرابط بتاعك هنا ⚠️
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwfLnsuj4VoGta2rdxfClCZ_8-LFjvwI53SD74sARPS7jV2doeIYXwz8BQhlrBq3kS8Jg/exec"; 
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwg5BT3Z_8CCaOvkFNaZtuKE1SwEiXXjQjwGXSX9NVbHa9MUBj2uBjvukDrVQUDh4N8jg/exec"; 
     
     // بيانات الطالب والمنتج الحالي
     let currentUser = null;
@@ -213,33 +213,18 @@ function submitPurchase() {
         btn.disabled = true;
         btn.innerText = "جاري مراجعة التحويل... ⏳";
         
-        // تحويل البيانات لشكل استمارة عادية (URL-Encoded) عشان نكسر حماية CORS في الموبايل نهائياً
-        var formDetails = {
-            action: "claim_purchase",
-            transferPhone: transferPhone,
-            studentWhatsApp: currentUser.whatsapp,
-            price: activeProduct.price,
-            itemType: activeProduct.type,
-            itemName: activeProduct.name,
-            studentGov: currentUser.gov,
-            studentAddress: currentUser.address
-        };
+        // بناء رابط GET سحري يمر من أي حماية ومستحيل موبايل يرفضه
+        var queryUrl = SCRIPT_URL + 
+            "?action=claim_purchase" +
+            "&transferPhone=" + encodeURIComponent(transferPhone) +
+            "&studentWhatsApp=" + encodeURIComponent(currentUser.whatsapp) +
+            "&price=" + encodeURIComponent(activeProduct.price) +
+            "&itemType=" + encodeURIComponent(activeProduct.type) +
+            "&itemName=" + encodeURIComponent(activeProduct.name) +
+            "&studentGov=" + encodeURIComponent(currentUser.gov) +
+            "&studentAddress=" + encodeURIComponent(currentUser.address);
 
-        var formBody = [];
-        for (var property in formDetails) {
-            var encodedKey = encodeURIComponent(property);
-            var encodedValue = encodeURIComponent(formDetails[property]);
-            formBody.push(encodedKey + "=" + encodedValue);
-        }
-        formBody = formBody.join("&");
-
-        fetch(SCRIPT_URL, {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-            },
-            body: formBody
-        })
+        fetch(queryUrl, { method: "GET" }) // غيرناها لـ GET رسمياً
         .then(res => res.json())
         .then(data => {
             btn.disabled = false;
@@ -249,7 +234,7 @@ function submitPurchase() {
                 showToast(`✅ ${data.message}`, "success");
                 setTimeout(() => {
                     closeModal();
-                    window.location.href = "auth.html"; // التوجيه للبروفايل
+                    window.location.href = "auth.html"; // توجيه لبروفايل الطالب
                 }, 2000);
             } else {
                 showToast(`❌ ${data.message}`, "error");
@@ -258,7 +243,7 @@ function submitPurchase() {
         .catch(err => {
             btn.disabled = false;
             btn.innerText = "تأكيد واستلام الطلب 🚀";
-            showToast("خطأ السيرفر: " + err.message, "error");
+            showToast("خطأ في السيرفر: " + err.message, "error");
             console.error(err);
         });
     }
