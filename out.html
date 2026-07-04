@@ -3,95 +3,165 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>متجر الحصص والكتب الذكي</title>
+    <title>متجر فيصولة</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
+    
     <style>
-        :root { --primary: #ff3333; --dark: #111827; --card-bg: rgba(255, 255, 255, 0.85); }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: linear-gradient(135deg, #f3f4f6, #e5e7eb); margin: 0; min-height: 100vh; padding: 20px; color: #333; }
-        .container { max-width: 1200px; margin: 0 auto; }
-        h1 { text-align: center; color: var(--dark); font-size: 32px; margin-bottom: 40px; animation: fadeInDown 0.8s ease; }
+        :root { 
+            --primary: #4f46e5; 
+            --primary-hover: #4338ca;
+            --dark: #1e293b; 
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+        }
+        body { 
+            font-family: 'Tajawal', sans-serif; 
+            background-color: var(--bg); 
+            margin: 0; 
+            min-height: 100vh; 
+            padding: 20px; 
+            color: var(--dark); 
+        }
+        .container { max-width: 1100px; margin: 0 auto; }
         
-        /* شبكة المنتجات الاحترافية */
-        .products-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
-        .product-card { background: var(--card-bg); backdrop-filter: blur(10px); border-radius: 16px; border: 1px solid rgba(255,255,255,0.4); padding: 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.05); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); animation: fadeInUp 0.6s ease both; }
-        .product-card:hover { transform: translateY(-10px) scale(1.02); box-shadow: 0 20px 40px rgba(0,0,0,0.1); border-color: var(--primary); }
-        .product-img { width: 100%; height: 180px; object-fit: cover; border-radius: 12px; margin-bottom: 15px; background-color: #ddd; }
-        .product-title { font-size: 20px; font-weight: bold; margin: 10px 0; color: var(--dark); }
-        .product-desc { font-size: 14px; color: #666; height: 40px; overflow: hidden; margin-bottom: 15px; }
-        .product-price { font-size: 24px; font-weight: 800; color: var(--primary); margin-bottom: 15px; }
-        .buy-btn { background: var(--dark); color: white; border: none; padding: 12px 25px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.3s ease; }
-        .product-card:hover .buy-btn { background: var(--primary); box-shadow: 0 5px 15px rgba(255, 51, 51, 0.4); }
+        /* الهيدر */
+        .header { text-align: center; margin-bottom: 50px; animation: fadeInDown 0.8s ease; }
+        .header h1 { font-size: 40px; font-weight: 800; color: var(--dark); margin-bottom: 10px; letter-spacing: -1px; }
+        .header p { color: #64748b; font-size: 18px; margin: 0; }
+        
+        /* علامة التحميل الشيك (Spinner) */
+        .loader-container { display: flex; justify-content: center; align-items: center; height: 200px; grid-column: 1/-1; }
+        .spinner { width: 50px; height: 50px; border: 4px solid #e2e8f0; border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
+        
+        /* شبكة المنتجات */
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
+        .product-card { 
+            background: var(--card-bg); 
+            border-radius: 20px; 
+            padding: 20px; 
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03); 
+            transition: all 0.3s ease; 
+            border: 1px solid #f1f5f9;
+            animation: fadeInUp 0.5s ease both;
+        }
+        .product-card:hover { transform: translateY(-8px); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04); }
+        .product-img { width: 100%; height: 200px; object-fit: cover; border-radius: 14px; margin-bottom: 15px; }
+        .product-title { font-size: 22px; font-weight: 700; margin: 0 0 8px 0; color: var(--dark); }
+        .product-desc { font-size: 14px; color: #64748b; margin-bottom: 15px; line-height: 1.5; height: 42px; overflow: hidden; }
+        .price-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .product-price { font-size: 24px; font-weight: 800; color: var(--primary); }
+        .buy-btn { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer; width: 100%; transition: 0.3s; font-family: inherit; }
+        .buy-btn:hover { background: var(--primary-hover); }
 
-        /* نافذة الدفع الأنيميشن (Modal) */
-        .modal-overlay { position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: all 0.4s ease; z-index: 999; }
+        /* نافذة الدفع (Modal) */
+        .modal-overlay { position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(5px); display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: all 0.3s ease; z-index: 100; }
         .modal-overlay.active { opacity: 1; pointer-events: auto; }
-        .modal-box { background: white; padding: 30px; border-radius: 20px; width: 90%; max-width: 450px; text-align: center; transform: scale(0.7); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 25px 50px rgba(0,0,0,0.2); }
-        .modal-overlay.active .modal-box { transform: scale(1); }
-        .close-modal { float: left; font-size: 24px; cursor: pointer; color: #999; transition: 0.3s; }
-        .close-modal:hover { color: #333; }
+        .modal-box { background: white; padding: 35px; border-radius: 24px; width: 90%; max-width: 400px; transform: translateY(30px); transition: all 0.3s ease; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); text-align: center; }
+        .modal-overlay.active .modal-box { transform: translateY(0); }
+        .close-modal { position: absolute; top: 20px; left: 20px; font-size: 24px; cursor: pointer; color: #94a3b8; line-height: 1; }
+        .close-modal:hover { color: var(--dark); }
         
-        .vf-box { background: #fff5f5; border: 2px dashed var(--primary); border-radius: 12px; padding: 15px; margin: 20px 0; position: relative; }
-        .vf-num { font-size: 26px; font-weight: bold; color: var(--primary); letter-spacing: 1px; }
-        .input-group { margin-bottom: 20px; text-align: right; }
-        .input-group label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 14px; }
-        .input-group input { width: 100%; padding: 12px; border: 2px solid #eee; border-radius: 8px; box-sizing: border-box; font-size: 16px; transition: 0.3s; }
-        .input-group input:focus { border-color: var(--primary); outline: none; }
-        .confirm-btn { background: #28a745; color: white; border: none; padding: 14px; width:100%; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .confirm-btn:hover { background: #218838; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4); }
+        .vf-box { background: #f8fafc; border: 2px dashed #cbd5e1; border-radius: 16px; padding: 20px; margin: 25px 0; }
+        .vf-title { font-size: 14px; color: #64748b; margin-bottom: 5px; display: block; }
+        .vf-num { font-size: 28px; font-weight: 800; color: #e11d48; letter-spacing: 2px; }
+        
+        .input-group { margin-bottom: 25px; text-align: right; }
+        .input-group label { display: block; font-weight: 700; margin-bottom: 8px; font-size: 14px; color: var(--dark); }
+        .input-group input { width: 100%; padding: 14px; border: 2px solid #e2e8f0; border-radius: 12px; box-sizing: border-box; font-size: 16px; font-family: inherit; transition: 0.3s; background: #f8fafc; }
+        .input-group input:focus { border-color: var(--primary); outline: none; background: white; }
+        
+        .confirm-btn { background: #10b981; color: white; border: none; padding: 16px; width:100%; border-radius: 12px; font-size: 18px; font-weight: 800; cursor: pointer; transition: 0.3s; font-family: inherit; }
+        .confirm-btn:hover { background: #059669; transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.3); }
+        .confirm-btn:disabled { background: #94a3b8; cursor: not-allowed; transform: none; box-shadow: none; }
 
-        /* Animations */
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+        /* نظام الإشعارات الحديث (Toast) بديل الـ Alert */
+        .toast { position: fixed; top: -100px; left: 50%; transform: translateX(-50%); background: var(--dark); color: white; padding: 16px 24px; border-radius: 12px; font-size: 16px; font-weight: 700; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); z-index: 9999; transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); display: flex; align-items: center; gap: 10px; }
+        .toast.show { top: 30px; }
+        .toast.success { background: #10b981; }
+        .toast.error { background: #ef4444; }
+        .toast.info { background: #3b82f6; }
+
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
+<div id="toast" class="toast"></div>
+
 <div class="container">
-    <h1>🎯 متجر المبدعين للحصص والكتب</h1>
+    <div class="header">
+        <h1>متجر فيصولة 🚀</h1>
+        <p>احصل على أكواد الحصص والمذكرات أوتوماتيكياً في ثواني</p>
+    </div>
+
     <div class="products-grid" id="productsContainer">
-        <p style="text-align: center; grid-column: 1/-1;">جاري تحميل المنتجات بحركات أنيميشن...</p>
+        <div class="loader-container" id="loader">
+            <div class="spinner"></div>
+        </div>
     </div>
 </div>
 
 <div class="modal-overlay" id="paymentModal">
     <div class="modal-box">
         <span class="close-modal" onclick="closeModal()">&times;</span>
-        <h2 style="margin-top: 0;">إتمام عملية الشراء</h2>
-        <p>قم بتحويل المبلغ التالي عبر فودافون كاش:</p>
-        <div class="product-price" id="modalProductPrice">0 ج</div>
+        
+        <h2 style="margin: 0 0 10px 0; color: var(--dark);">إتمام الطلب</h2>
+        <p style="color: #64748b; margin: 0; font-size: 14px;">قيمة المنتج: <strong id="modalProductPrice" style="color: var(--primary); font-size: 18px;">0 ج</strong></p>
         
         <div class="vf-box">
-            <span style="font-size: 12px; color: #666;">رقم محفظة المتجر</span><br>
-            <span class="vf-num">01012345678</span> </div>
+            <span class="vf-title">رقم فودافون كاش للمتجر</span>
+            <div class="vf-num">010XXXXXXX</div> </div>
 
         <div class="input-group">
             <label>رقم موبايلك (اللي حولت منه)</label>
-            <input type="tel" id="customerPhone" placeholder="01XXXXXXXXX">
+            <input type="tel" id="customerPhone" placeholder="01X XXXX XXXX">
         </div>
 
-        <button class="confirm-btn" onclick="submitPurchase()">تأكيد واستلام الكود فورا ⚡</button>
+        <button class="confirm-btn" id="confirmBtn" onclick="submitPurchase()">تأكيد واستلام الكود ⚡</button>
     </div>
 </div>
 
 <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzB8gn4dPVyMJynJulwvnowI1l1WAq1mufWKrwYx3kbvMqRByn5iaUWoQON0CyrA5bkzQ/exec";
+    // حط الرابط بتاع جوجل سكريبت بتاعك هنا
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzB8gn4dPVyMJynJulwvnowI1l1WAq1mufWKrwYx3kbvMqRByn5iaUWoQON0CyrA5bkzQ/exec"; 
     let activePrice = 0;
 
-    // جلب المنتجات أوتوماتيكياً من الإكسيل عند فتح الصفحة
+    // دالة عرض الإشعارات الشيك (بديلة alert)
+    function showToast(message, type = 'info') {
+        const toast = document.getElementById('toast');
+        toast.className = `toast show ${type}`;
+        toast.innerHTML = message;
+        
+        // اخفاء الإشعار بعد 4 ثواني
+        setTimeout(() => {
+            toast.className = 'toast';
+        }, 4000);
+    }
+
+    // جلب المنتجات أوتوماتيكياً
     fetch(SCRIPT_URL)
     .then(res => res.json())
     .then(products => {
         const container = document.getElementById("productsContainer");
-        container.innerHTML = "";
+        container.innerHTML = ""; // إزالة علامة التحميل
+        
         products.forEach((p, index) => {
             container.innerHTML += `
                 <div class="product-card" style="animation-delay: ${index * 0.1}s">
                     <img src="${p.image}" class="product-img" alt="${p.name}">
-                    <div class="product-title">${p.name}</div>
-                    <div class="product-desc">${p.description}</div>
-                    <div class="product-price">${p.price} ج</div>
+                    <h3 class="product-title">${p.name}</h3>
+                    <p class="product-desc">${p.description}</p>
+                    <div class="price-row">
+                        <span class="product-price">${p.price} ج</span>
+                    </div>
                     <button class="buy-btn" onclick="openPayment(${p.price})">شراء الآن</button>
                 </div>`;
         });
+    })
+    .catch(err => {
+        document.getElementById("loader").innerHTML = "<p style='color:red;'>حدث خطأ في تحميل المتجر، يرجى تحديث الصفحة.</p>";
     });
 
     function openPayment(price) {
@@ -102,13 +172,22 @@
 
     function closeModal() {
         document.getElementById("paymentModal").classList.remove("active");
+        document.getElementById("customerPhone").value = ""; // تفريغ الخانة
     }
 
     function submitPurchase() {
         const phone = document.getElementById("customerPhone").value;
-        if(!phone) return alert("اكتب رقم فونك أولاً يا بطل!");
+        if(!phone) {
+            showToast("⚠️ يرجى كتابة رقم الموبايل أولاً", "error");
+            return;
+        }
 
-        alert("جاري فحص التحويل وإرسال الكود على الواتساب...");
+        const btn = document.getElementById("confirmBtn");
+        
+        // تغيير شكل الزرار أثناء التحميل عشان الطالب ميدوسش مرتين
+        btn.disabled = true;
+        btn.innerText = "جاري المراجعة والإرسال... ⏳";
+        showToast("جاري فحص التحويل، ثواني وتستلم الكود...", "info");
         
         fetch(SCRIPT_URL, {
             method: "POST",
@@ -120,8 +199,21 @@
         })
         .then(res => res.json())
         .then(data => {
-            alert(data.message);
-            if(data.status === "success") closeModal();
+            // إرجاع الزرار لأصله
+            btn.disabled = false;
+            btn.innerText = "تأكيد واستلام الكود ⚡";
+
+            if(data.status === "success") {
+                showToast(`✅ ${data.message}`, "success");
+                setTimeout(closeModal, 1500); // قفل النافذة بعد ثانية ونص من النجاح
+            } else {
+                showToast(`❌ ${data.message}`, "error");
+            }
+        })
+        .catch(err => {
+            btn.disabled = false;
+            btn.innerText = "تأكيد واستلام الكود ⚡";
+            showToast("حدث خطأ في الاتصال، حاول مرة أخرى", "error");
         });
     }
 </script>
