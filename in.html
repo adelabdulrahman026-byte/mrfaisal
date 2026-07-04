@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم الإدارة | الستور الذكي</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #0f172a; color: #f8fafc; padding: 30px; direction: rtl; }
+        .panel { max-width: 800px; margin: 0 auto; background: #1e293b; padding: 30px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        h1 { color: #38bdf8; border-bottom: 2px solid #334155; padding-bottom: 10px; }
+        .section { background: #334155; padding: 20px; border-radius: 12px; margin-bottom: 25px; }
+        h3 { margin-top: 0; color: #38bdf8; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input, textarea, select { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #475569; background: #1e293b; color: white; box-sizing: border-box; }
+        button { background: #0284c7; color: white; border: none; padding: 12px 25px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; width: 100%; transition: 0.3s; margin-top: 10px; }
+        button:hover { background: #0369a1; }
+    </style>
+</head>
+<body>
+
+<div class="panel">
+    <h1>🎛️ لوحة تحكم المتجر والمسؤول</h1>
+
+    <div class="section">
+        <h3>1. إضافة منتج جديد للمتجر (حصة أو كتاب)</h3>
+        <div class="form-group">
+            <label>اسم المنتج</label>
+            <input type="text" id="pName" placeholder="مثال: حصة شهر يوليو - مراجعة">
+        </div>
+        <div class="form-group">
+            <label>السعر (بالجنيه)</label>
+            <input type="number" id="pPrice" placeholder="50">
+        </div>
+        <div class="form-group">
+            <label>رابط صورة المنتج</label>
+            <input type="text" id="pImage" placeholder="انسخ رابط أي صورة من النت وضعها هنا">
+        </div>
+        <div class="form-group">
+            <label>وصف قصير للمنتج</label>
+            <input type="text" id="pDesc" placeholder="شرح مبسط يظهر للطلبة">
+        </div>
+        <button onclick="addProduct()">رفع ونشر المنتج بالستور 🚀</button>
+    </div>
+
+    <div class="section">
+        <h3>2. شحن محفظة الأكواد بالجملة (Bulk Upload)</h3>
+        <div class="form-group">
+            <label>فئة سعر الكود</label>
+            <input type="number" id="codePrice" placeholder="اكتب السعر لربطه بالمنتج (مثال: 50)">
+        </div>
+        <div class="form-group">
+            <label>انزل بالأكواد هنا (ضع كل كود في سطر منفصل - يمكنك وضع 1000 كود دفعة واحدة)</label>
+            <textarea id="bulkCodes" rows="10" placeholder="CODE123&#10;CODE456&#10;CODE789"></textarea>
+        </div>
+        <button style="background: #22c55e;" onclick="uploadCodes()">تفريغ وشحن الأكواد في قاعدة البيانات ⚡</button>
+    </div>
+</div>
+
+<script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzB8gn4dPVyMJynJulwvnowI1l1WAq1mufWKrwYx3kbvMqRByn5iaUWoQON0CyrA5bkzQ/exec";
+
+    function addProduct() {
+        const name = document.getElementById("pName").value;
+        const price = document.getElementById("pPrice").value;
+        const image = document.getElementById("pImage").value;
+        const description = document.getElementById("pDesc").value;
+
+        fetch(SCRIPT_URL, {
+            method: "POST",
+            body: JSON.stringify({ action: "add_product", name, price, image, description })
+        })
+        .then(res => res.json())
+        .then(data => alert(data.message));
+    }
+
+    function uploadCodes() {
+        const price = document.getElementById("codePrice").value;
+        const codes = document.getElementById("bulkCodes").value;
+
+        if(!price || !codes) return alert("املا البيانات يا مسؤل!");
+
+        alert("جاري حقن الأكواد بالجملة في الإكسيل دفعة واحدة...");
+
+        fetch(SCRIPT_URL, {
+            method: "POST",
+            body: JSON.stringify({ action: "bulk_upload", price, codes })
+        })
+        .then(res => res.json())
+        .then(data => {
+            alert(data.message);
+            if(data.status === "success") document.getElementById("bulkCodes").value = "";
+        });
+    }
+</script>
+</body>
+</html>
