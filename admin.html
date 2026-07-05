@@ -2,48 +2,232 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>لوحة التحكم | فيصل أكاديمي</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> ادمن | فيصل أكاديمي</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@700&display=swap" rel="stylesheet">
-    <style>body { font-family: 'Tajawal', sans-serif; }</style>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Tajawal', sans-serif; background-color: #f8fafc; }
+        .glass-panel { background: white; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
+    </style>
 </head>
-<body class="bg-gray-100 p-10">
-    <div class="max-w-3xl mx-auto bg-white p-8 rounded-3xl shadow-2xl border-t-4 border-teal-500">
-        <h1 class="text-3xl font-bold mb-8 text-slate-800">إدارة الموقع</h1>
+<body class="p-4 md:p-10">
+
+    <div class="max-w-4xl mx-auto glass-panel p-6 md:p-10 rounded-[2rem] border-t-8 border-teal-500 relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-32 h-32 bg-teal-50 rounded-bl-[100px] -z-10"></div>
+        
+        <div class="flex items-center gap-4 mb-10 border-b pb-6">
+            <i class="fas fa-cogs text-4xl text-teal-600"></i>
+            <h1 class="text-3xl md:text-4xl font-extrabold text-slate-800">لوحة تحكم المنصة</h1>
+        </div>
         
         <div class="space-y-6">
-            <div><label class="block font-bold mb-2">رابط واتساب</label><input type="text" id="wa" class="w-full border p-3 rounded-lg"></div>
-            <div><label class="block font-bold mb-2">رابط فيسبوك</label><input type="text" id="fb" class="w-full border p-3 rounded-lg"></div>
-            <div><label class="block font-bold mb-2">رابط يوتيوب</label><input type="text" id="yt" class="w-full border p-3 rounded-lg"></div>
-            <div><label class="block font-bold mb-2">رابط تيك توك</label><input type="text" id="tk" class="w-full border p-3 rounded-lg"></div>
+            <h2 class="text-2xl font-bold text-slate-700 mb-4"><i class="fas fa-link text-teal-500 ml-2"></i>روابط منصات التواصل الاجتماعي</h2>
             
-            <div class="pt-6 border-t border-gray-200">
-                <label class="block font-bold mb-2 text-orange-500">روابط صور السلايد شو (افصل بين كل رابط بفاصلة , )</label>
-                <textarea id="slider" class="w-full border p-3 rounded-lg h-32" placeholder="رابط صورة 1, رابط صورة 2"></textarea>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block font-bold mb-2 text-slate-600">رابط واتساب</label>
+                    <input type="text" id="wa" class="w-full border-2 border-gray-200 p-3 rounded-xl focus:border-teal-500 outline-none transition">
+                </div>
+                <div>
+                    <label class="block font-bold mb-2 text-slate-600">رابط فيسبوك</label>
+                    <input type="text" id="fb" class="w-full border-2 border-gray-200 p-3 rounded-xl focus:border-teal-500 outline-none transition">
+                </div>
+                <div>
+                    <label class="block font-bold mb-2 text-slate-600">رابط يوتيوب</label>
+                    <input type="text" id="yt" class="w-full border-2 border-gray-200 p-3 rounded-xl focus:border-teal-500 outline-none transition">
+                </div>
+                <div>
+                    <label class="block font-bold mb-2 text-slate-600">رابط تيك توك</label>
+                    <input type="text" id="tk" class="w-full border-2 border-gray-200 p-3 rounded-xl focus:border-teal-500 outline-none transition">
+                </div>
+            </div>
+            
+            <div class="pt-6 border-t border-gray-100 mt-8">
+                <h2 class="text-2xl font-bold text-slate-700 mb-4"><i class="fas fa-images text-teal-500 ml-2"></i>إدارة صور السلايد شو</h2>
+                
+                <div id="slides-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-6">
+                    </div>
+
+                <div class="bg-slate-50 p-4 rounded-2xl border border-gray-200 flex flex-col sm:flex-row gap-3 items-end">
+                    <div class="flex-1 w-full">
+                        <label class="block font-bold mb-2 text-slate-600 text-sm">إضافة صورة جديدة للسلايد شو (ضع رابط الصورة هنا)</label>
+                        <input type="text" id="new-slide-url" placeholder="https://example.com/image.jpg" class="w-full border-2 border-gray-200 p-3 rounded-xl focus:border-teal-500 outline-none transition bg-white">
+                    </div>
+                    <button type="button" onclick="addNewSlide()" class="w-full sm:w-auto bg-teal-500 hover:bg-teal-600 text-white font-bold px-6 py-3 rounded-xl transition shadow flex items-center justify-center gap-2 whitespace-nowrap">
+                        <i class="fas fa-plus"></i> إدراج الصورة
+                    </button>
+                </div>
             </div>
 
-            <button onclick="saveData()" class="w-full bg-teal-600 hover:bg-orange-500 text-white font-bold py-4 rounded-xl transition text-xl">حفظ التعديلات في الموقع</button>
-            <p class="text-center text-sm text-gray-500 mt-4">* بالنسبة للإشعارات، التيم بيدخل على لوحة تحكم موقع OneSignal ويبعت الإشعار مباشرة لكل الطلاب.</p>
+            <button id="saveBtn" onclick="saveData()" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-4 rounded-xl transition transform hover:scale-[1.01] text-xl shadow-lg mt-8">
+                حفظ كل التعديلات وتحديث الموقع الأساسي
+            </button>
         </div>
+
+        <div class="mt-12 pt-10 border-t-2 border-dashed border-gray-300">
+            <h2 class="text-2xl font-bold text-orange-600 mb-6"><i class="fas fa-bell ml-2"></i>إرسال إشعار فوري لهواتف الطلاب</h2>
+            
+            <div class="bg-orange-50 p-6 md:p-8 rounded-2xl border border-orange-100 space-y-6">
+                <div>
+                    <label class="block font-bold mb-2 text-slate-700">عنوان الإشعار</label>
+                    <input type="text" id="notif-title" placeholder="مثال: مراجعة الجغرافيا السياسية نزلت!" class="w-full border-2 border-white p-3 rounded-xl focus:border-orange-500 outline-none transition shadow-sm">
+                </div>
+                <div>
+                    <label class="block font-bold mb-2 text-slate-700">تفاصيل الرسالة</label>
+                    <textarea id="notif-msg" placeholder="اكتب نص الإشعار اللي هيظهر على شاشة الطالب..." class="w-full border-2 border-white p-4 rounded-xl h-28 focus:border-orange-500 outline-none transition shadow-sm"></textarea>
+                </div>
+                
+                <button id="notifBtn" onclick="sendNotification()" class="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold py-4 rounded-xl transition transform hover:scale-[1.02] shadow-lg text-xl flex justify-center items-center gap-3">
+                    <span>إرسال الإشعار الآن للجميع</span> <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+
     </div>
 
     <script>
+        // رابط جوجل سكريبت الخاص بك المعتمد للمشروع
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzbyDwD1pIJ4gRqxHB-MKAuF920koKQewaaYCG2g3wNV7edVAq1n8QgopkVmkKTd2E/exec";
+        
+        // مصفوفة محلية لتخزين روابط السلايد شو والتحكم بها (إضافة وحذف)
+        let currentSlides = [];
+
+        // تحضير وجلب البيانات الحالية فور فتح لوحة التحكم
+        window.onload = function() {
+            fetch(SCRIPT_URL)
+            .then(res => res.json())
+            .then(data => {
+                if(data.whatsapp) document.getElementById('wa').value = data.whatsapp;
+                if(data.facebook) document.getElementById('fb').value = data.facebook;
+                if(data.youtube) document.getElementById('yt').value = data.youtube;
+                if(data.tiktok) document.getElementById('tk').value = data.tiktok;
+                
+                if(data.sliderImages) {
+                    currentSlides = data.sliderImages;
+                    renderSlides();
+                }
+            })
+            .catch(err => console.error("Error loading current settings: ", err));
+        };
+
+        // دالة مسؤولة عن عرض وتحديث شبكة الصور الحالية في الصفحة
+        function renderSlides() {
+            const grid = document.getElementById('slides-grid');
+            grid.innerHTML = '';
+
+            if(currentSlides.length === 0) {
+                grid.innerHTML = `<p class="col-span-full text-center py-4 text-gray-400 bg-gray-50 rounded-xl border border-dashed">لا توجد صور في السلايد شو حالياً، يرجى إضافة صورة أدناه.</p>`;
+                return;
+            }
+
+            currentSlides.forEach((url, index) => {
+                grid.innerHTML += `
+                    <div class="relative bg-gray-100 rounded-xl overflow-hidden border-2 border-gray-200 group h-32 shadow-sm">
+                        <img src="${url}" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-200">
+                            <button type="button" onclick="deleteSlide(${index})" class="bg-red-500 hover:bg-red-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1 transition transform active:scale-95 shadow">
+                                <i class="fas fa-trash-alt"></i> حذف الصورة
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // دالة لإضافة رابط صورة جديد للمصفوفة المحلية
+        function addNewSlide() {
+            const input = document.getElementById('new-slide-url');
+            const url = input.value.trim();
+
+            if(!url) {
+                alert("⚠️ الرجاء وضع رابط الصورة أولاً!");
+                return;
+            }
+
+            currentSlides.push(url);
+            input.value = ''; // مسح الخانة بعد الإضافة
+            renderSlides(); // إعادة بناء المعاينة
+        }
+
+        // دالة لحذف صورة معينة بناءً على ترتيبها (Index)
+        function deleteSlide(index) {
+            if(confirm("هل أنت متأكد من رغبتك في حذف هذه الصورة من السلايد شو؟")) {
+                currentSlides.splice(index, 1); // حذف العنصر من المصفوفة
+                renderSlides(); // تحديث الشكل فوراً أمام الأدمن
+            }
+        }
+
+        // --- إرسال وحفظ كل الإعدادات والروابط وصور السلايد شو للإكسيل ---
         function saveData() {
-            // هنا بيتبعت الـ Request لجوجل سكريبت عشان يحفظ البيانات
+            const btn = document.getElementById('saveBtn');
+            btn.innerText = "جاري حفظ ونشر التعديلات... ⏳";
+            btn.disabled = true;
+
             const payload = {
+                action: "update_settings",
                 whatsapp: document.getElementById('wa').value,
                 facebook: document.getElementById('fb').value,
                 youtube: document.getElementById('yt').value,
                 tiktok: document.getElementById('tk').value,
-                sliderImages: document.getElementById('slider').value.split(',').map(s => s.trim())
+                sliderImages: currentSlides // إرسال المصفوفة المحدثة بالكامل بعد الحذف والإضافة
             };
             
-            // الكود ده هيشتغل لما تحط رابط الـ API بتاعك
-            /*
-            fetch("https://script.google.com/macros/s/AKfycbxYT-8j-y7UafqryHzXmuBJcLaXPQR11ph49Aqka69QXY4TkI-2Lej8NSs7sbODTWs/exec", { method: 'POST', body: JSON.stringify(payload) })
-            .then(res => alert('تم تحديث الموقع بنجاح!'));
-            */
-            alert('تم تجهيز البيانات، اربط بجوجل سكريبت لتفعيل الحفظ!');
+            fetch(SCRIPT_URL, { 
+                method: 'POST', 
+                mode: 'no-cors',
+                headers: { "Content-Type": "text/plain;charset=utf-8" },
+                body: JSON.stringify(payload) 
+            })
+            .then(() => {
+                btn.innerText = "حفظ كل التعديلات وتحديث الموقع الأساسي";
+                btn.disabled = false;
+                alert('✅ تم حفظ الإعدادات وتحديث صور السلايد شو في الموقع بنجاح!');
+            }).catch(err => {
+                btn.innerText = "حفظ كل التعديلات وتحديث الموقع الأساسي";
+                btn.disabled = false;
+                alert('❌ حدث خطأ أثناء الاتصال بالسيرفر!');
+            });
+        }
+
+        // --- دالة إرسال الإشعارات الفورية للطلاب ---
+        function sendNotification() {
+            const title = document.getElementById('notif-title').value;
+            const msg = document.getElementById('notif-msg').value;
+            const btn = document.getElementById('notifBtn');
+
+            if(!title || !msg) {
+                alert("⚠️ يرجى كتابة عنوان وتفاصيل الإشعار أولاً!");
+                return;
+            }
+
+            btn.innerHTML = "جاري بث الإشعار الآن... ⏳";
+            btn.disabled = true;
+
+            const payload = {
+                action: "send_push_notification",
+                title: title,
+                message: msg
+            };
+
+            fetch(SCRIPT_URL, { 
+                method: 'POST', 
+                mode: 'no-cors', 
+                headers: { "Content-Type": "text/plain;charset=utf-8" },
+                body: JSON.stringify(payload) 
+            })
+            .then(() => {
+                btn.innerHTML = '<span>إرسال الإشعار الآن للجميع</span> <i class="fas fa-paper-plane"></i>';
+                btn.disabled = false;
+                alert('✅ تم إطلاق وإرسال الإشعار لجميع المشتركين بنجاح!');
+                document.getElementById('notif-title').value = '';
+                document.getElementById('notif-msg').value = '';
+            }).catch(err => {
+                btn.innerHTML = '<span>إرسال الإشعار الآن للجميع</span> <i class="fas fa-paper-plane"></i>';
+                btn.disabled = false;
+                alert('❌ فشل الاتصال، لم يتم إرسال الإشعار!');
+            });
         }
     </script>
 </body>
