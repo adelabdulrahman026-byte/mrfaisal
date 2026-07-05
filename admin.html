@@ -1,173 +1,50 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-  <title>تسجيل دخول مسؤول</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Cairo&display=swap');
-    
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Cairo', sans-serif;
-      background: linear-gradient(135deg, #667eea, #764ba2);
-      color: #fff;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      overflow: hidden;
-    }
-
-    .container {
-      background: rgba(255, 255, 255, 0.1);
-      padding: 30px 25px;
-      border-radius: 20px;
-      width: 90%;
-      max-width: 400px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
-      text-align: center;
-      position: relative;
-    }
-
-    h1 {
-      margin-bottom: 25px;
-      font-weight: 700;
-      font-size: 28px;
-      letter-spacing: 1px;
-      text-shadow: 0 2px 5px rgba(0,0,0,0.3);
-    }
-
-    input[type="text"], input[type="password"] {
-      width: 100%;
-      padding: 14px 15px;
-      margin-bottom: 20px;
-      border: none;
-      border-radius: 12px;
-      font-size: 16px;
-      box-sizing: border-box;
-      outline: none;
-      transition: box-shadow 0.3s ease;
-    }
-    input[type="text"]:focus, input[type="password"]:focus {
-      box-shadow: 0 0 10px #a78bfa;
-    }
-
-    button {
-      width: 100%;
-      padding: 15px;
-      font-size: 18px;
-      border: none;
-      border-radius: 12px;
-      background: #a78bfa;
-      color: #fff;
-      font-weight: 700;
-      cursor: pointer;
-      transition: background 0.3s ease;
-      box-shadow: 0 6px 15px rgba(167,139,250,0.6);
-    }
-    button:hover {
-      background: #8158ff;
-    }
-
-    /* شاشة الأنيميشن تظهر وتغطي الشاشة */
-    .loading-screen {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: #1c1c3c;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      z-index: 9999;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.5s ease;
-    }
-
-    .loading-screen.active {
-      opacity: 1;
-      pointer-events: all;
-    }
-
-    .loading-text {
-      margin-top: 20px;
-      font-size: 22px;
-      font-weight: 600;
-      color: #ddd;
-      animation: pulse 1.5s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <title>لوحة التحكم | فيصل أكاديمي</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@700&display=swap" rel="stylesheet">
+    <style>body { font-family: 'Tajawal', sans-serif; }</style>
 </head>
-<body>
+<body class="bg-gray-100 p-10">
+    <div class="max-w-3xl mx-auto bg-white p-8 rounded-3xl shadow-2xl border-t-4 border-teal-500">
+        <h1 class="text-3xl font-bold mb-8 text-slate-800">إدارة الموقع</h1>
+        
+        <div class="space-y-6">
+            <div><label class="block font-bold mb-2">رابط واتساب</label><input type="text" id="wa" class="w-full border p-3 rounded-lg"></div>
+            <div><label class="block font-bold mb-2">رابط فيسبوك</label><input type="text" id="fb" class="w-full border p-3 rounded-lg"></div>
+            <div><label class="block font-bold mb-2">رابط يوتيوب</label><input type="text" id="yt" class="w-full border p-3 rounded-lg"></div>
+            <div><label class="block font-bold mb-2">رابط تيك توك</label><input type="text" id="tk" class="w-full border p-3 rounded-lg"></div>
+            
+            <div class="pt-6 border-t border-gray-200">
+                <label class="block font-bold mb-2 text-orange-500">روابط صور السلايد شو (افصل بين كل رابط بفاصلة , )</label>
+                <textarea id="slider" class="w-full border p-3 rounded-lg h-32" placeholder="رابط صورة 1, رابط صورة 2"></textarea>
+            </div>
 
-  <div class="container" id="login-container">
-    <h1>تسجيل دخول المسؤول</h1>
-    <input type="text" id="username" placeholder="اسم المستخدم" autocomplete="off" />
-    <input type="password" id="password" placeholder="كلمة المرور" autocomplete="off" />
-    <button id="login-btn">مسؤول تسجيل دخول</button>
-  </div>
+            <button onclick="saveData()" class="w-full bg-teal-600 hover:bg-orange-500 text-white font-bold py-4 rounded-xl transition text-xl">حفظ التعديلات في الموقع</button>
+            <p class="text-center text-sm text-gray-500 mt-4">* بالنسبة للإشعارات، التيم بيدخل على لوحة تحكم موقع OneSignal ويبعت الإشعار مباشرة لكل الطلاب.</p>
+        </div>
+    </div>
 
-  <!-- شاشة التحميل والأنيميشن -->
-  <div class="loading-screen" id="loading-screen">
-    <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.6.2/dist/dotlottie-wc.js" type="module"></script>
-    <dotlottie-wc 
-      src="https://lottie.host/a13c9760-800d-4a24-9a6b-bb084ffa6085/Vaslh8cLLr.lottie" 
-      style="width: 300px; height: 300px;" 
-      speed="1" 
-      autoplay 
-      loop>
-    </dotlottie-wc>
-    <div class="loading-text">جاري تسجيل الدخول ...</div>
-  </div>
-
-  <script>
-    const loginBtn = document.getElementById('login-btn');
-    const loadingScreen = document.getElementById('loading-screen');
-    const loginContainer = document.getElementById('login-container');
-
-    loginBtn.addEventListener('click', () => {
-      const user = document.getElementById('username').value.trim();
-      const pass = document.getElementById('password').value.trim();
-
-      if(user === '' || pass === '') {
-        alert('يرجى ملء اسم المستخدم وكلمة المرور');
-        return;
-      }
-
-      // تحقق من الحسابات
-      if(
-        (user === 'abdulah' && pass === '123456') || 
-        (user === 'sagda' && pass === '123456')
-      ) {
-        // الحسابات الأولى تروح للرابط الأصلي
-        showLoadingAndRedirect('https://script.google.com/macros/s/AKfycbxfj9cu8akEUGPm9ZfAgXRtMzxtqgCH1FaM59u3ZHluRPUUgWRFriwANQfbF7NdGAcQRg/exec');
-      }
-      else if(user === 'faisal' && pass === '123456789') {
-        // حساب فيصل يروح لصفحة ثانية
-        // عدل الرابط هنا لما تحب تضيف الصفحة الثانية
-        showLoadingAndRedirect('https://example.com/your-second-page.html'); // <-- عدل هنا رابط الصفحة الثانية
-      }
-      else {
-        alert('اسم المستخدم أو كلمة المرور غير صحيحة');
-      }
-    });
-
-    function showLoadingAndRedirect(url) {
-      loadingScreen.classList.add('active');
-      loginContainer.style.display = 'none';
-
-      setTimeout(() => {
-        window.location.href = url;
-      }, 3000);
-    }
-  </script>
+    <script>
+        function saveData() {
+            // هنا بيتبعت الـ Request لجوجل سكريبت عشان يحفظ البيانات
+            const payload = {
+                whatsapp: document.getElementById('wa').value,
+                facebook: document.getElementById('fb').value,
+                youtube: document.getElementById('yt').value,
+                tiktok: document.getElementById('tk').value,
+                sliderImages: document.getElementById('slider').value.split(',').map(s => s.trim())
+            };
+            
+            // الكود ده هيشتغل لما تحط رابط الـ API بتاعك
+            /*
+            fetch("https://script.google.com/macros/s/AKfycbxYT-8j-y7UafqryHzXmuBJcLaXPQR11ph49Aqka69QXY4TkI-2Lej8NSs7sbODTWs/exec", { method: 'POST', body: JSON.stringify(payload) })
+            .then(res => alert('تم تحديث الموقع بنجاح!'));
+            */
+            alert('تم تجهيز البيانات، اربط بجوجل سكريبت لتفعيل الحفظ!');
+        }
+    </script>
 </body>
 </html>
