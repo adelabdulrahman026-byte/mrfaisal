@@ -93,59 +93,35 @@
     </footer>
 
     <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyfqzIQ_MMoOOXebPNqRlCi_86IUbzppdTP6aUPjC64SL3Dibr7HUulvJH4P7IL4w/exec";
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyE7ABQvBd_kbj1VVJwwqU__44ICYupDLeB9avakXBGf32fNIkB_-tiXwrqNXqRyho/exec";
 
-        window.OneSignal = window.OneSignal || [];
-        OneSignal.push(function() {
-            OneSignal.init({ 
-                appId: "8e36161f-8906-41f3-b0b8-3e272167065b", notifyButton: { enable: true },
-                promptOptions: { slidedown: { prompts: [{ type: "push", autoPrompt: true, text: { actionMessage: "فعل الإشعارات ليصلك كل جديد", acceptButton: "موافق", cancelButton: "لا" } }] } }
-            });
-            OneSignal.showSlidedownPrompt();
+    // 1. الإشعارات
+    window.OneSignal = window.OneSignal || [];
+    OneSignal.push(function() {
+        OneSignal.init({ 
+            appId: "8e36161f-8906-41f3-b0b8-3e272167065b", 
+            notifyButton: { enable: true },
+            promptOptions: { slidedown: { prompts: [{ type: "push", autoPrompt: true, text: { actionMessage: "اشترك في الإشعارات عشان يوصلك كل جديد", acceptButton: "موافق", cancelButton: "لا" } }] } }
         });
+        OneSignal.showSlidedownPrompt();
+    });
 
-        function toggleTheme() { document.documentElement.classList.toggle('dark'); }
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar'), overlay = document.getElementById('overlay');
-            if (sidebar.style.right === '0px') { sidebar.style.right = '-320px'; overlay.classList.add('hidden'); }
-            else { sidebar.style.right = '0px'; overlay.classList.remove('hidden'); }
+    // 2. فحص الدخول وإظهار الاسم
+    function checkUserSession() {
+        const loginContainer = document.getElementById('loginContainer');
+        const userName = localStorage.getItem('userName');
+        if (localStorage.getItem('isLoggedIn') === 'true' && userName) {
+            loginContainer.innerHTML = `<div class="flex items-center gap-2 bg-teal-50 dark:bg-slate-700 px-4 py-2 rounded-full font-bold text-sm text-slate-800 dark:text-white"><i class="fas fa-user-circle text-teal-600"></i> أهلاً، <span class="text-orange-500">${userName}</span> <button onclick="logout()" class="text-red-500 hover:text-red-700 mr-2 pr-2 border-r border-teal-200" title="خروج"><i class="fas fa-sign-out-alt"></i></button></div>`;
         }
+    }
 
-        function checkStore() {
-            if(localStorage.getItem("isLoggedIn")) window.location.href = "store.html";
-            else { alert("يرجى تسجيل الدخول أولاً"); window.location.href = "login.html"; }
-        }
+    function logout() {
+        if(confirm("تسجيل الخروج؟")) { localStorage.clear(); window.location.reload(); }
+    }
 
-        function checkUserSession() {
-            const loginContainer = document.getElementById('loginContainer');
-            const user = localStorage.getItem('username');
-            if (localStorage.getItem('isLoggedIn') === 'true' && user) {
-                loginContainer.innerHTML = `<div class="flex items-center gap-3 bg-teal-50 dark:bg-slate-700 px-4 py-2 rounded-full font-bold text-sm text-slate-800 dark:text-white"><i class="fas fa-user-graduate text-teal-600"></i> أهلاً، <span class="text-orange-500">${user}</span> <button onclick="logout()" class="text-red-500 hover:text-red-700 mr-2"><i class="fas fa-sign-out-alt"></i></button></div>`;
-            }
-        }
-
-        function logout() {
-            if(confirm("تسجيل الخروج؟")) { localStorage.removeItem('isLoggedIn'); localStorage.removeItem('username'); window.location.reload(); }
-        }
-
-        async function loadSiteData() {
-            try {
-                const response = await fetch(SCRIPT_URL);
-                const data = await response.json();
-                if(data.whatsapp) document.getElementById('wa').href = data.whatsapp;
-                if(data.facebook) document.getElementById('fb').href = data.facebook;
-                if(data.youtube) document.getElementById('yt').href = data.youtube;
-                if(data.tiktok) document.getElementById('tk').href = data.tiktok;
-                
-                const slider = document.getElementById('slider-container');
-                if(data.sliderImages.length > 0) {
-                    data.sliderImages.forEach((img, i) => slider.innerHTML += `<img src="${img}" class="slide ${i===0?'active':''}">`);
-                    let slides = document.querySelectorAll('.slide'), current = 0;
-                    setInterval(() => { slides[current].classList.remove('active'); current = (current + 1) % slides.length; slides[current].classList.add('active'); }, 5000);
-                }
-            } catch (e) {}
-        }
-        checkUserSession(); loadSiteData();
-    </script>
+    // تشغيل الدوال فوراً
+    checkUserSession();
+    // واستدعي هنا دالة loadSiteData بتاعتك لجلب الصور والروابط
+</script>
 </body>
 </html>
