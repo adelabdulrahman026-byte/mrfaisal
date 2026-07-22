@@ -1,102 +1,15 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<!doctype html>
+<html lang=ar dir=rtl>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>دخول | فيصل أكاديمي</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@700;900&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Tajawal', sans-serif; background-color: #0f172a; }
-        .glass-card { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); }
-        .input-field { background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.1); }
-        .input-field:focus { border-color: #f97316; }
-    </style>
+<meta charset=UTF-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<title>دخول | فيصل أكاديمي</title>
+<script src=https://cdn.tailwindcss.com></script>
+<link href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css rel=stylesheet>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@700;900&display=swap" rel=stylesheet>
 </head>
 <body class="min-h-screen flex items-center justify-center p-4 bg-[url('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2070')] bg-cover bg-center relative">
-    <div class="absolute inset-0 bg-slate-900/80"></div>
-
-    <div class="glass-card w-full max-w-md p-8 rounded-[2rem] shadow-2xl relative z-10 border-t-4 border-orange-500 text-center">
-        <h1 class="text-3xl font-black text-white mb-6">تسجيل الدخول</h1>
-        
-        <div id="fingerprintSection" class="hidden mb-6">
-            <button onclick="loginWithFingerprint()" class="w-full bg-slate-800 border-2 border-orange-500 text-orange-400 hover:bg-orange-500 hover:text-white font-bold py-4 rounded-xl transition flex flex-col items-center gap-2">
-                <i class="fas fa-fingerprint text-4xl"></i><span>الدخول بالبصمة</span>
-            </button>
-            <div class="my-4 text-slate-500 text-sm">أو برقم الهاتف</div>
-        </div>
-
-        <form onsubmit="handleLogin(event)" class="space-y-4 text-right">
-            <div>
-                <label class="block text-orange-400 mb-1 text-sm">رقم الهاتف</label>
-                <div class="relative">
-                    <input type="tel" id="phone" required class="input-field w-full pl-4 pr-12 py-3 rounded-xl outline-none" placeholder="01012345678">
-                    <i class="fas fa-phone absolute right-4 top-4 text-slate-400"></i>
-                </div>
-            </div>
-            <div>
-                <label class="block text-orange-400 mb-1 text-sm">كلمة المرور</label>
-                <div class="relative">
-                    <input type="password" id="password" required class="input-field w-full pl-4 pr-12 py-3 rounded-xl outline-none">
-                    <i class="fas fa-lock absolute right-4 top-4 text-slate-400"></i>
-                </div>
-            </div>
-            <button type="submit" id="loginBtn" class="w-full bg-gradient-to-r from-orange-500 to-red-500 text-white font-bold py-4 rounded-xl mt-4 shadow-lg">دخول</button>
-        </form>
-        <div class="mt-4 flex justify-between text-sm px-2"><a href="forgot.html" class="text-slate-400 hover:text-orange-400">نسيت كلمة المرور؟</a><a href="register.html" class="text-teal-400 hover:text-teal-300">إنشاء حساب</a></div>
-    </div>
-
-    <div id="bioModal" class="fixed inset-0 bg-slate-900/90 z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-slate-800 p-8 rounded-2xl text-center max-w-sm w-full border border-slate-700">
-            <i class="fas fa-fingerprint text-5xl text-orange-500 mb-4 animate-bounce"></i>
-            <h2 class="text-xl font-bold text-white mb-4">تفعيل الدخول بالبصمة؟</h2>
-            <button onclick="setupFingerprint()" class="w-full bg-orange-500 text-white font-bold py-3 rounded-xl mb-3">نعم، تفعيل</button>
-            <button onclick="skipFingerprint()" class="w-full bg-slate-700 text-white font-bold py-3 rounded-xl">لا شكراً</button>
-        </div>
-    </div>
-
-    <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyE7ABQvBd_kbj1VVJwwqU__44ICYupDLeB9avakXBGf32fNIkB_-tiXwrqNXqRyho/exec";
-        const isWebAuthn = window.PublicKeyCredential !== undefined;
-        
-        window.onload = () => { if (localStorage.getItem("bioEnabled") === "true" && isWebAuthn) document.getElementById('fingerprintSection').classList.remove('hidden'); };
-
-        function handleLogin(e) {
-            e.preventDefault(); const btn = document.getElementById('loginBtn'); btn.innerHTML = 'جاري التحقق...'; btn.disabled = true;
-            fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: "login", phone: document.getElementById('phone').value, password: document.getElementById('password').value }) })
-            .then(res => res.json()).then(data => {
-                if(data.status === "success") {
-                    localStorage.setItem("tempPhone", data.phone); localStorage.setItem("tempName", data.name);
-                    if (isWebAuthn && localStorage.getItem("bioEnabled") !== "true") document.getElementById('bioModal').classList.remove('hidden');
-                    else finishLogin(data.phone, data.name);
-                } else { btn.innerHTML = '❌ ' + data.message; setTimeout(() => { btn.innerHTML = 'دخول'; btn.disabled = false; }, 2000); }
-            }).catch(() => { btn.innerHTML = 'خطأ اتصال'; btn.disabled = false; });
-        }
-
-        async function setupFingerprint() {
-            try {
-                const challenge = new Uint8Array(32); crypto.getRandomValues(challenge);
-                const cred = await navigator.credentials.create({ publicKey: { challenge: challenge, rp: { name: "فيصل أكاديمي" }, user: { id: Uint8Array.from("user_id", c => c.charCodeAt(0)), name: "user", displayName: "User" }, pubKeyCredParams: [{alg: -7, type: "public-key"}], authenticatorSelection: { userVerification: "required" }, timeout: 60000 } });
-                localStorage.setItem("bioEnabled", "true"); localStorage.setItem("credId", btoa(String.fromCharCode(...new Uint8Array(cred.rawId))));
-                finishLogin(localStorage.getItem("tempPhone"), localStorage.getItem("tempName"));
-            } catch (err) { finishLogin(localStorage.getItem("tempPhone"), localStorage.getItem("tempName")); }
-        }
-
-        function skipFingerprint() { finishLogin(localStorage.getItem("tempPhone"), localStorage.getItem("tempName")); }
-        
-        function finishLogin(phone, name) { localStorage.setItem("isLoggedIn", "true"); localStorage.setItem("userPhone", phone); localStorage.setItem("userName", name); window.location.href = "index.html"; }
-
-        async function loginWithFingerprint() {
-            try {
-                const challenge = new Uint8Array(32); crypto.getRandomValues(challenge);
-                const credIdStr = localStorage.getItem("credId");
-                if(!credIdStr) throw new Error("لا يوجد بصمة مسجلة");
-                const credId = Uint8Array.from(atob(credIdStr), c => c.charCodeAt(0));
-                await navigator.credentials.get({ publicKey: { challenge: challenge, allowCredentials: [{ type: 'public-key', id: credId }], userVerification: "required", timeout: 60000 } });
-                finishLogin(localStorage.getItem("userPhone"), localStorage.getItem("userName"));
-            } catch (err) { alert("فشلت المطابقة أو لا توجد بصمة مسجلة في هذا المتصفح."); }
-        }
-    </script>
+<div id=app class="w-full max-w-md relative z-10"></div>
+<script src=login.js></script>
 </body>
 </html>
