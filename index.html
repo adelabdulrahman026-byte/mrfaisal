@@ -202,7 +202,7 @@
 
     <!-- سكربتات التشغيل -->
     <script>
-             const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyE7ABQvBd_kbj1VVJwwqU__44ICYupDLeB9avakXBGf32fNIkB_-tiXwrqNXqRyho/exec";
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyE7ABQvBd_kbj1VVJwwqU__44ICYupDLeB9avakXBGf32fNIkB_-tiXwrqNXqRyho/exec";
 
         // 1. الوضع الليلي (Dark Mode)
         function toggleTheme() {
@@ -320,6 +320,34 @@
             });
             OneSignal.showSlidedownPrompt();
         });
+
+        // 6. حماية الكود (تعطيل كليك يمين واختصارات المطورين)
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+
+        document.onkeydown = function(e) {
+            // منع F12
+            if (e.keyCode === 123) {
+                return false;
+            }
+            // منع Ctrl+Shift+I
+            if (e.ctrlKey && e.shiftKey && e.keyCode === 'I'.charCodeAt(0)) {
+                return false;
+            }
+            // منع Ctrl+Shift+J
+            if (e.ctrlKey && e.shiftKey && e.keyCode === 'J'.charCodeAt(0)) {
+                return false;
+            }
+            // منع Ctrl+Shift+C
+            if (e.ctrlKey && e.shiftKey && e.keyCode === 'C'.charCodeAt(0)) {
+                return false;
+            }
+            // منع Ctrl+U
+            if (e.ctrlKey && e.keyCode === 'U'.charCodeAt(0)) {
+                return false;
+            }
+        };
 
         // تشغيل الدوال عند تحميل الصفحة
         checkUserSession();
