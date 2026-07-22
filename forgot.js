@@ -14,7 +14,7 @@ document.getElementById('app').innerHTML = `
 `;
 
 // 2. إعدادات وأكواد العمليات الخاصة بالاسترجاع
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzt--yjDgItKwXE3vjfmFokoQdYhlkLsfFGu0zIyanHkrNJpx4edl5xZENDAjaYU2M/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzxSPRQ_Hh2dN20sapCQi0TT39ZyqlUtu5f16tgJ1bObPe-OSJHGCC4565suai1Sr0/exec";
 
 function handleRec(e) {
     e.preventDefault(); 
