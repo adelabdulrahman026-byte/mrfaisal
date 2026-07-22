@@ -1,0 +1,279 @@
+// 1. حقن كود الـ HTML والـ CSS بالكامل داخل العنصر الرئيسي
+document.getElementById('app').innerHTML = `
+    <style>
+        body { font-family: 'Tajawal', sans-serif; overflow-x: hidden; scroll-behavior: smooth; }
+        .glass-nav { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255,255,255,0.3); }
+        .dark .glass-nav { background: rgba(15, 23, 42, 0.85); border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .hover-lift { transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .hover-lift:hover { transform: translateY(-8px); box-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.15); }
+        .slide { opacity: 0; transition: opacity 1.2s ease-in-out, transform 5s linear; position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transform: scale(1.05); z-index: 0; }
+        .slide.active { opacity: 1; transform: scale(1); z-index: 1; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #14b8a6; border-radius: 10px; }
+        .dark ::-webkit-scrollbar-track { background: #1e293b; }
+    </style>
+
+    <nav class="glass-nav fixed w-full z-40 top-0 transition-all duration-300">
+        <div class="container mx-auto px-4 py-3 md:py-4 flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <button onclick="toggleSidebar()" class="text-2xl text-slate-600 dark:text-slate-300 hover:text-orange-500 transition focus:outline-none">
+                    <i class="fas fa-bars-staggered"></i>
+                </button>
+                <div class="flex items-center gap-2">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-teal-500 to-orange-500 flex items-center justify-center text-white font-bold text-xl shadow-lg">FA</div>
+                    <h1 class="text-2xl md:text-3xl font-black bg-gradient-to-r from-teal-600 to-orange-500 bg-clip-text text-transparent hidden sm:block">فيصل أكاديمي</h1>
+                </div>
+            </div>
+            <div class="flex items-center gap-4 md:gap-6">
+                <button onclick="toggleTheme()" class="text-xl text-slate-600 dark:text-slate-300 hover:text-teal-500 transition">
+                    <i class="fas fa-moon" id="themeIcon"></i>
+                </button>
+                <div id="loginContainer" class="flex items-center">
+                    <a href="login.html" class="bg-slate-800 dark:bg-white dark:text-slate-900 text-white px-6 py-2.5 rounded-full font-bold text-sm hover:shadow-lg hover:bg-orange-500 transition-all transform hover:-translate-y-0.5">
+                        تسجيل الدخول
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div id="sidebar" class="fixed top-0 right-0 h-full w-[300px] bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl shadow-2xl z-[60] p-8 border-l border-slate-100 dark:border-slate-700 transform translate-x-full transition-transform duration-500 ease-in-out">
+        <button onclick="toggleSidebar()" class="absolute top-6 left-6 text-2xl text-slate-400 hover:text-orange-500 transition"><i class="fas fa-times-circle"></i></button>
+        <div class="mt-8 mb-10">
+            <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">الوصول السريع</h2>
+            <div class="h-1 w-10 bg-teal-500 rounded"></div>
+        </div>
+        <ul class="space-y-3 font-bold text-lg">
+            <li><a href="talb.html" class="flex items-center gap-4 p-3 rounded-xl hover:bg-orange-50 hover:text-orange-600 dark:hover:bg-slate-700 transition group"><div class="w-10 h-10 rounded-lg bg-orange-100 dark:bg-slate-600 flex items-center justify-center text-orange-500 group-hover:scale-110 transition"><i class="fas fa-user-shield"></i></div>متابعة ولي الأمر</a></li>
+            <li><a href="cors.html" class="flex items-center gap-4 p-3 rounded-xl hover:bg-teal-50 hover:text-teal-600 dark:hover:bg-slate-700 transition group"><div class="w-10 h-10 rounded-lg bg-teal-100 dark:bg-slate-600 flex items-center justify-center text-teal-500 group-hover:scale-110 transition"><i class="fas fa-laptop-code"></i></div>منصتنا التعليمية</a></li>
+            <li><a href="moayed.html" class="flex items-center gap-4 p-3 rounded-xl hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-slate-700 transition group"><div class="w-10 h-10 rounded-lg bg-blue-100 dark:bg-slate-600 flex items-center justify-center text-blue-500 group-hover:scale-110 transition"><i class="fas fa-calendar-alt"></i></div>مواعيدنا</a></li>
+            <li><a href="hw.html" class="flex items-center gap-4 p-3 rounded-xl hover:bg-purple-50 hover:text-purple-600 dark:hover:bg-slate-700 transition group"><div class="w-10 h-10 rounded-lg bg-purple-100 dark:bg-slate-600 flex items-center justify-center text-purple-500 group-hover:scale-110 transition"><i class="fas fa-book-open"></i></div>الواجبات</a></li>
+            <li><a href="exam.html" class="flex items-center gap-4 p-3 rounded-xl hover:bg-rose-50 hover:text-rose-600 dark:hover:bg-slate-700 transition group"><div class="w-10 h-10 rounded-lg bg-rose-100 dark:bg-slate-600 flex items-center justify-center text-rose-500 group-hover:scale-110 transition"><i class="fas fa-file-signature"></i></div>امتحاناتنا</a></li>
+        </ul>
+    </div>
+    <div id="overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/40 z-50 hidden backdrop-blur-sm transition-opacity"></div>
+
+    <div class="relative w-full h-[65vh] min-h-[500px] mt-0 overflow-hidden bg-slate-900">
+        <div id="slider-container" class="w-full h-full relative"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent flex flex-col justify-end pb-24 px-6 md:px-16 text-white z-10 pointer-events-none">
+            <span class="inline-block px-4 py-1.5 rounded-full bg-orange-500/80 backdrop-blur-md text-sm font-bold w-max mb-4 animate-pulse">نظام تعليمي متكامل</span>
+            <h2 class="text-4xl md:text-6xl lg:text-7xl font-black mb-4 leading-tight">مستقبلك يبدأ من <br><span class="text-teal-400">فيصل أكاديمي</span></h2>
+            <p class="text-lg md:text-xl text-slate-300 max-w-2xl font-medium">المنصة الأقوى والأحدث لتعلم الجغرافيا، مصممة بأحدث التقنيات لضمان تفوقك وتوفير تجربة تعليمية ممتعة.</p>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-4 relative z-20 -mt-16">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <a href="talb.html" class="hover-lift bg-gradient-to-br from-orange-500 to-red-600 rounded-[2rem] p-8 shadow-2xl flex items-center justify-between group overflow-hidden relative">
+                <div class="absolute -right-10 -top-10 w-40 h-40 bg-white opacity-10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
+                <div class="relative z-10">
+                    <div class="inline-flex items-center justify-center w-12 h-12 bg-white/20 rounded-xl mb-4 backdrop-blur-sm">
+                        <i class="fas fa-user-shield text-white text-xl"></i>
+                    </div>
+                    <h3 class="text-3xl md:text-4xl font-black text-white mb-2">متابعة ولي الأمر</h3>
+                    <p class="text-orange-100 font-medium text-lg">تقارير مفصلة لمستوى الطالب ودرجاته</p>
+                </div>
+                <i class="fas fa-arrow-left text-white text-3xl opacity-0 transform translate-x-10 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500 relative z-10"></i>
+            </a>
+
+            <a href="cors.html" class="hover-lift bg-gradient-to-br from-teal-500 to-cyan-600 rounded-[2rem] p-8 shadow-2xl flex items-center justify-between group overflow-hidden relative">
+                <div class="absolute -right-10 -top-10 w-40 h-40 bg-white opacity-10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
+                <div class="relative z-10">
+                    <div class="inline-flex items-center justify-center w-12 h-12 bg-white/20 rounded-xl mb-4 backdrop-blur-sm">
+                        <i class="fas fa-play text-white text-xl"></i>
+                    </div>
+                    <h3 class="text-3xl md:text-4xl font-black text-white mb-2">المنصة التعليمية</h3>
+                    <p class="text-teal-100 font-medium text-lg">شرح، مراجعات، ومحتوى تفاعلي كامل</p>
+                </div>
+                <i class="fas fa-arrow-left text-white text-3xl opacity-0 transform translate-x-10 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500 relative z-10"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-4 py-16">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+            <a href="moayed.html" class="hover-lift bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-lg border border-slate-100 dark:border-slate-700 text-center group">
+                <div class="w-16 h-16 mx-auto bg-blue-50 dark:bg-slate-700 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-blue-500 transition-colors duration-300">
+                    <i class="fas fa-calendar-check text-3xl text-blue-500 group-hover:text-white transition-colors duration-300"></i>
+                </div>
+                <h3 class="text-xl font-bold text-slate-800 dark:text-white">مواعيدنا</h3>
+            </a>
+            
+            <a href="hw.html" class="hover-lift bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-lg border border-slate-100 dark:border-slate-700 text-center group">
+                <div class="w-16 h-16 mx-auto bg-purple-50 dark:bg-slate-700 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-purple-500 transition-colors duration-300">
+                    <i class="fas fa-tasks text-3xl text-purple-500 group-hover:text-white transition-colors duration-300"></i>
+                </div>
+                <h3 class="text-xl font-bold text-slate-800 dark:text-white">الواجبات</h3>
+            </a>
+
+            <a href="exam.html" class="hover-lift bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-lg border border-slate-100 dark:border-slate-700 text-center group">
+                <div class="w-16 h-16 mx-auto bg-rose-50 dark:bg-slate-700 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-rose-500 transition-colors duration-300">
+                    <i class="fas fa-stopwatch text-3xl text-rose-500 group-hover:text-white transition-colors duration-300"></i>
+                </div>
+                <h3 class="text-xl font-bold text-slate-800 dark:text-white">امتحاناتنا</h3>
+            </a>
+
+            <a href="#" onclick="checkStore()" class="hover-lift bg-gradient-to-br from-slate-800 to-slate-900 dark:from-slate-700 dark:to-slate-800 rounded-3xl p-6 shadow-xl border border-slate-700 text-center group relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-full h-1 bg-gradient-to-r from-orange-500 to-teal-500"></div>
+                <div class="w-16 h-16 mx-auto bg-white/10 rounded-2xl flex items-center justify-center mb-4 backdrop-blur-md group-hover:scale-110 transition-transform duration-300">
+                    <i class="fas fa-shopping-bag text-3xl text-orange-400"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white">المتجر الحصري</h3>
+                <span class="block text-xs text-slate-400 mt-2">يلزم تسجيل الدخول</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="bg-white dark:bg-slate-800/50 py-12 border-t border-slate-100 dark:border-slate-800">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-wrap justify-center gap-4 md:gap-6">
+                <a href="#" id="link-whatsapp" class="hover-lift w-16 h-16 md:w-20 md:h-20 bg-[#25D366] text-white rounded-2xl md:rounded-[2rem] flex items-center justify-center text-3xl md:text-4xl shadow-lg shadow-green-500/30">
+                    <i class="fab fa-whatsapp"></i>
+                </a>
+                <a href="#" id="link-facebook" class="hover-lift w-16 h-16 md:w-20 md:h-20 bg-[#1877F2] text-white rounded-2xl md:rounded-[2rem] flex items-center justify-center text-3xl md:text-4xl shadow-lg shadow-blue-500/30">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="#" id="link-youtube" class="hover-lift w-16 h-16 md:w-20 md:h-20 bg-[#FF0000] text-white rounded-2xl md:rounded-[2rem] flex items-center justify-center text-3xl md:text-4xl shadow-lg shadow-red-500/30">
+                    <i class="fab fa-youtube"></i>
+                </a>
+                <a href="#" id="link-tiktok" class="hover-lift w-16 h-16 md:w-20 md:h-20 bg-slate-900 text-white rounded-2xl md:rounded-[2rem] flex items-center justify-center text-3xl md:text-4xl shadow-lg shadow-slate-900/30 border border-slate-700">
+                    <i class="fab fa-tiktok"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-slate-900 text-slate-400 py-10 text-center border-t border-slate-800">
+        <h2 class="text-xl font-black text-white mb-2">فيصل أكاديمي</h2>
+        <p class="text-sm">جميع الحقوق محفوظة © 2026</p>
+        <a href="https://wa.me/201093139047" class="inline-flex items-center gap-2 mt-4 px-4 py-2 bg-slate-800 rounded-full text-teal-400 hover:text-orange-400 text-sm transition">
+            <i class="fas fa-code"></i> Designed by Abdulrahman Adel
+        </a>
+    </footer>
+`;
+
+// 2. منطق التطبيق البرمجي الوظيفي
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyE7ABQvBd_kbj1VVJwwqU__44ICYupDLeB9avakXBGf32fNIkB_-tiXwrqNXqRyho/exec";
+
+function toggleTheme() {
+    document.documentElement.classList.toggle('dark');
+    const icon = document.getElementById('themeIcon');
+    if (document.documentElement.classList.contains('dark')) {
+        icon.classList.replace('fa-moon', 'fa-sun');
+        icon.classList.add('text-orange-400');
+    } else {
+        icon.classList.replace('fa-sun', 'fa-moon');
+        icon.classList.remove('text-orange-400');
+    }
+}
+
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    sidebar.classList.toggle('translate-x-full');
+    sidebar.classList.toggle('translate-x-0');
+    overlay.classList.toggle('hidden');
+}
+
+function checkUserSession() {
+    const loginContainer = document.getElementById('loginContainer');
+    const userName = localStorage.getItem('userName');
+    
+    if (localStorage.getItem('isLoggedIn') === 'true' && userName) {
+        loginContainer.innerHTML = `
+            <div class="flex items-center gap-2 bg-teal-50 dark:bg-slate-800 px-4 py-2 rounded-full font-bold text-sm text-slate-800 dark:text-white border border-teal-100 dark:border-slate-700">
+                <i class="fas fa-user-circle text-teal-600 dark:text-teal-400 text-lg"></i>
+                <span>أهلاً، <span class="text-orange-500">${userName}</span></span>
+                <div class="h-4 w-px bg-teal-200 dark:bg-slate-600 mx-1"></div>
+                <button onclick="logout()" class="text-red-500 hover:text-red-700 px-1" title="خروج">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        `;
+    }
+}
+
+function logout() {
+    if(confirm("هل أنت متأكد من تسجيل الخروج؟")) {
+        localStorage.clear();
+        window.location.reload();
+    }
+}
+
+function checkStore() {
+    if(localStorage.getItem("isLoggedIn") === "true") {
+        window.location.href = "store.html";
+    } else {
+        alert("يرجى تسجيل الدخول أولاً للوصول للمتجر");
+        window.location.href = "login.html";
+    }
+}
+
+async function loadSiteData() {
+    try {
+        const response = await fetch(SCRIPT_URL);
+        const data = await response.json();
+        
+        if(data.whatsapp) document.getElementById('link-whatsapp').href = data.whatsapp;
+        if(data.facebook) document.getElementById('link-facebook').href = data.facebook;
+        if(data.youtube) document.getElementById('link-youtube').href = data.youtube;
+        if(data.tiktok) document.getElementById('link-tiktok').href = data.tiktok;
+        
+        const sliderContainer = document.getElementById('slider-container');
+        if(data.sliderImages && data.sliderImages.length > 0) {
+            sliderContainer.innerHTML = '';
+            data.sliderImages.forEach((img, index) => {
+                let activeClass = index === 0 ? 'active' : '';
+                sliderContainer.innerHTML += `<img src="${img}" class="slide ${activeClass}">`;
+            });
+            
+            let slides = document.querySelectorAll('.slide');
+            if (slides.length > 1) {
+                let currentSlide = 0;
+                setInterval(() => {
+                    slides[currentSlide].classList.remove('active');
+                    currentSlide = (currentSlide + 1) % slides.length;
+                    slides[currentSlide].classList.add('active');
+                }, 5000);
+            }
+        } else {
+            sliderContainer.innerHTML = `<img src="https://images.unsplash.com/photo-1497646650708-244018b14c33" class="slide active">`;
+        }
+    } catch (error) {
+        console.error("فشل في تحميل الإعدادات:", error);
+        document.getElementById('slider-container').innerHTML = `<img src="https://images.unsplash.com/photo-1497646650708-244018b14c33" class="slide active">`;
+    }
+}
+
+// 3. OneSignal
+window.OneSignal = window.OneSignal || [];
+OneSignal.push(function() {
+    OneSignal.init({ 
+        appId: "8e36161f-8906-41f3-b0b8-3e272167065b", 
+        notifyButton: { enable: true },
+        promptOptions: { 
+            slidedown: { 
+                prompts: [{ 
+                    type: "push", autoPrompt: true, 
+                    text: { actionMessage: "اشترك في الإشعارات عشان يوصلك كل جديد", acceptButton: "موافق", cancelButton: "لا شكراً" } 
+                }] 
+            } 
+        }
+    });
+    OneSignal.showSlidedownPrompt();
+});
+
+// 4. حظر زر الفحص والـ Right-Click
+document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+document.onkeydown = function(e) {
+    if (e.keyCode === 123) return false; // F12
+    if (e.ctrlKey && e.shiftKey && e.keyCode === 'I'.charCodeAt(0)) return false;
+    if (e.ctrlKey && e.shiftKey && e.keyCode === 'J'.charCodeAt(0)) return false;
+    if (e.ctrlKey && e.shiftKey && e.keyCode === 'C'.charCodeAt(0)) return false;
+    if (e.ctrlKey && e.keyCode === 'U'.charCodeAt(0)) return false;
+};
+
+// 5. بدء التشغيل
+checkUserSession();
+loadSiteData();
