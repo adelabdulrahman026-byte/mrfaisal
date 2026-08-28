@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Disallow: /motaba.html
+Disallow: /hw.html
+Disallow: /exam.html
+Disallow: /examtanya.html
+Disallow: /examtalta.html
+Disallow: /father.html
+Disallow: /talb.html
+Disallow: /hwwait.html
+Sitemap: https://www.mrfaisal.net/sitemap.xml

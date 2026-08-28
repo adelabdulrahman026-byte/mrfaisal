@@ -1,0 +1,2200 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة إدارة سناتر مستر محمد فيصل</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            600: '#7c3aed',
+                            700: '#6d28d9',
+                            800: '#5b21b6',
+                            900: '#4c1d95'
+                        }
+                    },
+                    fontFamily: { cairo: ['Cairo', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- QR Code Scanner -->
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <!-- SheetJS Excel Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+        @media print { .no-print { display: none !important; } .print-area { display: block !important; } }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen">
+
+    <!-- ================= LOGIN SCREEN ================= -->
+    <div id="admin-auth-gate" class="fixed inset-0 z-50 bg-slate-950 flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 p-8 rounded-3xl w-full max-w-md shadow-2xl relative">
+            <div class="w-16 h-16 bg-brand-600/20 text-brand-400 rounded-2xl flex items-center justify-center mx-auto text-3xl mb-4">
+                <i class="fa-solid fa-lock"></i>
+            </div>
+            <h2 class="text-xl font-black text-center mb-1">لوحة تحكم مستر محمد فيصل</h2>
+            <p class="text-xs text-gray-400 text-center mb-6">أهلاً بك يا مستر.. ادخل بيانات حسابك للمتابعة</p>
+
+            <form onsubmit="handleAdminLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold mb-1">اسم المستخدم (Username):</label>
+                    <input type="text" id="login-username" required placeholder="اسم المستخدم" class="w-full p-3.5 rounded-xl bg-slate-800 border border-slate-700 text-sm text-white focus:outline-none focus:border-brand-600">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold mb-1">كلمة المرور (Password):</label>
+                    <input type="password" id="login-password" required placeholder="••••••••" class="w-full p-3.5 rounded-xl bg-slate-800 border border-slate-700 text-sm text-white focus:outline-none focus:border-brand-600">
+                </div>
+                <button type="submit" id="btn-login-submit" class="w-full py-3.5 bg-brand-700 hover:bg-brand-600 text-white font-black rounded-xl text-sm transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-right-to-bracket"></i> دخول لوحة التحكم
+                </button>
+            </form>
+            <p id="auth-error-msg" class="text-xs text-red-400 font-bold text-center mt-3 hidden"></p>
+        </div>
+    </div>
+
+    <!-- ================= MAIN DASHBOARD ================= -->
+    <div id="admin-main-view" class="hidden">
+        <!-- Top Nav -->
+        <header class="bg-slate-800/90 backdrop-blur-md border-b border-slate-700 sticky top-0 z-40 px-4 sm:px-8 py-4">
+            <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-brand-700 flex items-center justify-center text-white font-bold">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-black text-lg">منظومة سناتر مستر محمد فيصل</h1>
+                        <p class="text-xs text-gray-400">مرحباً: <span id="logged-admin-name" class="font-bold text-amber-400">مستر فيصل</span> | الحصة النشطة: <span id="header-active-session-name" class="text-emerald-400 font-bold">لم تُحدد بعد</span></p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <span id="sync-status-badge" class="px-3 py-1 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-bold rounded-full flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> متصل (Offline Ready)
+                    </span>
+                    <button onclick="logoutAdmin()" class="px-3 py-1.5 bg-red-950/60 hover:bg-red-900 border border-red-800 text-red-300 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-power-off"></i> خروج
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-8 py-8">
+            <!-- Navigation Tabs -->
+            <div class="flex items-center gap-2 overflow-x-auto pb-4 mb-6 border-b border-slate-800">
+                <button onclick="switchTab('session-scan')" id="tab-btn-session-scan" class="tab-btn px-4 py-2.5 rounded-xl bg-brand-700 text-white font-black text-xs sm:text-sm whitespace-nowrap"><i class="fa-solid fa-camera ml-1"></i> حصة اليوم والماسح الذكي</button>
+                <button onclick="switchTab('exams-desk')" id="tab-btn-exams-desk" class="tab-btn px-4 py-2.5 rounded-xl bg-slate-800 text-gray-300 font-bold text-xs sm:text-sm whitespace-nowrap"><i class="fa-solid fa-star ml-1"></i> تسجيل درجات الامتحانات</button>
+                <button onclick="switchTab('absence-alert')" id="tab-btn-absence-alert" class="tab-btn px-4 py-2.5 rounded-xl bg-slate-800 text-gray-300 font-bold text-xs sm:text-sm whitespace-nowrap"><i class="fa-solid fa-user-xmark ml-1"></i> إبلاغ غياب الحصة</button>
+                <button onclick="switchTab('students')" id="tab-btn-students" class="tab-btn px-4 py-2.5 rounded-xl bg-slate-800 text-gray-300 font-bold text-xs sm:text-sm whitespace-nowrap"><i class="fa-solid fa-user-plus ml-1"></i> الطلاب ورفع الإكسيل</button>
+                <button onclick="switchTab('homework')" id="tab-btn-homework" class="tab-btn px-4 py-2.5 rounded-xl bg-slate-800 text-gray-300 font-bold text-xs sm:text-sm whitespace-nowrap"><i class="fa-solid fa-file-circle-plus ml-1"></i> إدارة وتعديل الواجبات</button>
+                <button onclick="switchTab('broadcast')" id="tab-btn-broadcast" class="tab-btn px-4 py-2.5 rounded-xl bg-slate-800 text-gray-300 font-bold text-xs sm:text-sm whitespace-nowrap"><i class="fa-brands fa-whatsapp ml-1"></i> رسائل جماعية للسنتر</button>
+                <button onclick="switchTab('centers')" id="tab-btn-centers" class="tab-btn px-4 py-2.5 rounded-xl bg-slate-800 text-gray-300 font-bold text-xs sm:text-sm whitespace-nowrap"><i class="fa-solid fa-map-location-dot ml-1"></i> إضافة السناتر</button>
+                <button onclick="switchTab('reports')" id="tab-btn-reports" class="tab-btn px-4 py-2.5 rounded-xl bg-slate-800 text-gray-300 font-bold text-xs sm:text-sm whitespace-nowrap"><i class="fa-solid fa-file-invoice-dollar ml-1"></i> التقارير والماليات المفصلة</button>
+                <button onclick="switchTab('api')" id="tab-btn-api" class="tab-btn px-4 py-2.5 rounded-xl bg-slate-800 text-gray-300 font-bold text-xs sm:text-sm whitespace-nowrap"><i class="fa-solid fa-sliders ml-1"></i> ربط WAPilot API</button>
+            </div>
+
+            <!-- ================= TAB 1: SESSION-BASED SCANNER ================= -->
+            <div id="tab-content-session-scan" class="tab-sec space-y-6">
+                <!-- Session Setup Card -->
+                <div class="bg-slate-800/90 border border-slate-700 rounded-3xl p-6 shadow-md">
+                    <h3 class="text-base font-black text-amber-400 mb-3 flex items-center gap-2"><i class="fa-solid fa-chalkboard-user"></i> تجهيز بيانات حصة اليوم ورقم الحصة والشهر</h3>
+                    <form onsubmit="handleStartSession(event)" class="grid grid-cols-1 sm:grid-cols-5 gap-3 items-end">
+                        <div>
+                            <label class="block text-xs font-bold mb-1">السنتر:</label>
+                            <select id="ses-center" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white" required></select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold mb-1">الصف الدراسي:</label>
+                            <select id="ses-grade" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white" required>
+                                <option value="الصف الثالث الثانوي">الصف الثالث الثانوي</option>
+                                <option value="الصف الثاني الثانوي">الصف الثاني الثانوي</option>
+                                <option value="الصف الأول الثانوي">الصف الأول الثانوي</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold mb-1">اسم / موضوع الحصة:</label>
+                            <input type="text" id="ses-name" required placeholder="مثال: جغرافيا سياسية - مدخل" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white">
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="block text-[11px] font-bold mb-1 text-amber-300">رقم الحصة:</label>
+                                <select id="ses-lesson-num" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white">
+                                    <option value="الحصة 1">حصة 1</option>
+                                    <option value="الحصة 2">حصة 2</option>
+                                    <option value="الحصة 3">حصة 3</option>
+                                    <option value="الحصة 4">حصة 4</option>
+                                    <option value="الحصة 5">حصة 5</option>
+                                    <option value="الحصة 6">حصة 6</option>
+                                    <option value="الحصة 7">حصة 7</option>
+                                    <option value="الحصة 8">حصة 8</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold mb-1 text-amber-300">الشهر:</label>
+                                <select id="ses-month-num" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white">
+                                    <option value="شهر 8 (أغسطس)">شهر 8</option>
+                                    <option value="شهر 9 (سبتمبر)">شهر 9</option>
+                                    <option value="شهر 10 (أكتوبر)">شهر 10</option>
+                                    <option value="شهر 11 (نوفمبر)">شهر 11</option>
+                                    <option value="شهر 12 (ديسمبر)">شهر 12</option>
+                                    <option value="شهر 1 (يناير)">شهر 1</option>
+                                    <option value="شهر 2 (فبراير)">شهر 2</option>
+                                    <option value="شهر 3 (مارس)">شهر 3</option>
+                                    <option value="شهر 4 (أبريل)">شهر 4</option>
+                                    <option value="شهر 5 (مايو)">شهر 5</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button type="submit" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 font-black rounded-xl text-xs transition shadow-md flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-play"></i> بدء وتثبيت الحصة
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Dual Scanner Viewports -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <div class="lg:col-span-6 bg-slate-800/80 border border-slate-700 rounded-3xl p-6 space-y-4">
+                        <div class="bg-slate-900 p-2 rounded-2xl border border-slate-700 flex gap-2">
+                            <label class="flex-1 text-center cursor-pointer p-2.5 rounded-xl text-xs font-black transition" id="mode-label-attendance">
+                                <input type="radio" name="scan_mode" value="attendance" checked onchange="handleScanModeChange()" class="hidden">
+                                <i class="fa-solid fa-calendar-check ml-1"></i> الحضور والتحصيل والتعويض
+                            </label>
+                            <label class="flex-1 text-center cursor-pointer p-2.5 rounded-xl text-xs font-black transition text-gray-400" id="mode-label-homework">
+                                <input type="radio" name="scan_mode" value="homework" onchange="handleScanModeChange()" class="hidden">
+                                <i class="fa-solid fa-book-open-reader ml-1"></i> فحص درجة ووقت الواجب
+                            </label>
+                        </div>
+
+                        <div class="flex justify-between items-center">
+                            <h3 class="font-bold text-sm" id="scan-mode-heading"><i class="fa-solid fa-qrcode text-brand-400 ml-1"></i> ماسح الحضور والتحصيل الفوري</h3>
+                            <button onclick="toggleCameraScanner()" id="scanner-btn" class="px-3 py-1 bg-brand-700 text-white rounded-lg text-xs font-bold">تشغيل الكاميرا</button>
+                        </div>
+
+                        <div id="qr-camera-viewport" class="w-full rounded-2xl overflow-hidden border-2 border-dashed border-slate-600 min-h-[220px] bg-slate-900 flex items-center justify-center text-xs text-gray-500">
+                            اضغط تشغيل الكاميرا للمسح المباشر أو ابحث برقم الكود
+                        </div>
+
+                        <div class="flex gap-2">
+                            <input type="number" id="manual-code-search" placeholder="اكتب كود الطالب الرقمي..." class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs focus:outline-none font-mono">
+                            <button onclick="searchStudentDirectly()" class="px-5 py-3 bg-brand-700 font-bold rounded-xl text-xs whitespace-nowrap">بحث وفحص</button>
+                        </div>
+                    </div>
+
+                    <!-- Scanned Student Result Card -->
+                    <div class="lg:col-span-6 bg-slate-800/80 border border-slate-700 rounded-3xl p-6">
+                        <div id="scan-empty-msg" class="h-full flex flex-col items-center justify-center text-center p-8 text-gray-500">
+                            <i class="fa-solid fa-id-card text-5xl mb-3 text-slate-700"></i>
+                            <p class="font-bold">في انتظار مسح كارت الطالب</p>
+                            <p class="text-xs text-gray-400 mt-1" id="scan-empty-subtext">تأكد من بدء الحصة أولاً لتسجيل الحضور والحسابات باسمها</p>
+                        </div>
+
+                        <div id="scan-loaded-data" class="hidden space-y-4">
+                            <div class="flex justify-between items-start border-b border-slate-700 pb-3">
+                                <div>
+                                    <h3 id="adm-st-name" class="text-xl font-black text-white">--</h3>
+                                    <p class="text-xs text-gray-400">الكود: <span id="adm-st-code" class="font-mono text-brand-400 font-bold">--</span> | سنتر: <span id="adm-st-center" class="text-amber-300 font-bold">--</span></p>
+                                </div>
+                                <span id="adm-st-grade" class="px-3 py-1 bg-brand-900 text-brand-300 text-xs font-bold rounded-lg">--</span>
+                            </div>
+
+                            <div class="p-3 bg-slate-900/90 rounded-2xl border border-brand-500/40 flex items-center justify-between gap-4">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-xs font-bold text-gray-300"><i class="fa-solid fa-wallet text-amber-400 ml-1"></i> نظام الدفع:</span>
+                                    <select id="scan-edit-payment-plan" onchange="handleLivePaymentPlanChange(this.value)" class="p-1.5 rounded-lg bg-slate-800 border border-slate-700 text-xs font-black text-amber-300 focus:outline-none">
+                                        <option value="شهري">شهري (دفع كل شهر)</option>
+                                        <option value="بالحصة">بالحصة (دفع كل حصة)</option>
+                                        <option value="غير محدد">غير محدد</option>
+                                    </select>
+                                </div>
+                                <span id="scan-edit-plan-msg" class="text-[10px] text-emerald-400 font-bold hidden"><i class="fa-solid fa-check"></i> تم التعديل</span>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-3 text-xs">
+                                <div class="p-3 bg-slate-900 rounded-xl border border-slate-700">
+                                    <span class="text-gray-400 block font-bold">المتبقي على الطالب:</span>
+                                    <span id="adm-st-balance" class="text-red-400 font-bold block mt-1 text-sm">0 ج.م</span>
+                                </div>
+                                <div class="p-3 bg-slate-900 rounded-xl border border-slate-700">
+                                    <span class="text-gray-400 block font-bold">حالة آخر واجب:</span>
+                                    <span id="adm-st-hw" class="font-bold text-emerald-400 block mt-1 text-sm">--</span>
+                                </div>
+                                <div class="p-3 bg-slate-900 rounded-xl border border-slate-700">
+                                    <span class="text-gray-400 block font-bold">آخر دفع مسدد:</span>
+                                    <span id="adm-st-last-pay" class="font-bold text-blue-400 block mt-1">--</span>
+                                </div>
+                                <div class="p-3 bg-slate-900 rounded-xl border border-slate-700">
+                                    <span class="text-gray-400 block font-bold">رقم ولي الأمر:</span>
+                                    <span id="adm-st-parent-phone" class="font-mono font-bold text-white block mt-1">--</span>
+                                </div>
+                            </div>
+
+                            <div id="scan-mode-output-box" class="space-y-3 pt-2"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= TAB 2: EXAM SCORING DESK ================= -->
+            <div id="tab-content-exams-desk" class="tab-sec hidden space-y-6">
+                <div class="bg-slate-800/80 border border-slate-700 rounded-3xl p-6 shadow-md max-w-3xl mx-auto">
+                    <div class="border-b border-slate-700 pb-4 mb-6">
+                        <h3 class="text-xl font-black text-amber-400 flex items-center gap-2"><i class="fa-solid fa-star"></i> رصد وتسجيل درجات الامتحانات (مع إشعار فوري لولي الأمر)</h3>
+                        <p class="text-xs text-gray-400 mt-1">حدد تفاصيل الامتحان، ثم أدخل كود الطالب والدرجة ليتم حفظها وإرسال رسالة واتساب لولي أمره فوراً.</p>
+                    </div>
+
+                    <form onsubmit="handleQuickExamGrading(event)" class="space-y-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold mb-1">اسم / عنوان الامتحان:</label>
+                                <input type="text" id="exam-entry-title" required placeholder="مثال: امتحان شهر أكتوبر - جغرافيا" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold mb-1">السنتر / المجموعة:</label>
+                                <select id="exam-entry-center" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white" required></select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold mb-1">الصف الدراسي:</label>
+                                <select id="exam-entry-grade" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white" required>
+                                    <option value="الصف الثالث الثانوي">الصف الثالث الثانوي</option>
+                                    <option value="الصف الثاني الثانوي">الصف الثاني الثانوي</option>
+                                    <option value="الصف الأول الثانوي">الصف الأول الثانوي</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="p-4 bg-slate-900 rounded-2xl border border-slate-700 grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
+                            <div>
+                                <label class="block text-xs font-bold mb-1 text-brand-400">كود الطالب الرقمي:</label>
+                                <input type="number" id="exam-entry-code" required placeholder="مثال: 101" class="w-full p-3 rounded-xl bg-slate-800 border border-slate-700 text-xs text-white font-mono">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold mb-1 text-amber-400">الدرجة المحصلة (مثال: 58/60):</label>
+                                <input type="text" id="exam-entry-score" required placeholder="58 / 60" class="w-full p-3 rounded-xl bg-slate-800 border border-slate-700 text-xs text-white font-bold">
+                            </div>
+                            <button type="submit" id="btn-save-exam-score" class="w-full py-3 bg-brand-700 hover:bg-brand-600 text-white font-black rounded-xl text-xs transition shadow-md flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-paper-plane"></i> حفظ وإرسال واتساب لولي الأمر
+                            </button>
+                        </div>
+                    </form>
+
+                    <div class="mt-6">
+                        <h4 class="font-bold text-xs text-gray-400 mb-2">آخر درجات تم رصدها الآن:</h4>
+                        <div id="recent-graded-exams-box" class="space-y-2 text-xs max-h-48 overflow-y-auto"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= TAB 3: ABSENCE ALERT DESK ================= -->
+            <div id="tab-content-absence-alert" class="tab-sec hidden space-y-6">
+                <div class="bg-slate-800/80 border border-slate-700 rounded-3xl p-6 shadow-md max-w-4xl mx-auto">
+                    <div class="border-b border-slate-700 pb-4 mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <div>
+                            <h3 class="text-xl font-black text-red-400 flex items-center gap-2"><i class="fa-solid fa-user-xmark"></i> إبلاغ غياب الحصة للطلاب وأولياء الأمور</h3>
+                            <p class="text-xs text-gray-400 mt-1">يتم حصر الطلاب الغائبين في الحصة النشطة تلقائياً وإرسال رسالة غياب لهم ولأولياء أمورهم بأمان.</p>
+                        </div>
+                        <button onclick="calculateAndDisplayAbsentees()" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-xl text-xs font-bold text-white">
+                            <i class="fa-solid fa-arrows-rotate ml-1"></i> تحديث الحصر
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                        <div class="p-4 bg-slate-900 rounded-2xl border border-slate-700 text-center">
+                            <span class="text-xs text-gray-400 font-bold block mb-1">إجمالي طلاب السنتر والصف</span>
+                            <span id="abs-stat-total" class="text-2xl font-black text-white">0</span>
+                        </div>
+                        <div class="p-4 bg-slate-900 rounded-2xl border border-slate-700 text-center">
+                            <span class="text-xs text-gray-400 font-bold block mb-1">حضروا الحصة بالفعل</span>
+                            <span id="abs-stat-attended" class="text-2xl font-black text-emerald-400">0</span>
+                        </div>
+                        <div class="p-4 bg-slate-900 rounded-2xl border border-slate-700 text-center">
+                            <span class="text-xs text-gray-400 font-bold block mb-1">الطلاب الغائبون</span>
+                            <span id="abs-stat-absent" class="text-2xl font-black text-red-500">0</span>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto mb-6">
+                        <table class="w-full text-right text-xs">
+                            <thead class="bg-slate-900/80 text-gray-400 border-b border-slate-700">
+                                <tr>
+                                    <th class="p-3">الكود</th>
+                                    <th class="p-3">اسم الطالب</th>
+                                    <th class="p-3">تليفون الطالب</th>
+                                    <th class="p-3">تليفون ولي الأمر</th>
+                                </tr>
+                            </thead>
+                            <tbody id="absentees-table-tbody" class="divide-y divide-slate-700"></tbody>
+                        </table>
+                    </div>
+
+                    <button onclick="handleDispatchAbsenceAlerts()" id="btn-dispatch-absence" class="w-full py-4 bg-red-600 hover:bg-red-700 text-white font-black rounded-2xl text-sm transition shadow-lg flex items-center justify-center gap-2">
+                        <i class="fa-brands fa-whatsapp text-lg"></i> إرسال إشعار الغياب لجميع الطلاب وأولياء الأمور الغائبين الآن
+                    </button>
+                </div>
+            </div>
+
+            <!-- ================= TAB 4: STUDENTS & BULK MANAGEMENT ================= -->
+            <div id="tab-content-students" class="tab-sec hidden space-y-6">
+                <!-- Excel Import Box -->
+                <div class="bg-gradient-to-r from-emerald-950/40 via-slate-800 to-slate-800 border-2 border-emerald-500/40 rounded-3xl p-6 shadow-xl">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
+                        <div>
+                            <h3 class="text-lg font-black text-emerald-400 flex items-center gap-2">
+                                <i class="fa-solid fa-file-excel text-xl"></i> رفع وتسجيل الطلاب دفعة واحدة عن طريق شيت إكسيل (Excel / CSV)
+                            </h3>
+                            <p class="text-xs text-gray-300 mt-1">إذا كانت خانة نظام الدفع فارغة لن يتم ذكرها في رسالة الترحيب للطالب.</p>
+                        </div>
+                        <button onclick="downloadExcelTemplate()" class="px-4 py-2.5 bg-emerald-700 hover:bg-emerald-600 text-white font-bold rounded-xl text-xs flex items-center gap-2 shadow transition whitespace-nowrap">
+                            <i class="fa-solid fa-download"></i> تحميل شيت إكسيل تجريبي (Template)
+                        </button>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row gap-3 items-center pt-2">
+                        <input type="file" id="excel-file-input" accept=".xlsx, .xls, .csv" class="w-full text-xs text-gray-300 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-black file:bg-brand-700 file:text-white hover:file:bg-brand-600 cursor-pointer bg-slate-900 p-2 rounded-2xl border border-slate-700">
+                        <button onclick="handleProcessExcelUpload()" id="btn-process-excel" class="w-full sm:w-auto px-8 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-black rounded-xl text-xs whitespace-nowrap shadow-md transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-cloud-arrow-up"></i> قراءة ورفع الطلاب وإشعارهم
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Single Student Add Form -->
+                <div class="bg-slate-800/80 border border-slate-700 rounded-3xl p-6">
+                    <h3 class="font-black text-lg mb-4 text-brand-400">إضافة طالب فردي وتحديد حسابه وسنتره</h3>
+                    <form onsubmit="handleCreateStudent(event)" class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold mb-1">اسم الطالب رباعي:</label>
+                            <input type="text" id="add-st-name" required placeholder="محمد أحمد محمود" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold mb-1">كود الطالب في السنتر (أرقام فقط):</label>
+                            <input type="number" id="add-st-code" required placeholder="مثال: 101" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs font-mono text-white">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold mb-1">السنة الدراسية:</label>
+                            <select id="add-st-grade" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white">
+                                <option value="الصف الثالث الثانوي">الصف الثالث الثانوي</option>
+                                <option value="الصف الثاني الثانوي">الصف الثاني الثانوي</option>
+                                <option value="الصف الأول الثانوي">الصف الأول الثانوي</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold mb-1">السنتر / المجموعة:</label>
+                            <select id="add-st-center" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white"></select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold mb-1">تليفون الطالب:</label>
+                            <input type="tel" id="add-st-phone" required placeholder="01XXXXXXXXX" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold mb-1">تليفون ولي الأمر (للواتساب):</label>
+                            <input type="tel" id="add-st-parent-phone" required placeholder="01XXXXXXXXX" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold mb-1">نظام الدفع:</label>
+                            <select id="add-st-plan" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white">
+                                <option value="شهري">شهري (دفع كل شهر)</option>
+                                <option value="بالحصة">بالحصة (دفع كل حصة)</option>
+                                <option value="غير محدد">غير محدد</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold mb-1">المبلغ المطلوب / المتبقي (ج.م):</label>
+                            <input type="number" id="add-st-balance" value="0" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white">
+                        </div>
+                        <div class="flex items-end">
+                            <button type="submit" class="w-full py-3 bg-brand-700 hover:bg-brand-600 font-bold rounded-xl text-xs transition text-white">حفظ الطالب وإرسال رسالة الترحيب</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Students Table List with Bulk Actions -->
+                <div class="bg-slate-800/80 border border-slate-700 rounded-3xl p-6">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
+                        <div>
+                            <h3 class="font-black text-base">سجل طلاب السناتر المسجلين</h3>
+                            <p class="text-[11px] text-gray-400">حدد الطلاب من المربعات للتعديل الجماعي في المرحلة أو السنتر</p>
+                        </div>
+                        <input type="text" id="adm-table-search" onkeyup="filterAdminStudentsTable()" placeholder="ابحث بالاسم أو الكود..." class="p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs w-full sm:w-64 font-mono text-white">
+                    </div>
+
+                    <!-- NEW: Bulk Actions Toolbar (Appears when students are selected) -->
+                    <div id="bulk-actions-toolbar" class="hidden mb-4 p-4 bg-slate-900/95 border-2 border-brand-500/60 rounded-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-xl animate-fade-in">
+                        <div class="flex items-center gap-3">
+                            <span class="w-8 h-8 rounded-xl bg-brand-600/30 text-brand-400 flex items-center justify-center font-bold text-sm">
+                                <i class="fa-solid fa-users-gear"></i>
+                            </span>
+                            <div>
+                                <p class="text-xs font-black text-white">تعديل جماعي للطلاب المحددين</p>
+                                <p class="text-[11px] text-brand-300 font-bold">تم تحديد: <span id="bulk-selected-count" class="text-amber-400 text-xs font-black">0</span> طالب</p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 w-full md:w-auto items-center">
+                            <div>
+                                <select id="bulk-change-grade" class="w-full p-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs text-white font-bold">
+                                    <option value="">-- تغيير الصف الدراسي --</option>
+                                    <option value="الصف الثالث الثانوي">الصف الثالث الثانوي</option>
+                                    <option value="الصف الثاني الثانوي">الصف الثاني الثانوي</option>
+                                    <option value="الصف الأول الثانوي">الصف الأول الثانوي</option>
+                                </select>
+                            </div>
+                            <div>
+                                <select id="bulk-change-center" class="w-full p-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs text-white font-bold">
+                                    <option value="">-- تغيير السنتر --</option>
+                                </select>
+                            </div>
+                            <div class="flex gap-2">
+                                <button onclick="executeBulkUpdateStudents()" id="btn-apply-bulk-edit" class="flex-1 py-2.5 px-4 bg-brand-700 hover:bg-brand-600 text-white font-black rounded-xl text-xs transition shadow flex items-center justify-center gap-1.5 whitespace-nowrap">
+                                    <i class="fa-solid fa-floppy-disk"></i> تطبيق التعديل
+                                </button>
+                                <button onclick="clearBulkStudentSelection()" class="py-2.5 px-3 bg-slate-800 hover:bg-slate-700 text-gray-400 hover:text-white rounded-xl text-xs transition" title="إلغاء التحديد">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-right text-xs">
+                            <thead class="bg-slate-900/80 text-gray-400 border-b border-slate-700">
+                                <tr>
+                                    <th class="p-3 w-10 text-center">
+                                        <input type="checkbox" id="select-all-students-cb" onchange="toggleSelectAllStudents(this.checked)" class="w-4 h-4 rounded bg-slate-800 border-slate-600 text-brand-600 cursor-pointer">
+                                    </th>
+                                    <th class="p-3">الكود</th>
+                                    <th class="p-3">اسم الطالب</th>
+                                    <th class="p-3">السنة الدراسية</th>
+                                    <th class="p-3">السنتر</th>
+                                    <th class="p-3">نظام الدفع</th>
+                                    <th class="p-3">المتبقي</th>
+                                    <th class="p-3">آخر دفع</th>
+                                    <th class="p-3">إجراء</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adm-students-tbody" class="divide-y divide-slate-700"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= TAB 5: HOMEWORK BUILDER & EDITING ================= -->
+            <div id="tab-content-homework" class="tab-sec hidden space-y-6">
+                <div class="bg-slate-800/80 border border-slate-700 rounded-3xl p-6" id="homework-form-card">
+                    <div class="flex justify-between items-center mb-6">
+                        <div>
+                            <h3 class="font-black text-lg text-brand-400" id="hw-form-heading">إنشاء ونشر واجب جديد</h3>
+                            <p class="text-xs text-gray-400 mt-0.5" id="hw-form-subheading">عند النشر أو إضافة سنتر جديد سيتم إشعار طلاب السنتر الجديد فقط على الواتساب</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button type="button" onclick="cancelHomeworkEdit()" id="btn-cancel-hw-edit" class="hidden px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-xl text-xs font-bold text-gray-300">
+                                إلغاء التعديل
+                            </button>
+                            <button type="button" onclick="addNewQuestionToBuilder()" class="px-4 py-2 bg-purple-900/60 hover:bg-purple-800 border border-purple-700 text-purple-200 rounded-xl text-xs font-bold transition">
+                                <i class="fa-solid fa-plus ml-1"></i> إضافة سؤال آخر
+                            </button>
+                        </div>
+                    </div>
+
+                    <form onsubmit="handleSaveHomework(event)" class="space-y-6">
+                        <input type="hidden" id="editing-hw-id" value="">
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold mb-1">عنوان الواجب / الدرس:</label>
+                                <input type="text" id="hw-builder-title" required placeholder="مثال: واجب 1 - مدخل الجغرافيا السياسية" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold mb-1">الصف الدراسي المستهدف:</label>
+                                <select id="hw-builder-grade" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white">
+                                    <option value="الصف الثالث الثانوي">الصف الثالث الثانوي</option>
+                                    <option value="الصف الثاني الثانوي">الصف الثاني الثانوي</option>
+                                    <option value="الصف الأول الثانوي">الصف الأول الثانوي</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold mb-1">السنتر / المجموعة المستهدفة:</label>
+                                <select id="hw-builder-target-center" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white">
+                                    <option value="all">جميع السناتر والمجموعات</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div id="homework-questions-list" class="space-y-4"></div>
+
+                        <div class="pt-4 flex gap-4">
+                            <button type="submit" id="btn-save-hw-action" class="flex-1 py-4 bg-emerald-600 hover:bg-emerald-700 text-white font-black rounded-xl text-sm transition shadow-lg flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-cloud-arrow-up"></i> حفظ ونشر الواجب وإشعار السناتر الجديدة
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="bg-slate-800/80 border border-slate-700 rounded-3xl p-6">
+                    <h3 class="font-black text-base mb-4 text-white">الواجبات المنشورة الحالية والتحكم فيها</h3>
+                    <div id="admin-homeworks-table-container" class="overflow-x-auto"></div>
+                </div>
+            </div>
+
+            <!-- ================= TAB 6: BROADCAST WHATSAPP ================= -->
+            <div id="tab-content-broadcast" class="tab-sec hidden max-w-2xl bg-slate-800/80 border border-slate-700 rounded-3xl p-6">
+                <h3 class="font-black text-lg mb-2 text-green-400"><i class="fa-brands fa-whatsapp ml-1"></i> إرسال رسائل جماعية للسنتر (حماية ضد الحظر)</h3>
+                <p class="text-xs text-gray-400 mb-6">يتم الإرسال بفارق زمني منتظم (3.5 ثوانٍ بين كل رسالة) لتجنب حظر الرقم على الواتساب.</p>
+
+                <form onsubmit="handleSendBroadcast(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold mb-1">اختر السنتر / المجموعة المستهدفة:</label>
+                        <select id="broadcast-center-select" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white"></select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold mb-1">الجهة المستلمة للرسالة:</label>
+                        <select id="broadcast-target-role" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white">
+                            <option value="parents">أولياء الأمور فقط</option>
+                            <option value="students">الطلاب فقط</option>
+                            <option value="both">أولياء الأمور والطلاب معاً</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold mb-1">نص الرسالة:</label>
+                        <textarea id="broadcast-msg-text" required rows="4" placeholder="اكتب التنبيه أو موعد الامتحان أو رسالة المستر..." class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white"></textarea>
+                    </div>
+                    <div id="broadcast-progress-box" class="hidden p-4 bg-slate-900 rounded-2xl border border-slate-700 space-y-2">
+                        <div class="flex justify-between text-xs font-bold">
+                            <span id="broadcast-progress-label">جاري الإرسال بأمان...</span>
+                            <span id="broadcast-progress-count">0 / 0</span>
+                        </div>
+                        <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden">
+                            <div id="broadcast-progress-bar" class="bg-green-500 h-full w-0 transition-all duration-300"></div>
+                        </div>
+                    </div>
+
+                    <button type="submit" id="broadcast-submit-btn" class="w-full py-3.5 bg-green-600 hover:bg-green-700 font-bold rounded-xl text-xs transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-paper-plane"></i> بدء الإرسال الجماعي الآمن
+                    </button>
+                </form>
+            </div>
+
+            <!-- ================= TAB 7: CENTERS MANAGEMENT ================= -->
+            <div id="tab-content-centers" class="tab-sec hidden space-y-6">
+                <div class="bg-slate-800/80 border border-slate-700 rounded-3xl p-6 max-w-xl">
+                    <h3 class="font-black text-lg mb-4 text-brand-400">إضافة سنتر ومواعيد جديدة</h3>
+                    <form onsubmit="handleCreateCenter(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-bold mb-1">اسم السنتر والمنطقة:</label>
+                            <input type="text" id="add-center-name" required placeholder="مثال: سنتر يونايتد - لوران" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white">
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold mb-1">اليوم:</label>
+                                <input type="text" id="add-center-day" required placeholder="مثال: السبت 22/8" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold mb-1">الموعد والتوقيت:</label>
+                                <input type="text" id="add-center-time" required placeholder="مثال: 12:00 ظهراً" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white">
+                            </div>
+                        </div>
+                        <button type="submit" class="w-full py-3 bg-brand-700 hover:bg-brand-600 font-bold rounded-xl text-xs text-white">حفظ وإتاحة السنتر</button>
+                    </form>
+                </div>
+
+                <div class="bg-slate-800/80 border border-slate-700 rounded-3xl p-6">
+                    <h3 class="font-black text-base mb-4">السناتر المعتمدة حالياً</h3>
+                    <div id="admin-centers-list-grid" class="grid grid-cols-1 sm:grid-cols-3 gap-4"></div>
+                </div>
+            </div>
+
+            <!-- ================= TAB 8: FULL DETAILED REPORTS ================= -->
+            <div id="tab-content-reports" class="tab-sec hidden bg-slate-800/80 border border-slate-700 rounded-3xl p-6 space-y-6">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div class="flex bg-slate-900 p-1.5 rounded-2xl border border-slate-700">
+                        <button onclick="switchReportSubtype('attendance_finances')" id="subrep-btn-att" class="px-4 py-2 rounded-xl text-xs font-black bg-brand-700 text-white transition">
+                            <i class="fa-solid fa-file-invoice-dollar ml-1"></i> تقرير الحضور والماليات بالتفصيل الكامل
+                        </button>
+                        <button onclick="switchReportSubtype('exams')" id="subrep-btn-exams" class="px-4 py-2 rounded-xl text-xs font-bold text-gray-400 hover:text-white transition">
+                            <i class="fa-solid fa-award ml-1"></i> تقرير سجل درجات الامتحانات
+                        </button>
+                    </div>
+
+                    <div class="flex flex-wrap gap-2 w-full sm:w-auto">
+                        <select id="report-filter-center" onchange="renderCenterReport()" class="p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs font-bold text-white"></select>
+                        <select id="report-filter-grade" onchange="renderCenterReport()" class="p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs font-bold text-white">
+                            <option value="all">جميع السنوات الدراسية</option>
+                            <option value="الصف الثالث الثانوي">الصف الثالث الثانوي</option>
+                            <option value="الصف الثاني الثانوي">الصف الثاني الثانوي</option>
+                            <option value="الصف الأول الثانوي">الصف الأول الثانوي</option>
+                        </select>
+                        <button onclick="window.print()" class="px-4 py-2.5 bg-white text-slate-950 font-black rounded-xl text-xs"><i class="fa-solid fa-print ml-1"></i> طباعة PDF</button>
+                    </div>
+                </div>
+
+                <div id="report-printable-box" class="bg-slate-900 p-4 rounded-2xl border border-slate-700 print-area overflow-x-auto"></div>
+            </div>
+
+            <!-- ================= TAB 9: WAPILOT API SETTINGS ================= -->
+            <div id="tab-content-api" class="tab-sec hidden max-w-xl bg-slate-800/80 border border-slate-700 rounded-3xl p-6">
+                <h3 class="font-black text-lg mb-2 text-brand-400"><i class="fa-brands fa-whatsapp ml-1"></i> إعدادات WAPilot WhatsApp API</h3>
+                <p class="text-xs text-gray-400 mb-6">ادخل الـ Instance ID والـ Token الخاص بحسابك على WAPilot لبدء إرسال رسائل الواتساب تلقائياً.</p>
+                
+                <form onsubmit="handleSaveWAPilotSettings(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold mb-1">WAPilot Instance ID:</label>
+                        <input type="text" id="api-instance-id" required placeholder="مثال: instance10492" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs font-mono text-white focus:outline-none focus:border-brand-600">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold mb-1">WAPilot Bearer Token:</label>
+                        <input type="text" id="api-token-key" required placeholder="Bearer Token" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs font-mono text-white focus:outline-none focus:border-brand-600">
+                    </div>
+                    <button type="submit" class="w-full py-3.5 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl text-xs transition">حفظ وتفعيل WAPilot API</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPT LOGIC (OFFLINE-FIRST + FIRESTORE SYNC + BULK ACTIONS) -->
+    <script>
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-sec').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.className = 'tab-btn px-4 py-2.5 rounded-xl bg-slate-800 text-gray-300 font-bold text-xs sm:text-sm whitespace-nowrap');
+            const targetContent = document.getElementById('tab-content-' + tabId);
+            const targetBtn = document.getElementById('tab-btn-' + tabId);
+            if (targetContent) targetContent.classList.remove('hidden');
+            if (targetBtn) targetBtn.className = 'tab-btn px-4 py-2.5 rounded-xl bg-brand-700 text-white font-black text-xs sm:text-sm whitespace-nowrap';
+            
+            if (tabId === 'reports') renderCenterReport();
+            if (tabId === 'homework') loadHomeworksList();
+            if (tabId === 'absence-alert') calculateAndDisplayAbsentees();
+        }
+
+        // Firebase Connection
+        let db = null;
+        try {
+            const firebaseConfig = {
+                apiKey: "AIzaSyB99rFG7UmEop9TujTrYEPt8PKj24kYENs",
+                authDomain: "mrfaisal-aa7a0.firebaseapp.com",
+                projectId: "mrfaisal-aa7a0",
+                storageBucket: "mrfaisal-aa7a0.firebasestorage.app",
+                messagingSenderId: "814677298899",
+                appId: "1:814677298899:web:e8320f5102d5eadb838e26",
+                measurementId: "G-FDH118PHCC"
+            };
+            if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+            db = firebase.firestore();
+            db.enablePersistence({ synchronizeTabs: true }).catch(() => {});
+        } catch(e) {}
+
+        let currentActiveAdmin = null;
+        let currentAdminScannedStudent = null;
+        let html5QrCodeScanner = null;
+        let currentScanMode = 'attendance';
+        let currentReportSubtype = 'attendance_finances';
+        let activeSession = null;
+        let currentGradedExamsLog = [];
+
+        let cachedStudents = [];
+        let cachedCenters = [];
+        let cachedHomeworks = [];
+        let questionIndexCounter = 0;
+
+        // Selected Student Codes for Bulk Actions
+        let selectedStudentCodes = new Set();
+        let currentlyRenderedStudents = [];
+
+        window.addEventListener('online', () => {
+            const el = document.getElementById('sync-status-badge');
+            if (el) el.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> متصل (Online)`;
+        });
+        window.addEventListener('offline', () => {
+            const el = document.getElementById('sync-status-badge');
+            if (el) el.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-400"></span> وضع الأوفلاين (شغال محلياً)`;
+        });
+
+        // Auto-check session on reload
+        window.addEventListener('DOMContentLoaded', () => {
+            const saved = sessionStorage.getItem('MF_ADMIN_LOGGED');
+            if (saved) {
+                try {
+                    currentActiveAdmin = JSON.parse(saved);
+                    initAdminDashboardUI();
+                } catch(e) {
+                    sessionStorage.removeItem('MF_ADMIN_LOGGED');
+                }
+            }
+        });
+
+        // Strict Server Authentication
+        async function handleAdminLogin(e) {
+            e.preventDefault();
+            const u = document.getElementById('login-username').value.trim();
+            const p = document.getElementById('login-password').value.trim();
+            const errEl = document.getElementById('auth-error-msg');
+            const btn = document.getElementById('btn-login-submit');
+
+            errEl.classList.add('hidden');
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري التحقق...`;
+
+            if (!db) {
+                errEl.innerText = 'تعذر الاتصال بقاعدة البيانات. تأكد من اتصال الإنترنت.';
+                errEl.classList.remove('hidden');
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fa-solid fa-right-to-bracket"></i> دخول لوحة التحكم`;
+                return;
+            }
+
+            try {
+                const snapshot = await db.collection('admins').where('username', '==', u).get();
+
+                if (snapshot.empty) {
+                    errEl.innerText = 'اسم المستخدم غير مسجل في قاعدة البيانات!';
+                    errEl.classList.remove('hidden');
+                    btn.disabled = false;
+                    btn.innerHTML = `<i class="fa-solid fa-right-to-bracket"></i> دخول لوحة التحكم`;
+                    return;
+                }
+
+                let matchedAdmin = null;
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    if (data.password && data.password.toString() === p) {
+                        matchedAdmin = { id: doc.id, ...data };
+                    }
+                });
+
+                if (matchedAdmin) {
+                    currentActiveAdmin = matchedAdmin;
+                    sessionStorage.setItem('MF_ADMIN_LOGGED', JSON.stringify(currentActiveAdmin));
+                    initAdminDashboardUI();
+                } else {
+                    errEl.innerText = 'كلمة المرور غير صحيحة!';
+                    errEl.classList.remove('hidden');
+                }
+            } catch(err) {
+                errEl.innerText = 'حدث خطأ أثناء الاتصال: ' + (err.message || 'فشل الاتصال');
+                errEl.classList.remove('hidden');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fa-solid fa-right-to-bracket"></i> دخول لوحة التحكم`;
+            }
+        }
+
+        function initAdminDashboardUI() {
+            document.getElementById('admin-auth-gate').classList.add('hidden');
+            document.getElementById('admin-main-view').classList.remove('hidden');
+            document.getElementById('logged-admin-name').innerText = currentActiveAdmin.name || currentActiveAdmin.username;
+
+            initHomeworkBuilder();
+            loadCenters();
+            loadStudents();
+            loadHomeworksList();
+            loadWAPilotSettings();
+        }
+
+        function logoutAdmin() {
+            currentActiveAdmin = null;
+            sessionStorage.removeItem('MF_ADMIN_LOGGED');
+            document.getElementById('admin-main-view').classList.add('hidden');
+            document.getElementById('admin-auth-gate').classList.remove('hidden');
+            document.getElementById('login-password').value = '';
+            document.getElementById('btn-login-submit').disabled = false;
+            document.getElementById('btn-login-submit').innerHTML = `<i class="fa-solid fa-right-to-bracket"></i> دخول لوحة التحكم`;
+        }
+
+        // ================= 1. ACTIVE SESSION ENGINE =================
+        function handleStartSession(e) {
+            e.preventDefault();
+            const center = document.getElementById('ses-center').value;
+            const grade = document.getElementById('ses-grade').value;
+            const sessionName = document.getElementById('ses-name').value.trim();
+            const lessonNum = document.getElementById('ses-lesson-num').value;
+            const monthNum = document.getElementById('ses-month-num').value;
+            const now = new Date();
+
+            activeSession = {
+                center,
+                grade,
+                sessionName,
+                lessonNum,
+                monthNum,
+                fullSessionTitle: `${sessionName} [${lessonNum} - ${monthNum}]`,
+                date: now.toLocaleDateString('ar-EG'),
+                time: now.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' }),
+                timestamp: now.toISOString()
+            };
+
+            document.getElementById('header-active-session-name').innerText = `${sessionName} (${lessonNum} - ${monthNum})`;
+            document.getElementById('scan-empty-subtext').innerText = `الحصة النشطة: ${sessionName} [${lessonNum} - ${monthNum}] - سنتر ${center}`;
+            alert(`تم بدء وتثبيت الحصة بنجاح! جاهز لمسح باركود طلاب سنتر ${center}.`);
+            
+            calculateAndDisplayAbsentees();
+        }
+
+        // ================= 2. SMART SCANNER & LIVE PLAN MODIFIER =================
+        function handleScanModeChange() {
+            const selected = document.querySelector('input[name="scan_mode"]:checked').value;
+            currentScanMode = selected;
+
+            const attLabel = document.getElementById('mode-label-attendance');
+            const hwLabel = document.getElementById('mode-label-homework');
+            const heading = document.getElementById('scan-mode-heading');
+
+            if (selected === 'attendance') {
+                attLabel.className = 'flex-1 text-center cursor-pointer p-2.5 rounded-xl text-xs font-black bg-brand-700 text-white transition';
+                hwLabel.className = 'flex-1 text-center cursor-pointer p-2.5 rounded-xl text-xs font-black text-gray-400 hover:text-white transition';
+                heading.innerHTML = `<i class="fa-solid fa-qrcode text-brand-400 ml-1"></i> ماسح: الحضور والتحصيل والتعويض`;
+            } else {
+                hwLabel.className = 'flex-1 text-center cursor-pointer p-2.5 rounded-xl text-xs font-black bg-brand-700 text-white transition';
+                attLabel.className = 'flex-1 text-center cursor-pointer p-2.5 rounded-xl text-xs font-black text-gray-400 hover:text-white transition';
+                heading.innerHTML = `<i class="fa-solid fa-book-open text-brand-400 ml-1"></i> ماسح: فحص درجة ووقت الواجب فقط`;
+            }
+
+            if (currentAdminScannedStudent) {
+                loadDirectStudent(currentAdminScannedStudent.code);
+            }
+        }
+
+        function toggleCameraScanner() {
+            const btn = document.getElementById('scanner-btn');
+            if (html5QrCodeScanner) {
+                html5QrCodeScanner.stop().then(() => { html5QrCodeScanner = null; btn.innerText = 'تشغيل الكاميرا'; });
+            } else {
+                html5QrCodeScanner = new Html5Qrcode("qr-camera-viewport");
+                html5QrCodeScanner.start({ facingMode: "environment" }, { fps: 10, qrbox: 200 }, (code) => {
+                    loadDirectStudent(code);
+                    if (currentScanMode === 'attendance') {
+                        actionTakeAttendance('حضور');
+                    }
+                    toggleCameraScanner();
+                }, () => {}).catch(() => alert('تعذر فتح الكاميرا، يرجى استخدام البحث المباشر برقم الكود.'));
+                btn.innerText = 'إيقاف الكاميرا';
+            }
+        }
+
+        function searchStudentDirectly() {
+            const code = document.getElementById('manual-code-search').value.trim();
+            if (code) loadDirectStudent(code);
+        }
+
+        function loadDirectStudent(code) {
+            const s = cachedStudents.find(x => x.code.toString() === code.toString());
+            if (!s) { alert('لم يتم العثور على طالب بهذا الكود: ' + code); return; }
+
+            currentAdminScannedStudent = s;
+            document.getElementById('scan-empty-msg').classList.add('hidden');
+            document.getElementById('scan-loaded-data').classList.remove('hidden');
+
+            document.getElementById('adm-st-name').innerText = s.name;
+            document.getElementById('adm-st-code').innerText = s.code;
+            document.getElementById('adm-st-center').innerText = s.center;
+            document.getElementById('adm-st-grade').innerText = s.grade;
+            document.getElementById('adm-st-balance').innerText = `${s.balanceDue || 0} ج.م`;
+            document.getElementById('adm-st-hw').innerText = s.lastHwExactScore || 'لم يحل';
+            document.getElementById('adm-st-last-pay').innerText = `${s.lastPaymentAmount || 0} ج.م (${s.lastPaymentDate || 'لم يسدد'})`;
+            document.getElementById('adm-st-parent-phone').innerText = s.parentPhone;
+
+            const planSelect = document.getElementById('scan-edit-payment-plan');
+            planSelect.value = s.paymentPlan || 'غير محدد';
+
+            const box = document.getElementById('scan-mode-output-box');
+
+            if (currentScanMode === 'homework') {
+                const lastHw = (s.homeworksHistory && s.homeworksHistory.length > 0) ? s.homeworksHistory[s.homeworksHistory.length - 1] : null;
+                box.innerHTML = `
+                    <div class="p-4 bg-slate-900 rounded-2xl border border-brand-500/40 space-y-2 text-center">
+                        <span class="px-3 py-1 bg-purple-900/60 text-brand-300 text-xs font-bold rounded-lg">${lastHw ? lastHw.title : 'لا يوجد واجبات مسجلة'}</span>
+                        <div class="flex justify-around items-center pt-2">
+                            <div>
+                                <span class="text-xs text-gray-400 block">درجة الواجب:</span>
+                                <span class="text-xl font-black text-emerald-400">${lastHw ? lastHw.score : 'لم يحل'}</span>
+                            </div>
+                            <div>
+                                <span class="text-xs text-gray-400 block">وقت وتاريخ الحل:</span>
+                                <span class="text-xs font-bold text-white">${lastHw ? lastHw.date : '--'}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="resetAndScanAnother()" class="w-full py-3 bg-brand-700 hover:bg-brand-600 text-white font-bold rounded-xl text-xs transition">
+                        <i class="fa-solid fa-arrows-rotate ml-1"></i> مسح طالب آخر
+                    </button>
+                `;
+            } else {
+                box.innerHTML = `
+                    <div class="grid grid-cols-3 gap-2">
+                        <button onclick="actionTakeAttendance('حضور')" class="py-3 bg-emerald-600 hover:bg-emerald-700 font-bold rounded-xl text-xs transition text-white">
+                            <i class="fa-solid fa-check ml-1"></i> تسجيل حضور
+                        </button>
+                        <button onclick="actionTakeAttendance('تعويض')" class="py-3 bg-amber-600 hover:bg-amber-700 font-bold rounded-xl text-xs transition text-white">
+                            <i class="fa-solid fa-arrow-rotate-right ml-1"></i> تسجيل تعويض
+                        </button>
+                        <button onclick="actionCollectPayment()" class="py-3 bg-brand-700 hover:bg-brand-600 font-bold rounded-xl text-xs transition text-white">
+                            <i class="fa-solid fa-money-bill-wave ml-1"></i> تحصيل مبلغ
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        async function handleLivePaymentPlanChange(newPlan) {
+            if (!currentAdminScannedStudent) return;
+            currentAdminScannedStudent.paymentPlan = newPlan;
+
+            if (db && currentAdminScannedStudent.id) {
+                try {
+                    await db.collection('students').doc(currentAdminScannedStudent.id).update({ paymentPlan: newPlan });
+                } catch(e) {}
+            }
+
+            const idx = cachedStudents.findIndex(s => s.code.toString() === currentAdminScannedStudent.code.toString());
+            if (idx !== -1) cachedStudents[idx].paymentPlan = newPlan;
+            localStorage.setItem('MF_LOCAL_STUDENTS', JSON.stringify(cachedStudents));
+
+            const msgEl = document.getElementById('scan-edit-plan-msg');
+            msgEl.classList.remove('hidden');
+            setTimeout(() => msgEl.classList.add('hidden'), 2500);
+
+            loadStudents();
+        }
+
+        function resetAndScanAnother() {
+            document.getElementById('scan-loaded-data').classList.add('hidden');
+            document.getElementById('scan-empty-msg').classList.remove('hidden');
+            document.getElementById('manual-code-search').value = '';
+            currentAdminScannedStudent = null;
+            toggleCameraScanner();
+        }
+
+        async function actionTakeAttendance(type = 'حضور') {
+            if (!currentAdminScannedStudent) return;
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('ar-EG');
+            const timeStr = now.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
+            
+            const sessionTitle = activeSession ? activeSession.fullSessionTitle : 'حصة عادية بالسنتر';
+            const centerName = activeSession ? activeSession.center : currentAdminScannedStudent.center;
+            const lessonNum = activeSession ? activeSession.lessonNum : 'حصة دورية';
+            const monthNum = activeSession ? activeSession.monthNum : 'الشهر الحالي';
+
+            const attRecord = {
+                type: type,
+                sessionTitle: sessionTitle,
+                lessonNum: lessonNum,
+                monthNum: monthNum,
+                center: centerName,
+                date: dateStr,
+                time: timeStr,
+                timestamp: now.toISOString()
+            };
+
+            const newCount = (currentAdminScannedStudent.attendanceCount || 0) + 1;
+
+            if (db && currentAdminScannedStudent.id) {
+                try {
+                    await db.collection('students').doc(currentAdminScannedStudent.id).update({
+                        attendanceCount: newCount,
+                        attendanceHistory: firebase.firestore.FieldValue.arrayUnion(attRecord)
+                    });
+                } catch(e) {}
+            }
+
+            if (!currentAdminScannedStudent.attendanceHistory) currentAdminScannedStudent.attendanceHistory = [];
+            currentAdminScannedStudent.attendanceHistory.push(attRecord);
+            currentAdminScannedStudent.attendanceCount = newCount;
+
+            localStorage.setItem('MF_LOCAL_STUDENTS', JSON.stringify(cachedStudents));
+
+            const msg = `السلام عليكم ولي أمر الطالب/ة: ${currentAdminScannedStudent.name} 🌸\n`
+                      + `نحيطكم علماً بأن الطالب قد سجل (${type}) في:\n`
+                      + `📖 الحصة: ${sessionTitle}\n`
+                      + `🏫 سنتر: ${centerName}\n`
+                      + `⏰ الموعد: ${dateStr} الساعة ${timeStr}\n`
+                      + `مع تحيات فريق عمل مستر محمد فيصل.`;
+
+            sendWAPilotMessage(currentAdminScannedStudent.parentPhone, msg);
+
+            alert(`تم تسجيل (${type}) للطالب ${currentAdminScannedStudent.name} في ${sessionTitle} وإرسال إشعار الواتساب بنجاح!`);
+            loadStudents();
+            loadDirectStudent(currentAdminScannedStudent.code);
+            calculateAndDisplayAbsentees();
+        }
+
+        async function actionCollectPayment() {
+            if (!currentAdminScannedStudent) return;
+            const planText = currentAdminScannedStudent.paymentPlan || 'شهري';
+            const amount = prompt(`أدخل المبلغ المحصل من الطالب ${currentAdminScannedStudent.name} (نظام: ${planText}):`, planText === 'بالحصة' ? "60" : "250");
+            if (amount !== null && !isNaN(amount)) {
+                const paid = parseFloat(amount);
+                const newBal = Math.max(0, (currentAdminScannedStudent.balanceDue || 0) - paid);
+                const now = new Date();
+                const dateStr = now.toLocaleDateString('ar-EG');
+                const timeStr = now.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
+                
+                const sessionTitle = activeSession ? activeSession.fullSessionTitle : 'تحصيل مباشر بالسنتر';
+                const lessonNum = activeSession ? activeSession.lessonNum : '';
+                const monthNum = activeSession ? activeSession.monthNum : '';
+
+                const payRecord = {
+                    amount: paid,
+                    date: dateStr,
+                    time: timeStr,
+                    sessionTitle: sessionTitle,
+                    lessonNum: lessonNum,
+                    monthNum: monthNum,
+                    paymentPlan: planText,
+                    remainingBalance: newBal,
+                    note: `تحصيل بحصة (${sessionTitle}) - نظام ${planText}`
+                };
+
+                if (db && currentAdminScannedStudent.id) {
+                    try {
+                        await db.collection('students').doc(currentAdminScannedStudent.id).update({
+                            balanceDue: newBal,
+                            lastPaymentAmount: paid,
+                            lastPaymentDate: `${dateStr} (${timeStr})`,
+                            paymentsHistory: firebase.firestore.FieldValue.arrayUnion(payRecord)
+                        });
+                    } catch(e) {}
+                }
+
+                if (!currentAdminScannedStudent.paymentsHistory) currentAdminScannedStudent.paymentsHistory = [];
+                currentAdminScannedStudent.paymentsHistory.push(payRecord);
+                currentAdminScannedStudent.balanceDue = newBal;
+                currentAdminScannedStudent.lastPaymentAmount = paid;
+                currentAdminScannedStudent.lastPaymentDate = `${dateStr} (${timeStr})`;
+
+                localStorage.setItem('MF_LOCAL_STUDENTS', JSON.stringify(cachedStudents));
+
+                const msg = `إشعار توريد مالي | سناتر مستر محمد فيصل 🧾\n`
+                          + `تم تحصيل مبلغ: ${paid} ج.م من الطالب/ة: ${currentAdminScannedStudent.name}\n`
+                          + `📌 الحصة: ${sessionTitle} (نظام: ${planText})\n`
+                          + `💰 المبلغ المتبقي على الطالب: ${newBal} ج.م\n`
+                          + `⏰ التاريخ: ${dateStr} الساعة ${timeStr}\n`
+                          + `شاكرين لحضراتكم تعاونكم الدائم.`;
+                sendWAPilotMessage(currentAdminScannedStudent.parentPhone, msg);
+
+                alert('تم تسجيل الدفعة المالية وإرسال الإيصال لولي الأمر بنجاح!');
+                loadStudents();
+                loadDirectStudent(currentAdminScannedStudent.code);
+            }
+        }
+
+        // ================= 3. EXAM SCORING DESK =================
+        async function handleQuickExamGrading(e) {
+            e.preventDefault();
+            const examTitle = document.getElementById('exam-entry-title').value.trim();
+            const center = document.getElementById('exam-entry-center').value;
+            const grade = document.getElementById('exam-entry-grade').value;
+            const code = document.getElementById('exam-entry-code').value.trim();
+            const score = document.getElementById('exam-entry-score').value.trim();
+            const btn = document.getElementById('btn-save-exam-score');
+
+            const student = cachedStudents.find(s => s.code.toString() === code);
+            if (!student) {
+                alert(`لم يتم العثور على طالب بالكود: ${code}!`);
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري الحفظ والإرسال...`;
+
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('ar-EG');
+            const timeStr = now.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
+
+            const examRecord = {
+                title: examTitle,
+                score: score,
+                center: center,
+                grade: grade,
+                date: `${dateStr} (${timeStr})`,
+                timestamp: now.toISOString()
+            };
+
+            if (db && student.id) {
+                try {
+                    await db.collection('students').doc(student.id).update({
+                        lastExamScore: score,
+                        examsHistory: firebase.firestore.FieldValue.arrayUnion(examRecord)
+                    });
+                } catch(err) {}
+            }
+
+            if (!student.examsHistory) student.examsHistory = [];
+            student.examsHistory.push(examRecord);
+            student.lastExamScore = score;
+            localStorage.setItem('MF_LOCAL_STUDENTS', JSON.stringify(cachedStudents));
+
+            const msg = `السلام عليكم ولي أمر الطالب/ة: ${student.name} 🌸\n`
+                      + `نتيجة امتحان مستر محمد فيصل (تاريخ وجغرافيا):\n`
+                      + `📝 الامتحان: ${examTitle}\n`
+                      + `🎯 الدرجة المحصلة: ${score}\n`
+                      + `🏫 السنتر: ${center}\n`
+                      + `مع تحيات فريق عمل مستر محمد فيصل.`;
+
+            sendWAPilotMessage(student.parentPhone, msg);
+
+            currentGradedExamsLog.unshift({ name: student.name, code: student.code, score, title: examTitle });
+            renderGradedExamsLog();
+
+            alert(`تم حفظ درجة الطالب ${student.name} (${score}) وإرسال النتيجة فوراً لولي الأمر عبر الواتساب!`);
+            document.getElementById('exam-entry-code').value = '';
+            document.getElementById('exam-entry-score').value = '';
+            document.getElementById('exam-entry-code').focus();
+
+            btn.disabled = false;
+            btn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> حفظ وإرسال واتساب لولي الأمر`;
+            loadStudents();
+        }
+
+        function renderGradedExamsLog() {
+            const box = document.getElementById('recent-graded-exams-box');
+            box.innerHTML = currentGradedExamsLog.map(item => `
+                <div class="p-2.5 bg-slate-800 rounded-xl border border-slate-700 flex justify-between items-center">
+                    <div>
+                        <span class="font-bold text-white">${item.name}</span>
+                        <span class="text-[10px] text-gray-400 font-mono">(${item.code})</span>
+                    </div>
+                    <span class="font-black text-amber-400 bg-amber-950/40 px-2.5 py-1 rounded-lg">${item.score}</span>
+                </div>
+            `).join('');
+        }
+
+        // ================= 4. ABSENCE ALERT ENGINE =================
+        function calculateAndDisplayAbsentees() {
+            const tbody = document.getElementById('absentees-table-tbody');
+            if (!activeSession) {
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center py-6 text-gray-400 font-bold">يرجى بدء حصة أولاً من تبويب (حصة اليوم) لحصر الغائبين بدقة.</td></tr>`;
+                document.getElementById('abs-stat-total').innerText = '0';
+                document.getElementById('abs-stat-attended').innerText = '0';
+                document.getElementById('abs-stat-absent').innerText = '0';
+                return;
+            }
+
+            const totalInGroup = cachedStudents.filter(s => s.center === activeSession.center && s.grade === activeSession.grade);
+            
+            const attendedList = totalInGroup.filter(s => {
+                if (!s.attendanceHistory) return false;
+                return s.attendanceHistory.some(att => att.sessionTitle === activeSession.fullSessionTitle && att.date === activeSession.date);
+            });
+
+            const absentList = totalInGroup.filter(s => !attendedList.includes(s));
+
+            document.getElementById('abs-stat-total').innerText = totalInGroup.length;
+            document.getElementById('abs-stat-attended').innerText = attendedList.length;
+            document.getElementById('abs-stat-absent').innerText = absentList.length;
+
+            if (absentList.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center py-6 text-emerald-400 font-bold">عاش! لا يوجد طلاب غائبين في هذه الحصة حتى الآن.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = absentList.map(s => `
+                <tr>
+                    <td class="p-3 font-mono font-bold text-brand-400">${s.code}</td>
+                    <td class="p-3 font-bold text-white">${s.name}</td>
+                    <td class="p-3 font-mono text-gray-400">${s.phone}</td>
+                    <td class="p-3 font-mono text-gray-400">${s.parentPhone}</td>
+                </tr>
+            `).join('');
+        }
+
+        async function handleDispatchAbsenceAlerts() {
+            if (!activeSession) {
+                alert('يرجى بدء حصة وتحديد بياناتها أولاً!');
+                return;
+            }
+
+            const totalInGroup = cachedStudents.filter(s => s.center === activeSession.center && s.grade === activeSession.grade);
+            const absentList = totalInGroup.filter(s => {
+                if (!s.attendanceHistory) return true;
+                return !s.attendanceHistory.some(att => att.sessionTitle === activeSession.fullSessionTitle && att.date === activeSession.date);
+            });
+
+            if (absentList.length === 0) {
+                alert('لا يوجد طلاب غائبين في هذه الحصة!');
+                return;
+            }
+
+            if (!confirm(`هل أنت متأكد من إرسال إشعار الغياب لـ (${absentList.length}) طالب غائب وأولياء أمورهم؟`)) return;
+
+            const btn = document.getElementById('btn-dispatch-absence');
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري إرسال إشعارات الغياب بأمان...`;
+
+            const absMsg = `تنبيه غياب هام من مستر محمد فيصل ⚠️\n`
+                         + `نحيطكم علماً بغياب الطالب/ة اليوم عن:\n`
+                         + `📖 الحصة: ${activeSession.fullSessionTitle}\n`
+                         + `🏫 السنتر: ${activeSession.center}\n`
+                         + `⏰ التاريخ: ${activeSession.date}\n`
+                         + `يرجى التواصل مع إدارة السنتر لتحديد موعد الحصة التعويضية على منصة ميجا أكاديمي.`;
+
+            await sendBatchWithDelay(absentList, 'both', absMsg);
+
+            btn.disabled = false;
+            btn.innerHTML = `<i class="fa-brands fa-whatsapp text-lg"></i> إرسال إشعار الغياب لجميع الطلاب وأولياء الأمور الغائبين الآن`;
+            alert(`تم إرسال إشعارات الغياب بنجاح لجميع الغائبين وأولياء أمورهم!`);
+        }
+
+        // ================= 5. EXCEL BULK UPLOAD =================
+        function downloadExcelTemplate() {
+            const templateData = [
+                {
+                    "اسم الطالب": "أحمد محمود علي",
+                    "رقم الطالب": "01012345678",
+                    "رقم ولي الامر": "01098765432",
+                    "الكود": 101,
+                    "الصف الدراسي": "الصف الثالث الثانوي",
+                    "السنتر": "سنتر يونايتد",
+                    "نظام الدفع": "شهري",
+                    "المبلغ المطلوب": 250
+                },
+                {
+                    "اسم الطالب": "سارة محمد إبراهيم",
+                    "رقم الطالب": "01123456789",
+                    "رقم ولي الامر": "01187654321",
+                    "الكود": 102,
+                    "الصف الدراسي": "الصف الثالث الثانوي",
+                    "السنتر": "سنتر رويال",
+                    "نظام الدفع": "بالحصة",
+                    "المبلغ المطلوب": 60
+                }
+            ];
+
+            const ws = XLSX.utils.json_to_sheet(templateData);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Students_Template");
+            XLSX.writeFile(wb, "Mr_Faisal_Students_Template.xlsx");
+        }
+
+        async function handleProcessExcelUpload() {
+            const fileInput = document.getElementById('excel-file-input');
+            if (!fileInput.files || fileInput.files.length === 0) {
+                alert('يرجى اختيار ملف إكسيل أولاً!');
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+            const btn = document.getElementById('btn-process-excel');
+
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري قراءة الملف وإدراج الطلاب...`;
+
+            reader.onload = async function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const firstSheetName = workbook.SheetNames[0];
+                    const rows = XLSX.utils.sheet_to_json(workbook.Sheets[firstSheetName]);
+
+                    if (rows.length === 0) {
+                        alert('الملف فارغ أو غير متوافق!');
+                        btn.disabled = false;
+                        btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> قراءة ورفع الطلاب وإشعارهم`;
+                        return;
+                    }
+
+                    let insertedCount = 0;
+                    const newStudentsList = [];
+
+                    for (const r of rows) {
+                        const name = r["اسم الطالب"] || r["الاسم"] || r["Name"] || "";
+                        const phone = (r["رقم الطالب"] || r["تليفون الطالب"] || r["Phone"] || "").toString().trim();
+                        const parentPhone = (r["رقم ولي الامر"] || r["تليفون ولي الامر"] || r["Parent Phone"] || "").toString().trim();
+                        const code = (r["الكود"] || r["كود الطالب"] || r["Code"] || "").toString().trim();
+                        const grade = r["الصف الدراسي"] || r["الصف"] || "الصف الثالث الثانوي";
+                        const center = r["السنتر"] || r["المجموعة"] || (cachedCenters.length > 0 ? cachedCenters[0].name : "السنتر الرئيسي");
+                        
+                        let rawPlan = r["نظام الدفع"] || "";
+                        let paymentPlan = "غير محدد";
+                        if (rawPlan.includes("شهر")) paymentPlan = "شهري";
+                        else if (rawPlan.includes("حص")) paymentPlan = "بالحصة";
+
+                        const balanceDue = parseFloat(r["المبلغ المطلوب"] || r["المتبقي"] || 0);
+
+                        if (!name || !code) continue;
+
+                        const exists = cachedStudents.some(s => s.code.toString() === code.toString());
+                        if (exists) continue;
+
+                        const st = {
+                            name, code, grade, center, phone, parentPhone,
+                            paymentPlan, balanceDue,
+                            lastPaymentAmount: 0,
+                            lastPaymentDate: 'لم يسدد بعد',
+                            attendanceCount: 0,
+                            attendanceHistory: [],
+                            paymentsHistory: [],
+                            homeworksHistory: [],
+                            examsHistory: [],
+                            hwStatus: 'لم يتم الحل بعد',
+                            lastHwExactScore: '--',
+                            createdAt: new Date().toISOString()
+                        };
+
+                        if (db) {
+                            try {
+                                const ref = await db.collection('students').add(st);
+                                st.id = ref.id;
+                            } catch(err) {}
+                        }
+
+                        cachedStudents.unshift(st);
+                        newStudentsList.push(st);
+                        insertedCount++;
+                    }
+
+                    localStorage.setItem('MF_LOCAL_STUDENTS', JSON.stringify(cachedStudents));
+                    loadStudents();
+
+                    alert(`تم استيراد (${insertedCount}) طالب بنجاح! جاري إرسال رسائل الترحيب وكود الدخول لهم على الواتساب.`);
+
+                    if (newStudentsList.length > 0) {
+                        sendWelcomeWhatsAppToNewStudents(newStudentsList);
+                    }
+
+                    fileInput.value = '';
+                } catch(err) {
+                    alert('حدث خطأ أثناء معالجة ملف الإكسيل: ' + err.message);
+                } finally {
+                    btn.disabled = false;
+                    btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> قراءة ورفع الطلاب وإشعارهم`;
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        function sendWelcomeWhatsAppToNewStudents(studentsList) {
+            for (const s of studentsList) {
+                let planLine = '';
+                if (s.paymentPlan && s.paymentPlan !== 'غير محدد') {
+                    planLine = `▫️ نظام الدفع: ${s.paymentPlan}\n`;
+                }
+
+                const welcomeMsg = `أهلاً بك يا بطل في منصة مستر محمد فيصل 👑 (تاريخ وجغرافيا)\n`
+                                 + `تم تفعيل حسابك بنجاح في سنتر: ${s.center}\n`
+                                 + `🔑 كود الدخول الخاص بك: ${s.code}\n`
+                                 + `📱 رقم تليفونك المسجل: ${s.phone}\n`
+                                 + planLine
+                                 + `رابط المنصة: https://mrfaisal.net\n`
+                                 + `ادخل على المنصة لمتابعة كارت الـ QR الذكي لحضور الحصص وحل الواجبات واستلام نتائج الامتحانات فورياً!`;
+                
+                sendWAPilotMessage(s.phone, welcomeMsg);
+            }
+        }
+
+        async function handleCreateStudent(e) {
+            e.preventDefault();
+            const code = document.getElementById('add-st-code').value.trim();
+            const name = document.getElementById('add-st-name').value.trim();
+            const phone = document.getElementById('add-st-phone').value.trim();
+            const parentPhone = document.getElementById('add-st-parent-phone').value.trim();
+            const grade = document.getElementById('add-st-grade').value;
+            const center = document.getElementById('add-st-center').value;
+            const paymentPlan = document.getElementById('add-st-plan').value;
+            const balanceDue = parseFloat(document.getElementById('add-st-balance').value) || 0;
+
+            const exists = cachedStudents.some(s => s.code.toString() === code);
+            if (exists) {
+                alert('كود الطالب هذا مسجل لطالب آخر! يرجى اختيار رقم مختلف.');
+                return;
+            }
+
+            const st = {
+                name, code, grade, center, phone, parentPhone,
+                paymentPlan, balanceDue,
+                lastPaymentAmount: 0,
+                lastPaymentDate: 'لم يسدد بعد',
+                attendanceCount: 0,
+                attendanceHistory: [],
+                paymentsHistory: [],
+                homeworksHistory: [],
+                examsHistory: [],
+                hwStatus: 'لم يتم الحل بعد',
+                lastHwExactScore: '--',
+                createdAt: new Date().toISOString()
+            };
+
+            if (db) {
+                try {
+                    const ref = await db.collection('students').add(st);
+                    st.id = ref.id;
+                } catch(err) {}
+            }
+
+            cachedStudents.unshift(st);
+            localStorage.setItem('MF_LOCAL_STUDENTS', JSON.stringify(cachedStudents));
+
+            let planLine = '';
+            if (paymentPlan && paymentPlan !== 'غير محدد') {
+                planLine = `▫️ نظام الدفع: ${paymentPlan}\n`;
+            }
+
+            const welcomeMsg = `أهلاً بك يا بطل في منصة مستر محمد فيصل 👑 (تاريخ وجغرافيا)\n`
+                             + `تم تفعيل حسابك بنجاح في سنتر: ${center}\n`
+                             + `🔑 كود الدخول الخاص بك: ${code}\n`
+                             + `📱 رقم تليفونك المسجل: ${phone}\n`
+                             + planLine
+                             + `رابط المنصة: https://mrfaisal.net\n`
+                             + `ادخل على المنصة لمتابعة كارت الـ QR الذكي لحضور الحصص وحل الواجبات الأسبوعية واستلام نتائج الامتحانات فورياً!`;
+
+            sendWAPilotMessage(phone, welcomeMsg);
+
+            alert(`تم إنشاء حساب الطالب ${st.name} بنجاح وإرسال رسالة الترحيب وبيانات الدخول لرقم هاتفه!`);
+            e.target.reset();
+            loadStudents();
+        }
+
+        // ================= 6. STUDENTS BULK ACTIONS & RENDERING =================
+        function toggleStudentSelection(code, isChecked) {
+            if (isChecked) {
+                selectedStudentCodes.add(code.toString());
+            } else {
+                selectedStudentCodes.delete(code.toString());
+            }
+            updateBulkToolbarState();
+        }
+
+        function toggleSelectAllStudents(isChecked) {
+            if (isChecked) {
+                currentlyRenderedStudents.forEach(s => selectedStudentCodes.add(s.code.toString()));
+            } else {
+                currentlyRenderedStudents.forEach(s => selectedStudentCodes.delete(s.code.toString()));
+            }
+            renderAdminStudentsTable(currentlyRenderedStudents);
+        }
+
+        function clearBulkStudentSelection() {
+            selectedStudentCodes.clear();
+            const selectAllCb = document.getElementById('select-all-students-cb');
+            if (selectAllCb) selectAllCb.checked = false;
+            renderAdminStudentsTable(currentlyRenderedStudents);
+        }
+
+        function updateBulkToolbarState() {
+            const toolbar = document.getElementById('bulk-actions-toolbar');
+            const countLabel = document.getElementById('bulk-selected-count');
+            const selectAllCb = document.getElementById('select-all-students-cb');
+            const count = selectedStudentCodes.size;
+
+            if (countLabel) countLabel.innerText = count;
+
+            if (count > 0) {
+                toolbar.classList.remove('hidden');
+            } else {
+                toolbar.classList.add('hidden');
+            }
+
+            if (selectAllCb && currentlyRenderedStudents.length > 0) {
+                selectAllCb.checked = currentlyRenderedStudents.every(s => selectedStudentCodes.has(s.code.toString()));
+            }
+        }
+
+        async function executeBulkUpdateStudents() {
+            if (selectedStudentCodes.size === 0) {
+                alert('لم تقم بتحديد أي طالب بعد!');
+                return;
+            }
+
+            const newGrade = document.getElementById('bulk-change-grade').value;
+            const newCenter = document.getElementById('bulk-change-center').value;
+
+            if (!newGrade && !newCenter) {
+                alert('يرجى اختيار المرحلة الدراسية أو السنتر الجديد المراد تغييرهما على الأقل!');
+                return;
+            }
+
+            let confirmText = `هل أنت متأكد من تطبيق التعديلات على (${selectedStudentCodes.size}) طالب؟\n`;
+            if (newGrade) confirmText += `• المرحلة الدراسية: ${newGrade}\n`;
+            if (newCenter) confirmText += `• السنتر الجديد: ${newCenter}\n`;
+
+            if (!confirm(confirmText)) return;
+
+            const btn = document.getElementById('btn-apply-bulk-edit');
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري التعديل...`;
+
+            const updates = {};
+            if (newGrade) updates.grade = newGrade;
+            if (newCenter) updates.center = newCenter;
+
+            // Update in Firestore
+            if (db) {
+                try {
+                    const batch = db.batch();
+                    cachedStudents.forEach(s => {
+                        if (selectedStudentCodes.has(s.code.toString()) && s.id) {
+                            const ref = db.collection('students').doc(s.id);
+                            batch.update(ref, updates);
+                        }
+                    });
+                    await batch.commit();
+                } catch(e) {
+                    console.error("Firestore batch error:", e);
+                }
+            }
+
+            // Update locally
+            cachedStudents.forEach(s => {
+                if (selectedStudentCodes.has(s.code.toString())) {
+                    if (newGrade) s.grade = newGrade;
+                    if (newCenter) s.center = newCenter;
+                }
+            });
+
+            localStorage.setItem('MF_LOCAL_STUDENTS', JSON.stringify(cachedStudents));
+
+            alert(`تم تعديل بيانات (${selectedStudentCodes.size}) طالب بنجاح!`);
+            
+            // Reset fields & selection
+            document.getElementById('bulk-change-grade').value = '';
+            document.getElementById('bulk-change-center').value = '';
+            clearBulkStudentSelection();
+
+            btn.disabled = false;
+            btn.innerHTML = `<i class="fa-solid fa-floppy-disk"></i> تطبيق التعديل`;
+            loadStudents();
+        }
+
+        async function loadStudents() {
+            cachedStudents = [];
+            if (db) {
+                try {
+                    const snap = await db.collection('students').orderBy('createdAt', 'desc').get();
+                    snap.forEach(d => cachedStudents.push({ id: d.id, ...d.data() }));
+                } catch(e) {}
+            }
+            if (cachedStudents.length === 0) {
+                const local = localStorage.getItem('MF_LOCAL_STUDENTS');
+                if (local) cachedStudents = JSON.parse(local);
+            }
+            renderAdminStudentsTable(cachedStudents);
+        }
+
+        function renderAdminStudentsTable(list) {
+            currentlyRenderedStudents = list;
+            const tbody = document.getElementById('adm-students-tbody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            if (list.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="9" class="text-center py-6 text-gray-400 font-bold">لا يوجد طلاب مسجلين بعد.</td></tr>`;
+                updateBulkToolbarState();
+                return;
+            }
+
+            list.forEach(s => {
+                const isChecked = selectedStudentCodes.has(s.code.toString());
+                tbody.innerHTML += `
+                    <tr class="${isChecked ? 'bg-brand-950/30' : ''}">
+                        <td class="p-3 text-center">
+                            <input type="checkbox" onchange="toggleStudentSelection('${s.code}', this.checked)" ${isChecked ? 'checked' : ''} class="w-4 h-4 rounded bg-slate-800 border-slate-600 text-brand-600 cursor-pointer">
+                        </td>
+                        <td class="p-3 font-mono font-bold text-brand-400">${s.code}</td>
+                        <td class="p-3 font-bold text-white">${s.name}</td>
+                        <td class="p-3 text-xs text-gray-300">${s.grade}</td>
+                        <td class="p-3 text-amber-300 font-bold">${s.center}</td>
+                        <td class="p-3 font-semibold text-amber-200">${s.paymentPlan || 'غير محدد'}</td>
+                        <td class="p-3 font-bold ${s.balanceDue > 0 ? 'text-red-400' : 'text-emerald-400'}">${s.balanceDue || 0} ج.م</td>
+                        <td class="p-3 text-xs text-gray-400">${s.lastPaymentAmount || 0} ج.م (${s.lastPaymentDate || 'لم يسدد'})</td>
+                        <td class="p-3"><button onclick="loadDirectStudent('${s.code}'); switchTab('session-scan');" class="px-2 py-1 bg-brand-700 hover:bg-brand-600 rounded text-[11px] font-bold text-white">فحص</button></td>
+                    </tr>
+                `;
+            });
+
+            updateBulkToolbarState();
+        }
+
+        function filterAdminStudentsTable() {
+            const q = document.getElementById('adm-table-search').value.toLowerCase();
+            const filtered = cachedStudents.filter(s => s.name.toLowerCase().includes(q) || s.code.toString().includes(q));
+            renderAdminStudentsTable(filtered);
+        }
+
+        // ================= 7. HOMEWORK BUILDER & EDITING =================
+        function initHomeworkBuilder() {
+            const list = document.getElementById('homework-questions-list');
+            if (!list) return;
+            list.innerHTML = '';
+            questionIndexCounter = 0;
+            addNewQuestionToBuilder();
+        }
+
+        function addNewQuestionToBuilder(qData = null) {
+            questionIndexCounter++;
+            const qNum = questionIndexCounter;
+            const container = document.getElementById('homework-questions-list');
+
+            const textVal = qData ? qData.text : '';
+            const opt0 = qData && qData.options ? qData.options[0] : '';
+            const opt1 = qData && qData.options ? qData.options[1] : '';
+            const opt2 = qData && qData.options ? qData.options[2] : '';
+            const opt3 = qData && qData.options ? qData.options[3] : '';
+            const correctVal = qData ? qData.correctOption : 0;
+            const pointsVal = qData ? qData.points : 5;
+
+            const card = document.createElement('div');
+            card.id = `q-card-${qNum}`;
+            card.className = "p-5 bg-slate-900 rounded-2xl border border-slate-700 space-y-4 relative";
+            card.innerHTML = `
+                <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                    <span class="font-black text-xs text-amber-400">السؤال رقم (${qNum}):</span>
+                    ${qNum > 1 ? `<button type="button" onclick="document.getElementById('q-card-${qNum}').remove()" class="text-xs text-red-400"><i class="fa-solid fa-trash ml-1"></i> حذف</button>` : ''}
+                </div>
+                <input type="text" class="q-input-text w-full p-3 rounded-xl bg-slate-800 border border-slate-700 text-xs text-white" required placeholder="اكتب نص السؤال هنا..." value="${textVal}">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <input type="text" class="q-opt-0 w-full p-2.5 rounded-lg bg-slate-800 border border-slate-700 text-xs text-white" required placeholder="الخيار (أ)" value="${opt0}">
+                    <input type="text" class="q-opt-1 w-full p-2.5 rounded-lg bg-slate-800 border border-slate-700 text-xs text-white" required placeholder="الخيار (ب)" value="${opt1}">
+                    <input type="text" class="q-opt-2 w-full p-2.5 rounded-lg bg-slate-800 border border-slate-700 text-xs text-white" required placeholder="الخيار (ج)" value="${opt2}">
+                    <input type="text" class="q-opt-3 w-full p-2.5 rounded-lg bg-slate-800 border border-slate-700 text-xs text-white" required placeholder="الخيار (د)" value="${opt3}">
+                </div>
+                <div class="flex gap-4 items-center bg-slate-800/60 p-3 rounded-xl">
+                    <label class="text-xs font-bold text-emerald-400">الإجابة الصحيحة:</label>
+                    <select class="q-correct-select p-2 rounded-lg bg-slate-900 border border-slate-700 text-xs font-bold text-white">
+                        <option value="0" ${correctVal == 0 ? 'selected' : ''}>الخيار (أ)</option>
+                        <option value="1" ${correctVal == 1 ? 'selected' : ''}>الخيار (ب)</option>
+                        <option value="2" ${correctVal == 2 ? 'selected' : ''}>الخيار (ج)</option>
+                        <option value="3" ${correctVal == 3 ? 'selected' : ''}>الخيار (د)</option>
+                    </select>
+                    <label class="text-xs font-bold text-amber-400 mr-auto">درجة السؤال:</label>
+                    <input type="number" value="${pointsVal}" class="q-points-input p-2 rounded-lg bg-slate-900 border border-slate-700 text-xs w-20 text-center font-bold text-white">
+                </div>
+            `;
+            container.appendChild(card);
+        }
+
+        function startEditHomework(hwId) {
+            const hw = cachedHomeworks.find(h => h.id === hwId || h.title === hwId);
+            if (!hw) return;
+
+            document.getElementById('editing-hw-id').value = hw.id || hwId;
+            document.getElementById('hw-builder-title').value = hw.title;
+            document.getElementById('hw-builder-grade').value = hw.grade;
+            document.getElementById('hw-builder-target-center').value = hw.targetCenter || 'all';
+
+            document.getElementById('hw-form-heading').innerText = `تعديل الواجب: ${hw.title}`;
+            document.getElementById('hw-form-subheading').innerText = `إذا قمت بتغيير السنتر المستهدف سيتم إشعار طلاب السنتر الجديد فقط`;
+            document.getElementById('btn-cancel-hw-edit').classList.remove('hidden');
+            document.getElementById('btn-save-hw-action').innerHTML = `<i class="fa-solid fa-floppy-disk"></i> حفظ التعديلات وإشعار السنتر الجديد`;
+
+            const list = document.getElementById('homework-questions-list');
+            list.innerHTML = '';
+            questionIndexCounter = 0;
+
+            if (hw.questions && hw.questions.length > 0) {
+                hw.questions.forEach(q => addNewQuestionToBuilder(q));
+            } else {
+                addNewQuestionToBuilder();
+            }
+
+            document.getElementById('homework-form-card').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function cancelHomeworkEdit() {
+            document.getElementById('editing-hw-id').value = '';
+            document.getElementById('hw-builder-title').value = '';
+            document.getElementById('hw-form-heading').innerText = 'إنشاء ونشر واجب جديد';
+            document.getElementById('hw-form-subheading').innerText = 'عند النشر أو إضافة سنتر جديد سيتم إشعار طلاب السنتر الجديد فقط على الواتساب';
+            document.getElementById('btn-cancel-hw-edit').classList.add('hidden');
+            document.getElementById('btn-save-hw-action').innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> حفظ ونشر الواجب وإشعار السناتر الجديدة`;
+            initHomeworkBuilder();
+        }
+
+        async function handleSaveHomework(e) {
+            e.preventDefault();
+            const editingId = document.getElementById('editing-hw-id').value;
+            const title = document.getElementById('hw-builder-title').value.trim();
+            const grade = document.getElementById('hw-builder-grade').value;
+            const targetCenter = document.getElementById('hw-builder-target-center').value;
+            const cards = document.querySelectorAll('#homework-questions-list > div');
+            const btn = document.getElementById('btn-save-hw-action');
+
+            const questions = [];
+            cards.forEach(card => {
+                questions.push({
+                    text: card.querySelector('.q-input-text').value.trim(),
+                    options: [
+                        card.querySelector('.q-opt-0').value.trim(),
+                        card.querySelector('.q-opt-1').value.trim(),
+                        card.querySelector('.q-opt-2').value.trim(),
+                        card.querySelector('.q-opt-3').value.trim()
+                    ],
+                    correctOption: parseInt(card.querySelector('.q-correct-select').value),
+                    points: parseInt(card.querySelector('.q-points-input').value) || 1
+                });
+            });
+
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري الحفظ والمعالجة...`;
+
+            if (editingId) {
+                const existingHw = cachedHomeworks.find(h => h.id === editingId);
+                const prevTarget = existingHw ? existingHw.targetCenter : 'all';
+                const previouslyNotified = (existingHw && existingHw.notifiedCenters) ? existingHw.notifiedCenters : [prevTarget];
+
+                const updatedData = {
+                    title, grade, targetCenter, questions, isVisible: true
+                };
+
+                let isNewCenterAdded = false;
+                if (!previouslyNotified.includes(targetCenter) && targetCenter !== 'all') {
+                    isNewCenterAdded = true;
+                    updatedData.notifiedCenters = [...previouslyNotified, targetCenter];
+                }
+
+                if (db) {
+                    try { await db.collection('homeworks').doc(editingId).update(updatedData); } catch(err) {}
+                }
+
+                const idx = cachedHomeworks.findIndex(h => h.id === editingId);
+                if (idx !== -1) cachedHomeworks[idx] = { ...cachedHomeworks[idx], ...updatedData };
+                localStorage.setItem('MF_LOCAL_HOMEWORKS', JSON.stringify(cachedHomeworks));
+
+                if (isNewCenterAdded) {
+                    let newCenterTargets = cachedStudents.filter(s => s.grade === grade && s.center === targetCenter);
+                    const hwAlertMsg = `تنبيه هام من مستر محمد فيصل 📢\n`
+                                     + `تم إتاحة الواجب الإلكتروني لمجموعتكم:\n`
+                                     + `📝 العنوان: ${title}\n`
+                                     + `🏫 السنتر: ${targetCenter}\n`
+                                     + `يرجى تسجيل الدخول على المنصة وحل الواجب قبل الحصة القادمة.`;
+
+                    sendBatchWithDelay(newCenterTargets, 'students', hwAlertMsg);
+                    alert(`تم حفظ تعديل الواجب وإرسال إشعار الواتساب حصرياً لطلاب سنتر (${targetCenter})!`);
+                } else {
+                    alert('تم حفظ تعديلات الواجب بنجاح!');
+                }
+
+                cancelHomeworkEdit();
+            } else {
+                const newHw = {
+                    title, grade, targetCenter, questions, isVisible: true,
+                    notifiedCenters: [targetCenter],
+                    createdAt: new Date().toISOString()
+                };
+
+                if (db) {
+                    try {
+                        const ref = await db.collection('homeworks').add(newHw);
+                        newHw.id = ref.id;
+                    } catch(err) {}
+                }
+
+                cachedHomeworks.unshift(newHw);
+                localStorage.setItem('MF_LOCAL_HOMEWORKS', JSON.stringify(cachedHomeworks));
+
+                let targets = cachedStudents.filter(s => s.grade === grade);
+                if (targetCenter !== 'all') targets = targets.filter(s => s.center === targetCenter);
+
+                const hwAlertMsg = `تنبيه هام من مستر محمد فيصل 📢\n`
+                                 + `تم نشر واجب إلكتروني جديد على المنصة:\n`
+                                 + `📝 العنوان: ${title}\n`
+                                 + `🏫 المجموعة: ${targetCenter === 'all' ? 'جميع السناتر' : targetCenter}\n`
+                                 + `يرجى تسجيل الدخول وحل الواجب قبل موعد الحصة القادمة.`;
+
+                sendBatchWithDelay(targets, 'students', hwAlertMsg);
+                alert(`تم نشر الواجب بنجاح وإرسال إشعارات الواتساب للطلاب المستهدفين!`);
+                cancelHomeworkEdit();
+            }
+
+            btn.disabled = false;
+            loadHomeworksList();
+        }
+
+        async function loadHomeworksList() {
+            const container = document.getElementById('admin-homeworks-table-container');
+            if (!container) return;
+            cachedHomeworks = [];
+
+            if (db) {
+                try {
+                    const snap = await db.collection('homeworks').orderBy('createdAt', 'desc').get();
+                    snap.forEach(d => cachedHomeworks.push({ id: d.id, ...d.data() }));
+                } catch(e) {}
+            }
+
+            if (cachedHomeworks.length === 0) {
+                const local = localStorage.getItem('MF_LOCAL_HOMEWORKS');
+                if (local) cachedHomeworks = JSON.parse(local);
+            }
+
+            if (cachedHomeworks.length === 0) {
+                container.innerHTML = `<p class="text-xs text-gray-400 py-4">لا توجد واجبات منشورة بعد.</p>`;
+                return;
+            }
+
+            let html = `
+                <table class="w-full text-right text-xs">
+                    <thead class="bg-slate-900/80 text-gray-400 border-b border-slate-700">
+                        <tr>
+                            <th class="p-3">عنوان الواجب</th>
+                            <th class="p-3">الصف الدراسي</th>
+                            <th class="p-3">السنتر الموجه له</th>
+                            <th class="p-3">عدد الأسئلة</th>
+                            <th class="p-3">الحالة</th>
+                            <th class="p-3">إجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-700">
+            `;
+
+            cachedHomeworks.forEach(hw => {
+                const isVis = hw.isVisible !== false;
+                html += `
+                    <tr>
+                        <td class="p-3 font-bold text-white">${hw.title}</td>
+                        <td class="p-3">${hw.grade}</td>
+                        <td class="p-3 text-amber-400">${hw.targetCenter === 'all' ? 'جميع السناتر' : hw.targetCenter}</td>
+                        <td class="p-3 font-bold">${hw.questions ? hw.questions.length : 0} أسئلة</td>
+                        <td class="p-3">
+                            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold ${isVis ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'}">
+                                ${isVis ? 'ظاهر للطلاب' : 'مخفي'}
+                            </span>
+                        </td>
+                        <td class="p-3 flex gap-2">
+                            <button onclick="startEditHomework('${hw.id}')" class="px-2.5 py-1 bg-amber-600/30 hover:bg-amber-600 text-amber-300 hover:text-white rounded text-[11px] font-bold transition">
+                                <i class="fa-solid fa-pen-to-square ml-1"></i> تعديل
+                            </button>
+                            <button onclick="toggleHomeworkVisibility('${hw.id}', ${!isVis})" class="px-2 py-1 bg-slate-700 hover:bg-slate-600 rounded text-[11px] text-white">
+                                ${isVis ? 'إخفاء' : 'إظهار'}
+                            </button>
+                            <button onclick="deleteHomework('${hw.id}')" class="px-2 py-1 bg-red-950 text-red-400 hover:bg-red-900 rounded text-[11px]">
+                                حذف
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            html += `</tbody></table>`;
+            container.innerHTML = html;
+        }
+
+        async function toggleHomeworkVisibility(id, newStatus) {
+            if (db) {
+                try { await db.collection('homeworks').doc(id).update({ isVisible: newStatus }); } catch(e) {}
+            }
+            const hw = cachedHomeworks.find(h => h.id === id);
+            if (hw) hw.isVisible = newStatus;
+            localStorage.setItem('MF_LOCAL_HOMEWORKS', JSON.stringify(cachedHomeworks));
+            loadHomeworksList();
+        }
+
+        async function deleteHomework(id) {
+            if (!confirm('هل أنت متأكد من حذف هذا الواجب نهائياً؟')) return;
+            if (db) {
+                try { await db.collection('homeworks').doc(id).delete(); } catch(e) {}
+            }
+            cachedHomeworks = cachedHomeworks.filter(h => h.id !== id);
+            localStorage.setItem('MF_LOCAL_HOMEWORKS', JSON.stringify(cachedHomeworks));
+            loadHomeworksList();
+        }
+
+        // ================= 8. DETAILED REPORTS =================
+        function switchReportSubtype(subtype) {
+            currentReportSubtype = subtype;
+            const btnAtt = document.getElementById('subrep-btn-att');
+            const btnExams = document.getElementById('subrep-btn-exams');
+
+            if (subtype === 'attendance_finances') {
+                btnAtt.className = 'px-4 py-2 rounded-xl text-xs font-black bg-brand-700 text-white transition';
+                btnExams.className = 'px-4 py-2 rounded-xl text-xs font-bold text-gray-400 hover:text-white transition';
+            } else {
+                btnExams.className = 'px-4 py-2 rounded-xl text-xs font-black bg-brand-700 text-white transition';
+                btnAtt.className = 'px-4 py-2 rounded-xl text-xs font-bold text-gray-400 hover:text-white transition';
+            }
+            renderCenterReport();
+        }
+
+        function renderCenterReport() {
+            const centerFilter = document.getElementById('report-filter-center').value;
+            const gradeFilter = document.getElementById('report-filter-grade').value;
+            const container = document.getElementById('report-printable-box');
+
+            let list = cachedStudents;
+            if (centerFilter !== 'all') list = list.filter(s => s.center === centerFilter);
+            if (gradeFilter !== 'all') list = list.filter(s => s.grade === gradeFilter);
+
+            let html = '';
+
+            if (currentReportSubtype === 'attendance_finances') {
+                html += `
+                    <div class="text-center mb-4">
+                        <h2 class="text-base font-black text-white">تقرير الحضور والماليات التفصيلي الشامل - سناتر مستر محمد فيصل</h2>
+                        <p class="text-xs text-gray-400 mt-0.5">السنتر: ${centerFilter === 'all' ? 'جميع السناتر' : centerFilter} | السنة: ${gradeFilter === 'all' ? 'جميع السنوات' : gradeFilter}</p>
+                    </div>
+                    <table class="w-full text-right text-xs border border-slate-700">
+                        <thead class="bg-slate-800 text-gray-300">
+                            <tr>
+                                <th class="p-2 border border-slate-700">الكود</th>
+                                <th class="p-2 border border-slate-700">اسم الطالب</th>
+                                <th class="p-2 border border-slate-700">السنتر والصف</th>
+                                <th class="p-2 border border-slate-700">نظام الدفع</th>
+                                <th class="p-2 border border-slate-700">إجمالي الحضور</th>
+                                <th class="p-2 border border-slate-700">سجل المدفوعات والحصص المسددة</th>
+                                <th class="p-2 border border-slate-700">المتبقي</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+
+                if (list.length === 0) {
+                    html += `<tr><td colspan="7" class="text-center py-6 text-gray-400">لا توجد بيانات مطابقة.</td></tr>`;
+                } else {
+                    list.forEach(s => {
+                        const payments = s.paymentsHistory || [];
+                        const paySummary = payments.length > 0 ? payments.map(p => `<span class="inline-block bg-slate-800 p-1 rounded my-0.5 border border-slate-700">💰 ${p.amount} ج.م [${p.sessionTitle || p.sessionName || 'حصة'} - ${p.date} ${p.time || ''}]</span>`).join('<br>') : 'لم يسدد أي مبالغ بعد';
+
+                        html += `
+                            <tr>
+                                <td class="p-2 border border-slate-700 font-mono font-bold text-brand-400">${s.code}</td>
+                                <td class="p-2 border border-slate-700 font-bold">${s.name}</td>
+                                <td class="p-2 border border-slate-700 text-xs">${s.center} - ${s.grade}</td>
+                                <td class="p-2 border border-slate-700 font-bold text-amber-300">${s.paymentPlan || 'غير محدد'}</td>
+                                <td class="p-2 border border-slate-700 font-bold text-emerald-400">${s.attendanceCount || 0} حصص</td>
+                                <td class="p-2 border border-slate-700 text-[11px]">${paySummary}</td>
+                                <td class="p-2 border border-slate-700 font-bold ${s.balanceDue > 0 ? 'text-red-400' : 'text-emerald-400'}">${s.balanceDue || 0} ج.م</td>
+                            </tr>
+                        `;
+                    });
+                }
+                html += `</tbody></table>`;
+            } else {
+                html += `
+                    <div class="text-center mb-4">
+                        <h2 class="text-base font-black text-white">تقرير درجات الامتحانات والتقييمات - سناتر مستر محمد فيصل</h2>
+                        <p class="text-xs text-gray-400 mt-0.5">السنتر: ${centerFilter === 'all' ? 'جميع السناتر' : centerFilter} | السنة: ${gradeFilter === 'all' ? 'جميع السنوات' : gradeFilter}</p>
+                    </div>
+                    <table class="w-full text-right text-xs border border-slate-700">
+                        <thead class="bg-slate-800 text-gray-300">
+                            <tr>
+                                <th class="p-2 border border-slate-700">الكود</th>
+                                <th class="p-2 border border-slate-700">اسم الطالب</th>
+                                <th class="p-2 border border-slate-700">السنتر والصف</th>
+                                <th class="p-2 border border-slate-700">آخر درجة</th>
+                                <th class="p-2 border border-slate-700">سجل الامتحانات بالتاريخ والدرجة</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+
+                if (list.length === 0) {
+                    html += `<tr><td colspan="5" class="text-center py-6 text-gray-400">لا توجد بيانات مطابقة.</td></tr>`;
+                } else {
+                    list.forEach(s => {
+                        const exams = s.examsHistory || [];
+                        const summary = exams.length > 0 ? exams.map(e => `<span class="inline-block bg-slate-800 p-1 rounded my-0.5 border border-slate-700">⭐ ${e.title}: <b>(${e.score})</b> بتاريخ [${e.date}]</span>`).join('<br>') : 'لم يؤد امتحانات بعد';
+
+                        html += `
+                            <tr>
+                                <td class="p-2 border border-slate-700 font-mono font-bold text-brand-400">${s.code}</td>
+                                <td class="p-2 border border-slate-700 font-bold">${s.name}</td>
+                                <td class="p-2 border border-slate-700 text-xs">${s.center} - ${s.grade}</td>
+                                <td class="p-2 border border-slate-700 font-black text-amber-400">${s.lastExamScore || 'لم يمتحن بعد'}</td>
+                                <td class="p-2 border border-slate-700 text-[11px]">${summary}</td>
+                            </tr>
+                        `;
+                    });
+                }
+                html += `</tbody></table>`;
+            }
+
+            container.innerHTML = html;
+        }
+
+        // ================= 9. CENTERS MANAGEMENT =================
+        async function loadCenters() {
+            cachedCenters = [];
+            if (db) {
+                try {
+                    const snap = await db.collection('centers').orderBy('createdAt', 'desc').get();
+                    snap.forEach(d => cachedCenters.push({ id: d.id, ...d.data() }));
+                } catch(e) {}
+            }
+
+            if (cachedCenters.length === 0) {
+                const local = localStorage.getItem('MF_LOCAL_CENTERS');
+                if (local) cachedCenters = JSON.parse(local);
+            }
+
+            const selectElements = ['add-st-center', 'report-filter-center', 'broadcast-center-select', 'hw-builder-target-center', 'ses-center', 'exam-entry-center', 'bulk-change-center'];
+            selectElements.forEach(selId => {
+                const el = document.getElementById(selId);
+                if (!el) return;
+                
+                if (selId === 'report-filter-center' || selId === 'hw-builder-target-center') {
+                    el.innerHTML = '<option value="all">جميع السناتر والمجموعات</option>';
+                } else if (selId === 'bulk-change-center') {
+                    el.innerHTML = '<option value="">-- تغيير السنتر --</option>';
+                } else {
+                    el.innerHTML = '';
+                }
+                
+                cachedCenters.forEach(c => el.innerHTML += `<option value="${c.name}">${c.name}</option>`);
+            });
+
+            const grid = document.getElementById('admin-centers-list-grid');
+            if (grid) {
+                grid.innerHTML = '';
+                if (cachedCenters.length === 0) {
+                    grid.innerHTML = `<p class="text-xs text-gray-400 col-span-3">لا توجد سناتر مسجلة بعد.</p>`;
+                } else {
+                    cachedCenters.forEach(c => {
+                        grid.innerHTML += `
+                            <div class="p-4 bg-slate-900 rounded-2xl border border-slate-700 flex justify-between items-center">
+                                <div>
+                                    <p class="font-bold text-xs text-white">${c.name}</p>
+                                    <span class="text-[11px] text-gray-400">${c.day} - ${c.time}</span>
+                                </div>
+                                <button onclick="deleteCenter('${c.id}')" class="text-red-400 text-xs p-1 hover:text-red-300"><i class="fa-solid fa-trash"></i></button>
+                            </div>
+                        `;
+                    });
+                }
+            }
+        }
+
+        async function handleCreateCenter(e) {
+            e.preventDefault();
+            const name = document.getElementById('add-center-name').value.trim();
+            const day = document.getElementById('add-center-day').value.trim();
+            const time = document.getElementById('add-center-time').value.trim();
+
+            if (db) {
+                try { 
+                    await db.collection('centers').add({ name, day, time, createdAt: new Date().toISOString() }); 
+                    alert('تمت إضافة السنتر بنجاح!');
+                    document.getElementById('add-center-name').value = '';
+                    loadCenters();
+                } catch(e) {
+                    alert('حدث خطأ أثناء الإضافة: ' + e.message);
+                }
+            }
+        }
+
+        async function deleteCenter(id) {
+            if (!confirm('هل أنت متأكد من حذف هذا السنتر؟')) return;
+            if (db) {
+                try { 
+                    await db.collection('centers').doc(id).delete(); 
+                    loadCenters();
+                } catch(e) {}
+            }
+        }
+
+        // ================= 10. WHATSAPP & API =================
+        async function handleSendBroadcast(e) {
+            e.preventDefault();
+            const center = document.getElementById('broadcast-center-select').value;
+            const role = document.getElementById('broadcast-target-role').value;
+            const text = document.getElementById('broadcast-msg-text').value.trim();
+            const btn = document.getElementById('broadcast-submit-btn');
+
+            let targets = cachedStudents;
+            if (center !== 'all') targets = targets.filter(s => s.center === center);
+
+            if (targets.length === 0) {
+                alert('لا يوجد طلاب مسجلين في هذا السنتر!');
+                return;
+            }
+
+            if (!confirm(`هل أنت متأكد من إرسال الرسالة إلى (${targets.length}) جهة اتصال في ${center} مع تفعيل فارق الأمان الزمني؟`)) return;
+
+            btn.disabled = true;
+            document.getElementById('broadcast-progress-box').classList.remove('hidden');
+
+            await sendBatchWithDelay(targets, role, text, true);
+
+            btn.disabled = false;
+            document.getElementById('broadcast-progress-box').classList.add('hidden');
+            alert(`تم اكتمال الإرسال الجماعي بنجاح وبأعلى أمان!`);
+            document.getElementById('broadcast-msg-text').value = '';
+        }
+
+        async function sendBatchWithDelay(targets, role, text, updateUI = false) {
+            const total = targets.length;
+            let current = 0;
+
+            for (const s of targets) {
+                if (role === 'parents' || role === 'both') {
+                    await sendWAPilotMessage(s.parentPhone, text);
+                    await new Promise(r => setTimeout(r, 3500));
+                }
+                if (role === 'students' || role === 'both') {
+                    await sendWAPilotMessage(s.phone, text);
+                    await new Promise(r => setTimeout(r, 3500));
+                }
+
+                current++;
+                if (updateUI) {
+                    const percent = Math.round((current / total) * 100);
+                    document.getElementById('broadcast-progress-bar').style.width = percent + '%';
+                    document.getElementById('broadcast-progress-count').innerText = `${current} / ${total}`;
+                }
+            }
+        }
+
+        async function loadWAPilotSettings() {
+            if (db) {
+                try {
+                    const doc = await db.collection('settings').doc('whatsapp_api').get();
+                    if (doc.exists) {
+                        const d = doc.data();
+                        document.getElementById('api-instance-id').value = d.instance || '';
+                        document.getElementById('api-token-key').value = d.token || '';
+                    }
+                } catch(e) {}
+            }
+        }
+
+        async function handleSaveWAPilotSettings(e) {
+            e.preventDefault();
+            const instance = document.getElementById('api-instance-id').value.trim();
+            const token = document.getElementById('api-token-key').value.trim();
+
+            if (db) {
+                try {
+                    await db.collection('settings').doc('whatsapp_api').set({ instance, token });
+                    alert('تم حفظ وتفعيل إعدادات WAPilot API بنجاح!');
+                } catch(err) {
+                    alert('خطأ في الحفظ: ' + err.message);
+                }
+            }
+        }
+
+        async function sendWAPilotMessage(phone, message) {
+            try {
+                if (!db) return;
+                const doc = await db.collection('settings').doc('whatsapp_api').get();
+                if (!doc.exists) return;
+                const { instance, token } = doc.data();
+                if (!instance || !token) return;
+
+                let cleanPhone = phone.replace(/\D/g, '');
+                if (cleanPhone.startsWith('01')) cleanPhone = '2' + cleanPhone;
+                else if (!cleanPhone.startsWith('20') && cleanPhone.startsWith('1')) cleanPhone = '20' + cleanPhone;
+                const chatId = `${cleanPhone}@c.us`;
+
+                const url = `https://api.wapilot.net/api/v2/${instance}/send-message`;
+                await fetch(url, {
+                    method: "POST",
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify({ chat_id: chatId, text: message })
+                });
+            } catch (e) {
+                console.error("WAPilot API Error:", e);
+            }
+        }
+    </script>
+</body>
+</html>
