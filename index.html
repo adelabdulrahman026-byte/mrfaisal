@@ -116,7 +116,7 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-                    <!-- Mega Academy (التعويضات) -->
+                    <!-- Mega Academy -->
                     <a href="https://www.mrfaisal.net/cors" target="_blank" class="group bg-white dark:bg-slate-800 p-8 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-md hover:shadow-2xl hover:border-brand-500 transition duration-300 flex flex-col justify-between">
                         <div>
                             <div class="w-16 h-16 rounded-2xl bg-purple-100 dark:bg-purple-950 text-brand-600 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition">
@@ -131,7 +131,7 @@
                         </div>
                     </a>
 
-                    <!-- Primee Academy (الأونلاين) -->
+                    <!-- Primee Academy -->
                     <a href="https://www.primeeacademy.com" target="_blank" class="group bg-white dark:bg-slate-800 p-8 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-md hover:shadow-2xl hover:border-amber-500 transition duration-300 flex flex-col justify-between">
                         <div>
                             <div class="w-16 h-16 rounded-2xl bg-amber-100 dark:bg-amber-950 text-amber-600 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition">
@@ -233,7 +233,7 @@
             </div>
         </section>
 
-        <!-- 3. STUDENT ACCOUNT (حساب الطالب المطور) -->
+        <!-- 3. STUDENT ACCOUNT -->
         <section id="sec-student-portal" class="page-sec hidden max-w-5xl mx-auto px-4 py-10">
             <!-- Student Header Profile with Direct QR Code Display -->
             <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-700 shadow-xl mb-8">
@@ -249,6 +249,9 @@
                         <div class="pt-2 flex flex-wrap gap-3 justify-center lg:justify-start text-xs">
                             <span class="p-2.5 bg-slate-100 dark:bg-slate-900 rounded-xl font-bold">نظام الدفع: <span id="sp-payment-plan" class="text-brand-600">--</span></span>
                             <span class="p-2.5 bg-slate-100 dark:bg-slate-900 rounded-xl font-bold">المتبقي: <span id="sp-balance" class="text-red-500">0 ج.م</span></span>
+                            <span class="p-2.5 bg-brand-50 dark:bg-slate-900 rounded-xl font-bold border border-brand-200 dark:border-slate-700">
+                                الواجبات المسلمة: <span id="sp-hw-solved-count" class="text-brand-700 dark:text-brand-400 font-black">0</span>
+                            </span>
                         </div>
                     </div>
 
@@ -265,7 +268,7 @@
             </div>
 
             <!-- Homework Solver & Status View -->
-            <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-700 shadow-md">
+            <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-700 shadow-md mb-8">
                 <div class="flex justify-between items-center mb-6 pb-4 border-b border-slate-200 dark:border-slate-700">
                     <div>
                         <h3 id="hw-title" class="text-xl font-black text-brand-700 dark:text-brand-400">الواجب الإلكتروني للأسبوع الحالي</h3>
@@ -275,13 +278,21 @@
                 </div>
 
                 <!-- State 1: Homework Already Submitted -->
-                <div id="hw-already-submitted-card" class="hidden p-8 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 rounded-3xl text-center space-y-3">
+                <div id="hw-already-submitted-card" class="hidden p-8 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 rounded-3xl text-center space-y-4">
                     <div class="w-16 h-16 bg-emerald-500 text-white rounded-2xl flex items-center justify-center text-3xl mx-auto shadow-md">
                         <i class="fa-solid fa-circle-check"></i>
                     </div>
-                    <h4 class="text-2xl font-black text-emerald-800 dark:text-emerald-300">تم تسليم هذا الواجب بالفعل</h4>
-                    <p class="text-sm text-gray-600 dark:text-gray-300">درجتك المحصلة في هذا الواجب: <span id="hw-student-final-score" class="font-black text-emerald-600 text-lg">--</span></p>
-                    <p class="text-xs text-gray-400">عاش يا بطل! تابع مع المستر في الحصة القادمة لتصحيح الأفكار الصعبة.</p>
+                    <div>
+                        <h4 class="text-2xl font-black text-emerald-800 dark:text-emerald-300">تم تسليم هذا الواجب بنجاح</h4>
+                        <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">درجتك المحصلة الحالية: <span id="hw-student-final-score" class="font-black text-emerald-600 text-lg">--</span></p>
+                        <p class="text-xs text-gray-400 mt-1">يمكنك مراجعة إجاباتك أو تعديل أي سؤال وإعادة التسليم في أي وقت.</p>
+                    </div>
+                    <div>
+                        <button onclick="enableHomeworkEditMode()" class="px-6 py-3 bg-amber-500 hover:bg-amber-600 text-slate-950 font-black rounded-2xl text-sm shadow-md transition inline-flex items-center gap-2">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                            <span>تعديل الإجابات وإعادة الحل</span>
+                        </button>
+                    </div>
                 </div>
 
                 <!-- State 2: Active Questions -->
@@ -293,6 +304,25 @@
                     <button onclick="submitHomeworkAnswers()" class="w-full py-4 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-lg rounded-2xl shadow-lg transition">
                         تسجيل وإرسال إجابة الواجب الآن
                     </button>
+                </div>
+            </div>
+
+            <!-- 4. Student Completed Homeworks Log -->
+            <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-700 shadow-md">
+                <div class="flex items-center justify-between mb-6 pb-4 border-b border-slate-200 dark:border-slate-700">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-brand-100 dark:bg-brand-950 text-brand-700 flex items-center justify-center font-bold text-lg">
+                            <i class="fa-solid fa-clipboard-check"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-black text-slate-900 dark:text-white">سجل الواجبات التي قمت بحلها</h3>
+                            <p class="text-xs text-gray-500">قائمة الواجبات المسلمة مع الدرجات وتاريخ التسليم</p>
+                        </div>
+                    </div>
+                    <span id="sp-completed-count-badge" class="px-3 py-1 bg-brand-700 text-white text-xs font-black rounded-lg">0 واجب</span>
+                </div>
+                <div id="student-hw-solved-list" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <p class="text-center text-gray-400 py-6 sm:col-span-2 text-xs font-bold">لم تقم بحل أي واجبات بعد.</p>
                 </div>
             </div>
         </section>
@@ -353,12 +383,12 @@
             }
         }
 
-        // Arabic string normalizer to avoid mismatch in letters, hamzas, or extra spaces
+        // Arabic string normalizer
         function normalizeArabic(text) {
             if (!text) return '';
             return text.toString()
                 .trim()
-                .replace(/[\u064B-\u065F]/g, '') // remove tashkeel
+                .replace(/[\u064B-\u065F]/g, '')
                 .replace(/[إأآا]/g, 'ا')
                 .replace(/ى/g, 'ي')
                 .replace(/ة/g, 'ه')
@@ -385,7 +415,6 @@
         let currentActiveStudent = null;
         let activeHomework = null;
 
-        // Session Auto-restore on refresh
         window.addEventListener('DOMContentLoaded', () => {
             const savedSession = localStorage.getItem('MF_ACTIVE_STUDENT');
             if (savedSession) {
@@ -527,7 +556,7 @@
                 `).reverse().join('');
         }
 
-        // Helper to normalize phone numbers for comparison
+        // Normalize Phone Number
         function normalizePhoneNumber(phoneStr) {
             if (!phoneStr) return '';
             let cleaned = phoneStr.toString().replace(/\D/g, '');
@@ -536,7 +565,7 @@
             return cleaned;
         }
 
-        // Student Auth with Auto Normalization
+        // Student Auth
         async function handleStudentLogin(e) {
             e.preventDefault();
             const rawPhone = document.getElementById('st-login-phone').value.trim();
@@ -590,7 +619,6 @@
         async function initStudentAccountUI() {
             if (!currentActiveStudent) return;
 
-            // Fetch fresh student document from Firestore if possible to ensure latest center/grade
             if (db && currentActiveStudent.id) {
                 try {
                     const docSnap = await db.collection('students').doc(currentActiveStudent.id).get();
@@ -623,7 +651,38 @@
                 colorLight: "#ffffff"
             });
 
+            renderStudentSolvedHomeworksList();
             loadActiveHomeworkForStudent();
+        }
+
+        // Render Student Solved Homeworks History & Counter
+        function renderStudentSolvedHomeworksList() {
+            const hwList = currentActiveStudent.homeworksHistory || [];
+            const count = hwList.length;
+
+            const badge = document.getElementById('sp-hw-solved-count');
+            if (badge) badge.innerText = count;
+
+            const completedCountBadge = document.getElementById('sp-completed-count-badge');
+            if (completedCountBadge) completedCountBadge.innerText = `${count} واجب`;
+
+            const listContainer = document.getElementById('student-hw-solved-list');
+            if (!listContainer) return;
+
+            if (count === 0) {
+                listContainer.innerHTML = `<p class="text-center text-gray-400 py-6 sm:col-span-2 text-xs font-bold">لم تقم بحل أي واجبات بعد.</p>`;
+                return;
+            }
+
+            listContainer.innerHTML = hwList.map((hw) => `
+                <div class="p-4 bg-slate-50 dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 flex justify-between items-center">
+                    <div>
+                        <h4 class="font-bold text-sm text-slate-800 dark:text-slate-200">${hw.title}</h4>
+                        <span class="text-[11px] text-gray-400 block mt-0.5"><i class="fa-regular fa-calendar ml-1 text-brand-600"></i> ${hw.date}</span>
+                    </div>
+                    <span class="font-black text-brand-700 dark:text-brand-400 bg-brand-100 dark:bg-brand-950 px-3 py-1.5 rounded-xl text-xs">${hw.score}</span>
+                </div>
+            `).reverse().join('');
         }
 
         function logoutStudent() {
@@ -635,14 +694,13 @@
             showSection('home');
         }
 
-        // ================= SMART HOMEWORK ELIGIBILITY CHECK =================
+        // Smart Homework Eligibility Check
         function isHomeworkEligibleForStudent(hw, student) {
             if (!hw || hw.isVisible === false) return false;
             
             const stGradeNorm = normalizeArabic(student.grade || '');
             const hwGradeNorm = normalizeArabic(hw.grade || '');
 
-            // 1. Grade check (supports partial or exact matches)
             if (hwGradeNorm && stGradeNorm) {
                 const gradeMatches = (hwGradeNorm === stGradeNorm) || 
                                      stGradeNorm.includes(hwGradeNorm) || 
@@ -650,21 +708,17 @@
                 if (!gradeMatches) return false;
             }
 
-            // 2. Center check
             const stCenterNorm = normalizeArabic(student.center || '');
             const targetNorm = normalizeArabic(hw.targetCenter || '');
 
-            // If targeted to all centers
             if (!targetNorm || targetNorm === 'all' || targetNorm.includes('جميع') || targetNorm === '') {
                 return true;
             }
 
-            // If targeted to student's exact center or substring
             if (stCenterNorm && (targetNorm === stCenterNorm || stCenterNorm.includes(targetNorm) || targetNorm.includes(stCenterNorm))) {
                 return true;
             }
 
-            // If student's center is in notifiedCenters array
             if (Array.isArray(hw.notifiedCenters)) {
                 const hasMatch = hw.notifiedCenters.some(c => {
                     const cNorm = normalizeArabic(c);
@@ -676,7 +730,52 @@
             return false;
         }
 
-        // ================= HOMEWORK ENGINE =================
+        // Render Questions helper
+        function renderQuestionsUI(savedAnswers = {}) {
+            const container = document.getElementById('hw-questions-container');
+            const actionBtn = document.getElementById('hw-submit-action');
+            const choiceLetters = ['(أ)', '(ب)', '(ج)', '(د)'];
+
+            let html = '';
+            (activeHomework.questions || []).forEach((q, idx) => {
+                const selectedOpt = savedAnswers[idx];
+                html += `
+                    <div class="p-5 bg-slate-50 dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700">
+                        <p class="font-bold text-sm sm:text-base mb-3"><span class="text-brand-700 font-black ml-1">س${idx+1}:</span> ${q.text} <span class="text-xs text-amber-600">(${q.points || 1} درجات)</span></p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            ${(q.options || []).map((opt, oIdx) => {
+                                const isChecked = (selectedOpt !== undefined && parseInt(selectedOpt) === oIdx) ? 'checked' : '';
+                                return `
+                                    <label class="flex items-center gap-3 p-3 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 cursor-pointer hover:border-brand-600 transition">
+                                        <input type="radio" name="q_${idx}" value="${oIdx}" ${isChecked} class="text-brand-600 focus:ring-brand-600">
+                                        <span class="text-xs font-bold text-brand-600">${choiceLetters[oIdx] || ''}</span>
+                                        <span class="text-xs sm:text-sm font-semibold">${opt}</span>
+                                    </label>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+            actionBtn.classList.remove('hidden');
+        }
+
+        // Enable Edit Mode for submitted homework
+        function enableHomeworkEditMode() {
+            if (!activeHomework || !currentActiveStudent) return;
+            const alreadySubmittedCard = document.getElementById('hw-already-submitted-card');
+            alreadySubmittedCard.classList.add('hidden');
+
+            const studentHwHistory = currentActiveStudent.homeworksHistory || [];
+            const previousRecord = studentHwHistory.find(h => normalizeArabic(h.title) === normalizeArabic(activeHomework.title));
+            const savedAnswers = previousRecord && previousRecord.savedAnswers ? previousRecord.savedAnswers : {};
+
+            renderQuestionsUI(savedAnswers);
+        }
+
+        // Homework Engine
         async function loadActiveHomeworkForStudent() {
             const container = document.getElementById('hw-questions-container');
             const actionBtn = document.getElementById('hw-submit-action');
@@ -684,7 +783,6 @@
 
             let homeworkList = [];
 
-            // 1. Fetch fresh homeworks from Firestore without complex index requirement
             if (db) {
                 try {
                     const snapshot = await db.collection('homeworks').get();
@@ -694,7 +792,6 @@
                 } catch(e) {}
             }
 
-            // 2. Fallback to LocalStorage if offline
             if (homeworkList.length === 0) {
                 const local = localStorage.getItem('MF_LOCAL_HOMEWORKS');
                 if (local) {
@@ -702,14 +799,12 @@
                 }
             }
 
-            // 3. Sort by creation date descending (newest first)
             homeworkList.sort((a, b) => {
                 const timeA = new Date(a.createdAt || 0).getTime();
                 const timeB = new Date(b.createdAt || 0).getTime();
                 return timeB - timeA;
             });
 
-            // 4. Filter strictly by Grade and Student's Specific Center
             const available = homeworkList.filter(hw => isHomeworkEligibleForStudent(hw, currentActiveStudent));
 
             if (available.length === 0) {
@@ -727,7 +822,6 @@
                 return;
             }
 
-            // Pick the latest assigned homework
             activeHomework = available[0];
             document.getElementById('hw-title').innerText = activeHomework.title;
             const targetCenterText = (activeHomework.targetCenter === 'all' || !activeHomework.targetCenter) ? 'جميع السناتر' : activeHomework.targetCenter;
@@ -745,30 +839,8 @@
                 return;
             } else {
                 alreadySubmittedCard.classList.add('hidden');
+                renderQuestionsUI({});
             }
-
-            // Render Questions
-            const choiceLetters = ['(أ)', '(ب)', '(ج)', '(د)'];
-            let html = '';
-            (activeHomework.questions || []).forEach((q, idx) => {
-                html += `
-                    <div class="p-5 bg-slate-50 dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700">
-                        <p class="font-bold text-sm sm:text-base mb-3"><span class="text-brand-700 font-black ml-1">س${idx+1}:</span> ${q.text} <span class="text-xs text-amber-600">(${q.points || 1} درجات)</span></p>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                            ${(q.options || []).map((opt, oIdx) => `
-                                <label class="flex items-center gap-3 p-3 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 cursor-pointer hover:border-brand-600 transition">
-                                    <input type="radio" name="q_${idx}" value="${oIdx}" class="text-brand-600 focus:ring-brand-600">
-                                    <span class="text-xs font-bold text-brand-600">${choiceLetters[oIdx] || ''}</span>
-                                    <span class="text-xs sm:text-sm font-semibold">${opt}</span>
-                                </label>
-                            `).join('')}
-                        </div>
-                    </div>
-                `;
-            });
-
-            container.innerHTML = html;
-            actionBtn.classList.remove('hidden');
         }
 
         async function submitHomeworkAnswers() {
@@ -777,14 +849,19 @@
             let totalScore = 0;
             let maxScore = 0;
             let allAnswered = true;
+            let answersMap = {};
 
             activeHomework.questions.forEach((q, idx) => {
                 maxScore += parseInt(q.points || 1);
                 const selected = document.querySelector(`input[name="q_${idx}"]:checked`);
                 if (!selected) {
                     allAnswered = false;
-                } else if (parseInt(selected.value) === parseInt(q.correctOption)) {
-                    totalScore += parseInt(q.points || 1);
+                } else {
+                    const selVal = parseInt(selected.value);
+                    answersMap[idx] = selVal;
+                    if (selVal === parseInt(q.correctOption)) {
+                        totalScore += parseInt(q.points || 1);
+                    }
                 }
             });
 
@@ -798,15 +875,25 @@
                 title: activeHomework.title,
                 score: exactScoreFormatted,
                 center: currentActiveStudent.center,
-                date: new Date().toLocaleDateString('ar-EG')
+                date: new Date().toLocaleDateString('ar-EG'),
+                savedAnswers: answersMap
             };
+
+            // Update or add in student homeworksHistory array
+            let existingHistory = currentActiveStudent.homeworksHistory || [];
+            const existingIndex = existingHistory.findIndex(h => normalizeArabic(h.title) === normalizeArabic(activeHomework.title));
+            if (existingIndex > -1) {
+                existingHistory[existingIndex] = hwRecord;
+            } else {
+                existingHistory.push(hwRecord);
+            }
 
             if (db && currentActiveStudent.id) {
                 try {
                     await db.collection('students').doc(currentActiveStudent.id).update({
                         hwStatus: 'تم الحل والتسليم',
                         lastHwExactScore: exactScoreFormatted,
-                        homeworksHistory: firebase.firestore.FieldValue.arrayUnion(hwRecord)
+                        homeworksHistory: existingHistory
                     });
                 } catch(e) {}
             }
@@ -820,15 +907,13 @@
                     if (st) {
                         st.hwStatus = 'تم الحل والتسليم';
                         st.lastHwExactScore = exactScoreFormatted;
-                        if (!st.homeworksHistory) st.homeworksHistory = [];
-                        st.homeworksHistory.push(hwRecord);
+                        st.homeworksHistory = existingHistory;
                         localStorage.setItem('MF_LOCAL_STUDENTS', JSON.stringify(list));
                     }
                 } catch(e) {}
             }
 
-            if (!currentActiveStudent.homeworksHistory) currentActiveStudent.homeworksHistory = [];
-            currentActiveStudent.homeworksHistory.push(hwRecord);
+            currentActiveStudent.homeworksHistory = existingHistory;
             currentActiveStudent.lastHwExactScore = exactScoreFormatted;
             localStorage.setItem('MF_ACTIVE_STUDENT', JSON.stringify(currentActiveStudent));
 
@@ -836,14 +921,15 @@
             sendWAPilotMessage(
                 currentActiveStudent.parentPhone,
                 `السلام عليكم ولي أمر الطالب/ة: ${currentActiveStudent.name} 🌸\n`
-                + `نحيطكم علماً بأن الطالب قام بحل الواجب الإلكتروني بنجاح على منصة مستر محمد فيصل:\n`
+                + `نحيطكم علماً بأن الطالب قام بحل / تعديل الواجب الإلكتروني بنجاح على منصة مستر محمد فيصل:\n`
                 + `📝 الواجب: ${activeHomework.title}\n`
                 + `🎯 الدرجة المحصلة: ${exactScoreFormatted}\n`
                 + `🏫 سنتر: ${currentActiveStudent.center}\n`
                 + `مع تحيات فريق عمل مستر محمد فيصل.`
             );
 
-            alert(`تم تسليم الواجب بنجاح وحساب الدرجة: (${exactScoreFormatted}).`);
+            alert(`تم تسجيل إجابات الواجب بنجاح! النتيجة: (${exactScoreFormatted}).`);
+            renderStudentSolvedHomeworksList();
             loadActiveHomeworkForStudent();
         }
 
