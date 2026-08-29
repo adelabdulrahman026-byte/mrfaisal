@@ -73,7 +73,7 @@
     <!-- ================= MAIN DASHBOARD ================= -->
     <div id="admin-main-view" class="hidden">
         <!-- Top Nav -->
-        <header class="bg-slate-800/90 backdrop-blur-md border-b border-slate-700 sticky top-0 z-40 px-4 sm:px-8 py-4">
+        <header class="bg-slate-800 border-b border-slate-700 sticky top-0 z-40 px-4 sm:px-8 py-4">
             <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 rounded-xl bg-brand-700 flex items-center justify-center text-white font-bold">
@@ -103,7 +103,7 @@
                 <button onclick="switchTab('reports')" id="tab-btn-reports" class="tab-btn px-4 py-2.5 rounded-xl bg-slate-800 text-gray-300 font-bold text-xs sm:text-sm whitespace-nowrap"><i class="fa-solid fa-chart-line ml-1"></i> التقارير والمقارنات الأسبوعية</button>
                 <button onclick="switchTab('exams-desk')" id="tab-btn-exams-desk" class="tab-btn px-4 py-2.5 rounded-xl bg-slate-800 text-gray-300 font-bold text-xs sm:text-sm whitespace-nowrap"><i class="fa-solid fa-star ml-1"></i> تسجيل درجات الامتحانات</button>
                 <button onclick="switchTab('absence-alert')" id="tab-btn-absence-alert" class="tab-btn px-4 py-2.5 rounded-xl bg-slate-800 text-gray-300 font-bold text-xs sm:text-sm whitespace-nowrap"><i class="fa-solid fa-user-xmark ml-1"></i> إبلاغ غياب الحصة</button>
-                <button onclick="switchTab('students')" id="tab-btn-students" class="tab-btn px-4 py-2.5 rounded-xl bg-slate-800 text-gray-300 font-bold text-xs sm:text-sm whitespace-nowrap"><i class="fa-solid fa-user-plus ml-1"></i> الطلاب ورفع الإكسيل</button>
+                <button onclick="switchTab('students')" id="tab-btn-students" class="tab-btn px-4 py-2.5 rounded-xl bg-slate-800 text-gray-300 font-bold text-xs sm:text-sm whitespace-nowrap"><i class="fa-solid fa-user-plus ml-1"></i> الطلاب وإدارة السناتر</button>
                 <button onclick="switchTab('homework')" id="tab-btn-homework" class="tab-btn px-4 py-2.5 rounded-xl bg-slate-800 text-gray-300 font-bold text-xs sm:text-sm whitespace-nowrap"><i class="fa-solid fa-file-circle-plus ml-1"></i> إدارة وتعديل الواجبات</button>
                 <button onclick="switchTab('broadcast')" id="tab-btn-broadcast" class="tab-btn px-4 py-2.5 rounded-xl bg-slate-800 text-gray-300 font-bold text-xs sm:text-sm whitespace-nowrap"><i class="fa-brands fa-whatsapp ml-1"></i> رسائل جماعية للسنتر</button>
                 <button onclick="switchTab('centers')" id="tab-btn-centers" class="tab-btn px-4 py-2.5 rounded-xl bg-slate-800 text-gray-300 font-bold text-xs sm:text-sm whitespace-nowrap"><i class="fa-solid fa-map-location-dot ml-1"></i> إضافة السناتر</button>
@@ -113,7 +113,7 @@
             <!-- ================= TAB 1: SMART SCANNER & LIVE METRICS ================= -->
             <div id="tab-content-session-scan" class="tab-sec space-y-6">
                 <!-- Session Setup Card -->
-                <div class="bg-slate-800/90 border border-slate-700 rounded-3xl p-6 shadow-md">
+                <div class="bg-slate-800 border border-slate-700 rounded-3xl p-6 shadow-md">
                     <h3 class="text-base font-black text-amber-400 mb-3 flex items-center gap-2"><i class="fa-solid fa-chalkboard-user"></i> تجهيز بيانات حصة اليوم ورقم الحصة والشهر</h3>
                     <form onsubmit="handleStartSession(event)" class="grid grid-cols-1 sm:grid-cols-5 gap-3 items-end">
                         <div>
@@ -170,7 +170,7 @@
 
                 <!-- LIVE SCAN COUNTERS BAR -->
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                    <div class="p-4 bg-slate-800/90 border border-slate-700 rounded-2xl text-center">
+                    <div class="p-4 bg-slate-800 border border-slate-700 rounded-2xl text-center">
                         <span class="text-[11px] text-gray-400 font-bold block mb-1">إجمالي طلاب السنتر المختار</span>
                         <span id="live-stat-total-group" class="text-2xl font-black text-white">0</span>
                     </div>
@@ -190,7 +190,7 @@
 
                 <!-- Dual Scanner Viewports & Live Log -->
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                    <div class="lg:col-span-6 bg-slate-800/80 border border-slate-700 rounded-3xl p-6 space-y-4">
+                    <div class="lg:col-span-6 bg-slate-800 border border-slate-700 rounded-3xl p-6 space-y-4">
                         <div class="bg-slate-900 p-2 rounded-2xl border border-slate-700 flex gap-2">
                             <label class="flex-1 text-center cursor-pointer p-2.5 rounded-xl text-xs font-black transition" id="mode-label-attendance">
                                 <input type="radio" name="scan_mode" value="attendance" checked onchange="handleScanModeChange()" class="hidden">
@@ -232,7 +232,7 @@
                     </div>
 
                     <!-- Scanned Student Result Card -->
-                    <div class="lg:col-span-6 bg-slate-800/80 border border-slate-700 rounded-3xl p-6">
+                    <div class="lg:col-span-6 bg-slate-800 border border-slate-700 rounded-3xl p-6">
                         <div id="scan-empty-msg" class="h-full flex flex-col items-center justify-center text-center p-8 text-gray-500">
                             <i class="fa-solid fa-id-card text-5xl mb-3 text-slate-700"></i>
                             <p class="font-bold">في انتظار مسح كارت الطالب</p>
@@ -248,7 +248,7 @@
                                 <span id="adm-st-grade" class="px-3 py-1 bg-brand-900 text-brand-300 text-xs font-bold rounded-lg">--</span>
                             </div>
 
-                            <div class="p-3 bg-slate-900/90 rounded-2xl border border-brand-500/40 flex items-center justify-between gap-4">
+                            <div class="p-3 bg-slate-900 rounded-2xl border border-brand-500/40 flex items-center justify-between gap-4">
                                 <div class="flex items-center gap-2">
                                     <span class="text-xs font-bold text-gray-300"><i class="fa-solid fa-wallet text-amber-400 ml-1"></i> نظام الدفع:</span>
                                     <select id="scan-edit-payment-plan" onchange="handleLivePaymentPlanChange(this.value)" class="p-1.5 rounded-lg bg-slate-800 border border-slate-700 text-xs font-black text-amber-300 focus:outline-none">
@@ -286,7 +286,7 @@
             </div>
 
             <!-- ================= TAB 2: ADVANCED REPORTS & WEEKLY COMPARISONS ================= -->
-            <div id="tab-content-reports" class="tab-sec hidden bg-slate-800/80 border border-slate-700 rounded-3xl p-6 space-y-6">
+            <div id="tab-content-reports" class="tab-sec hidden bg-slate-800 border border-slate-700 rounded-3xl p-6 space-y-6">
                 <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 border-b border-slate-700 pb-4">
                     <div class="flex bg-slate-900 p-1.5 rounded-2xl border border-slate-700 flex-wrap gap-1">
                         <button onclick="switchReportSubtype('session_detail')" id="subrep-btn-session" class="px-4 py-2 rounded-xl text-xs font-black bg-brand-700 text-white transition">
@@ -320,7 +320,7 @@
 
             <!-- ================= TAB 3: EXAM SCORING DESK ================= -->
             <div id="tab-content-exams-desk" class="tab-sec hidden space-y-6">
-                <div class="bg-slate-800/80 border border-slate-700 rounded-3xl p-6 shadow-md max-w-3xl mx-auto">
+                <div class="bg-slate-800 border border-slate-700 rounded-3xl p-6 shadow-md max-w-3xl mx-auto">
                     <div class="border-b border-slate-700 pb-4 mb-6">
                         <h3 class="text-xl font-black text-amber-400 flex items-center gap-2"><i class="fa-solid fa-star"></i> رصد وتسجيل درجات الامتحانات (مع إشعار فوري لولي الأمر)</h3>
                         <p class="text-xs text-gray-400 mt-1">حدد تفاصيل الامتحان، ثم أدخل كود الطالب والدرجة ليتم حفظها وإرسال رسالة واتساب لولي أمره فوراً.</p>
@@ -370,7 +370,7 @@
 
             <!-- ================= TAB 4: ABSENCE ALERT DESK ================= -->
             <div id="tab-content-absence-alert" class="tab-sec hidden space-y-6">
-                <div class="bg-slate-800/80 border border-slate-700 rounded-3xl p-6 shadow-md max-w-4xl mx-auto">
+                <div class="bg-slate-800 border border-slate-700 rounded-3xl p-6 shadow-md max-w-4xl mx-auto">
                     <div class="border-b border-slate-700 pb-4 mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                         <div>
                             <h3 class="text-xl font-black text-red-400 flex items-center gap-2"><i class="fa-solid fa-user-xmark"></i> إبلاغ غياب الحصة للطلاب وأولياء الأمور</h3>
@@ -398,7 +398,7 @@
 
                     <div class="overflow-x-auto mb-6">
                         <table class="w-full text-right text-xs">
-                            <thead class="bg-slate-900/80 text-gray-400 border-b border-slate-700">
+                            <thead class="bg-slate-900 text-gray-400 border-b border-slate-700">
                                 <tr>
                                     <th class="p-3">الكود</th>
                                     <th class="p-3">اسم الطالب</th>
@@ -419,7 +419,7 @@
             <!-- ================= TAB 5: STUDENTS & BULK MANAGEMENT ================= -->
             <div id="tab-content-students" class="tab-sec hidden space-y-6">
                 <!-- Excel Import Box -->
-                <div class="bg-gradient-to-r from-emerald-950/40 via-slate-800 to-slate-800 border-2 border-emerald-500/40 rounded-3xl p-6 shadow-xl">
+                <div class="bg-slate-800 border-2 border-emerald-500/40 rounded-3xl p-6 shadow-xl">
                     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
                         <div>
                             <h3 class="text-lg font-black text-emerald-400 flex items-center gap-2">
@@ -441,7 +441,7 @@
                 </div>
 
                 <!-- Single Student Add Form -->
-                <div class="bg-slate-800/80 border border-slate-700 rounded-3xl p-6">
+                <div class="bg-slate-800 border border-slate-700 rounded-3xl p-6">
                     <h3 class="font-black text-lg mb-4 text-brand-400">إضافة طالب فردي وتحديد حسابه وسنتره</h3>
                     <form onsubmit="handleCreateStudent(event)" class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <div>
@@ -490,17 +490,17 @@
                     </form>
                 </div>
 
-                <!-- Students Table List with Enhanced Center/Grade Filtering & Export -->
-                <div class="bg-slate-800/80 border border-slate-700 rounded-3xl p-6">
-                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
+                <!-- Students Table List with Enhanced Center/Grade Filtering & Fast Export -->
+                <div class="bg-slate-800 border border-slate-700 rounded-3xl p-6">
+                    <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-3 mb-4">
                         <div>
                             <h3 class="font-black text-base">سجل طلاب السناتر المسجلين</h3>
-                            <p class="text-[11px] text-gray-400">حدد الطلاب من المربعات للتعديل الجماعي في المرحلة أو السنتر، أو قم بتصديرهم لإكسيل</p>
+                            <p class="text-[11px] text-gray-400">حدد الطلاب من المربعات للتعديل الجماعي في المرحلة أو السنتر</p>
                         </div>
-                        <div class="flex flex-wrap gap-2 w-full sm:w-auto items-center">
-                            <!-- New Export Button -->
-                            <button onclick="exportStudentsToExcel()" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs flex items-center gap-1.5 shadow transition whitespace-nowrap">
-                                <i class="fa-solid fa-file-arrow-down"></i> تصدير إكسيل للسنتر المحدد
+                        <div class="flex flex-wrap items-center gap-2 w-full lg:w-auto">
+                            <!-- زر تصدير إكسيل لبيانات السنتر -->
+                            <button onclick="exportStudentsToExcel()" class="px-3.5 py-2 bg-emerald-700 hover:bg-emerald-600 text-white font-bold rounded-xl text-xs flex items-center gap-1.5 transition shadow" title="تصدير بيانات السنتر المختار إلى Excel">
+                                <i class="fa-solid fa-file-excel text-sm"></i> تصدير إكسيل السنتر
                             </button>
 
                             <select id="filter-table-by-center" onchange="filterAdminStudentsTable()" class="p-2 rounded-xl bg-slate-900 border border-slate-700 text-xs font-bold text-white"></select>
@@ -510,12 +510,12 @@
                                 <option value="الصف الثاني الثانوي">الصف الثاني الثانوي</option>
                                 <option value="الصف الأول الثانوي">الصف الأول الثانوي</option>
                             </select>
-                            <input type="text" id="adm-table-search" onkeyup="filterAdminStudentsTable()" placeholder="ابحث بالاسم أو الكود..." class="p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs w-full sm:w-56 font-mono text-white">
+                            <input type="text" id="adm-table-search" oninput="debounceFilterStudents()" placeholder="ابحث بالاسم أو الكود..." class="p-2 rounded-xl bg-slate-900 border border-slate-700 text-xs w-full sm:w-48 font-mono text-white">
                         </div>
                     </div>
 
                     <!-- Bulk Actions Toolbar -->
-                    <div id="bulk-actions-toolbar" class="hidden mb-4 p-4 bg-slate-900/95 border-2 border-brand-500/60 rounded-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-xl">
+                    <div id="bulk-actions-toolbar" class="hidden mb-4 p-4 bg-slate-900 border-2 border-brand-500/60 rounded-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-xl">
                         <div class="flex items-center gap-3">
                             <span class="w-8 h-8 rounded-xl bg-brand-600/30 text-brand-400 flex items-center justify-center font-bold text-sm">
                                 <i class="fa-solid fa-users-gear"></i>
@@ -553,7 +553,7 @@
 
                     <div class="overflow-x-auto">
                         <table class="w-full text-right text-xs">
-                            <thead class="bg-slate-900/80 text-gray-400 border-b border-slate-700">
+                            <thead class="bg-slate-900 text-gray-400 border-b border-slate-700">
                                 <tr>
                                     <th class="p-3 w-10 text-center">
                                         <input type="checkbox" id="select-all-students-cb" onchange="toggleSelectAllStudents(this.checked)" class="w-4 h-4 rounded bg-slate-800 border-slate-600 text-brand-600 cursor-pointer">
@@ -576,7 +576,7 @@
 
             <!-- ================= TAB 6: HOMEWORK BUILDER & EDITING ================= -->
             <div id="tab-content-homework" class="tab-sec hidden space-y-6">
-                <div class="bg-slate-800/80 border border-slate-700 rounded-3xl p-6" id="homework-form-card">
+                <div class="bg-slate-800 border border-slate-700 rounded-3xl p-6" id="homework-form-card">
                     <div class="flex justify-between items-center mb-6">
                         <div>
                             <h3 class="font-black text-lg text-brand-400" id="hw-form-heading">إنشاء ونشر واجب جديد</h3>
@@ -626,14 +626,14 @@
                     </form>
                 </div>
 
-                <div class="bg-slate-800/80 border border-slate-700 rounded-3xl p-6">
+                <div class="bg-slate-800 border border-slate-700 rounded-3xl p-6">
                     <h3 class="font-black text-base mb-4 text-white">الواجبات المنشورة الحالية والتحكم فيها</h3>
                     <div id="admin-homeworks-table-container" class="overflow-x-auto"></div>
                 </div>
             </div>
 
             <!-- ================= TAB 7: BROADCAST WHATSAPP ================= -->
-            <div id="tab-content-broadcast" class="tab-sec hidden max-w-2xl bg-slate-800/80 border border-slate-700 rounded-3xl p-6">
+            <div id="tab-content-broadcast" class="tab-sec hidden max-w-2xl bg-slate-800 border border-slate-700 rounded-3xl p-6">
                 <h3 class="font-black text-lg mb-2 text-green-400"><i class="fa-brands fa-whatsapp ml-1"></i> إرسال رسائل جماعية للسنتر (حماية ضد الحظر)</h3>
                 <p class="text-xs text-gray-400 mb-6">يتم الإرسال بفارق زمني منتظم (3.5 ثوانٍ بين كل رسالة) لتجنب حظر الرقم على الواتساب.</p>
 
@@ -672,7 +672,7 @@
 
             <!-- ================= TAB 8: CENTERS MANAGEMENT ================= -->
             <div id="tab-content-centers" class="tab-sec hidden space-y-6">
-                <div class="bg-slate-800/80 border border-slate-700 rounded-3xl p-6 max-w-xl">
+                <div class="bg-slate-800 border border-slate-700 rounded-3xl p-6 max-w-xl">
                     <h3 class="font-black text-lg mb-4 text-brand-400">إضافة سنتر ومواعيد جديدة</h3>
                     <form onsubmit="handleCreateCenter(event)" class="space-y-4">
                         <div>
@@ -693,14 +693,14 @@
                     </form>
                 </div>
 
-                <div class="bg-slate-800/80 border border-slate-700 rounded-3xl p-6">
+                <div class="bg-slate-800 border border-slate-700 rounded-3xl p-6">
                     <h3 class="font-black text-base mb-4">السناتر المعتمدة حالياً</h3>
                     <div id="admin-centers-list-grid" class="grid grid-cols-1 sm:grid-cols-3 gap-4"></div>
                 </div>
             </div>
 
             <!-- ================= TAB 9: WAPILOT API SETTINGS ================= -->
-            <div id="tab-content-api" class="tab-sec hidden max-w-xl bg-slate-800/80 border border-slate-700 rounded-3xl p-6">
+            <div id="tab-content-api" class="tab-sec hidden max-w-xl bg-slate-800 border border-slate-700 rounded-3xl p-6">
                 <h3 class="font-black text-lg mb-2 text-brand-400"><i class="fa-brands fa-whatsapp ml-1"></i> إعدادات WAPilot WhatsApp API</h3>
                 <p class="text-xs text-gray-400 mb-6">ادخل الـ Instance ID والـ Token الخاص بحسابك على WAPilot لبدء إرسال رسائل الواتساب تلقائياً.</p>
                 
@@ -720,7 +720,7 @@
     </div>
 
     <!-- ================= EDIT STUDENT MODAL ================= -->
-    <div id="edit-student-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div id="edit-student-modal" class="fixed inset-0 z-50 bg-slate-950/85 hidden flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-700 p-6 rounded-3xl w-full max-w-xl shadow-2xl space-y-4">
             <div class="flex justify-between items-center border-b border-slate-800 pb-3">
                 <h3 class="text-base font-black text-amber-400 flex items-center gap-2">
@@ -871,6 +871,7 @@
 
         let selectedStudentCodes = new Set();
         let currentlyRenderedStudents = [];
+        let searchDebounceTimer = null;
 
         window.addEventListener('online', () => {
             const el = document.getElementById('sync-status-badge');
@@ -1988,44 +1989,39 @@
             XLSX.writeFile(wb, "Mr_Faisal_Students_Template.xlsx");
         }
 
-        // Export filtered students to Excel
+        // وظيفة تصدير إكسيل لبيانات كل سنتر (الكود - الاسم - تليفون الطالب - تليفون ولي الأمر فقط)
         function exportStudentsToExcel() {
             const centerFilter = document.getElementById('filter-table-by-center') ? document.getElementById('filter-table-by-center').value : 'all';
             const gradeFilter = document.getElementById('filter-table-by-grade') ? document.getElementById('filter-table-by-grade').value : 'all';
 
-            let list = cachedStudents;
-            if (centerFilter !== 'all') list = list.filter(s => s.center === centerFilter);
-            if (gradeFilter !== 'all') list = list.filter(s => s.grade === gradeFilter);
+            let targetList = cachedStudents;
 
-            if (list.length === 0) {
-                alert('لا توجد بيانات طلاب مطابقة للتصدير!');
+            if (centerFilter !== 'all') {
+                targetList = targetList.filter(s => s.center === centerFilter);
+            }
+            if (gradeFilter !== 'all') {
+                targetList = targetList.filter(s => s.grade === gradeFilter);
+            }
+
+            if (targetList.length === 0) {
+                alert('لا يوجد طلاب مسجلين لتصديرهم وفق الفلتر المحدد!');
                 return;
             }
 
-            const exportData = list.map(s => ({
-                "الكود": s.code,
+            // تحضير الأعمدة المطلوبة فقط وحصراً
+            const exportData = targetList.map(s => ({
+                "كود الطالب": s.code,
                 "اسم الطالب": s.name,
-                "رقم الطالب": s.phone,
-                "رقم ولي الأمر": s.parentPhone,
-                "الصف الدراسي": s.grade,
-                "السنتر": s.center,
-                "نظام الدفع": s.paymentPlan || 'غير محدد',
-                "المبلغ المتبقي": s.balanceDue || 0,
-                "عدد الحصص الحاضرة": s.attendanceCount || 0,
-                "آخر دفع": `${s.lastPaymentAmount || 0} ج.م (${s.lastPaymentDate || 'لم يسدد'})`,
-                "آخر درجة امتحان": s.lastExamScore || 'لم يمتحن',
-                "حالة الواجب": s.lastHwExactScore || 'لم يحل'
+                "رقم تليفون الطالب": s.phone || '',
+                "رقم ولي الأمر": s.parentPhone || ''
             }));
 
             const ws = XLSX.utils.json_to_sheet(exportData);
             const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "Students_Data");
-
-            const fileNameCenter = centerFilter === 'all' ? 'جميع_السناتر' : centerFilter.replace(/\s+/g, '_');
-            const fileNameGrade = gradeFilter === 'all' ? 'جميع_الصفوف' : gradeFilter.replace(/\s+/g, '_');
-            const fileName = `طلاب_${fileNameCenter}_${fileNameGrade}.xlsx`;
-
-            XLSX.writeFile(wb, fileName);
+            
+            const centerNameSanitized = centerFilter === 'all' ? 'جميع_السناتر' : centerFilter.replace(/\s+/g, '_');
+            XLSX.utils.book_append_sheet(wb, ws, "الطلاب");
+            XLSX.writeFile(wb, `بيانات_طلاب_${centerNameSanitized}.xlsx`);
         }
 
         async function handleProcessExcelUpload() {
@@ -2419,11 +2415,11 @@
             updateLiveScanningStats();
         }
 
+        // تحسين الأداء: بناء جدول الطلاب ككتلة واحدة مجمعة وتفادي التجميد
         function renderAdminStudentsTable(list) {
             currentlyRenderedStudents = list;
             const tbody = document.getElementById('adm-students-tbody');
             if (!tbody) return;
-            tbody.innerHTML = '';
 
             if (list.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="9" class="text-center py-6 text-gray-400 font-bold">لا يوجد طلاب مسجلين مطابقين للبحث.</td></tr>`;
@@ -2431,9 +2427,9 @@
                 return;
             }
 
-            list.forEach(s => {
+            tbody.innerHTML = list.map(s => {
                 const isChecked = selectedStudentCodes.has(s.code.toString());
-                tbody.innerHTML += `
+                return `
                     <tr class="${isChecked ? 'bg-brand-950/30' : ''}">
                         <td class="p-3 text-center">
                             <input type="checkbox" onchange="toggleStudentSelection('${s.code}', this.checked)" ${isChecked ? 'checked' : ''} class="w-4 h-4 rounded bg-slate-800 border-slate-600 text-brand-600 cursor-pointer">
@@ -2455,9 +2451,16 @@
                         </td>
                     </tr>
                 `;
-            });
+            }).join('');
 
             updateBulkToolbarState();
+        }
+
+        function debounceFilterStudents() {
+            clearTimeout(searchDebounceTimer);
+            searchDebounceTimer = setTimeout(() => {
+                filterAdminStudentsTable();
+            }, 150);
         }
 
         function filterAdminStudentsTable() {
@@ -2511,7 +2514,7 @@
                     <input type="text" class="q-opt-2 w-full p-2.5 rounded-lg bg-slate-800 border border-slate-700 text-xs text-white" required placeholder="الخيار (ج)" value="${opt2}">
                     <input type="text" class="q-opt-3 w-full p-2.5 rounded-lg bg-slate-800 border border-slate-700 text-xs text-white" required placeholder="الخيار (د)" value="${opt3}">
                 </div>
-                <div class="flex gap-4 items-center bg-slate-800/60 p-3 rounded-xl">
+                <div class="flex gap-4 items-center bg-slate-800 p-3 rounded-xl">
                     <label class="text-xs font-bold text-emerald-400">الإجابة الصحيحة:</label>
                     <select class="q-correct-select p-2 rounded-lg bg-slate-900 border border-slate-700 text-xs font-bold text-white">
                         <option value="0" ${correctVal == 0 ? 'selected' : ''}>الخيار (أ)</option>
@@ -2687,7 +2690,7 @@
 
             let html = `
                 <table class="w-full text-right text-xs">
-                    <thead class="bg-slate-900/80 text-gray-400 border-b border-slate-700">
+                    <thead class="bg-slate-900 text-gray-400 border-b border-slate-700">
                         <tr>
                             <th class="p-3">عنوان الواجب</th>
                             <th class="p-3">الصف الدراسي</th>
