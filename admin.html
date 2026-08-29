@@ -168,10 +168,10 @@
                     </form>
                 </div>
 
-                <!-- LIVE SCAN COUNTERS BAR (NEW) -->
+                <!-- LIVE SCAN COUNTERS BAR -->
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
                     <div class="p-4 bg-slate-800/90 border border-slate-700 rounded-2xl text-center">
-                        <span class="text-[11px] text-gray-400 font-bold block mb-1">إجمالي طلاب السنتر</span>
+                        <span class="text-[11px] text-gray-400 font-bold block mb-1">إجمالي طلاب السنتر المختار</span>
                         <span id="live-stat-total-group" class="text-2xl font-black text-white">0</span>
                     </div>
                     <div class="p-4 bg-emerald-950/40 border border-emerald-500/40 rounded-2xl text-center">
@@ -490,14 +490,23 @@
                     </form>
                 </div>
 
-                <!-- Students Table List with Bulk Actions -->
+                <!-- Students Table List with Enhanced Center/Grade Filtering -->
                 <div class="bg-slate-800/80 border border-slate-700 rounded-3xl p-6">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
                         <div>
                             <h3 class="font-black text-base">سجل طلاب السناتر المسجلين</h3>
                             <p class="text-[11px] text-gray-400">حدد الطلاب من المربعات للتعديل الجماعي في المرحلة أو السنتر</p>
                         </div>
-                        <input type="text" id="adm-table-search" onkeyup="filterAdminStudentsTable()" placeholder="ابحث بالاسم أو الكود..." class="p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs w-full sm:w-64 font-mono text-white">
+                        <div class="flex flex-wrap gap-2 w-full sm:w-auto">
+                            <select id="filter-table-by-center" onchange="filterAdminStudentsTable()" class="p-2 rounded-xl bg-slate-900 border border-slate-700 text-xs font-bold text-white"></select>
+                            <select id="filter-table-by-grade" onchange="filterAdminStudentsTable()" class="p-2 rounded-xl bg-slate-900 border border-slate-700 text-xs font-bold text-white">
+                                <option value="all">جميع المراحل</option>
+                                <option value="الصف الثالث الثانوي">الصف الثالث الثانوي</option>
+                                <option value="الصف الثاني الثانوي">الصف الثاني الثانوي</option>
+                                <option value="الصف الأول الثانوي">الصف الأول الثانوي</option>
+                            </select>
+                            <input type="text" id="adm-table-search" onkeyup="filterAdminStudentsTable()" placeholder="ابحث بالاسم أو الكود..." class="p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs w-full sm:w-56 font-mono text-white">
+                        </div>
                     </div>
 
                     <!-- Bulk Actions Toolbar -->
@@ -774,7 +783,7 @@
         </div>
     </div>
 
-    <!-- SCRIPT LOGIC (OFFLINE-FIRST + REALTME METRICS + ADVANCED REPORTS) -->
+    <!-- SCRIPT LOGIC -->
     <script>
         function switchTab(tabId) {
             document.querySelectorAll('.tab-sec').forEach(el => el.classList.add('hidden'));
@@ -790,7 +799,7 @@
             if (tabId === 'session-scan') updateLiveScanningStats();
         }
 
-        // Web Audio API Beep Function (Works 100% Offline)
+        // Web Audio API Beep Function
         function playBeepSound(type = 'success') {
             try {
                 const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -900,7 +909,6 @@
             btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري التحقق...`;
 
             if (!db) {
-                // Offline login fallback
                 if (u === 'admin' || u === 'faisal') {
                     currentActiveAdmin = { username: u, name: 'مستر فيصل' };
                     sessionStorage.setItem('MF_ADMIN_LOGGED', JSON.stringify(currentActiveAdmin));
@@ -998,8 +1006,6 @@
             };
 
             localStorage.setItem('MF_ACTIVE_SESSION', JSON.stringify(activeSession));
-
-            // Save in recorded sessions history for comparison reports
             saveSessionToHistory(activeSession);
 
             document.getElementById('header-active-session-name').innerText = `${sessionName} (${lessonNum} - ${monthNum})`;
@@ -1107,7 +1113,6 @@
                     { fps: 15, qrbox: 240 },
                     (decodedText) => {
                         const now = Date.now();
-                        // Prevent multi-trigger within 1.8 seconds for same code
                         if (decodedText === lastScannedCode && now - lastScannedTime < 1800) {
                             return;
                         }
@@ -1134,12 +1139,20 @@
                 return;
             }
 
+            // Cross-Center Verification
+            let isComp = false;
+            if (activeSession && s.center !== activeSession.center) {
+                playBeepSound('error');
+                const confirmComp = confirm(`⚠️ تنبيه سنتر مختلف:\nالطالب (${s.name}) مسجل في (${s.center})، والحصة النشطة الحالية تابعة لـ (${activeSession.center}).\n\nهل ترغب بتسجيله الآن كحضور تعويض في سنتر ${activeSession.center}؟`);
+                if (!confirmComp) return;
+                isComp = true;
+            }
+
             playBeepSound('success');
             loadDirectStudent(s.code);
 
-            // Auto-action based on current mode
             if (currentScanMode === 'attendance') {
-                actionTakeAttendance('حضور', true);
+                actionTakeAttendance(isComp ? 'تعويض' : 'حضور', true);
             } else if (currentScanMode === 'homework') {
                 logHomeworkScan(s);
             }
@@ -1173,13 +1186,13 @@
             }
 
             container.innerHTML = liveSessionScannedLog.slice(0, 15).map(item => `
-                <div class="p-2 bg-slate-800 rounded-xl border border-slate-700 flex justify-between items-center text-[11px] animate-fade-in">
+                <div class="p-2 bg-slate-800 rounded-xl border border-slate-700 flex justify-between items-center text-[11px]">
                     <div>
                         <span class="font-bold text-white">${item.name}</span>
                         <span class="text-[10px] text-brand-400 font-mono">(${item.code})</span>
                     </div>
                     <div class="flex items-center gap-2">
-                        <span class="px-2 py-0.5 rounded text-[10px] font-bold ${item.type === 'حضور' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-purple-500/20 text-brand-300'}">
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold ${item.type === 'حضور' || item.type === 'تعويض' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-purple-500/20 text-brand-300'}">
                             ${item.type} ${item.score ? `[${item.score}]` : ''}
                         </span>
                         <span class="text-[10px] text-gray-400 font-mono">${item.time}</span>
@@ -1317,7 +1330,6 @@
             }
             localStorage.setItem('MF_LOCAL_STUDENTS', JSON.stringify(cachedStudents));
 
-            // Log entry in live scan bar
             liveSessionScannedLog.unshift({
                 name: currentAdminScannedStudent.name,
                 code: currentAdminScannedStudent.code,
@@ -1338,7 +1350,7 @@
             sendWAPilotMessage(currentAdminScannedStudent.parentPhone, msg);
 
             if (!isAuto) {
-                alert(`تم تسجيل (${type}) للطالب ${currentAdminScannedStudent.name} وإرسال إشعار الواتساب بنجاح!`);
+                alert(`تم تسجيل (${type}) للطالب ${currentAdminScannedStudent.name} بنجاح!`);
             }
             loadStudents();
             calculateAndDisplayAbsentees();
@@ -1356,11 +1368,13 @@
                 const timeStr = now.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
                 
                 const sessionTitle = activeSession ? activeSession.fullSessionTitle : 'تحصيل مباشر بالسنتر';
+                const centerName = activeSession ? activeSession.center : currentAdminScannedStudent.center;
                 const lessonNum = activeSession ? activeSession.lessonNum : '';
                 const monthNum = activeSession ? activeSession.monthNum : '';
 
                 const payRecord = {
                     amount: paid,
+                    center: centerName,
                     date: dateStr,
                     time: timeStr,
                     sessionTitle: sessionTitle,
@@ -1368,7 +1382,7 @@
                     monthNum: monthNum,
                     paymentPlan: planText,
                     remainingBalance: newBal,
-                    note: `تحصيل بحصة (${sessionTitle}) - نظام ${planText}`
+                    note: `تحصيل بحصة (${sessionTitle}) - سنتر ${centerName}`
                 };
 
                 if (db && currentAdminScannedStudent.id) {
@@ -1399,6 +1413,7 @@
 
                 const msg = `إشعار توريد مالي | سناتر مستر محمد فيصل 🧾\n`
                           + `تم تحصيل مبلغ: ${paid} ج.م من الطالب/ة: ${currentAdminScannedStudent.name}\n`
+                          + `🏫 سنتر: ${centerName}\n`
                           + `📌 الحصة: ${sessionTitle} (نظام: ${planText})\n`
                           + `💰 المبلغ المتبقي على الطالب: ${newBal} ج.م\n`
                           + `⏰ التاريخ: ${dateStr} الساعة ${timeStr}\n`
@@ -1411,7 +1426,7 @@
             }
         }
 
-        // ================= 3. ADVANCED REPORTING & WEEKLY COMPARATIVE ENGINE =================
+        // ================= 3. ADVANCED REPORTING ENGINE =================
         function switchReportSubtype(subtype) {
             currentReportSubtype = subtype;
             
@@ -1443,7 +1458,6 @@
 
             let html = '';
 
-            // ================= VIEW 1: CURRENT / SELECTED SESSION DETAIL & ABSENCE =================
             if (currentReportSubtype === 'session_detail') {
                 if (!activeSession) {
                     container.innerHTML = `
@@ -1500,7 +1514,6 @@
                         </div>
                     </div>
 
-                    <!-- Attended Students Table -->
                     <h3 class="font-black text-sm text-emerald-400 mb-2 flex items-center gap-1.5"><i class="fa-solid fa-circle-check"></i> الطلاب الحاضرون في الحصة (${attendedList.length}):</h3>
                     <table class="w-full text-right text-xs border border-slate-700 mb-8">
                         <thead class="bg-slate-800 text-gray-300">
@@ -1538,8 +1551,7 @@
                         </tbody>
                     </table>
 
-                    <!-- Absent Students Table -->
-                    <h3 class="font-black text-sm text-red-400 mb-2 flex items-center gap-1.5"><i class="fa-solid fa-circle-xmark"></i> الطلاب الغائبون (لم يتم مسحهم في السنتر) (${absentList.length}):</h3>
+                    <h3 class="font-black text-sm text-red-400 mb-2 flex items-center gap-1.5"><i class="fa-solid fa-circle-xmark"></i> الطلاب الغائبون من سنتر (${activeSession.center}) (${absentList.length}):</h3>
                     <table class="w-full text-right text-xs border border-slate-700">
                         <thead class="bg-slate-800 text-gray-300">
                             <tr>
@@ -1554,7 +1566,7 @@
                 `;
 
                 if (absentList.length === 0) {
-                    html += `<tr><td colspan="5" class="text-center py-4 text-emerald-400 font-bold">رائع! حضور كامل 100% ولا يوجد غائبين.</td></tr>`;
+                    html += `<tr><td colspan="5" class="text-center py-4 text-emerald-400 font-bold">حضور كامل 100% ولا يوجد غائبين.</td></tr>`;
                 } else {
                     absentList.forEach(s => {
                         html += `
@@ -1572,12 +1584,10 @@
                 html += `</tbody></table>`;
             }
 
-            // ================= VIEW 2: WEEKLY COMPARATIVE & GROWTH REPORT =================
             else if (currentReportSubtype === 'comparative') {
                 const targetCenter = (centerFilter !== 'all') ? centerFilter : (activeSession ? activeSession.center : (cachedCenters[0] ? cachedCenters[0].name : 'السنتر الرئيسي'));
                 const targetGrade = (gradeFilter !== 'all') ? gradeFilter : (activeSession ? activeSession.grade : 'الصف الثالث الثانوي');
 
-                // Extract all sessions associated with this center & grade from student histories
                 const allRecordedSessions = new Map();
                 cachedStudents.filter(s => s.center === targetCenter && s.grade === targetGrade).forEach(s => {
                     (s.attendanceHistory || []).forEach(att => {
@@ -1619,9 +1629,7 @@
                 const diff = currCount - prevCount;
                 const growthRate = prevCount > 0 ? ((diff / prevCount) * 100).toFixed(1) : 100;
 
-                // New attendees this session that were not in previous session
                 const newInThisSession = prevSes ? currentSes.attendees.filter(c => !prevSes.attendees.includes(c)) : currentSes.attendees;
-                // Attendees from previous session who missed this one
                 const droppedInThisSession = prevSes ? prevSes.attendees.filter(c => !currentSes.attendees.includes(c)) : [];
 
                 html = `
@@ -1632,7 +1640,6 @@
                         <p class="text-xs text-gray-400 mt-1">السنتر: <b>${targetCenter}</b> | المرحلة: <b>${targetGrade}</b></p>
                     </div>
 
-                    <!-- Growth KPI Metric Cards -->
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
                         <div class="p-4 bg-slate-800 rounded-2xl border border-slate-700 text-center">
                             <span class="text-[11px] text-gray-400 block font-bold mb-1">حضور الحصة الحالية</span>
@@ -1661,7 +1668,6 @@
                         </div>
                     </div>
 
-                    <!-- Comparison Table Across All Historical Sessions -->
                     <h3 class="font-black text-sm text-white mb-3 flex items-center gap-2"><i class="fa-solid fa-list-ol"></i> التدرج الزمني لكافة حصص السنتر والمرحلة:</h3>
                     <table class="w-full text-right text-xs border border-slate-700">
                         <thead class="bg-slate-800 text-gray-300">
@@ -1702,7 +1708,6 @@
                 html += `</tbody></table>`;
             }
 
-            // ================= VIEW 3: FULL FINANCIALS =================
             else if (currentReportSubtype === 'attendance_finances') {
                 html += `
                     <div class="text-center mb-4">
@@ -1717,7 +1722,7 @@
                                 <th class="p-2 border border-slate-700">السنتر والصف</th>
                                 <th class="p-2 border border-slate-700">نظام الدفع</th>
                                 <th class="p-2 border border-slate-700">إجمالي الحضور</th>
-                                <th class="p-2 border border-slate-700">سجل المدفوعات والحصص المسددة</th>
+                                <th class="p-2 border border-slate-700">سجل المدفوعات والسنتر المحصل فيه</th>
                                 <th class="p-2 border border-slate-700">المتبقي</th>
                             </tr>
                         </thead>
@@ -1729,7 +1734,7 @@
                 } else {
                     list.forEach(s => {
                         const payments = s.paymentsHistory || [];
-                        const paySummary = payments.length > 0 ? payments.map(p => `<span class="inline-block bg-slate-800 p-1 rounded my-0.5 border border-slate-700">💰 ${p.amount} ج.م [${p.sessionTitle || p.sessionName || 'حصة'} - ${p.date} ${p.time || ''}]</span>`).join('<br>') : 'لم يسدد أي مبالغ بعد';
+                        const paySummary = payments.length > 0 ? payments.map(p => `<span class="inline-block bg-slate-800 p-1 rounded my-0.5 border border-slate-700">💰 ${p.amount} ج.م [${p.center || s.center} - ${p.sessionTitle || 'حصة'} - ${p.date}]</span>`).join('<br>') : 'لم يسدد أي مبالغ بعد';
 
                         html += `
                             <tr>
@@ -1747,7 +1752,6 @@
                 html += `</tbody></table>`;
             }
 
-            // ================= VIEW 4: EXAMS =================
             else {
                 html += `
                     <div class="text-center mb-4">
@@ -1772,7 +1776,7 @@
                 } else {
                     list.forEach(s => {
                         const exams = s.examsHistory || [];
-                        const summary = exams.length > 0 ? exams.map(e => `<span class="inline-block bg-slate-800 p-1 rounded my-0.5 border border-slate-700">⭐ ${e.title}: <b>(${e.score})</b> بتاريخ [${e.date}]</span>`).join('<br>') : 'لم يؤد امتحانات بعد';
+                        const summary = exams.length > 0 ? exams.map(e => `<span class="inline-block bg-slate-800 p-1 rounded my-0.5 border border-slate-700">⭐ ${e.title}: <b>(${e.score})</b> [سنتر: ${e.center || s.center}]</span>`).join('<br>') : 'لم يؤد امتحانات بعد';
 
                         html += `
                             <tr>
@@ -1897,7 +1901,7 @@
             document.getElementById('abs-stat-absent').innerText = absentList.length;
 
             if (absentList.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="text-center py-6 text-emerald-400 font-bold">عاش! لا يوجد طلاب غائبين في هذه الحصة حتى الآن.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center py-6 text-emerald-400 font-bold">عاش! لا يوجد طلاب غائبين في سنتر ${activeSession.center} حتى الآن.</td></tr>`;
                 return;
             }
 
@@ -1928,7 +1932,7 @@
                 return;
             }
 
-            if (!confirm(`هل أنت متأكد من إرسال إشعار الغياب لـ (${absentList.length}) طالب غائب وأولياء أمورهم؟`)) return;
+            if (!confirm(`هل أنت متأكد من إرسال إشعار الغياب لـ (${absentList.length}) طالب غائب في سنتر (${activeSession.center}) وأولياء أمورهم؟`)) return;
 
             const btn = document.getElementById('btn-dispatch-absence');
             btn.disabled = true;
@@ -1939,13 +1943,13 @@
                          + `📖 الحصة: ${activeSession.fullSessionTitle}\n`
                          + `🏫 السنتر: ${activeSession.center}\n`
                          + `⏰ التاريخ: ${activeSession.date}\n`
-                         + `يرجى التواصل مع إدارة السنتر لتحديد موعد الحصة التعويضية على منصة ميجا أكاديمي.`;
+                         + `يرجى التواصل مع إدارة السنتر لتحديد موعد الحصة التعويضية على المنصة.`;
 
             await sendBatchWithDelay(absentList, 'both', absMsg);
 
             btn.disabled = false;
             btn.innerHTML = `<i class="fa-brands fa-whatsapp text-lg"></i> إرسال إشعار الغياب لجميع الطلاب وأولياء الأمور الغائبين الآن`;
-            alert(`تم إرسال إشعارات الغياب بنجاح لجميع الغائبين وأولياء أمورهم!`);
+            alert(`تم إرسال إشعارات الغياب بنجاح لجميع الغائبين في سنتر ${activeSession.center}!`);
         }
 
         // ================= 6. EXCEL BULK UPLOAD =================
@@ -2060,7 +2064,7 @@
                     localStorage.setItem('MF_LOCAL_STUDENTS', JSON.stringify(cachedStudents));
                     loadStudents();
 
-                    alert(`تم استيراد (${insertedCount}) طالب بنجاح! جاري إرسال رسائل الترحيب وكود الدخول لهم على الواتساب.`);
+                    alert(`تم استيراد (${insertedCount}) طالب بنجاح! جاري إرسال رسائل الترحيب للطلاب الجدد.`);
 
                     if (newStudentsList.length > 0) {
                         sendWelcomeWhatsAppToNewStudents(newStudentsList);
@@ -2149,11 +2153,11 @@
                              + `📱 رقم تليفونك المسجل: ${phone}\n`
                              + planLine
                              + `رابط المنصة: https://mrfaisal.net\n`
-                             + `ادخل على المنصة لمتابعة كارت الـ QR الذكي لحضور الحصص وحل الواجبات الأسبوعية واستلام نتائج الامتحانات فورياً!`;
+                             + `ادخل على المنصة لمتابعة كارت الـ QR الذكي لحضور الحصص وحل الواجبات واستلام نتائج الامتحانات فورياً!`;
 
             sendWAPilotMessage(phone, welcomeMsg);
 
-            alert(`تم إنشاء حساب الطالب ${st.name} بنجاح وإرسال رسالة الترحيب وبيانات الدخول لرقم هاتفه!`);
+            alert(`تم إنشاء حساب الطالب ${st.name} بنجاح وإرسال رسالة الترحيب لرقم هاتفه!`);
             e.target.reset();
             loadStudents();
         }
@@ -2366,7 +2370,7 @@
                 const local = localStorage.getItem('MF_LOCAL_STUDENTS');
                 if (local) cachedStudents = JSON.parse(local);
             }
-            renderAdminStudentsTable(cachedStudents);
+            filterAdminStudentsTable();
             updateLiveScanningStats();
         }
 
@@ -2377,7 +2381,7 @@
             tbody.innerHTML = '';
 
             if (list.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="9" class="text-center py-6 text-gray-400 font-bold">لا يوجد طلاب مسجلين بعد.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="9" class="text-center py-6 text-gray-400 font-bold">لا يوجد طلاب مسجلين مطابقين للبحث.</td></tr>`;
                 updateBulkToolbarState();
                 return;
             }
@@ -2413,7 +2417,15 @@
 
         function filterAdminStudentsTable() {
             const q = document.getElementById('adm-table-search').value.toLowerCase();
-            const filtered = cachedStudents.filter(s => s.name.toLowerCase().includes(q) || s.code.toString().includes(q));
+            const centerFilter = document.getElementById('filter-table-by-center') ? document.getElementById('filter-table-by-center').value : 'all';
+            const gradeFilter = document.getElementById('filter-table-by-grade') ? document.getElementById('filter-table-by-grade').value : 'all';
+
+            const filtered = cachedStudents.filter(s => {
+                const matchesSearch = s.name.toLowerCase().includes(q) || s.code.toString().includes(q);
+                const matchesCenter = (centerFilter === 'all' || s.center === centerFilter);
+                const matchesGrade = (gradeFilter === 'all' || s.grade === gradeFilter);
+                return matchesSearch && matchesCenter && matchesGrade;
+            });
             renderAdminStudentsTable(filtered);
         }
 
@@ -2710,12 +2722,12 @@
                 if (local) cachedCenters = JSON.parse(local);
             }
 
-            const selectElements = ['add-st-center', 'edit-st-center', 'report-filter-center', 'broadcast-center-select', 'hw-builder-target-center', 'ses-center', 'exam-entry-center', 'bulk-change-center'];
+            const selectElements = ['add-st-center', 'edit-st-center', 'report-filter-center', 'broadcast-center-select', 'hw-builder-target-center', 'ses-center', 'exam-entry-center', 'bulk-change-center', 'filter-table-by-center'];
             selectElements.forEach(selId => {
                 const el = document.getElementById(selId);
                 if (!el) return;
                 
-                if (selId === 'report-filter-center' || selId === 'hw-builder-target-center') {
+                if (selId === 'report-filter-center' || selId === 'hw-builder-target-center' || selId === 'filter-table-by-center') {
                     el.innerHTML = '<option value="all">جميع السناتر والمجموعات</option>';
                 } else if (selId === 'bulk-change-center') {
                     el.innerHTML = '<option value="">-- تغيير السنتر --</option>';
