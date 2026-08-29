@@ -312,7 +312,6 @@
             <form onsubmit="handleStudentLogin(event)" class="space-y-4">
                 <div>
                     <label class="block text-xs font-bold mb-1">رقم تليفون الطالب:</label>
-                    <!-- Phone Input with fixed +20 Badge -->
                     <div class="flex rounded-xl border border-slate-300 dark:border-slate-700 overflow-hidden bg-slate-50 dark:bg-slate-900 focus-within:border-brand-600 transition" dir="ltr">
                         <span class="inline-flex items-center px-3.5 bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-mono font-bold text-sm select-none border-r border-slate-300 dark:border-slate-700">
                             +20
@@ -496,10 +495,13 @@
             const attContainer = document.getElementById('parent-attendance-dates-list');
             const attList = s.attendanceHistory || [];
             attContainer.innerHTML = attList.length === 0 ? `<p class="text-gray-400 py-2">لا يوجد حضور مسجل بعد.</p>` :
-                attList.map((dt, idx) => `
+                attList.map((att, idx) => `
                     <div class="p-2 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 flex justify-between items-center">
-                        <span class="font-bold text-emerald-600">حصة (${idx+1})</span>
-                        <span class="text-gray-400 font-mono">${dt}</span>
+                        <div>
+                            <span class="font-bold text-emerald-600">${att.sessionTitle || `حصة (${idx+1})`}</span>
+                            <span class="text-[10px] text-gray-400 block">${att.center || ''}</span>
+                        </div>
+                        <span class="text-gray-400 font-mono text-[11px]">${att.date || att}</span>
                     </div>
                 `).reverse().join('');
 
@@ -508,7 +510,7 @@
             payContainer.innerHTML = payList.length === 0 ? `<p class="text-gray-400 py-2">لا يوجد سجل مدفوعات.</p>` :
                 payList.map(p => `
                     <div class="p-2 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 flex justify-between items-center">
-                        <div><span class="font-bold text-blue-500">${p.amount} ج.م</span><span class="text-[10px] text-gray-400 block">${p.note || 'توريد سنتر'}</span></div>
+                        <div><span class="font-bold text-blue-500">${p.amount} ج.م</span><span class="text-[10px] text-gray-400 block">${p.note || p.sessionTitle || 'توريد سنتر'}</span></div>
                         <span class="text-gray-400 font-mono text-[11px]">${p.date}</span>
                     </div>
                 `).reverse().join('');
@@ -520,10 +522,10 @@
             let cleaned = phoneStr.toString().replace(/\D/g, '');
             if (cleaned.startsWith('20')) cleaned = cleaned.substring(2);
             if (cleaned.startsWith('0')) cleaned = cleaned.substring(1);
-            return cleaned; // returns 10-digit number (e.g. 1012345678)
+            return cleaned;
         }
 
-        // Student Auth with Auto 20 Normalization
+        // Student Auth with Auto Normalization
         async function handleStudentLogin(e) {
             e.preventDefault();
             const rawPhone = document.getElementById('st-login-phone').value.trim();
@@ -537,7 +539,7 @@
                     const snapshot = await db.collection('students')
                         .where('code', '==', code)
                         .get();
-                    
+
                     if (!snapshot.empty) {
                         for (let doc of snapshot.docs) {
                             const data = doc.data();
@@ -609,7 +611,32 @@
             showSection('home');
         }
 
-        // Homework Engine
+        // ================= HELPER: CHECK IF HOMEWORK IS ASSIGNED TO STUDENT'S CENTER & GRADE =================
+        function isHomeworkEligibleForStudent(hw, student) {
+            if (!hw || hw.isVisible === false) return false;
+            
+            // 1. Check Grade Match
+            if (hw.grade && hw.grade !== student.grade) return false;
+
+            // 2. Check Center Match
+            const studentCenter = (student.center || '').trim();
+            const target = (hw.targetCenter || '').trim();
+
+            // Direct match or all centers
+            if (target === 'all' || target === 'جميع السناتر والمجموعات' || target === '') return true;
+            if (target === studentCenter) return true;
+
+            // Check if student's center was added / notified in notifiedCenters array
+            if (Array.isArray(hw.notifiedCenters)) {
+                if (hw.notifiedCenters.includes('all') || hw.notifiedCenters.includes('جميع السناتر والمجموعات') || hw.notifiedCenters.includes(studentCenter)) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        // ================= HOMEWORK ENGINE =================
         async function loadActiveHomeworkForStudent() {
             const container = document.getElementById('hw-questions-container');
             const actionBtn = document.getElementById('hw-submit-action');
@@ -617,38 +644,48 @@
 
             let homeworkList = [];
 
+            // 1. Fetch from Firestore
             if (db) {
                 try {
-                    const snapshot = await db.collection('homeworks')
-                        .where('grade', '==', currentActiveStudent.grade)
-                        .get();
-                    snapshot.forEach(doc => homeworkList.push({ id: doc.id, ...doc.data() }));
-                } catch(e) {}
-            }
-
-            if (homeworkList.length === 0) {
-                const local = localStorage.getItem('MF_LOCAL_HOMEWORKS');
-                if (local) {
-                    homeworkList = JSON.parse(local).filter(h => h.grade === currentActiveStudent.grade);
+                    const snapshot = await db.collection('homeworks').orderBy('createdAt', 'desc').get();
+                    snapshot.forEach(doc => {
+                        homeworkList.push({ id: doc.id, ...doc.data() });
+                    });
+                } catch(e) {
+                    try {
+                        const fallbackSnap = await db.collection('homeworks').get();
+                        fallbackSnap.forEach(doc => homeworkList.push({ id: doc.id, ...doc.data() }));
+                    } catch(err) {}
                 }
             }
 
-            const available = homeworkList.filter(hw => 
-                (hw.targetCenter === 'all' || hw.targetCenter === currentActiveStudent.center) && 
-                (hw.isVisible !== false)
-            );
+            // 2. Fallback to LocalStorage
+            if (homeworkList.length === 0) {
+                const local = localStorage.getItem('MF_LOCAL_HOMEWORKS');
+                if (local) {
+                    homeworkList = JSON.parse(local);
+                }
+            }
+
+            // 3. Filter strictly by Grade and Student's Specific Center
+            const available = homeworkList.filter(hw => isHomeworkEligibleForStudent(hw, currentActiveStudent));
 
             if (available.length === 0) {
                 alreadySubmittedCard.classList.add('hidden');
+                document.getElementById('hw-title').innerText = 'الواجب الإلكتروني للأسبوع الحالي';
+                document.getElementById('hw-subtitle').innerText = `المجموعة: ${currentActiveStudent.center}`;
                 container.innerHTML = `<p class="text-center text-gray-400 py-6 font-bold">لا يوجد واجب متاح لمجموعتك (${currentActiveStudent.center}) حالياً.</p>`;
                 actionBtn.classList.add('hidden');
                 return;
             }
 
-            activeHomework = available[available.length - 1];
+            // Pick the latest assigned homework
+            activeHomework = available[0];
             document.getElementById('hw-title').innerText = activeHomework.title;
+            const targetCenterText = (activeHomework.targetCenter === 'all' || !activeHomework.targetCenter) ? 'جميع السناتر' : activeHomework.targetCenter;
+            document.getElementById('hw-subtitle').innerText = `مخصص لمجموعة: ${targetCenterText} | الصف: ${activeHomework.grade}`;
 
-            // Check if already submitted
+            // Check if student already submitted this homework
             const studentHwHistory = currentActiveStudent.homeworksHistory || [];
             const isAlreadyDone = studentHwHistory.find(h => h.title === activeHomework.title);
 
@@ -662,12 +699,13 @@
                 alreadySubmittedCard.classList.add('hidden');
             }
 
+            // Render Questions
             const choiceLetters = ['(أ)', '(ب)', '(ج)', '(د)'];
             let html = '';
             activeHomework.questions.forEach((q, idx) => {
                 html += `
                     <div class="p-5 bg-slate-50 dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700">
-                        <p class="font-bold text-sm sm:text-base mb-3"><span class="text-brand-700 font-black ml-1">س${idx+1}:</span> ${q.text} <span class="text-xs text-amber-600">(${q.points} درجات)</span></p>
+                        <p class="font-bold text-sm sm:text-base mb-3"><span class="text-brand-700 font-black ml-1">س${idx+1}:</span> ${q.text} <span class="text-xs text-amber-600">(${q.points || 1} درجات)</span></p>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                             ${q.options.map((opt, oIdx) => `
                                 <label class="flex items-center gap-3 p-3 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 cursor-pointer hover:border-brand-600 transition">
@@ -711,6 +749,7 @@
             const hwRecord = {
                 title: activeHomework.title,
                 score: exactScoreFormatted,
+                center: currentActiveStudent.center,
                 date: new Date().toLocaleDateString('ar-EG')
             };
 
@@ -743,7 +782,7 @@
             currentActiveStudent.lastHwExactScore = exactScoreFormatted;
             localStorage.setItem('MF_ACTIVE_STUDENT', JSON.stringify(currentActiveStudent));
 
-            // Silently dispatch WhatsApp Notification to Parent without alerting student
+            // Silently dispatch WhatsApp Notification to Parent
             sendWAPilotMessage(
                 currentActiveStudent.parentPhone,
                 `السلام عليكم ولي أمر الطالب/ة: ${currentActiveStudent.name} 🌸\n`
