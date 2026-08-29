@@ -490,14 +490,19 @@
                     </form>
                 </div>
 
-                <!-- Students Table List with Enhanced Center/Grade Filtering -->
+                <!-- Students Table List with Enhanced Center/Grade Filtering & Export -->
                 <div class="bg-slate-800/80 border border-slate-700 rounded-3xl p-6">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
                         <div>
                             <h3 class="font-black text-base">سجل طلاب السناتر المسجلين</h3>
-                            <p class="text-[11px] text-gray-400">حدد الطلاب من المربعات للتعديل الجماعي في المرحلة أو السنتر</p>
+                            <p class="text-[11px] text-gray-400">حدد الطلاب من المربعات للتعديل الجماعي في المرحلة أو السنتر، أو قم بتصديرهم لإكسيل</p>
                         </div>
-                        <div class="flex flex-wrap gap-2 w-full sm:w-auto">
+                        <div class="flex flex-wrap gap-2 w-full sm:w-auto items-center">
+                            <!-- New Export Button -->
+                            <button onclick="exportStudentsToExcel()" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs flex items-center gap-1.5 shadow transition whitespace-nowrap">
+                                <i class="fa-solid fa-file-arrow-down"></i> تصدير إكسيل للسنتر المحدد
+                            </button>
+
                             <select id="filter-table-by-center" onchange="filterAdminStudentsTable()" class="p-2 rounded-xl bg-slate-900 border border-slate-700 text-xs font-bold text-white"></select>
                             <select id="filter-table-by-grade" onchange="filterAdminStudentsTable()" class="p-2 rounded-xl bg-slate-900 border border-slate-700 text-xs font-bold text-white">
                                 <option value="all">جميع المراحل</option>
@@ -1952,7 +1957,7 @@
             alert(`تم إرسال إشعارات الغياب بنجاح لجميع الغائبين في سنتر ${activeSession.center}!`);
         }
 
-        // ================= 6. EXCEL BULK UPLOAD =================
+        // ================= 6. EXCEL BULK UPLOAD & EXPORT =================
         function downloadExcelTemplate() {
             const templateData = [
                 {
@@ -1981,6 +1986,46 @@
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, "Students_Template");
             XLSX.writeFile(wb, "Mr_Faisal_Students_Template.xlsx");
+        }
+
+        // Export filtered students to Excel
+        function exportStudentsToExcel() {
+            const centerFilter = document.getElementById('filter-table-by-center') ? document.getElementById('filter-table-by-center').value : 'all';
+            const gradeFilter = document.getElementById('filter-table-by-grade') ? document.getElementById('filter-table-by-grade').value : 'all';
+
+            let list = cachedStudents;
+            if (centerFilter !== 'all') list = list.filter(s => s.center === centerFilter);
+            if (gradeFilter !== 'all') list = list.filter(s => s.grade === gradeFilter);
+
+            if (list.length === 0) {
+                alert('لا توجد بيانات طلاب مطابقة للتصدير!');
+                return;
+            }
+
+            const exportData = list.map(s => ({
+                "الكود": s.code,
+                "اسم الطالب": s.name,
+                "رقم الطالب": s.phone,
+                "رقم ولي الأمر": s.parentPhone,
+                "الصف الدراسي": s.grade,
+                "السنتر": s.center,
+                "نظام الدفع": s.paymentPlan || 'غير محدد',
+                "المبلغ المتبقي": s.balanceDue || 0,
+                "عدد الحصص الحاضرة": s.attendanceCount || 0,
+                "آخر دفع": `${s.lastPaymentAmount || 0} ج.م (${s.lastPaymentDate || 'لم يسدد'})`,
+                "آخر درجة امتحان": s.lastExamScore || 'لم يمتحن',
+                "حالة الواجب": s.lastHwExactScore || 'لم يحل'
+            }));
+
+            const ws = XLSX.utils.json_to_sheet(exportData);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Students_Data");
+
+            const fileNameCenter = centerFilter === 'all' ? 'جميع_السناتر' : centerFilter.replace(/\s+/g, '_');
+            const fileNameGrade = gradeFilter === 'all' ? 'جميع_الصفوف' : gradeFilter.replace(/\s+/g, '_');
+            const fileName = `طلاب_${fileNameCenter}_${fileNameGrade}.xlsx`;
+
+            XLSX.writeFile(wb, fileName);
         }
 
         async function handleProcessExcelUpload() {
