@@ -154,9 +154,7 @@
                     <h2 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">سناتر ومواعيد الحصص المعتمدة</h2>
                     <p class="text-xs text-gray-500 mt-1">يتم تحديث المواعيد مباشرة من إدارة السنتر</p>
                 </div>
-                <div id="dynamic-centers-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- Populated by JS -->
-                </div>
+                <div id="dynamic-centers-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
             </div>
         </section>
 
@@ -355,6 +353,19 @@
             }
         }
 
+        // Arabic string normalizer to avoid mismatch in letters, hamzas, or extra spaces
+        function normalizeArabic(text) {
+            if (!text) return '';
+            return text.toString()
+                .trim()
+                .replace(/[\u064B-\u065F]/g, '') // remove tashkeel
+                .replace(/[إأآا]/g, 'ا')
+                .replace(/ى/g, 'ي')
+                .replace(/ة/g, 'ه')
+                .replace(/\s+/g, ' ')
+                .toLowerCase();
+        }
+
         // Firebase Connection
         let db = null;
         try {
@@ -395,7 +406,7 @@
 
             if (db) {
                 try {
-                    const snapshot = await db.collection('centers').orderBy('createdAt', 'desc').get();
+                    const snapshot = await db.collection('centers').get();
                     snapshot.forEach(doc => centers.push(doc.data()));
                 } catch(e) {}
             }
@@ -576,15 +587,28 @@
             }
         }
 
-        function initStudentAccountUI() {
+        async function initStudentAccountUI() {
+            if (!currentActiveStudent) return;
+
+            // Fetch fresh student document from Firestore if possible to ensure latest center/grade
+            if (db && currentActiveStudent.id) {
+                try {
+                    const docSnap = await db.collection('students').doc(currentActiveStudent.id).get();
+                    if (docSnap.exists) {
+                        currentActiveStudent = { id: docSnap.id, ...docSnap.data() };
+                        localStorage.setItem('MF_ACTIVE_STUDENT', JSON.stringify(currentActiveStudent));
+                    }
+                } catch(e) {}
+            }
+
             document.getElementById('nav-student-btn').classList.add('hidden');
             document.getElementById('nav-portal-shortcut').classList.remove('hidden');
             document.getElementById('nav-logout-btn').classList.remove('hidden');
 
-            document.getElementById('sp-name').innerText = currentActiveStudent.name;
-            document.getElementById('sp-center').innerText = currentActiveStudent.center;
-            document.getElementById('sp-code').innerText = currentActiveStudent.code;
-            document.getElementById('sp-grade-badge').innerText = currentActiveStudent.grade;
+            document.getElementById('sp-name').innerText = currentActiveStudent.name || '--';
+            document.getElementById('sp-center').innerText = currentActiveStudent.center || '--';
+            document.getElementById('sp-code').innerText = currentActiveStudent.code || '--';
+            document.getElementById('sp-grade-badge').innerText = currentActiveStudent.grade || '--';
             document.getElementById('sp-payment-plan').innerText = currentActiveStudent.paymentPlan || 'شهري';
             document.getElementById('sp-balance').innerText = `${currentActiveStudent.balanceDue || 0} ج.م`;
 
@@ -611,26 +635,42 @@
             showSection('home');
         }
 
-        // ================= HELPER: CHECK IF HOMEWORK IS ASSIGNED TO STUDENT'S CENTER & GRADE =================
+        // ================= SMART HOMEWORK ELIGIBILITY CHECK =================
         function isHomeworkEligibleForStudent(hw, student) {
             if (!hw || hw.isVisible === false) return false;
             
-            // 1. Check Grade Match
-            if (hw.grade && hw.grade !== student.grade) return false;
+            const stGradeNorm = normalizeArabic(student.grade || '');
+            const hwGradeNorm = normalizeArabic(hw.grade || '');
 
-            // 2. Check Center Match
-            const studentCenter = (student.center || '').trim();
-            const target = (hw.targetCenter || '').trim();
+            // 1. Grade check (supports partial or exact matches)
+            if (hwGradeNorm && stGradeNorm) {
+                const gradeMatches = (hwGradeNorm === stGradeNorm) || 
+                                     stGradeNorm.includes(hwGradeNorm) || 
+                                     hwGradeNorm.includes(stGradeNorm);
+                if (!gradeMatches) return false;
+            }
 
-            // Direct match or all centers
-            if (target === 'all' || target === 'جميع السناتر والمجموعات' || target === '') return true;
-            if (target === studentCenter) return true;
+            // 2. Center check
+            const stCenterNorm = normalizeArabic(student.center || '');
+            const targetNorm = normalizeArabic(hw.targetCenter || '');
 
-            // Check if student's center was added / notified in notifiedCenters array
+            // If targeted to all centers
+            if (!targetNorm || targetNorm === 'all' || targetNorm.includes('جميع') || targetNorm === '') {
+                return true;
+            }
+
+            // If targeted to student's exact center or substring
+            if (stCenterNorm && (targetNorm === stCenterNorm || stCenterNorm.includes(targetNorm) || targetNorm.includes(stCenterNorm))) {
+                return true;
+            }
+
+            // If student's center is in notifiedCenters array
             if (Array.isArray(hw.notifiedCenters)) {
-                if (hw.notifiedCenters.includes('all') || hw.notifiedCenters.includes('جميع السناتر والمجموعات') || hw.notifiedCenters.includes(studentCenter)) {
-                    return true;
-                }
+                const hasMatch = hw.notifiedCenters.some(c => {
+                    const cNorm = normalizeArabic(c);
+                    return cNorm === 'all' || cNorm.includes('جميع') || cNorm === stCenterNorm || (stCenterNorm && (stCenterNorm.includes(cNorm) || cNorm.includes(stCenterNorm)));
+                });
+                if (hasMatch) return true;
             }
 
             return false;
@@ -644,37 +684,45 @@
 
             let homeworkList = [];
 
-            // 1. Fetch from Firestore
+            // 1. Fetch fresh homeworks from Firestore without complex index requirement
             if (db) {
                 try {
-                    const snapshot = await db.collection('homeworks').orderBy('createdAt', 'desc').get();
+                    const snapshot = await db.collection('homeworks').get();
                     snapshot.forEach(doc => {
                         homeworkList.push({ id: doc.id, ...doc.data() });
                     });
-                } catch(e) {
-                    try {
-                        const fallbackSnap = await db.collection('homeworks').get();
-                        fallbackSnap.forEach(doc => homeworkList.push({ id: doc.id, ...doc.data() }));
-                    } catch(err) {}
-                }
+                } catch(e) {}
             }
 
-            // 2. Fallback to LocalStorage
+            // 2. Fallback to LocalStorage if offline
             if (homeworkList.length === 0) {
                 const local = localStorage.getItem('MF_LOCAL_HOMEWORKS');
                 if (local) {
-                    homeworkList = JSON.parse(local);
+                    try { homeworkList = JSON.parse(local); } catch(e) {}
                 }
             }
 
-            // 3. Filter strictly by Grade and Student's Specific Center
+            // 3. Sort by creation date descending (newest first)
+            homeworkList.sort((a, b) => {
+                const timeA = new Date(a.createdAt || 0).getTime();
+                const timeB = new Date(b.createdAt || 0).getTime();
+                return timeB - timeA;
+            });
+
+            // 4. Filter strictly by Grade and Student's Specific Center
             const available = homeworkList.filter(hw => isHomeworkEligibleForStudent(hw, currentActiveStudent));
 
             if (available.length === 0) {
                 alreadySubmittedCard.classList.add('hidden');
                 document.getElementById('hw-title').innerText = 'الواجب الإلكتروني للأسبوع الحالي';
-                document.getElementById('hw-subtitle').innerText = `المجموعة: ${currentActiveStudent.center}`;
-                container.innerHTML = `<p class="text-center text-gray-400 py-6 font-bold">لا يوجد واجب متاح لمجموعتك (${currentActiveStudent.center}) حالياً.</p>`;
+                document.getElementById('hw-subtitle').innerText = `المجموعة: ${currentActiveStudent.center || 'غير محدد'} | الصف: ${currentActiveStudent.grade || 'غير محدد'}`;
+                container.innerHTML = `
+                    <div class="text-center py-8 space-y-2">
+                        <i class="fa-solid fa-folder-open text-4xl text-gray-400 mb-2"></i>
+                        <p class="text-gray-400 font-bold">لا يوجد واجب متاح لمجموعتك (${currentActiveStudent.center}) حالياً.</p>
+                        <p class="text-[11px] text-gray-500">سيظهر الواجب هنا فور نشره من قبل المستر لمجموعتك المحددة.</p>
+                    </div>
+                `;
                 actionBtn.classList.add('hidden');
                 return;
             }
@@ -687,7 +735,7 @@
 
             // Check if student already submitted this homework
             const studentHwHistory = currentActiveStudent.homeworksHistory || [];
-            const isAlreadyDone = studentHwHistory.find(h => h.title === activeHomework.title);
+            const isAlreadyDone = studentHwHistory.find(h => normalizeArabic(h.title) === normalizeArabic(activeHomework.title));
 
             if (isAlreadyDone) {
                 alreadySubmittedCard.classList.remove('hidden');
@@ -702,12 +750,12 @@
             // Render Questions
             const choiceLetters = ['(أ)', '(ب)', '(ج)', '(د)'];
             let html = '';
-            activeHomework.questions.forEach((q, idx) => {
+            (activeHomework.questions || []).forEach((q, idx) => {
                 html += `
                     <div class="p-5 bg-slate-50 dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700">
                         <p class="font-bold text-sm sm:text-base mb-3"><span class="text-brand-700 font-black ml-1">س${idx+1}:</span> ${q.text} <span class="text-xs text-amber-600">(${q.points || 1} درجات)</span></p>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                            ${q.options.map((opt, oIdx) => `
+                            ${(q.options || []).map((opt, oIdx) => `
                                 <label class="flex items-center gap-3 p-3 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 cursor-pointer hover:border-brand-600 transition">
                                     <input type="radio" name="q_${idx}" value="${oIdx}" class="text-brand-600 focus:ring-brand-600">
                                     <span class="text-xs font-bold text-brand-600">${choiceLetters[oIdx] || ''}</span>
@@ -766,15 +814,17 @@
             // Update Local Storage
             const local = localStorage.getItem('MF_LOCAL_STUDENTS');
             if (local) {
-                const list = JSON.parse(local);
-                const st = list.find(s => s.code.toString() === currentActiveStudent.code.toString());
-                if (st) {
-                    st.hwStatus = 'تم الحل والتسليم';
-                    st.lastHwExactScore = exactScoreFormatted;
-                    if (!st.homeworksHistory) st.homeworksHistory = [];
-                    st.homeworksHistory.push(hwRecord);
-                    localStorage.setItem('MF_LOCAL_STUDENTS', JSON.stringify(list));
-                }
+                try {
+                    const list = JSON.parse(local);
+                    const st = list.find(s => s.code.toString() === currentActiveStudent.code.toString());
+                    if (st) {
+                        st.hwStatus = 'تم الحل والتسليم';
+                        st.lastHwExactScore = exactScoreFormatted;
+                        if (!st.homeworksHistory) st.homeworksHistory = [];
+                        st.homeworksHistory.push(hwRecord);
+                        localStorage.setItem('MF_LOCAL_STUDENTS', JSON.stringify(list));
+                    }
+                } catch(e) {}
             }
 
             if (!currentActiveStudent.homeworksHistory) currentActiveStudent.homeworksHistory = [];
