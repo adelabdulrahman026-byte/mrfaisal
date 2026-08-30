@@ -303,9 +303,11 @@
                             </h3>
                             <p class="text-xs text-gray-300 mt-1">تأكد من وجود أعمدة: اسم الطالب، الكود، السنتر، رقم الطالب، رقم ولي الأمر</p>
                         </div>
-                        <button onclick="downloadExcelTemplate()" class="px-4 py-2.5 bg-emerald-700 hover:bg-emerald-600 text-white font-bold rounded-xl text-xs flex items-center gap-2 shadow transition whitespace-nowrap">
-                            <i class="fa-solid fa-download"></i> تحميل شيت إكسيل تجريبي (Template)
-                        </button>
+                        <div class="flex flex-wrap gap-2">
+                            <button onclick="downloadExcelTemplate()" class="px-4 py-2.5 bg-slate-700 hover:bg-slate-600 text-white font-bold rounded-xl text-xs flex items-center gap-2 shadow transition whitespace-nowrap">
+                                <i class="fa-solid fa-download"></i> تحميل شيت تجريبي (Template)
+                            </button>
+                        </div>
                     </div>
 
                     <div class="flex flex-col sm:flex-row gap-3 items-center pt-2">
@@ -359,9 +361,14 @@
                     <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-3 mb-4">
                         <div>
                             <h3 class="font-black text-base">دليل طلاب السناتر المسجلين</h3>
-                            <p class="text-[11px] text-gray-400">انقر على "فحص الواجبات" لأي طالب لعرض سجله مباشرة</p>
+                            <p class="text-[11px] text-gray-400">انقر على "فحص الواجبات" لأي طالب لعرض سجله مباشرة أو حمّل الإكسيل مرتباً بالأكواد</p>
                         </div>
                         <div class="flex flex-wrap items-center gap-2 w-full lg:w-auto">
+                            <!-- زر تصدير إكسيل مرتب تصاعدياً بالكود -->
+                            <button onclick="exportStudentsToExcelSorted()" class="px-3.5 py-2.5 bg-emerald-700 hover:bg-emerald-600 text-white font-bold rounded-xl text-xs flex items-center gap-1.5 transition shadow whitespace-nowrap" title="تصدير بيانات الطلاب إلى Excel مرتبة من أصغر كود إلى أكبر كود">
+                                <i class="fa-solid fa-file-excel text-sm"></i> تصدير إكسيل (مرتب بالأكواد)
+                            </button>
+
                             <select id="filter-table-by-center" onchange="filterAdminStudentsTable()" class="p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs font-bold text-white"></select>
                             <select id="filter-table-by-grade" onchange="filterAdminStudentsTable()" class="p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs font-bold text-white">
                                 <option value="all">جميع المراحل</option>
@@ -821,7 +828,6 @@
             const now = new Date();
             const timeStr = now.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
             
-            // Avoid duplicate contiguous logging
             if (!liveSessionScannedLog.some(item => item.code === student.code && item.time === timeStr)) {
                 liveSessionScannedLog.unshift({
                     name: student.name,
@@ -1122,7 +1128,7 @@
             loadHomeworksList();
         }
 
-        // ================= 3. STUDENTS MANAGEMENT & EXCEL =================
+        // ================= 3. STUDENTS MANAGEMENT & SORTED EXCEL EXPORT =================
         function downloadExcelTemplate() {
             const templateData = [
                 {
@@ -1147,6 +1153,52 @@
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, "Students_Template");
             XLSX.writeFile(wb, "Mr_Faisal_Students_Template.xlsx");
+        }
+
+        // وظيفة تصدير الطلاب إلى ملف Excel مرتبين تصاعدياً حسب الكود (من الأصغر للأكبر)
+        function exportStudentsToExcelSorted() {
+            const centerFilter = document.getElementById('filter-table-by-center') ? document.getElementById('filter-table-by-center').value : 'all';
+            const gradeFilter = document.getElementById('filter-table-by-grade') ? document.getElementById('filter-table-by-grade').value : 'all';
+
+            let targetList = [...cachedStudents];
+
+            if (centerFilter !== 'all') {
+                targetList = targetList.filter(s => s.center === centerFilter);
+            }
+            if (gradeFilter !== 'all') {
+                targetList = targetList.filter(s => s.grade === gradeFilter);
+            }
+
+            if (targetList.length === 0) {
+                alert('لا يوجد طلاب مسجلين لتصديرهم وفق الفلتر المحدد!');
+                return;
+            }
+
+            // ترتيب داتا الطلاب تصاعدياً برقم الكود (من الأصغر للأكبر)
+            targetList.sort((a, b) => {
+                const codeA = parseInt(a.code, 10) || 0;
+                const codeB = parseInt(b.code, 10) || 0;
+                return codeA - codeB;
+            });
+
+            // تجهيز أعمدة الإكسيل المطلوبة
+            const exportData = targetList.map(s => ({
+                "الكود": Number(s.code) || s.code,
+                "اسم الطالب": s.name || '',
+                "السنتر": s.center || '',
+                "الصف الدراسي": s.grade || '',
+                "رقم تليفون الطالب": s.phone || '',
+                "رقم ولي الأمر": s.parentPhone || '',
+                "آخر درجة واجب": s.lastHwExactScore || 'لم يحل',
+                "إجمالي الواجبات المسلمة": (s.homeworksHistory || []).length
+            }));
+
+            const ws = XLSX.utils.json_to_sheet(exportData);
+            const wb = XLSX.utils.book_new();
+            
+            const centerNameSanitized = centerFilter === 'all' ? 'جميع_السناتر' : centerFilter.replace(/\s+/g, '_');
+            XLSX.utils.book_append_sheet(wb, ws, "الطلاب_مرتبين");
+            XLSX.writeFile(wb, `طلاب_${centerNameSanitized}_مرتبين_بالأكواد.xlsx`);
         }
 
         async function handleProcessExcelUpload() {
