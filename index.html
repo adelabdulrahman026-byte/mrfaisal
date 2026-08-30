@@ -332,26 +332,20 @@
     <!-- Student Login Modal -->
     <div id="studentLoginModal" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-800 w-full max-w-md rounded-3xl p-8 border border-slate-200 dark:border-slate-700 shadow-2xl relative">
-            <button onclick="closeModal('studentLoginModal')" class="absolute top-6 left-6 text-gray-400"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <button onclick="closeModal('studentLoginModal')" class="absolute top-6 left-6 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition"><i class="fa-solid fa-xmark text-xl"></i></button>
             <div class="text-center mb-6">
+                <div class="w-14 h-14 bg-brand-100 dark:bg-brand-950 text-brand-700 dark:text-brand-400 rounded-2xl flex items-center justify-center mx-auto text-2xl mb-3">
+                    <i class="fa-solid fa-id-card"></i>
+                </div>
                 <h3 class="text-2xl font-black">تسجيل دخول الطالب</h3>
-                <p class="text-xs text-gray-500 mt-1">ادخل رقم تليفونك (بدون كود الدولة) وكود السنتر</p>
+                <p class="text-xs text-gray-500 mt-1">ادخل كود الطالب التعريفي المسجل بالسنتر</p>
             </div>
             <form onsubmit="handleStudentLogin(event)" class="space-y-4">
                 <div>
-                    <label class="block text-xs font-bold mb-1">رقم تليفون الطالب:</label>
-                    <div class="flex rounded-xl border border-slate-300 dark:border-slate-700 overflow-hidden bg-slate-50 dark:bg-slate-900 focus-within:border-brand-600 transition" dir="ltr">
-                        <span class="inline-flex items-center px-3.5 bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-mono font-bold text-sm select-none border-r border-slate-300 dark:border-slate-700">
-                            +20
-                        </span>
-                        <input type="tel" id="st-login-phone" required placeholder="01XXXXXXXXX أو 1XXXXXXXXX" class="w-full p-3.5 bg-transparent text-sm font-mono focus:outline-none dark:text-white">
-                    </div>
+                    <label class="block text-xs font-bold mb-1.5 text-slate-700 dark:text-slate-300">كود الطالب في السنتر:</label>
+                    <input type="text" id="st-login-code" required placeholder="مثال: 101" autofocus class="w-full p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-center font-bold text-lg font-mono focus:outline-none focus:border-brand-600 transition">
                 </div>
-                <div>
-                    <label class="block text-xs font-bold mb-1">كود الطالب في السنتر (أرقام فقط):</label>
-                    <input type="number" id="st-login-code" required placeholder="مثال: 101" class="w-full p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-sm font-mono">
-                </div>
-                <button type="submit" class="w-full py-3.5 bg-brand-700 hover:bg-brand-800 text-white font-bold rounded-xl text-sm shadow">دخول وحل الواجب</button>
+                <button type="submit" class="w-full py-3.5 bg-brand-700 hover:bg-brand-800 text-white font-bold rounded-xl text-sm shadow transition">دخول وحل الواجب</button>
             </form>
         </div>
     </div>
@@ -367,7 +361,11 @@
 
         function openModal(id) { 
             const el = document.getElementById(id);
-            if (el) el.classList.remove('hidden');
+            if (el) {
+                el.classList.remove('hidden');
+                const input = el.querySelector('input');
+                if (input) setTimeout(() => input.focus(), 100);
+            }
         }
 
         function closeModal(id) { 
@@ -479,6 +477,7 @@
             if (db) {
                 try {
                     let snapshot = await db.collection('students').where('code', '==', query).get();
+                    if (snapshot.empty) snapshot = await db.collection('students').where('code', '==', Number(query)).get();
                     if (snapshot.empty) snapshot = await db.collection('students').where('phone', '==', query).get();
                     if (snapshot.empty) snapshot = await db.collection('students').where('parentPhone', '==', query).get();
                     if (!snapshot.empty) studentData = snapshot.docs[0].data();
@@ -556,39 +555,30 @@
                 `).reverse().join('');
         }
 
-        // Normalize Phone Number
-        function normalizePhoneNumber(phoneStr) {
-            if (!phoneStr) return '';
-            let cleaned = phoneStr.toString().replace(/\D/g, '');
-            if (cleaned.startsWith('20')) cleaned = cleaned.substring(2);
-            if (cleaned.startsWith('0')) cleaned = cleaned.substring(1);
-            return cleaned;
-        }
-
-        // Student Auth
+        // Student Auth (Code Only)
         async function handleStudentLogin(e) {
             e.preventDefault();
-            const rawPhone = document.getElementById('st-login-phone').value.trim();
             const code = document.getElementById('st-login-code').value.trim();
 
-            const normalizedEnteredPhone = normalizePhoneNumber(rawPhone);
+            if (!code) {
+                alert('يرجى إدخال كود الطالب أولاً!');
+                return;
+            }
+
             let matchedStudent = null;
 
             if (db) {
                 try {
-                    const snapshot = await db.collection('students')
-                        .where('code', '==', code)
-                        .get();
+                    // Try string code first
+                    let snapshot = await db.collection('students').where('code', '==', code).get();
+                    if (snapshot.empty && !isNaN(code)) {
+                        // Try numeric code fallback
+                        snapshot = await db.collection('students').where('code', '==', Number(code)).get();
+                    }
 
                     if (!snapshot.empty) {
-                        for (let doc of snapshot.docs) {
-                            const data = doc.data();
-                            const dbPhoneNormalized = normalizePhoneNumber(data.phone);
-                            if (dbPhoneNormalized === normalizedEnteredPhone || data.phone === rawPhone) {
-                                matchedStudent = { id: doc.id, ...data };
-                                break;
-                            }
-                        }
+                        const doc = snapshot.docs[0];
+                        matchedStudent = { id: doc.id, ...doc.data() };
                     }
                 } catch(err) {}
             }
@@ -597,11 +587,7 @@
                 const local = localStorage.getItem('MF_LOCAL_STUDENTS');
                 if (local) {
                     const list = JSON.parse(local);
-                    matchedStudent = list.find(s => {
-                        if (s.code.toString() !== code.toString()) return false;
-                        const dbPhoneNormalized = normalizePhoneNumber(s.phone);
-                        return dbPhoneNormalized === normalizedEnteredPhone || s.phone === rawPhone;
-                    });
+                    matchedStudent = list.find(s => s.code.toString() === code.toString());
                 }
             }
 
@@ -612,7 +598,7 @@
                 initStudentAccountUI();
                 showSection('student-portal');
             } else {
-                alert('بيانات الدخول غير صحيحة! تأكد من رقم التليفون وكود السنتر.');
+                alert('كود الطالب غير صحيح أو غير مسجل بالسنتر!');
             }
         }
 
