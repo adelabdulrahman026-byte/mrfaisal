@@ -92,7 +92,7 @@
                         </p>
                         <div class="pt-2 flex flex-wrap gap-3 justify-center lg:justify-start">
                             <button onclick="handleHeroActionButton()" class="px-7 py-3.5 bg-amber-400 hover:bg-amber-300 text-slate-950 font-black rounded-2xl shadow-lg transition">
-                                حل واجب الأسبوع الحالي
+                                عرض وحل الواجبات
                             </button>
                             <button onclick="showSection('parent-portal')" class="px-7 py-3.5 bg-white/10 hover:bg-white/20 border border-white/20 font-bold rounded-2xl transition">
                                 استعلام ولي الأمر برقم الكود
@@ -107,7 +107,7 @@
                 </div>
             </div>
 
-            <!-- SECTION: منصاتنا التعليمية -->
+            <!-- منصاتنا التعليمية -->
             <div class="max-w-7xl mx-auto px-4 sm:px-6 py-16">
                 <div class="text-center mb-10">
                     <span class="text-brand-600 font-extrabold text-xs uppercase tracking-wider">منظومة التعلم عن بعد</span>
@@ -116,7 +116,6 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-                    <!-- Mega Academy -->
                     <a href="https://www.mrfaisal.net/cors" target="_blank" class="group bg-white dark:bg-slate-800 p-8 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-md hover:shadow-2xl hover:border-brand-500 transition duration-300 flex flex-col justify-between">
                         <div>
                             <div class="w-16 h-16 rounded-2xl bg-purple-100 dark:bg-purple-950 text-brand-600 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition">
@@ -131,7 +130,6 @@
                         </div>
                     </a>
 
-                    <!-- Primee Academy -->
                     <a href="https://www.primeeacademy.com" target="_blank" class="group bg-white dark:bg-slate-800 p-8 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-md hover:shadow-2xl hover:border-amber-500 transition duration-300 flex flex-col justify-between">
                         <div>
                             <div class="w-16 h-16 rounded-2xl bg-amber-100 dark:bg-amber-950 text-amber-600 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition">
@@ -166,12 +164,37 @@
                         <i class="fa-solid fa-user-shield"></i>
                     </div>
                     <h2 class="text-2xl font-black">بوابة متابعة ولي الأمر الشاملة</h2>
-                    <p class="text-xs text-gray-500 mt-1">ادخل كود الطالب الرقمي أو رقم التليفون لعرض تقرير الحصص والواجبات والماليات بالتفصيل</p>
+                    <p class="text-xs text-gray-500 mt-1">اختر نظام دراسة الطالب ثم ادخل البيانات للاستعلام</p>
                 </div>
 
-                <div class="flex gap-2 max-w-lg mx-auto mb-8">
-                    <input type="number" id="parent-search-input" placeholder="ادخل كود الطالب الرقمي (مثال: 101) أو رقم التليفون..." class="w-full p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-sm font-bold focus:outline-none focus:border-brand-600 font-mono">
-                    <button onclick="searchParentStudentData()" class="px-6 py-3.5 bg-brand-700 hover:bg-brand-800 text-white font-black rounded-2xl text-sm whitespace-nowrap shadow-md">
+                <!-- Type Selector For Parent -->
+                <div class="flex justify-center gap-3 max-w-md mx-auto mb-6">
+                    <button type="button" onclick="setParentLoginType('center')" id="parent-type-center" class="flex-1 py-2.5 rounded-xl border text-xs font-bold transition bg-brand-700 text-white border-brand-700">
+                        <i class="fa-solid fa-school ml-1"></i> طالب سنتر
+                    </button>
+                    <button type="button" onclick="setParentLoginType('online')" id="parent-type-online" class="flex-1 py-2.5 rounded-xl border text-xs font-bold transition bg-slate-100 dark:bg-slate-900 text-gray-600 dark:text-gray-300 border-slate-200 dark:border-slate-700">
+                        <i class="fa-solid fa-globe ml-1"></i> طالب أونلاين
+                    </button>
+                </div>
+
+                <div class="max-w-lg mx-auto mb-8 space-y-3">
+                    <div id="parent-center-input-wrap">
+                        <input type="text" id="parent-search-input" placeholder="ادخل كود الطالب في السنتر (مثال: 101)..." class="w-full p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-sm font-bold focus:outline-none focus:border-brand-600 font-mono text-center">
+                    </div>
+
+                    <div id="parent-online-input-wrap" class="hidden space-y-1.5">
+                        <div class="flex rounded-2xl border border-slate-300 dark:border-slate-700 overflow-hidden bg-slate-50 dark:bg-slate-900">
+                            <span class="p-3.5 bg-slate-200 dark:bg-slate-800 text-xs font-bold font-mono text-slate-700 dark:text-slate-300 border-l border-slate-300 dark:border-slate-700 flex items-center">
+                                🇪🇬 +20
+                            </span>
+                            <input type="tel" id="parent-online-phone-input" placeholder="10XXXXXXXX" class="w-full p-3.5 bg-transparent text-sm font-bold focus:outline-none font-mono text-center">
+                        </div>
+                        <p class="text-[11px] text-amber-600 dark:text-amber-400 text-center font-bold">
+                            * اكتب رقم الموبايل من غير الصفر الأول
+                        </p>
+                    </div>
+
+                    <button onclick="searchParentStudentData()" class="w-full py-3.5 bg-brand-700 hover:bg-brand-800 text-white font-black rounded-2xl text-sm shadow-md transition">
                         بحث ومتابعة
                     </button>
                 </div>
@@ -233,9 +256,9 @@
             </div>
         </section>
 
-        <!-- 3. STUDENT ACCOUNT -->
+        <!-- 3. STUDENT ACCOUNT & HOMEWORK HUB -->
         <section id="sec-student-portal" class="page-sec hidden max-w-5xl mx-auto px-4 py-10">
-            <!-- Student Header Profile with Direct QR Code Display -->
+            <!-- Student Header Profile with QR Code -->
             <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-700 shadow-xl mb-8">
                 <div class="flex flex-col lg:flex-row justify-between items-center gap-8">
                     <!-- Text Info -->
@@ -261,48 +284,64 @@
                             <div id="student-main-qr-box" class="flex justify-center"></div>
                         </div>
                         <p class="text-xs font-black text-brand-700 dark:text-brand-400 max-w-[220px] mx-auto leading-relaxed">
-                            كارت الـ QR الذكي الخاص بك لتسجيل الحضور والغياب واستلام وتأكيد الواجبات في السنتر
+                            كارت الـ QR الذكي الخاص بك لتسجيل الحضور وتأكيد الواجبات
                         </p>
                     </div>
                 </div>
             </div>
 
-            <!-- Homework Solver & Status View -->
-            <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-700 shadow-md mb-8">
-                <div class="flex justify-between items-center mb-6 pb-4 border-b border-slate-200 dark:border-slate-700">
+            <!-- VIEW 1: ALL AVAILABLE HOMEWORKS LIST (MAIN DASHBOARD) -->
+            <div id="student-homeworks-hub" class="space-y-6 mb-8">
+                <div class="flex justify-between items-center bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
                     <div>
-                        <h3 id="hw-title" class="text-xl font-black text-brand-700 dark:text-brand-400">الواجب الإلكتروني للأسبوع الحالي</h3>
-                        <p id="hw-subtitle" class="text-xs text-gray-500 mt-1">يتم تصحيح الإجابات إلكترونياً وحساب درجتك فورياً</p>
+                        <h3 class="text-lg font-black text-slate-900 dark:text-white flex items-center gap-2">
+                            <i class="fa-solid fa-list-check text-brand-600"></i> قائمة كافة الواجبات المتاحة لك
+                        </h3>
+                        <p class="text-xs text-gray-500 mt-0.5">اختر الواجب للبدء في حله أو مراجعة درجاتك وإجاباتك السابقة</p>
                     </div>
-                    <span id="hw-badge-status" class="px-3 py-1 bg-amber-100 text-amber-800 text-xs font-black rounded-lg">إجباري</span>
+                    <span id="all-hw-count-badge" class="px-3.5 py-1.5 bg-brand-100 text-brand-800 dark:bg-brand-950 dark:text-brand-300 font-black text-xs rounded-xl">
+                        0 واجب متاح
+                    </span>
                 </div>
 
-                <!-- State 1: Homework Already Submitted -->
-                <div id="hw-already-submitted-card" class="hidden p-8 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 rounded-3xl text-center space-y-4">
-                    <div class="w-16 h-16 bg-emerald-500 text-white rounded-2xl flex items-center justify-center text-3xl mx-auto shadow-md">
-                        <i class="fa-solid fa-circle-check"></i>
-                    </div>
+                <!-- Grid of Homework Cards -->
+                <div id="all-homeworks-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <p class="text-center text-gray-400 py-8 col-span-2 text-sm font-bold">جاري تحميل واجباتك المتاحة...</p>
+                </div>
+            </div>
+
+            <!-- VIEW 2: ACTIVE HOMEWORK QUESTIONS SOLVER (HIDDEN BY DEFAULT) -->
+            <div id="student-homework-solver-view" class="hidden bg-white dark:bg-slate-800 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-700 shadow-md mb-8">
+                <!-- Top Navigation in Solver -->
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 pb-4 border-b border-slate-200 dark:border-slate-700">
                     <div>
-                        <h4 class="text-2xl font-black text-emerald-800 dark:text-emerald-300">تم تسليم هذا الواجب بنجاح</h4>
-                        <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">درجتك المحصلة الحالية: <span id="hw-student-final-score" class="font-black text-emerald-600 text-lg">--</span></p>
-                        <p class="text-xs text-gray-400 mt-1">يمكنك مراجعة إجاباتك أو تعديل أي سؤال وإعادة التسليم في أي وقت.</p>
+                        <div class="flex items-center gap-2">
+                            <button onclick="backToHomeworksList()" class="px-3 py-1.5 bg-slate-100 dark:bg-slate-900 hover:bg-slate-200 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-bold transition flex items-center gap-1">
+                                <i class="fa-solid fa-arrow-right"></i> رجوع لكل الواجبات
+                            </button>
+                            <span id="active-hw-badge-status" class="px-3 py-1 bg-amber-100 text-amber-800 text-xs font-black rounded-lg">إجباري</span>
+                        </div>
+                        <h3 id="active-hw-solver-title" class="text-xl font-black text-brand-700 dark:text-brand-400 mt-2">--</h3>
+                        <p id="active-hw-solver-subtitle" class="text-xs text-gray-500 mt-0.5">--</p>
                     </div>
-                    <div>
-                        <button onclick="enableHomeworkEditMode()" class="px-6 py-3 bg-amber-500 hover:bg-amber-600 text-slate-950 font-black rounded-2xl text-sm shadow-md transition inline-flex items-center gap-2">
-                            <i class="fa-solid fa-pen-to-square"></i>
-                            <span>تعديل الإجابات وإعادة الحل</span>
-                        </button>
+
+                    <div id="solver-score-indicator" class="hidden text-right">
+                        <span class="text-[10px] text-gray-400 block font-bold">درجتك المحصلة:</span>
+                        <span id="active-hw-score-display" class="text-2xl font-black text-emerald-600 font-mono">--</span>
                     </div>
                 </div>
 
-                <!-- State 2: Active Questions -->
-                <div id="hw-questions-container" class="space-y-6">
-                    <p class="text-center text-gray-400 py-6">جاري فحص الواجبات المتاحة لمجموعتك...</p>
-                </div>
+                <!-- State: Questions Box -->
+                <div id="hw-questions-container" class="space-y-6"></div>
 
-                <div id="hw-submit-action" class="mt-8 hidden">
-                    <button onclick="submitHomeworkAnswers()" class="w-full py-4 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-lg rounded-2xl shadow-lg transition">
-                        تسجيل وإرسال إجابة الواجب الآن
+                <!-- Actions -->
+                <div class="mt-8 flex flex-col sm:flex-row gap-3">
+                    <button onclick="submitHomeworkAnswers()" id="btn-submit-answers-final" class="flex-1 py-4 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-base rounded-2xl shadow-lg transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                        <span id="btn-submit-text">تسجيل وإرسال إجابة الواجب</span>
+                    </button>
+                    <button onclick="backToHomeworksList()" class="px-6 py-4 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-800 dark:text-white font-bold text-sm rounded-2xl transition">
+                        إلغاء والعودة
                     </button>
                 </div>
             </div>
@@ -338,20 +377,92 @@
                     <i class="fa-solid fa-id-card"></i>
                 </div>
                 <h3 class="text-2xl font-black">تسجيل دخول الطالب</h3>
-                <p class="text-xs text-gray-500 mt-1">ادخل كود الطالب التعريفي المسجل بالسنتر</p>
+                <p class="text-xs text-gray-500 mt-1">اختر نظامك الدراسي لتسجيل الدخول</p>
             </div>
+
+            <!-- Mode Selector -->
+            <div class="flex justify-center gap-3 mb-5">
+                <button type="button" onclick="setStudentLoginType('center')" id="st-type-center" class="flex-1 py-2.5 rounded-xl border text-xs font-bold transition bg-brand-700 text-white border-brand-700">
+                    <i class="fa-solid fa-school ml-1"></i> طالب سنتر
+                </button>
+                <button type="button" onclick="setStudentLoginType('online')" id="st-type-online" class="flex-1 py-2.5 rounded-xl border text-xs font-bold transition bg-slate-100 dark:bg-slate-900 text-gray-600 dark:text-gray-300 border-slate-200 dark:border-slate-700">
+                    <i class="fa-solid fa-globe ml-1"></i> طالب أونلاين
+                </button>
+            </div>
+
             <form onsubmit="handleStudentLogin(event)" class="space-y-4">
-                <div>
+                <!-- Center Input -->
+                <div id="st-center-input-wrap">
                     <label class="block text-xs font-bold mb-1.5 text-slate-700 dark:text-slate-300">كود الطالب في السنتر:</label>
-                    <input type="text" id="st-login-code" required placeholder="مثال: 101" autofocus class="w-full p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-center font-bold text-lg font-mono focus:outline-none focus:border-brand-600 transition">
+                    <input type="text" id="st-login-code" placeholder="مثال: 101" autofocus class="w-full p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-center font-bold text-lg font-mono focus:outline-none focus:border-brand-600 transition">
                 </div>
-                <button type="submit" class="w-full py-3.5 bg-brand-700 hover:bg-brand-800 text-white font-bold rounded-xl text-sm shadow transition">دخول وحل الواجب</button>
+
+                <!-- Online Input -->
+                <div id="st-online-input-wrap" class="hidden space-y-1.5">
+                    <label class="block text-xs font-bold mb-1 text-slate-700 dark:text-slate-300">رقم موبايل الطالب (أونلاين):</label>
+                    <div class="flex rounded-xl border border-slate-300 dark:border-slate-700 overflow-hidden bg-slate-50 dark:bg-slate-900">
+                        <span class="p-3 bg-slate-200 dark:bg-slate-800 text-xs font-bold font-mono text-slate-700 dark:text-slate-300 border-l border-slate-300 dark:border-slate-700 flex items-center">
+                            🇪🇬 +20
+                        </span>
+                        <input type="tel" id="st-login-phone" placeholder="10XXXXXXXX" class="w-full p-3.5 bg-transparent text-center font-bold text-base font-mono focus:outline-none">
+                    </div>
+                    <p class="text-[11px] text-amber-600 dark:text-amber-400 font-bold text-center">
+                        * اكتب رقم موبايلك من غير الصفر الأول (مثال: 1012345678)
+                    </p>
+                </div>
+
+                <button type="submit" id="btn-login-action" class="w-full py-3.5 bg-brand-700 hover:bg-brand-800 text-white font-bold rounded-xl text-sm shadow transition">دخول وعرض الواجبات</button>
             </form>
         </div>
     </div>
 
     <!-- JAVASCRIPT ENGINE -->
     <script>
+        let currentStudentLoginType = 'center';
+        let currentParentLoginType = 'center';
+
+        function setStudentLoginType(type) {
+            currentStudentLoginType = type;
+            const btnCenter = document.getElementById('st-type-center');
+            const btnOnline = document.getElementById('st-type-online');
+            const wrapCenter = document.getElementById('st-center-input-wrap');
+            const wrapOnline = document.getElementById('st-online-input-wrap');
+
+            if (type === 'center') {
+                btnCenter.className = "flex-1 py-2.5 rounded-xl border text-xs font-bold transition bg-brand-700 text-white border-brand-700";
+                btnOnline.className = "flex-1 py-2.5 rounded-xl border text-xs font-bold transition bg-slate-100 dark:bg-slate-900 text-gray-600 dark:text-gray-300 border-slate-200 dark:border-slate-700";
+                wrapCenter.classList.remove('hidden');
+                wrapOnline.classList.add('hidden');
+                setTimeout(() => document.getElementById('st-login-code').focus(), 50);
+            } else {
+                btnOnline.className = "flex-1 py-2.5 rounded-xl border text-xs font-bold transition bg-brand-700 text-white border-brand-700";
+                btnCenter.className = "flex-1 py-2.5 rounded-xl border text-xs font-bold transition bg-slate-100 dark:bg-slate-900 text-gray-600 dark:text-gray-300 border-slate-200 dark:border-slate-700";
+                wrapOnline.classList.remove('hidden');
+                wrapCenter.classList.add('hidden');
+                setTimeout(() => document.getElementById('st-login-phone').focus(), 50);
+            }
+        }
+
+        function setParentLoginType(type) {
+            currentParentLoginType = type;
+            const btnCenter = document.getElementById('parent-type-center');
+            const btnOnline = document.getElementById('parent-type-online');
+            const wrapCenter = document.getElementById('parent-center-input-wrap');
+            const wrapOnline = document.getElementById('parent-online-input-wrap');
+
+            if (type === 'center') {
+                btnCenter.className = "flex-1 py-2.5 rounded-xl border text-xs font-bold transition bg-brand-700 text-white border-brand-700";
+                btnOnline.className = "flex-1 py-2.5 rounded-xl border text-xs font-bold transition bg-slate-100 dark:bg-slate-900 text-gray-600 dark:text-gray-300 border-slate-200 dark:border-slate-700";
+                wrapCenter.classList.remove('hidden');
+                wrapOnline.classList.add('hidden');
+            } else {
+                btnOnline.className = "flex-1 py-2.5 rounded-xl border text-xs font-bold transition bg-brand-700 text-white border-brand-700";
+                btnCenter.className = "flex-1 py-2.5 rounded-xl border text-xs font-bold transition bg-slate-100 dark:bg-slate-900 text-gray-600 dark:text-gray-300 border-slate-200 dark:border-slate-700";
+                wrapOnline.classList.remove('hidden');
+                wrapCenter.classList.add('hidden');
+            }
+        }
+
         function showSection(secId) {
             document.querySelectorAll('.page-sec').forEach(el => el.classList.add('hidden'));
             const target = document.getElementById('sec-' + secId);
@@ -381,7 +492,6 @@
             }
         }
 
-        // Arabic string normalizer
         function normalizeArabic(text) {
             if (!text) return '';
             return text.toString()
@@ -392,6 +502,21 @@
                 .replace(/ة/g, 'ه')
                 .replace(/\s+/g, ' ')
                 .toLowerCase();
+        }
+
+        // تنظيف وتجهيز كود الموبايل الأونلاين بإضافة 20 في البداية
+        function formatOnlinePhoneToCode(rawPhone) {
+            if (!rawPhone) return '';
+            let digitsOnly = rawPhone.toString().replace(/\D/g, '');
+            // حذف أي أصفار في البداية
+            while (digitsOnly.startsWith('0')) {
+                digitsOnly = digitsOnly.substring(1);
+            }
+            // إذا كان الطالب كتب 20 بالخطأ نحذفها لتوحيد الإضافة
+            if (digitsOnly.startsWith('20')) {
+                digitsOnly = digitsOnly.substring(2);
+            }
+            return '20' + digitsOnly;
         }
 
         // Firebase Connection
@@ -412,6 +537,7 @@
 
         let currentActiveStudent = null;
         let activeHomework = null;
+        let eligibleHomeworksList = [];
 
         window.addEventListener('DOMContentLoaded', () => {
             const savedSession = localStorage.getItem('MF_ACTIVE_STUDENT');
@@ -426,7 +552,6 @@
             loadCentersFromDB();
         });
 
-        // Load Centers
         async function loadCentersFromDB() {
             const container = document.getElementById('dynamic-centers-list');
             let centers = [];
@@ -440,11 +565,13 @@
 
             if (centers.length === 0) {
                 const local = localStorage.getItem('MF_LOCAL_CENTERS');
-                if (local) centers = JSON.parse(local);
+                if (local) {
+                    try { centers = JSON.parse(local); } catch(e) {}
+                }
             }
 
             if (centers.length === 0) {
-                container.innerHTML = `<p class="text-center text-gray-400 py-6 sm:col-span-3 font-bold">لا توجد سناتر مضافة بعد (يتم إضافتها من لوحة الإدارة).</p>`;
+                container.innerHTML = `<p class="text-center text-gray-400 py-6 sm:col-span-3 font-bold">لا توجد سناتر مضافة بعد.</p>`;
                 return;
             }
 
@@ -466,34 +593,60 @@
 
         // Parent Search Dossier
         async function searchParentStudentData() {
-            const query = document.getElementById('parent-search-input').value.trim();
-            if (!query) {
-                alert('يرجى كتابة كود الطالب أو رقم التليفون!');
-                return;
+            let targetSearchCode = '';
+
+            if (currentParentLoginType === 'center') {
+                targetSearchCode = document.getElementById('parent-search-input').value.trim();
+                if (!targetSearchCode) {
+                    alert('يرجى إدخال كود الطالب في السنتر أولاً!');
+                    return;
+                }
+            } else {
+                const rawPhone = document.getElementById('parent-online-phone-input').value.trim();
+                if (!rawPhone) {
+                    alert('يرجى كتابة رقم موبايل الطالب الأونلاين (بدون صفر)!');
+                    return;
+                }
+                targetSearchCode = formatOnlinePhoneToCode(rawPhone);
             }
 
             let studentData = null;
 
             if (db) {
                 try {
-                    let snapshot = await db.collection('students').where('code', '==', query).get();
-                    if (snapshot.empty) snapshot = await db.collection('students').where('code', '==', Number(query)).get();
-                    if (snapshot.empty) snapshot = await db.collection('students').where('phone', '==', query).get();
-                    if (snapshot.empty) snapshot = await db.collection('students').where('parentPhone', '==', query).get();
-                    if (!snapshot.empty) studentData = snapshot.docs[0].data();
+                    let snapshot = await db.collection('students').where('code', '==', targetSearchCode).get();
+                    if (snapshot.empty && !isNaN(targetSearchCode)) {
+                        snapshot = await db.collection('students').where('code', '==', Number(targetSearchCode)).get();
+                    }
+                    if (snapshot.empty) {
+                        snapshot = await db.collection('students').where('phone', '==', targetSearchCode).get();
+                    }
+                    if (snapshot.empty) {
+                        snapshot = await db.collection('students').where('parentPhone', '==', targetSearchCode).get();
+                    }
+
+                    if (!snapshot.empty) {
+                        studentData = { id: snapshot.docs[0].id, ...snapshot.docs[0].data() };
+                    }
                 } catch(e) {}
             }
 
             if (!studentData) {
                 const local = localStorage.getItem('MF_LOCAL_STUDENTS');
                 if (local) {
-                    const list = JSON.parse(local);
-                    studentData = list.find(s => s.code.toString() === query || s.phone === query || s.parentPhone === query);
+                    try {
+                        const list = JSON.parse(local);
+                        studentData = list.find(s => 
+                            (s.code && s.code.toString().trim() === targetSearchCode) ||
+                            (s.phone && s.phone.toString().trim() === targetSearchCode) ||
+                            (s.parentPhone && s.parentPhone.toString().trim() === targetSearchCode)
+                        );
+                    } catch(e) {}
                 }
             }
 
             if (!studentData) {
-                alert('عفواً، لم يتم العثور على طالب مسجل بهذا الكود أو الرقم!');
+                alert(`عفواً، لم يتم العثور على طالب مسجل بالبيانات المدخلة (${targetSearchCode})!`);
                 return;
             }
 
@@ -510,7 +663,6 @@
             document.getElementById('parent-st-last-pay-date').innerText = `بتاريخ: ${s.lastPaymentDate || 'لم يسدد بعد'}`;
             document.getElementById('parent-st-attendance-count').innerText = `${s.attendanceCount || 0} حصص`;
 
-            // Logs
             const hwContainer = document.getElementById('parent-hw-history-list');
             const hwList = s.homeworksHistory || [];
             hwContainer.innerHTML = hwList.length === 0 ? `<p class="text-gray-400 py-2">لا يوجد واجبات مسجلة بعد.</p>` :
@@ -555,30 +707,46 @@
                 `).reverse().join('');
         }
 
-        // Student Auth (Code Only)
+        // Student Auth (Center Code vs Online Auto-Format)
         async function handleStudentLogin(e) {
             e.preventDefault();
-            const code = document.getElementById('st-login-code').value.trim();
+            let finalSearchCode = '';
 
-            if (!code) {
-                alert('يرجى إدخال كود الطالب أولاً!');
-                return;
+            if (currentStudentLoginType === 'center') {
+                finalSearchCode = document.getElementById('st-login-code').value.trim();
+                if (!finalSearchCode) {
+                    alert('يرجى إدخال كود الطالب في السنتر!');
+                    return;
+                }
+            } else {
+                const rawPhone = document.getElementById('st-login-phone').value.trim();
+                if (!rawPhone) {
+                    alert('يرجى إدخال رقم الموبايل (بدون الصفر الأول)!');
+                    return;
+                }
+                finalSearchCode = formatOnlinePhoneToCode(rawPhone);
             }
+
+            const btn = document.getElementById('btn-login-action');
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin ml-1"></i> جاري الدخول...`;
 
             let matchedStudent = null;
 
             if (db) {
                 try {
-                    // Try string code first
-                    let snapshot = await db.collection('students').where('code', '==', code).get();
-                    if (snapshot.empty && !isNaN(code)) {
-                        // Try numeric code fallback
-                        snapshot = await db.collection('students').where('code', '==', Number(code)).get();
+                    let snapshot = await db.collection('students').where('code', '==', finalSearchCode).get();
+                    if (snapshot.empty && !isNaN(finalSearchCode)) {
+                        snapshot = await db.collection('students').where('code', '==', Number(finalSearchCode)).get();
                     }
 
                     if (!snapshot.empty) {
-                        const doc = snapshot.docs[0];
-                        matchedStudent = { id: doc.id, ...doc.data() };
+                        const foundDoc = snapshot.docs.find(d => {
+                            const c = d.data().code;
+                            return c && c.toString().trim() === finalSearchCode;
+                        }) || snapshot.docs[0];
+
+                        matchedStudent = { id: foundDoc.id, ...foundDoc.data() };
                     }
                 } catch(err) {}
             }
@@ -586,19 +754,32 @@
             if (!matchedStudent) {
                 const local = localStorage.getItem('MF_LOCAL_STUDENTS');
                 if (local) {
-                    const list = JSON.parse(local);
-                    matchedStudent = list.find(s => s.code.toString() === code.toString());
+                    try {
+                        const list = JSON.parse(local);
+                        matchedStudent = list.find(s => s.code && s.code.toString().trim() === finalSearchCode);
+                    } catch(e) {}
                 }
             }
+
+            btn.disabled = false;
+            btn.innerHTML = `دخول وعرض الواجبات`;
 
             if (matchedStudent) {
                 currentActiveStudent = matchedStudent;
                 localStorage.setItem('MF_ACTIVE_STUDENT', JSON.stringify(currentActiveStudent));
                 closeModal('studentLoginModal');
+                
+                document.getElementById('st-login-code').value = '';
+                document.getElementById('st-login-phone').value = '';
+                
                 initStudentAccountUI();
                 showSection('student-portal');
             } else {
-                alert('كود الطالب غير صحيح أو غير مسجل بالسنتر!');
+                if (currentStudentLoginType === 'online') {
+                    alert(`⚠️ لم يتم العثور على طالب أونلاين مسجل بهذا الرقم (${finalSearchCode}). تأكد من إدخال الرقم المسجل لدى المستر.`);
+                } else {
+                    alert(`⚠️ لم يتم العثور على طالب بالكود (${finalSearchCode}). تأكد من إدخال الكود الصحيح.`);
+                }
             }
         }
 
@@ -626,11 +807,10 @@
             document.getElementById('sp-payment-plan').innerText = currentActiveStudent.paymentPlan || 'شهري';
             document.getElementById('sp-balance').innerText = `${currentActiveStudent.balanceDue || 0} ج.م`;
 
-            // Render QR Directly on page
             const mainQrBox = document.getElementById('student-main-qr-box');
             mainQrBox.innerHTML = '';
             new QRCode(mainQrBox, {
-                text: currentActiveStudent.code.toString(),
+                text: currentActiveStudent.code.toString().trim(),
                 width: 150,
                 height: 150,
                 colorDark: "#4c1d95",
@@ -638,10 +818,9 @@
             });
 
             renderStudentSolvedHomeworksList();
-            loadActiveHomeworkForStudent();
+            loadAllEligibleHomeworksForStudent();
         }
 
-        // Render Student Solved Homeworks History & Counter
         function renderStudentSolvedHomeworksList() {
             const hwList = currentActiveStudent.homeworksHistory || [];
             const count = hwList.length;
@@ -666,21 +845,25 @@
                         <h4 class="font-bold text-sm text-slate-800 dark:text-slate-200">${hw.title}</h4>
                         <span class="text-[11px] text-gray-400 block mt-0.5"><i class="fa-regular fa-calendar ml-1 text-brand-600"></i> ${hw.date}</span>
                     </div>
-                    <span class="font-black text-brand-700 dark:text-brand-400 bg-brand-100 dark:bg-brand-950 px-3 py-1.5 rounded-xl text-xs">${hw.score}</span>
+                    <span class="font-black text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-500/20 px-3 py-1.5 rounded-xl text-xs">${hw.score}</span>
                 </div>
             `).reverse().join('');
         }
 
         function logoutStudent() {
             currentActiveStudent = null;
+            activeHomework = null;
             localStorage.removeItem('MF_ACTIVE_STUDENT');
             document.getElementById('nav-student-btn').classList.remove('hidden');
             document.getElementById('nav-portal-shortcut').classList.add('hidden');
             document.getElementById('nav-logout-btn').classList.add('hidden');
+            
+            const mainQrBox = document.getElementById('student-main-qr-box');
+            if (mainQrBox) mainQrBox.innerHTML = '';
+            
             showSection('home');
         }
 
-        // Smart Homework Eligibility Check
         function isHomeworkEligibleForStudent(hw, student) {
             if (!hw || hw.isVisible === false) return false;
             
@@ -716,10 +899,136 @@
             return false;
         }
 
-        // Render Questions helper
+        // Load all homeworks for student hub
+        async function loadAllEligibleHomeworksForStudent() {
+            const gridContainer = document.getElementById('all-homeworks-grid');
+            const countBadge = document.getElementById('all-hw-count-badge');
+            let homeworkList = [];
+
+            if (db) {
+                try {
+                    const snapshot = await db.collection('homeworks').get();
+                    snapshot.forEach(doc => {
+                        homeworkList.push({ id: doc.id, ...doc.data() });
+                    });
+                } catch(e) {}
+            }
+
+            if (homeworkList.length === 0) {
+                const local = localStorage.getItem('MF_LOCAL_HOMEWORKS');
+                if (local) {
+                    try { homeworkList = JSON.parse(local); } catch(e) {}
+                }
+            }
+
+            homeworkList.sort((a, b) => {
+                const timeA = new Date(a.createdAt || 0).getTime();
+                const timeB = new Date(b.createdAt || 0).getTime();
+                return timeB - timeA;
+            });
+
+            eligibleHomeworksList = homeworkList.filter(hw => isHomeworkEligibleForStudent(hw, currentActiveStudent));
+            countBadge.innerText = `${eligibleHomeworksList.length} واجب متاح`;
+
+            if (eligibleHomeworksList.length === 0) {
+                gridContainer.innerHTML = `
+                    <div class="text-center py-10 col-span-2 space-y-2">
+                        <i class="fa-solid fa-folder-open text-4xl text-gray-400 mb-2"></i>
+                        <p class="text-gray-400 font-bold">لا توجد واجبات منشورة لمجموعتك (${currentActiveStudent.center || 'السنتر'}) حالياً.</p>
+                        <p class="text-[11px] text-gray-500">سيتم إتاحة الواجبات هنا فور نشرها من قبل المستر.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const studentHwHistory = currentActiveStudent.homeworksHistory || [];
+
+            gridContainer.innerHTML = eligibleHomeworksList.map((hw, index) => {
+                const isSolved = studentHwHistory.find(h => normalizeArabic(h.title) === normalizeArabic(hw.title));
+                const isLatest = index === 0;
+                const questionsCount = (hw.questions || []).length;
+                const targetText = (!hw.targetCenter || hw.targetCenter === 'all') ? 'جميع السناتر' : hw.targetCenter;
+
+                return `
+                    <div class="p-5 rounded-3xl border transition duration-200 ${isSolved ? 'bg-slate-50/80 dark:bg-slate-900/60 border-slate-200 dark:border-slate-700' : 'bg-white dark:bg-slate-800 border-brand-300 dark:border-brand-700 shadow-md'} flex flex-col justify-between space-y-4">
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-start gap-2 flex-wrap">
+                                <div class="flex items-center gap-1.5 flex-wrap">
+                                    ${isLatest ? `<span class="px-2.5 py-0.5 bg-amber-400 text-slate-950 font-black text-[10px] rounded-md shadow-sm">أحدث واجب 🌟</span>` : ''}
+                                    <span class="px-2.5 py-0.5 bg-purple-100 dark:bg-purple-950 text-brand-700 text-[10px] font-bold rounded-md">${hw.grade}</span>
+                                </div>
+                                ${isSolved ? `
+                                    <span class="px-3 py-1 bg-emerald-500/10 text-emerald-600 border border-emerald-500/30 font-black text-xs rounded-full flex items-center gap-1">
+                                        <i class="fa-solid fa-check"></i> تم الحل (${isSolved.score})
+                                    </span>
+                                ` : `
+                                    <span class="px-3 py-1 bg-amber-500/10 text-amber-600 border border-amber-500/30 font-black text-xs rounded-full flex items-center gap-1">
+                                        <i class="fa-solid fa-hourglass-half"></i> مطلوب حله
+                                    </span>
+                                `}
+                            </div>
+
+                            <h4 class="text-base font-black text-slate-900 dark:text-white pt-1">${hw.title}</h4>
+                            <p class="text-xs text-gray-500"><i class="fa-solid fa-location-dot ml-1 text-brand-600"></i> المجموعة: ${targetText} | ${questionsCount} أسئلة</p>
+                        </div>
+
+                        <div class="pt-2 border-t border-slate-100 dark:border-slate-700/60 flex items-center justify-between">
+                            ${isSolved ? `
+                                <button onclick="openHomeworkSolver('${hw.id || hw.title}')" class="w-full py-2.5 bg-slate-200 dark:bg-slate-700 hover:bg-brand-700 hover:text-white text-slate-800 dark:text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5">
+                                    <i class="fa-solid fa-pen-to-square"></i> مراجعة وتعديل الإجابات
+                                </button>
+                            ` : `
+                                <button onclick="openHomeworkSolver('${hw.id || hw.title}')" class="w-full py-2.5 bg-brand-700 hover:bg-brand-800 text-white rounded-xl text-xs font-black transition flex items-center justify-center gap-1.5 shadow">
+                                    <i class="fa-solid fa-play"></i> ابدأ حل الواجب الآن
+                                </button>
+                            `}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function openHomeworkSolver(hwIdentifier) {
+            const hw = eligibleHomeworksList.find(h => (h.id && h.id === hwIdentifier) || h.title === hwIdentifier);
+            if (!hw) return;
+
+            activeHomework = hw;
+            const studentHwHistory = currentActiveStudent.homeworksHistory || [];
+            const previousRecord = studentHwHistory.find(h => normalizeArabic(h.title) === normalizeArabic(activeHomework.title));
+
+            document.getElementById('student-homeworks-hub').classList.add('hidden');
+            document.getElementById('student-homework-solver-view').classList.remove('hidden');
+
+            document.getElementById('active-hw-solver-title').innerText = activeHomework.title;
+            const targetCenterText = (!activeHomework.targetCenter || activeHomework.targetCenter === 'all') ? 'جميع السناتر' : activeHomework.targetCenter;
+            document.getElementById('active-hw-solver-subtitle').innerText = `المجموعة: ${targetCenterText} | الصف: ${activeHomework.grade}`;
+
+            const scoreIndicator = document.getElementById('solver-score-indicator');
+            const scoreDisplay = document.getElementById('active-hw-score-display');
+            const submitBtnText = document.getElementById('btn-submit-text');
+
+            if (previousRecord) {
+                scoreIndicator.classList.remove('hidden');
+                scoreDisplay.innerText = previousRecord.score;
+                submitBtnText.innerText = 'حفظ وتأكيد تعديل الإجابات';
+                renderQuestionsUI(previousRecord.savedAnswers || {});
+            } else {
+                scoreIndicator.classList.add('hidden');
+                submitBtnText.innerText = 'تسجيل وإرسال إجابة الواجب الآن';
+                renderQuestionsUI({});
+            }
+
+            document.getElementById('student-homework-solver-view').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function backToHomeworksList() {
+            document.getElementById('student-homework-solver-view').classList.add('hidden');
+            document.getElementById('student-homeworks-hub').classList.remove('hidden');
+            loadAllEligibleHomeworksForStudent();
+        }
+
         function renderQuestionsUI(savedAnswers = {}) {
             const container = document.getElementById('hw-questions-container');
-            const actionBtn = document.getElementById('hw-submit-action');
             const choiceLetters = ['(أ)', '(ب)', '(ج)', '(د)'];
 
             let html = '';
@@ -745,88 +1054,6 @@
             });
 
             container.innerHTML = html;
-            actionBtn.classList.remove('hidden');
-        }
-
-        // Enable Edit Mode for submitted homework
-        function enableHomeworkEditMode() {
-            if (!activeHomework || !currentActiveStudent) return;
-            const alreadySubmittedCard = document.getElementById('hw-already-submitted-card');
-            alreadySubmittedCard.classList.add('hidden');
-
-            const studentHwHistory = currentActiveStudent.homeworksHistory || [];
-            const previousRecord = studentHwHistory.find(h => normalizeArabic(h.title) === normalizeArabic(activeHomework.title));
-            const savedAnswers = previousRecord && previousRecord.savedAnswers ? previousRecord.savedAnswers : {};
-
-            renderQuestionsUI(savedAnswers);
-        }
-
-        // Homework Engine
-        async function loadActiveHomeworkForStudent() {
-            const container = document.getElementById('hw-questions-container');
-            const actionBtn = document.getElementById('hw-submit-action');
-            const alreadySubmittedCard = document.getElementById('hw-already-submitted-card');
-
-            let homeworkList = [];
-
-            if (db) {
-                try {
-                    const snapshot = await db.collection('homeworks').get();
-                    snapshot.forEach(doc => {
-                        homeworkList.push({ id: doc.id, ...doc.data() });
-                    });
-                } catch(e) {}
-            }
-
-            if (homeworkList.length === 0) {
-                const local = localStorage.getItem('MF_LOCAL_HOMEWORKS');
-                if (local) {
-                    try { homeworkList = JSON.parse(local); } catch(e) {}
-                }
-            }
-
-            homeworkList.sort((a, b) => {
-                const timeA = new Date(a.createdAt || 0).getTime();
-                const timeB = new Date(b.createdAt || 0).getTime();
-                return timeB - timeA;
-            });
-
-            const available = homeworkList.filter(hw => isHomeworkEligibleForStudent(hw, currentActiveStudent));
-
-            if (available.length === 0) {
-                alreadySubmittedCard.classList.add('hidden');
-                document.getElementById('hw-title').innerText = 'الواجب الإلكتروني للأسبوع الحالي';
-                document.getElementById('hw-subtitle').innerText = `المجموعة: ${currentActiveStudent.center || 'غير محدد'} | الصف: ${currentActiveStudent.grade || 'غير محدد'}`;
-                container.innerHTML = `
-                    <div class="text-center py-8 space-y-2">
-                        <i class="fa-solid fa-folder-open text-4xl text-gray-400 mb-2"></i>
-                        <p class="text-gray-400 font-bold">لا يوجد واجب متاح لمجموعتك (${currentActiveStudent.center}) حالياً.</p>
-                        <p class="text-[11px] text-gray-500">سيظهر الواجب هنا فور نشره من قبل المستر لمجموعتك المحددة.</p>
-                    </div>
-                `;
-                actionBtn.classList.add('hidden');
-                return;
-            }
-
-            activeHomework = available[0];
-            document.getElementById('hw-title').innerText = activeHomework.title;
-            const targetCenterText = (activeHomework.targetCenter === 'all' || !activeHomework.targetCenter) ? 'جميع السناتر' : activeHomework.targetCenter;
-            document.getElementById('hw-subtitle').innerText = `مخصص لمجموعة: ${targetCenterText} | الصف: ${activeHomework.grade}`;
-
-            // Check if student already submitted this homework
-            const studentHwHistory = currentActiveStudent.homeworksHistory || [];
-            const isAlreadyDone = studentHwHistory.find(h => normalizeArabic(h.title) === normalizeArabic(activeHomework.title));
-
-            if (isAlreadyDone) {
-                alreadySubmittedCard.classList.remove('hidden');
-                document.getElementById('hw-student-final-score').innerText = isAlreadyDone.score;
-                container.innerHTML = '';
-                actionBtn.classList.add('hidden');
-                return;
-            } else {
-                alreadySubmittedCard.classList.add('hidden');
-                renderQuestionsUI({});
-            }
         }
 
         async function submitHomeworkAnswers() {
@@ -856,6 +1083,12 @@
                 return;
             }
 
+            const btn = document.getElementById('btn-submit-answers-final');
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin ml-1"></i> جاري حفظ وتأكيد النتيجة...`;
+            }
+
             const exactScoreFormatted = `${totalScore} / ${maxScore}`;
             const hwRecord = {
                 title: activeHomework.title,
@@ -865,8 +1098,7 @@
                 savedAnswers: answersMap
             };
 
-            // Update or add in student homeworksHistory array
-            let existingHistory = currentActiveStudent.homeworksHistory || [];
+            let existingHistory = currentActiveStudent.homeworksHistory ? [...currentActiveStudent.homeworksHistory] : [];
             const existingIndex = existingHistory.findIndex(h => normalizeArabic(h.title) === normalizeArabic(activeHomework.title));
             if (existingIndex > -1) {
                 existingHistory[existingIndex] = hwRecord;
@@ -884,12 +1116,11 @@
                 } catch(e) {}
             }
 
-            // Update Local Storage
             const local = localStorage.getItem('MF_LOCAL_STUDENTS');
             if (local) {
                 try {
                     const list = JSON.parse(local);
-                    const st = list.find(s => s.code.toString() === currentActiveStudent.code.toString());
+                    const st = list.find(s => s.code && s.code.toString().trim() === currentActiveStudent.code.toString().trim());
                     if (st) {
                         st.hwStatus = 'تم الحل والتسليم';
                         st.lastHwExactScore = exactScoreFormatted;
@@ -903,47 +1134,15 @@
             currentActiveStudent.lastHwExactScore = exactScoreFormatted;
             localStorage.setItem('MF_ACTIVE_STUDENT', JSON.stringify(currentActiveStudent));
 
-            // Silently dispatch WhatsApp Notification to Parent
-            sendWAPilotMessage(
-                currentActiveStudent.parentPhone,
-                `السلام عليكم ولي أمر الطالب/ة: ${currentActiveStudent.name} 🌸\n`
-                + `نحيطكم علماً بأن الطالب قام بحل / تعديل الواجب الإلكتروني بنجاح على منصة مستر محمد فيصل:\n`
-                + `📝 الواجب: ${activeHomework.title}\n`
-                + `🎯 الدرجة المحصلة: ${exactScoreFormatted}\n`
-                + `🏫 سنتر: ${currentActiveStudent.center}\n`
-                + `مع تحيات فريق عمل مستر محمد فيصل.`
-            );
+            alert(`✅ تم تأكيد إجابات واجب (${activeHomework.title}) بنجاح!\nدرجتك المحصلة: (${exactScoreFormatted}).`);
+            
+            if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> <span id="btn-submit-text">تسجيل وإرسال إجابة الواجب</span>`;
+            }
 
-            alert(`تم تسجيل إجابات الواجب بنجاح! النتيجة: (${exactScoreFormatted}).`);
             renderStudentSolvedHomeworksList();
-            loadActiveHomeworkForStudent();
-        }
-
-        async function sendWAPilotMessage(phone, message) {
-            try {
-                let apiData = null;
-                if (db) {
-                    const doc = await db.collection('settings').doc('whatsapp_api').get();
-                    if (doc.exists) apiData = doc.data();
-                }
-                if (!apiData) {
-                    const local = localStorage.getItem('MF_WAPILOT_API');
-                    if (local) apiData = JSON.parse(local);
-                }
-                if (!apiData || !apiData.instance || !apiData.token) return;
-
-                let cleanPhone = phone.replace(/\D/g, '');
-                if (cleanPhone.startsWith('01')) cleanPhone = '2' + cleanPhone;
-                else if (!cleanPhone.startsWith('20') && cleanPhone.startsWith('1')) cleanPhone = '20' + cleanPhone;
-                const chatId = `${cleanPhone}@c.us`;
-
-                const url = `https://api.wapilot.net/api/v2/${apiData.instance}/send-message`;
-                await fetch(url, {
-                    method: "POST",
-                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiData.token}` },
-                    body: JSON.stringify({ chat_id: chatId, text: message })
-                });
-            } catch (e) {}
+            backToHomeworksList();
         }
     </script>
 </body>
