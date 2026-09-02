@@ -132,7 +132,7 @@
 
                     <a href="https://www.primeeacademy.com" target="_blank" class="group bg-white dark:bg-slate-800 p-8 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-md hover:shadow-2xl hover:border-amber-500 transition duration-300 flex flex-col justify-between">
                         <div>
-                            <div class="w-16 h-16 rounded-2xl bg-amber-100 dark:bg-amber-950 text-amber-600 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition">
+                            <div class="w-16 h-16 rounded-2xl bg-amber-100 dark:amber-950 text-amber-600 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition">
                                 <i class="fa-solid fa-laptop-code"></i>
                             </div>
                             <h3 class="text-2xl font-black text-slate-900 dark:text-white mb-2">منصة Primee Academy</h3>
@@ -185,12 +185,12 @@
                     <div id="parent-online-input-wrap" class="hidden space-y-1.5">
                         <div class="flex rounded-2xl border border-slate-300 dark:border-slate-700 overflow-hidden bg-slate-50 dark:bg-slate-900">
                             <span class="p-3.5 bg-slate-200 dark:bg-slate-800 text-xs font-bold font-mono text-slate-700 dark:text-slate-300 border-l border-slate-300 dark:border-slate-700 flex items-center">
-                                🇪🇬 +20
+                                📱 الهاتف
                             </span>
-                            <input type="tel" id="parent-online-phone-input" placeholder="10XXXXXXXX" class="w-full p-3.5 bg-transparent text-sm font-bold focus:outline-none font-mono text-center">
+                            <input type="tel" id="parent-online-phone-input" placeholder="010XXXXXXXX أو 10XXXXXXXX" class="w-full p-3.5 bg-transparent text-sm font-bold focus:outline-none font-mono text-center">
                         </div>
                         <p class="text-[11px] text-amber-600 dark:text-amber-400 text-center font-bold">
-                            * اكتب رقم الموبايل من غير الصفر الأول
+                            * يمكنك كتابة الرقم بالصفر أو بدونه مباشرة
                         </p>
                     </div>
 
@@ -402,12 +402,12 @@
                     <label class="block text-xs font-bold mb-1 text-slate-700 dark:text-slate-300">رقم موبايل الطالب (أونلاين):</label>
                     <div class="flex rounded-xl border border-slate-300 dark:border-slate-700 overflow-hidden bg-slate-50 dark:bg-slate-900">
                         <span class="p-3 bg-slate-200 dark:bg-slate-800 text-xs font-bold font-mono text-slate-700 dark:text-slate-300 border-l border-slate-300 dark:border-slate-700 flex items-center">
-                            🇪🇬 +20
+                            📱 الهاتف
                         </span>
-                        <input type="tel" id="st-login-phone" placeholder="10XXXXXXXX" class="w-full p-3.5 bg-transparent text-center font-bold text-base font-mono focus:outline-none">
+                        <input type="tel" id="st-login-phone" placeholder="010XXXXXXXX أو 10XXXXXXXX" class="w-full p-3.5 bg-transparent text-center font-bold text-base font-mono focus:outline-none">
                     </div>
                     <p class="text-[11px] text-amber-600 dark:text-amber-400 font-bold text-center">
-                        * اكتب رقم موبايلك من غير الصفر الأول (مثال: 1012345678)
+                        * يمكنك كتابة رقم الموبايل بالصفر أو بدونه
                     </p>
                 </div>
 
@@ -504,19 +504,37 @@
                 .toLowerCase();
         }
 
-        // تنظيف وتجهيز كود الموبايل الأونلاين بإضافة 20 في البداية
-        function formatOnlinePhoneToCode(rawPhone) {
-            if (!rawPhone) return '';
-            let digitsOnly = rawPhone.toString().replace(/\D/g, '');
-            // حذف أي أصفار في البداية
-            while (digitsOnly.startsWith('0')) {
-                digitsOnly = digitsOnly.substring(1);
+        // تحويل الأرقام العربية/الفارسية إلى إنجليزية
+        function toEnglishDigits(str) {
+            if (!str) return '';
+            return str.toString()
+                .replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d))
+                .replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d));
+        }
+
+        // توليد كافة الاحتمالات الممكنة لرقم الموبايل
+        function getPhoneVariants(rawInput) {
+            if (!rawInput) return [];
+            let clean = toEnglishDigits(rawInput).replace(/\D/g, '');
+            if (!clean) return [];
+
+            let core = clean;
+            if (core.startsWith('20')) {
+                core = core.substring(2);
             }
-            // إذا كان الطالب كتب 20 بالخطأ نحذفها لتوحيد الإضافة
-            if (digitsOnly.startsWith('20')) {
-                digitsOnly = digitsOnly.substring(2);
+            while (core.startsWith('0')) {
+                core = core.substring(1);
             }
-            return '20' + digitsOnly;
+
+            const variants = new Set();
+            variants.add(clean);
+            if (core) {
+                variants.add(core);              // بدون أصفار (مثال: 1012345678)
+                variants.add('0' + core);         // بصفر (مثال: 01012345678)
+                variants.add('20' + core);        // بكود الدولة (مثال: 201012345678)
+                variants.add('+20' + core);
+            }
+            return Array.from(variants);
         }
 
         // Firebase Connection
@@ -593,40 +611,41 @@
 
         // Parent Search Dossier
         async function searchParentStudentData() {
-            let targetSearchCode = '';
+            let searchTargets = [];
 
             if (currentParentLoginType === 'center') {
-                targetSearchCode = document.getElementById('parent-search-input').value.trim();
-                if (!targetSearchCode) {
+                const rawCenterCode = toEnglishDigits(document.getElementById('parent-search-input').value.trim());
+                if (!rawCenterCode) {
                     alert('يرجى إدخال كود الطالب في السنتر أولاً!');
                     return;
                 }
+                searchTargets = [rawCenterCode];
             } else {
                 const rawPhone = document.getElementById('parent-online-phone-input').value.trim();
                 if (!rawPhone) {
-                    alert('يرجى كتابة رقم موبايل الطالب الأونلاين (بدون صفر)!');
+                    alert('يرجى كتابة رقم موبايل الطالب الأونلاين!');
                     return;
                 }
-                targetSearchCode = formatOnlinePhoneToCode(rawPhone);
+                searchTargets = getPhoneVariants(rawPhone);
             }
 
             let studentData = null;
 
             if (db) {
                 try {
-                    let snapshot = await db.collection('students').where('code', '==', targetSearchCode).get();
-                    if (snapshot.empty && !isNaN(targetSearchCode)) {
-                        snapshot = await db.collection('students').where('code', '==', Number(targetSearchCode)).get();
-                    }
-                    if (snapshot.empty) {
-                        snapshot = await db.collection('students').where('phone', '==', targetSearchCode).get();
-                    }
-                    if (snapshot.empty) {
-                        snapshot = await db.collection('students').where('parentPhone', '==', targetSearchCode).get();
-                    }
-
-                    if (!snapshot.empty) {
-                        studentData = { id: snapshot.docs[0].id, ...snapshot.docs[0].data() };
+                    const fieldsToSearch = ['code', 'phone', 'parentPhone'];
+                    for (const term of searchTargets) {
+                        for (const field of fieldsToSearch) {
+                            let snapshot = await db.collection('students').where(field, '==', term).get();
+                            if (snapshot.empty && !isNaN(term)) {
+                                snapshot = await db.collection('students').where(field, '==', Number(term)).get();
+                            }
+                            if (!snapshot.empty) {
+                                studentData = { id: snapshot.docs[0].id, ...snapshot.docs[0].data() };
+                                break;
+                            }
+                        }
+                        if (studentData) break;
                     }
                 } catch(e) {}
             }
@@ -636,27 +655,28 @@
                 if (local) {
                     try {
                         const list = JSON.parse(local);
-                        studentData = list.find(s => 
-                            (s.code && s.code.toString().trim() === targetSearchCode) ||
-                            (s.phone && s.phone.toString().trim() === targetSearchCode) ||
-                            (s.parentPhone && s.parentPhone.toString().trim() === targetSearchCode)
-                        );
+                        studentData = list.find(s => {
+                            const c = s.code ? s.code.toString().trim() : '';
+                            const p = s.phone ? s.phone.toString().trim() : '';
+                            const pp = s.parentPhone ? s.parentPhone.toString().trim() : '';
+                            return searchTargets.some(term => term === c || term === p || term === pp);
+                        });
                     } catch(e) {}
                 }
             }
 
             if (!studentData) {
-                alert(`عفواً، لم يتم العثور على طالب مسجل بالبيانات المدخلة (${targetSearchCode})!`);
+                alert(`عفواً، لم يتم العثور على طالب مسجل بالبيانات المدخلة!`);
                 return;
             }
 
             const s = studentData;
             document.getElementById('parent-result-view').classList.remove('hidden');
 
-            document.getElementById('parent-st-name').innerText = s.name;
-            document.getElementById('parent-st-center').innerText = s.center;
-            document.getElementById('parent-st-code').innerText = s.code;
-            document.getElementById('parent-st-grade').innerText = s.grade;
+            document.getElementById('parent-st-name').innerText = s.name || '--';
+            document.getElementById('parent-st-center').innerText = s.center || '--';
+            document.getElementById('parent-st-code').innerText = s.code || '--';
+            document.getElementById('parent-st-grade').innerText = s.grade || '--';
             document.getElementById('parent-st-plan-badge').innerText = `نظام الدفع: ${s.paymentPlan || 'شهري'}`;
             document.getElementById('parent-st-balance').innerText = `${s.balanceDue || 0} ج.م`;
             document.getElementById('parent-st-last-pay').innerText = `${s.lastPaymentAmount || 0} ج.م`;
@@ -707,24 +727,25 @@
                 `).reverse().join('');
         }
 
-        // Student Auth (Center Code vs Online Auto-Format)
+        // Student Auth (Center Code vs Online Phone)
         async function handleStudentLogin(e) {
             e.preventDefault();
-            let finalSearchCode = '';
+            let searchCandidates = [];
 
             if (currentStudentLoginType === 'center') {
-                finalSearchCode = document.getElementById('st-login-code').value.trim();
-                if (!finalSearchCode) {
+                const rawCode = toEnglishDigits(document.getElementById('st-login-code').value.trim());
+                if (!rawCode) {
                     alert('يرجى إدخال كود الطالب في السنتر!');
                     return;
                 }
+                searchCandidates = [rawCode];
             } else {
                 const rawPhone = document.getElementById('st-login-phone').value.trim();
                 if (!rawPhone) {
-                    alert('يرجى إدخال رقم الموبايل (بدون الصفر الأول)!');
+                    alert('يرجى إدخال رقم الموبايل!');
                     return;
                 }
-                finalSearchCode = formatOnlinePhoneToCode(rawPhone);
+                searchCandidates = getPhoneVariants(rawPhone);
             }
 
             const btn = document.getElementById('btn-login-action');
@@ -735,18 +756,20 @@
 
             if (db) {
                 try {
-                    let snapshot = await db.collection('students').where('code', '==', finalSearchCode).get();
-                    if (snapshot.empty && !isNaN(finalSearchCode)) {
-                        snapshot = await db.collection('students').where('code', '==', Number(finalSearchCode)).get();
-                    }
+                    const fieldsToTest = ['code', 'phone'];
+                    for (const val of searchCandidates) {
+                        for (const field of fieldsToTest) {
+                            let snapshot = await db.collection('students').where(field, '==', val).get();
+                            if (snapshot.empty && !isNaN(val)) {
+                                snapshot = await db.collection('students').where(field, '==', Number(val)).get();
+                            }
 
-                    if (!snapshot.empty) {
-                        const foundDoc = snapshot.docs.find(d => {
-                            const c = d.data().code;
-                            return c && c.toString().trim() === finalSearchCode;
-                        }) || snapshot.docs[0];
-
-                        matchedStudent = { id: foundDoc.id, ...foundDoc.data() };
+                            if (!snapshot.empty) {
+                                matchedStudent = { id: snapshot.docs[0].id, ...snapshot.docs[0].data() };
+                                break;
+                            }
+                        }
+                        if (matchedStudent) break;
                     }
                 } catch(err) {}
             }
@@ -756,7 +779,11 @@
                 if (local) {
                     try {
                         const list = JSON.parse(local);
-                        matchedStudent = list.find(s => s.code && s.code.toString().trim() === finalSearchCode);
+                        matchedStudent = list.find(s => {
+                            const c = s.code ? s.code.toString().trim() : '';
+                            const p = s.phone ? s.phone.toString().trim() : '';
+                            return searchCandidates.some(term => term === c || term === p);
+                        });
                     } catch(e) {}
                 }
             }
@@ -776,9 +803,9 @@
                 showSection('student-portal');
             } else {
                 if (currentStudentLoginType === 'online') {
-                    alert(`⚠️ لم يتم العثور على طالب أونلاين مسجل بهذا الرقم (${finalSearchCode}). تأكد من إدخال الرقم المسجل لدى المستر.`);
+                    alert(`⚠️ لم يتم العثور على طالب أونلاين مسجل بهذا الرقم. يرجى التأكد من كتابة الرقم المسجل به لدى المستر.`);
                 } else {
-                    alert(`⚠️ لم يتم العثور على طالب بالكود (${finalSearchCode}). تأكد من إدخال الكود الصحيح.`);
+                    alert(`⚠️ لم يتم العثور على طالب بالكود المدخل. تأكد من إدخال الكود الصحيح.`);
                 }
             }
         }
@@ -810,7 +837,7 @@
             const mainQrBox = document.getElementById('student-main-qr-box');
             mainQrBox.innerHTML = '';
             new QRCode(mainQrBox, {
-                text: currentActiveStudent.code.toString().trim(),
+                text: (currentActiveStudent.code || '').toString().trim(),
                 width: 150,
                 height: 150,
                 colorDark: "#4c1d95",
