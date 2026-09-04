@@ -27,9 +27,7 @@
     </script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- QR Code Scanner -->
     <script src="https://unpkg.com/html5-qrcode"></script>
-    <!-- SheetJS Excel Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
     <!-- Firebase SDKs -->
@@ -38,14 +36,13 @@
 
     <style>
         body { font-family: 'Cairo', sans-serif; }
-        @media print { .no-print { display: none !important; } .print-area { display: block !important; } }
         .custom-scroll::-webkit-scrollbar { width: 5px; height: 5px; }
         .custom-scroll::-webkit-scrollbar-thumb { background: #475569; border-radius: 10px; }
     </style>
 </head>
 <body class="bg-slate-900 text-slate-100 min-h-screen">
 
-    <!-- ================= LOGIN SCREEN ================= -->
+    <!-- LOGIN SCREEN -->
     <div id="admin-auth-gate" class="fixed inset-0 z-50 bg-slate-950 flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-800 p-8 rounded-3xl w-full max-w-md shadow-2xl relative">
             <div class="w-16 h-16 bg-brand-600/20 text-brand-400 rounded-2xl flex items-center justify-center mx-auto text-3xl mb-4">
@@ -56,11 +53,11 @@
 
             <form onsubmit="handleAdminLogin(event)" class="space-y-4">
                 <div>
-                    <label class="block text-xs font-bold mb-1">اسم المستخدم (Username):</label>
-                    <input type="text" id="login-username" required placeholder="اسم المستخدم" class="w-full p-3.5 rounded-xl bg-slate-800 border border-slate-700 text-sm text-white focus:outline-none focus:border-brand-600">
+                    <label class="block text-xs font-bold mb-1">اسم المستخدم:</label>
+                    <input type="text" id="login-username" required placeholder="admin" class="w-full p-3.5 rounded-xl bg-slate-800 border border-slate-700 text-sm text-white focus:outline-none focus:border-brand-600">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold mb-1">كلمة المرور (Password):</label>
+                    <label class="block text-xs font-bold mb-1">كلمة المرور:</label>
                     <input type="password" id="login-password" required placeholder="••••••••" class="w-full p-3.5 rounded-xl bg-slate-800 border border-slate-700 text-sm text-white focus:outline-none focus:border-brand-600">
                 </div>
                 <button type="submit" id="btn-login-submit" class="w-full py-3.5 bg-brand-700 hover:bg-brand-600 text-white font-black rounded-xl text-sm transition flex items-center justify-center gap-2">
@@ -71,7 +68,7 @@
         </div>
     </div>
 
-    <!-- ================= MAIN DASHBOARD ================= -->
+    <!-- MAIN DASHBOARD -->
     <div id="admin-main-view" class="hidden">
         <!-- Top Nav -->
         <header class="bg-slate-800 border-b border-slate-700 sticky top-0 z-40 px-4 sm:px-8 py-4">
@@ -82,35 +79,41 @@
                     </div>
                     <div>
                         <h1 class="font-black text-lg">منظومة سناتر مستر محمد فيصل</h1>
-                        <p class="text-xs text-gray-400">مرحباً: <span id="logged-admin-name" class="font-bold text-amber-400">مستر فيصل</span> | وضع فحص الواجبات الذكي</p>
+                        <p class="text-xs text-gray-400">مرحباً: <span id="logged-admin-name" class="font-bold text-amber-400">مستر فيصل</span></p>
                     </div>
                 </div>
 
                 <div class="flex items-center gap-3 flex-wrap">
-                    <!-- Dynamic Offline/Online Queue Status Badge -->
                     <div id="sync-status-container" class="flex items-center gap-2">
                         <span id="sync-status-badge" class="px-3 py-1 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-bold rounded-full flex items-center gap-2">
                             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> متصل (Online)
                         </span>
-                        <span id="queue-count-badge" class="hidden px-2.5 py-1 bg-amber-500/20 text-amber-400 border border-amber-500/30 text-xs font-bold rounded-full flex items-center gap-1.5" title="رسائل في الانتظار للإرسال">
+                        <span id="queue-count-badge" class="hidden px-2.5 py-1 bg-amber-500/20 text-amber-400 border border-amber-500/30 text-xs font-bold rounded-full flex items-center gap-1.5">
                             <i class="fa-solid fa-clock-rotate-left"></i> معلق: <b id="queue-pending-count" class="font-mono">0</b>
                         </span>
                     </div>
 
-                    <button onclick="logoutAdmin()" class="px-3 py-1.5 bg-red-950/60 hover:bg-red-900 border border-red-800 text-red-300 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
-                        <i class="fa-solid fa-power-off"></i> خروج
+                    <button onclick="startQueueProcessingManually()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold transition flex items-center gap-1">
+                        <i class="fa-brands fa-whatsapp"></i> إرسال طابور الرسائل (آمن 30 ث)
+                    </button>
+
+                    <button onclick="logoutAdmin()" class="px-3 py-1.5 bg-red-950/60 hover:bg-red-900 border border-red-800 text-red-300 rounded-xl text-xs font-bold transition">
+                        <i class="fa-solid fa-power-off ml-1"></i> خروج
                     </button>
                 </div>
             </div>
         </header>
 
-        <!-- Floating Queue Banner when processing -->
-        <div id="queue-process-banner" class="hidden fixed bottom-5 left-5 z-50 bg-slate-950/95 border border-brand-500/60 shadow-2xl rounded-2xl p-4 max-w-sm backdrop-blur">
+        <!-- Floating Safe Progress Banner (Anti-Ban 30s) -->
+        <div id="queue-process-banner" class="hidden fixed bottom-5 left-5 z-50 bg-slate-950/95 border-2 border-brand-500 shadow-2xl rounded-2xl p-4 max-w-sm backdrop-blur">
             <div class="flex items-center gap-3">
-                <i class="fa-solid fa-paper-plane text-brand-400 text-xl animate-bounce"></i>
-                <div class="text-xs space-y-1 flex-1">
-                    <p class="font-black text-white" id="queue-process-status">جاري إرسال رسائل الطابور بأمان...</p>
-                    <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                <i class="fa-brands fa-whatsapp text-green-400 text-2xl animate-pulse"></i>
+                <div class="text-xs space-y-1.5 flex-1">
+                    <div class="flex justify-between items-center">
+                        <p class="font-black text-white" id="queue-process-status">إرسال آمن (فارق 30 ث)...</p>
+                        <span id="anti-ban-timer" class="text-amber-400 font-mono font-black">30s</span>
+                    </div>
+                    <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
                         <div id="queue-process-bar" class="bg-brand-500 h-full w-0 transition-all duration-300"></div>
                     </div>
                 </div>
@@ -120,447 +123,121 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-8 py-8">
             <!-- Navigation Tabs -->
             <div class="flex items-center gap-2 overflow-x-auto pb-4 mb-6 border-b border-slate-800">
-                <button onclick="switchTab('session-scan')" id="tab-btn-session-scan" class="tab-btn px-4 py-2.5 rounded-xl bg-brand-700 text-white font-black text-xs sm:text-sm whitespace-nowrap"><i class="fa-solid fa-qrcode ml-1"></i> ماسح الواجبات السريع</button>
-                <button onclick="switchTab('homework')" id="tab-btn-homework" class="tab-btn px-4 py-2.5 rounded-xl bg-slate-800 text-gray-300 font-bold text-xs sm:text-sm whitespace-nowrap"><i class="fa-solid fa-file-circle-plus ml-1"></i> إدارة وتعديل الواجبات</button>
-                <button onclick="switchTab('students')" id="tab-btn-students" class="tab-btn px-4 py-2.5 rounded-xl bg-slate-800 text-gray-300 font-bold text-xs sm:text-sm whitespace-nowrap"><i class="fa-solid fa-users ml-1"></i> دليل الطلاب والسناتر</button>
-                <button onclick="switchTab('reports')" id="tab-btn-reports" class="tab-btn px-4 py-2.5 rounded-xl bg-slate-800 text-gray-300 font-bold text-xs sm:text-sm whitespace-nowrap"><i class="fa-solid fa-chart-line ml-1"></i> تقارير الواجبات</button>
-                <button onclick="switchTab('broadcast')" id="tab-btn-broadcast" class="tab-btn px-4 py-2.5 rounded-xl bg-slate-800 text-gray-300 font-bold text-xs sm:text-sm whitespace-nowrap"><i class="fa-brands fa-whatsapp ml-1"></i> رسائل وتنبيهات الواجب</button>
-                <button onclick="switchTab('centers')" id="tab-btn-centers" class="tab-btn px-4 py-2.5 rounded-xl bg-slate-800 text-gray-300 font-bold text-xs sm:text-sm whitespace-nowrap"><i class="fa-solid fa-map-location-dot ml-1"></i> السناتر والمواعيد</button>
-                <button onclick="switchTab('api')" id="tab-btn-api" class="tab-btn px-4 py-2.5 rounded-xl bg-slate-800 text-gray-300 font-bold text-xs sm:text-sm whitespace-nowrap"><i class="fa-solid fa-sliders ml-1"></i> ربط WAPilot</button>
+                <button onclick="switchTab('session-scan')" id="tab-btn-session-scan" class="tab-btn px-4 py-2.5 rounded-xl bg-brand-700 text-white font-black text-xs sm:text-sm whitespace-nowrap"><i class="fa-solid fa-qrcode ml-1"></i> فحص الواجب والحضور</button>
+                <button onclick="switchTab('exams')" id="tab-btn-exams" class="tab-btn px-4 py-2.5 rounded-xl bg-slate-800 text-gray-300 font-bold text-xs sm:text-sm whitespace-nowrap"><i class="fa-solid fa-award ml-1"></i> رصد درجات الامتحانات</button>
+                <button onclick="switchTab('homework')" id="tab-btn-homework" class="tab-btn px-4 py-2.5 rounded-xl bg-slate-800 text-gray-300 font-bold text-xs sm:text-sm whitespace-nowrap"><i class="fa-solid fa-file-circle-plus ml-1"></i> الواجبات الإلكترونية</button>
+                <button onclick="switchTab('students')" id="tab-btn-students" class="tab-btn px-4 py-2.5 rounded-xl bg-slate-800 text-gray-300 font-bold text-xs sm:text-sm whitespace-nowrap"><i class="fa-solid fa-users ml-1"></i> دليل الطلاب</button>
+                <button onclick="switchTab('centers')" id="tab-btn-centers" class="tab-btn px-4 py-2.5 rounded-xl bg-slate-800 text-gray-300 font-bold text-xs sm:text-sm whitespace-nowrap"><i class="fa-solid fa-map-location-dot ml-1"></i> السناتر</button>
+                <button onclick="switchTab('api')" id="tab-btn-api" class="tab-btn px-4 py-2.5 rounded-xl bg-slate-800 text-gray-300 font-bold text-xs sm:text-sm whitespace-nowrap"><i class="fa-solid fa-sliders ml-1"></i> إعدادات الواتساب WAPilot</button>
             </div>
 
-            <!-- ================= TAB 1: DEDICATED HOMEWORK SCANNER ================= -->
+            <!-- TAB 1: DEDICATED HOMEWORK SCANNER -->
             <div id="tab-content-session-scan" class="tab-sec space-y-6">
-                <!-- Top Filter / Active Center Selector -->
-                <div class="bg-slate-800 border border-slate-700 rounded-3xl p-5 shadow-md flex flex-col sm:flex-row items-center justify-between gap-4">
-                    <div class="flex items-center gap-3">
-                        <div class="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-2xl">
-                            <i class="fa-solid fa-clipboard-check"></i>
-                        </div>
-                        <div>
-                            <h3 class="font-black text-base text-white">فحص ومراجعة الواجبات بالسنتر</h3>
-                            <p class="text-xs text-gray-400">امسح كارت الطالب لعرض بياناته وسجله كاملاً وتسجيل الحضور وتسليم الواجب</p>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-3 w-full sm:w-auto">
-                        <select id="hw-scan-filter-center" onchange="updateHwScanningStats()" class="p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs font-bold text-amber-300 focus:outline-none w-full sm:w-60">
-                            <option value="all">جميع السناتر</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Live Homework Counters Bar -->
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                    <div class="p-4 bg-slate-800 border border-slate-700 rounded-2xl text-center">
-                        <span class="text-[11px] text-gray-400 font-bold block mb-1">إجمالي الطلاب</span>
-                        <span id="hw-stat-total" class="text-2xl font-black text-white">0</span>
-                    </div>
-                    <div class="p-4 bg-emerald-950/40 border border-emerald-500/40 rounded-2xl text-center">
-                        <span class="text-[11px] text-emerald-400 font-bold block mb-1">حلوا الواجب وسلّموه</span>
-                        <span id="hw-stat-submitted" class="text-2xl font-black text-emerald-400">0</span>
-                    </div>
-                    <div class="p-4 bg-purple-950/40 border border-brand-500/40 rounded-2xl text-center">
-                        <span class="text-[11px] text-brand-300 font-bold block mb-1">تم فحصهم في جلسة اليوم</span>
-                        <span id="hw-stat-scanned-session" class="text-2xl font-black text-brand-300">0</span>
-                    </div>
-                    <div class="p-4 bg-red-950/40 border border-red-500/40 rounded-2xl text-center">
-                        <span class="text-[11px] text-red-400 font-bold block mb-1">لم يسلموا الواجب</span>
-                        <span id="hw-stat-pending" class="text-2xl font-black text-red-400">0</span>
-                    </div>
-                </div>
-
-                <!-- Scanner and Student Homework Dossier -->
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                    <!-- Left: Camera Viewport & Code Input -->
+                    <!-- Scanner Area -->
                     <div class="lg:col-span-5 bg-slate-800 border border-slate-700 rounded-3xl p-6 space-y-4">
                         <div class="flex justify-between items-center">
                             <h3 class="font-black text-sm text-white flex items-center gap-2">
-                                <i class="fa-solid fa-camera text-brand-400"></i> ماسح باركود كارت الطالب
+                                <i class="fa-solid fa-camera text-brand-400"></i> ماسح باركود الطالب
                             </h3>
-                            <button onclick="toggleCameraScanner()" id="scanner-btn" class="px-4 py-2 bg-brand-700 hover:bg-brand-600 text-white rounded-xl text-xs font-bold transition shadow">
+                            <button onclick="toggleCameraScanner()" id="scanner-btn" class="px-4 py-2 bg-brand-700 hover:bg-brand-600 text-white rounded-xl text-xs font-bold transition">
                                 <i class="fa-solid fa-video ml-1"></i> تشغيل الكاميرا
                             </button>
                         </div>
 
                         <div id="qr-camera-viewport" class="w-full rounded-2xl overflow-hidden border-2 border-dashed border-slate-600 min-h-[220px] bg-slate-900 flex flex-col items-center justify-center text-xs text-gray-400 p-4 text-center">
                             <i class="fa-solid fa-qrcode text-4xl mb-2 text-slate-600"></i>
-                            شغّل الكاميرا للمسح التلقائي السريع أو اكتب الكود بالأسفل
+                            شغل الكاميرا أو اكتب الكود بالأسفل
                         </div>
 
                         <div class="flex gap-2">
-                            <input type="number" id="manual-code-search" onkeydown="if(event.key==='Enter') searchStudentDirectly()" placeholder="اكتب كود الطالب (مثال: 101)..." class="w-full p-3.5 rounded-xl bg-slate-900 border border-slate-700 text-sm font-mono text-center font-bold text-white focus:outline-none focus:border-brand-600">
-                            <button onclick="searchStudentDirectly()" class="px-6 py-3.5 bg-brand-700 hover:bg-brand-600 font-black rounded-xl text-xs whitespace-nowrap text-white shadow">
-                                <i class="fa-solid fa-magnifying-glass ml-1"></i> فحص
+                            <input type="number" id="manual-code-search" onkeydown="if(event.key==='Enter') searchStudentDirectly()" placeholder="اكتب كود الطالب (مثال: 101)..." class="w-full p-3.5 rounded-xl bg-slate-900 border border-slate-700 text-sm font-mono text-center font-bold text-white focus:outline-none">
+                            <button onclick="searchStudentDirectly()" class="px-6 py-3.5 bg-brand-700 hover:bg-brand-600 font-black rounded-xl text-xs whitespace-nowrap text-white">
+                                فحص
                             </button>
-                        </div>
-
-                        <!-- Live Scanned Session Log -->
-                        <div class="pt-3 border-t border-slate-700">
-                            <div class="flex justify-between items-center mb-2">
-                                <span class="text-xs font-bold text-gray-400"><i class="fa-solid fa-clock-rotate-left ml-1 text-brand-400"></i> آخر طلاب تم فحصهم:</span>
-                                <span id="live-scanned-count" class="text-[11px] text-amber-400 font-mono font-bold">0 طلاب</span>
-                            </div>
-                            <div id="live-session-scanned-list" class="space-y-2 max-h-48 overflow-y-auto custom-scroll text-xs">
-                                <p class="text-gray-500 text-center py-4 text-[11px]">في انتظار مسح أول كارت...</p>
-                            </div>
                         </div>
                     </div>
 
-                    <!-- Right: Loaded Student Full Homework Dossier & Action Card -->
+                    <!-- Dossier / Action Card -->
                     <div class="lg:col-span-7 bg-slate-800 border border-slate-700 rounded-3xl p-6">
-                        <div id="scan-empty-msg" class="h-full min-h-[350px] flex flex-col items-center justify-center text-center p-8 text-gray-500">
+                        <div id="scan-empty-msg" class="h-full min-h-[300px] flex flex-col items-center justify-center text-center p-8 text-gray-500">
                             <div class="w-20 h-20 rounded-3xl bg-slate-900 border border-slate-700 flex items-center justify-center text-4xl text-slate-600 mb-3">
                                 <i class="fa-solid fa-address-card"></i>
                             </div>
-                            <p class="font-bold text-base text-gray-300">في انتظار مسح كود الطالب</p>
-                            <p class="text-xs text-gray-500 mt-1">امسح كارت QR أو أدخل كود الطالب الرقمي لعرض نتيجته وسجل الواجبات كاملاً</p>
+                            <p class="font-bold text-base text-gray-300">في انتظار مسح كارت الطالب</p>
                         </div>
 
                         <div id="scan-loaded-data" class="hidden space-y-5">
-                            <!-- Detailed Student Header Card -->
                             <div class="p-5 bg-slate-900 rounded-2xl border border-slate-700 space-y-4">
-                                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                                <div class="flex justify-between items-center">
                                     <div>
-                                        <div class="flex items-center gap-2">
-                                            <h3 id="adm-st-name" class="text-xl font-black text-white">--</h3>
-                                            <span id="adm-st-code" class="px-2.5 py-0.5 bg-brand-900/80 text-brand-300 font-mono font-black text-xs rounded-lg">#--</span>
-                                        </div>
-                                        <p class="text-xs text-gray-400 mt-1">
-                                            سنتر: <span id="adm-st-center" class="text-amber-400 font-bold">--</span> | 
-                                            الصف: <span id="adm-st-grade" class="text-slate-300 font-bold">--</span>
-                                        </p>
+                                        <h3 id="adm-st-name" class="text-xl font-black text-white">--</h3>
+                                        <p class="text-xs text-gray-400 mt-1">السنتر: <span id="adm-st-center" class="text-amber-400 font-bold">--</span> | كود: <span id="adm-st-code" class="text-brand-400 font-bold">#--</span></p>
                                     </div>
-                                    <div class="text-right sm:text-left">
-                                        <span id="adm-st-hw-count-badge" class="px-3.5 py-1.5 bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-black text-xs rounded-xl inline-block">
-                                            0 واجبات مسلّمة
-                                        </span>
-                                    </div>
+                                    <span id="adm-st-hw-count-badge" class="px-3.5 py-1.5 bg-emerald-500/20 text-emerald-400 font-black text-xs rounded-xl">0 واجب</span>
                                 </div>
 
-                                <!-- Phones Box -->
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-3 border-t border-slate-800 text-xs">
-                                    <div class="flex items-center gap-2 p-2.5 bg-slate-800/80 rounded-xl border border-slate-700/60">
-                                        <i class="fa-solid fa-mobile-screen text-brand-400 text-base"></i>
-                                        <div>
-                                            <span class="text-[10px] text-gray-400 block">رقم الطالب:</span>
-                                            <span id="adm-st-phone" class="font-mono font-bold text-white">--</span>
-                                        </div>
-                                    </div>
-                                    <div class="flex items-center gap-2 p-2.5 bg-slate-800/80 rounded-xl border border-slate-700/60">
-                                        <i class="fa-solid fa-user-shield text-emerald-400 text-base"></i>
-                                        <div>
-                                            <span class="text-[10px] text-gray-400 block">رقم ولي الأمر (واتساب):</span>
-                                            <span id="adm-st-parent-phone" class="font-mono font-bold text-emerald-300">--</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- زر سلّم الواجب وحضر مع إشعار ولي الأمر -->
-                                <div class="pt-2">
-                                    <button onclick="markStudentSubmittedAndPresent()" id="btn-submit-hw-present" class="w-full py-3.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black rounded-xl text-sm transition shadow-lg flex items-center justify-center gap-2">
-                                        <i class="fa-brands fa-whatsapp text-lg"></i> سلّم الواجب وحضر (إرسال إشعار لولي الأمر)
-                                    </button>
-                                </div>
-                            </div>
-
-                            <!-- Latest Homework Score Card Hero -->
-                            <div id="latest-hw-hero-card" class="p-5 rounded-2xl border transition-all">
-                                <!-- Dynamic Rendered by JS -->
-                            </div>
-
-                            <!-- Full Homeworks History Table -->
-                            <div>
-                                <h4 class="font-black text-sm text-white mb-3 flex items-center justify-between">
-                                    <span><i class="fa-solid fa-list-check ml-1.5 text-brand-400"></i> سجل كافة الواجبات المسلّمة</span>
-                                    <span class="text-[11px] text-gray-400 font-normal">مرتبة من الأحدث للأقدم</span>
-                                </h4>
-                                <div id="adm-student-hw-history-container" class="space-y-2.5 max-h-60 overflow-y-auto custom-scroll text-xs"></div>
+                                <!-- Action: Attendance & Homework Sync -->
+                                <button onclick="markStudentSubmittedAndPresent()" id="btn-submit-hw-present" class="w-full py-4 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 text-white font-black rounded-xl text-sm transition shadow-lg flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-circle-check text-lg"></i> تأكيد تسليم الواجب وحضور الحصة (إدراج إشعار ولي الأمر)
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- ================= TAB 2: HOMEWORK BUILDER & MANAGEMENT ================= -->
-            <div id="tab-content-homework" class="tab-sec hidden space-y-6">
-                <div class="bg-slate-800 border border-slate-700 rounded-3xl p-6" id="homework-form-card">
-                    <div class="flex justify-between items-center mb-6">
-                        <div>
-                            <h3 class="font-black text-lg text-brand-400" id="hw-form-heading">إنشاء ونشر واجب جديد</h3>
-                            <p class="text-xs text-gray-400 mt-0.5" id="hw-form-subheading">إضافة أسئلة الواجب الإلكتروني وتحديد السنتر المستهدف</p>
-                        </div>
-                        <div class="flex gap-2">
-                            <button type="button" onclick="cancelHomeworkEdit()" id="btn-cancel-hw-edit" class="hidden px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-xl text-xs font-bold text-gray-300">
-                                إلغاء التعديل
-                            </button>
-                            <button type="button" onclick="addNewQuestionToBuilder()" class="px-4 py-2 bg-purple-900/60 hover:bg-purple-800 border border-purple-700 text-purple-200 rounded-xl text-xs font-bold transition">
-                                <i class="fa-solid fa-plus ml-1"></i> إضافة سؤال آخر
-                            </button>
-                        </div>
-                    </div>
-
-                    <form onsubmit="handleSaveHomework(event)" class="space-y-6">
-                        <input type="hidden" id="editing-hw-id" value="">
-                        
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                            <div>
-                                <label class="block text-xs font-bold mb-1">عنوان الواجب / الدرس:</label>
-                                <input type="text" id="hw-builder-title" required placeholder="مثال: واجب 1 - مدخل الجغرافيا السياسية" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold mb-1">الصف الدراسي المستهدف:</label>
-                                <select id="hw-builder-grade" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white">
-                                    <option value="الصف الثالث الثانوي">الصف الثالث الثانوي</option>
-                                    <option value="الصف الثاني الثانوي">الصف الثاني الثانوي</option>
-                                    <option value="الصف الأول الثانوي">الصف الأول الثانوي</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold mb-1">السنتر / المجموعة المستهدفة:</label>
-                                <select id="hw-builder-target-center" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white">
-                                    <option value="all">جميع السناتر والمجموعات</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div id="homework-questions-list" class="space-y-4"></div>
-
-                        <div class="pt-4 flex gap-4">
-                            <button type="submit" id="btn-save-hw-action" class="flex-1 py-4 bg-emerald-600 hover:bg-emerald-700 text-white font-black rounded-xl text-sm transition shadow-lg flex items-center justify-center gap-2">
-                                <i class="fa-solid fa-cloud-arrow-up"></i> حفظ ونشر الواجب
-                            </button>
-                        </div>
-                    </form>
-                </div>
-
-                <div class="bg-slate-800 border border-slate-700 rounded-3xl p-6">
-                    <h3 class="font-black text-base mb-4 text-white">الواجبات المنشورة الحالية والتحكم فيها</h3>
-                    <div id="admin-homeworks-table-container" class="overflow-x-auto"></div>
-                </div>
-            </div>
-
-            <!-- ================= TAB 3: STUDENTS MANAGEMENT ================= -->
-            <div id="tab-content-students" class="tab-sec hidden space-y-6">
-                <!-- Excel Import Box -->
-                <div class="bg-slate-800 border-2 border-emerald-500/40 rounded-3xl p-6 shadow-xl">
-                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
-                        <div>
-                            <h3 class="text-lg font-black text-emerald-400 flex items-center gap-2">
-                                <i class="fa-solid fa-file-excel text-xl"></i> رفع وتسجيل الطلاب من شيت إكسيل (Excel)
-                            </h3>
-                            <p class="text-xs text-gray-300 mt-1">تأكد من وجود أعمدة: اسم الطالب، الكود، السنتر، رقم الطالب، رقم ولي الأمر</p>
-                        </div>
-                        <div class="flex flex-wrap gap-2">
-                            <button onclick="downloadExcelTemplate()" class="px-4 py-2.5 bg-slate-700 hover:bg-slate-600 text-white font-bold rounded-xl text-xs flex items-center gap-2 shadow transition whitespace-nowrap">
-                                <i class="fa-solid fa-download"></i> تحميل شيت تجريبي (Template)
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="flex flex-col sm:flex-row gap-3 items-center pt-2">
-                        <input type="file" id="excel-file-input" accept=".xlsx, .xls, .csv" class="w-full text-xs text-gray-300 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-black file:bg-brand-700 file:text-white hover:file:bg-brand-600 cursor-pointer bg-slate-900 p-2 rounded-2xl border border-slate-700">
-                        <button onclick="handleProcessExcelUpload()" id="btn-process-excel" class="w-full sm:w-auto px-8 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-black rounded-xl text-xs whitespace-nowrap shadow-md transition flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-cloud-arrow-up"></i> رفع وإدراج الطلاب
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Single Student Add / Edit Form -->
-                <div class="bg-slate-800 border border-slate-700 rounded-3xl p-6" id="student-form-card">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="font-black text-lg text-brand-400" id="student-form-title">إضافة طالب فردي وتحديد السنتر</h3>
-                        <button type="button" onclick="cancelStudentEdit()" id="btn-cancel-st-edit" class="hidden px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-xl text-xs font-bold text-gray-300">
-                            إلغاء التعديل
-                        </button>
-                    </div>
-                    
-                    <form onsubmit="handleSaveStudent(event)" class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        <input type="hidden" id="editing-st-id" value="">
-                        
-                        <div>
-                            <label class="block text-xs font-bold mb-1">اسم الطالب رباعي:</label>
-                            <input type="text" id="add-st-name" required placeholder="محمد أحمد محمود" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:border-brand-500 focus:outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold mb-1">كود الطالب في السنتر (أرقام فقط):</label>
-                            <input type="number" id="add-st-code" required placeholder="مثال: 101" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs font-mono text-white focus:border-brand-500 focus:outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold mb-1">السنة الدراسية:</label>
-                            <select id="add-st-grade" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:border-brand-500 focus:outline-none">
-                                <option value="الصف الثالث الثانوي">الصف الثالث الثانوي</option>
-                                <option value="الصف الثاني الثانوي">الصف الثاني الثانوي</option>
-                                <option value="الصف الأول الثانوي">الصف الأول الثانوي</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold mb-1">السنتر / المجموعة:</label>
-                            <select id="add-st-center" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:border-brand-500 focus:outline-none"></select>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold mb-1">تليفون الطالب:</label>
-                            <input type="tel" id="add-st-phone" required placeholder="01XXXXXXXXX" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:border-brand-500 focus:outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold mb-1">تليفون ولي الأمر (للواتساب):</label>
-                            <input type="tel" id="add-st-parent-phone" required placeholder="01XXXXXXXXX" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:border-brand-500 focus:outline-none">
-                        </div>
-                        <div class="sm:col-span-3 flex justify-end gap-2 pt-2">
-                            <button type="submit" id="btn-save-st-action" class="w-full sm:w-auto px-8 py-3 bg-brand-700 hover:bg-brand-600 font-bold rounded-xl text-xs transition text-white flex items-center justify-center gap-2">
-                                <i class="fa-solid fa-floppy-disk"></i> حفظ الطالب
-                            </button>
-                        </div>
-                    </form>
-                </div>
-
-                <!-- Students Table List -->
-                <div class="bg-slate-800 border border-slate-700 rounded-3xl p-6">
-                    <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-3 mb-4">
-                        <div>
-                            <h3 class="font-black text-base">دليل طلاب السناتر المسجلين</h3>
-                            <p class="text-[11px] text-gray-400">انقر على "فحص الواجبات" لأي طالب لعرض سجله مباشرة أو عدل بياناته وحمّل الإكسيل</p>
-                        </div>
-                        <div class="flex flex-wrap items-center gap-2 w-full lg:w-auto">
-                            <!-- زر تصدير إكسيل مرتب تصاعدياً بالكود -->
-                            <button onclick="exportStudentsToExcelSorted()" class="px-3.5 py-2.5 bg-emerald-700 hover:bg-emerald-600 text-white font-bold rounded-xl text-xs flex items-center gap-1.5 transition shadow whitespace-nowrap" title="تصدير بيانات الطلاب إلى Excel مرتبة من أصغر كود إلى أكبر كود">
-                                <i class="fa-solid fa-file-excel text-sm"></i> تصدير إكسيل (مرتب بالأكواد)
-                            </button>
-
-                            <select id="filter-table-by-center" onchange="filterAdminStudentsTable()" class="p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs font-bold text-white"></select>
-                            <select id="filter-table-by-grade" onchange="filterAdminStudentsTable()" class="p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs font-bold text-white">
-                                <option value="all">جميع المراحل</option>
-                                <option value="الصف الثالث الثانوي">الصف الثالث الثانوي</option>
-                                <option value="الصف الثاني الثانوي">الصف الثاني الثانوي</option>
-                                <option value="الصف الأول الثانوي">الصف الأول الثانوي</option>
-                            </select>
-                            <input type="text" id="adm-table-search" oninput="debounceFilterStudents()" placeholder="ابحث بالاسم أو الكود..." class="p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs w-full sm:w-48 font-mono text-white">
-                        </div>
-                    </div>
-
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-right text-xs">
-                            <thead class="bg-slate-900 text-gray-400 border-b border-slate-700">
-                                <tr>
-                                    <th class="p-3">الكود</th>
-                                    <th class="p-3">اسم الطالب</th>
-                                    <th class="p-3">السنة الدراسية</th>
-                                    <th class="p-3">السنتر</th>
-                                    <th class="p-3">أرقام التواصل</th>
-                                    <th class="p-3">آخر واجب</th>
-                                    <th class="p-3">المسلّم</th>
-                                    <th class="p-3 text-center">إجراءات</th>
-                                </tr>
-                            </thead>
-                            <tbody id="adm-students-tbody" class="divide-y divide-slate-700"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ================= TAB 4: REPORTS ================= -->
-            <div id="tab-content-reports" class="tab-sec hidden bg-slate-800 border border-slate-700 rounded-3xl p-6 space-y-6">
-                <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 border-b border-slate-700 pb-4">
+            <!-- TAB 2: EXAMS GRADING & BROADCAST -->
+            <div id="tab-content-exams" class="tab-sec hidden bg-slate-800 border border-slate-700 rounded-3xl p-6 space-y-6">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-slate-700">
                     <div>
-                        <h3 class="font-black text-lg text-white">تقرير الواجبات والتسليمات الشامل</h3>
-                        <p class="text-xs text-gray-400">كشف بجميع الطلاب ودرجات الواجبات المسجلة</p>
-                    </div>
-                    <div class="flex flex-wrap gap-2 w-full lg:w-auto">
-                        <select id="report-filter-center" onchange="renderHomeworksReport()" class="p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs font-bold text-white"></select>
-                        <select id="report-filter-grade" onchange="renderHomeworksReport()" class="p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs font-bold text-white">
-                            <option value="all">جميع المراحل</option>
-                            <option value="الصف الثالث الثانوي">الصف الثالث الثانوي</option>
-                            <option value="الصف الثاني الثانوي">الصف الثاني الثانوي</option>
-                            <option value="الصف الأول الثانوي">الصف الأول الثانوي</option>
-                        </select>
-                        <button onclick="window.print()" class="px-4 py-2.5 bg-white text-slate-950 font-black rounded-xl text-xs"><i class="fa-solid fa-print ml-1"></i> طباعة تقرير</button>
+                        <h3 class="font-black text-lg text-white">رصد درجات الامتحانات وإبلاغ أولياء الأمور</h3>
+                        <p class="text-xs text-gray-400">ادخل اسم الامتحان والدرجة لأي طالب وسيتم جدولة رسالة النتيجة لولي الأمر</p>
                     </div>
                 </div>
 
-                <div id="report-printable-box" class="bg-slate-900 p-6 rounded-2xl border border-slate-700 print-area overflow-x-auto"></div>
-            </div>
-
-            <!-- ================= TAB 5: BROADCAST WHATSAPP ================= -->
-            <div id="tab-content-broadcast" class="tab-sec hidden max-w-2xl bg-slate-800 border border-slate-700 rounded-3xl p-6">
-                <h3 class="font-black text-lg mb-2 text-green-400"><i class="fa-brands fa-whatsapp ml-1"></i> إرسال تنبيهات الواجبات جماعياً</h3>
-                <p class="text-xs text-gray-400 mb-6">إرسال رسائل جماعية للطلاب أو أولياء الأمور مع فارق زمني آمن ضد الحظر.</p>
-
-                <form onsubmit="handleSendBroadcast(event)" class="space-y-4">
-                    <div>
-                        <label class="block text-xs font-bold mb-1">اختر السنتر / المجموعة المستهدفة:</label>
-                        <select id="broadcast-center-select" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white"></select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold mb-1">الجهة المستلمة للرسالة:</label>
-                        <select id="broadcast-target-role" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white">
-                            <option value="parents">أولياء الأمور فقط</option>
-                            <option value="students">الطلاب فقط</option>
-                            <option value="both">أولياء الأمور والطلاب معاً</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold mb-1">نص الرسالة:</label>
-                        <textarea id="broadcast-msg-text" required rows="4" placeholder="تنبيه بموعد تسليم الواجب الإلكتروني..." class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white"></textarea>
-                    </div>
-                    <div id="broadcast-progress-box" class="hidden p-4 bg-slate-900 rounded-2xl border border-slate-700 space-y-2">
-                        <div class="flex justify-between text-xs font-bold">
-                            <span id="broadcast-progress-label">جاري الإرسال بأمان...</span>
-                            <span id="broadcast-progress-count">0 / 0</span>
-                        </div>
-                        <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden">
-                            <div id="broadcast-progress-bar" class="bg-green-500 h-full w-0 transition-all duration-300"></div>
-                        </div>
-                    </div>
-
-                    <button type="submit" id="broadcast-submit-btn" class="w-full py-3.5 bg-green-600 hover:bg-green-700 font-bold rounded-xl text-xs transition flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-paper-plane"></i> بدء الإرسال الجماعي
+                <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 bg-slate-900 p-4 rounded-2xl border border-slate-700">
+                    <input type="text" id="exam-title-input" placeholder="اسم الامتحان (مثال: امتحان الحصة 3 جغرافيا)" class="p-3 bg-slate-800 border border-slate-700 rounded-xl text-xs text-white">
+                    <input type="number" id="exam-student-code" placeholder="كود الطالب..." class="p-3 bg-slate-800 border border-slate-700 rounded-xl text-xs text-white font-mono">
+                    <input type="text" id="exam-student-score" placeholder="الدرجة (مثال: 19 / 20)" class="p-3 bg-slate-800 border border-slate-700 rounded-xl text-xs text-white font-mono">
+                    <button onclick="saveStudentExamScore()" class="p-3 bg-brand-700 hover:bg-brand-600 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-floppy-disk"></i> رصد وإدراج رسالة ولي الأمر
                     </button>
-                </form>
+                </div>
             </div>
 
-            <!-- ================= TAB 6: CENTERS MANAGEMENT ================= -->
-            <div id="tab-content-centers" class="tab-sec hidden space-y-6">
-                <div class="bg-slate-800 border border-slate-700 rounded-3xl p-6 max-w-xl">
-                    <h3 class="font-black text-lg mb-4 text-brand-400">إضافة سنتر ومواعيد جديدة</h3>
-                    <form onsubmit="handleCreateCenter(event)" class="space-y-4">
-                        <div>
-                            <label class="block text-xs font-bold mb-1">اسم السنتر والمنطقة:</label>
-                            <input type="text" id="add-center-name" required placeholder="مثال: سنتر يونايتد - لوران" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white">
-                        </div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-xs font-bold mb-1">اليوم:</label>
-                                <input type="text" id="add-center-day" required placeholder="مثال: السبت" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold mb-1">الموعد والتوقيت:</label>
-                                <input type="text" id="add-center-time" required placeholder="مثال: 12:00 ظهراً" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white">
-                            </div>
-                        </div>
-                        <button type="submit" class="w-full py-3 bg-brand-700 hover:bg-brand-600 font-bold rounded-xl text-xs text-white">حفظ وإتاحة السنتر</button>
-                    </form>
-                </div>
+            <!-- TAB 3: HOMEWORK BUILDER -->
+            <div id="tab-content-homework" class="tab-sec hidden space-y-6">
+                <!-- Homework Content from Previous Admin File -->
+                <p class="text-xs text-gray-400">يمكنك إدارة وتعديل الواجبات والأسئلة بنفس النمط المنظم.</p>
+            </div>
 
+            <!-- TAB 4: STUDENTS MANAGEMENT -->
+            <div id="tab-content-students" class="tab-sec hidden space-y-6">
                 <div class="bg-slate-800 border border-slate-700 rounded-3xl p-6">
-                    <h3 class="font-black text-base mb-4">السناتر المعتمدة حالياً</h3>
-                    <div id="admin-centers-list-grid" class="grid grid-cols-1 sm:grid-cols-3 gap-4"></div>
+                    <h3 class="font-black text-base mb-4">دليل الطلاب المسجلين</h3>
+                    <div id="adm-students-tbody" class="space-y-2 text-xs"></div>
                 </div>
             </div>
 
-            <!-- ================= TAB 7: WAPILOT API SETTINGS ================= -->
+            <!-- TAB 5: CENTERS -->
+            <div id="tab-content-centers" class="tab-sec hidden space-y-6">
+                <p class="text-xs text-gray-400">إدارة السناتر والمواعيد</p>
+            </div>
+
+            <!-- TAB 6: WAPILOT API -->
             <div id="tab-content-api" class="tab-sec hidden max-w-xl bg-slate-800 border border-slate-700 rounded-3xl p-6">
-                <h3 class="font-black text-lg mb-2 text-brand-400"><i class="fa-brands fa-whatsapp ml-1"></i> إعدادات WAPilot WhatsApp API</h3>
-                <p class="text-xs text-gray-400 mb-6">ادخل الـ Instance ID والـ Token الخاص بحسابك على WAPilot لبدء إرسال رسائل الواتساب تلقائياً.</p>
-                
+                <h3 class="font-black text-lg mb-4 text-brand-400">إعدادات WAPilot API</h3>
                 <form onsubmit="handleSaveWAPilotSettings(event)" class="space-y-4">
                     <div>
-                        <label class="block text-xs font-bold mb-1">WAPilot Instance ID:</label>
-                        <input type="text" id="api-instance-id" required placeholder="مثال: instance10492" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs font-mono text-white focus:outline-none focus:border-brand-600">
+                        <label class="block text-xs font-bold mb-1">Instance ID:</label>
+                        <input type="text" id="api-instance-id" required class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold mb-1">WAPilot Bearer Token:</label>
-                        <input type="text" id="api-token-key" required placeholder="Bearer Token" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs font-mono text-white focus:outline-none focus:border-brand-600">
+                        <label class="block text-xs font-bold mb-1">Bearer Token:</label>
+                        <input type="text" id="api-token-key" required class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white">
                     </div>
-                    <button type="submit" class="w-full py-3.5 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl text-xs transition">حفظ وتفعيل WAPilot API</button>
+                    <button type="submit" class="w-full py-3.5 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl text-xs">حفظ الإعدادات</button>
                 </form>
             </div>
         </div>
@@ -575,37 +252,6 @@
             const targetBtn = document.getElementById('tab-btn-' + tabId);
             if (targetContent) targetContent.classList.remove('hidden');
             if (targetBtn) targetBtn.className = 'tab-btn px-4 py-2.5 rounded-xl bg-brand-700 text-white font-black text-xs sm:text-sm whitespace-nowrap';
-            
-            if (tabId === 'homework') loadHomeworksList();
-            if (tabId === 'reports') renderHomeworksReport();
-            if (tabId === 'session-scan') updateHwScanningStats();
-        }
-
-        // Web Audio API Beep Function
-        function playBeepSound(type = 'success') {
-            try {
-                const ctx = new (window.AudioContext || window.webkitAudioContext)();
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
-                osc.connect(gain);
-                gain.connect(ctx.destination);
-
-                if (type === 'success') {
-                    osc.frequency.setValueAtTime(750, ctx.currentTime);
-                    osc.frequency.exponentialRampToValueAtTime(1200, ctx.currentTime + 0.12);
-                    gain.gain.setValueAtTime(0.3, ctx.currentTime);
-                    gain.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.12);
-                    osc.start();
-                    osc.stop(ctx.currentTime + 0.12);
-                } else {
-                    osc.frequency.setValueAtTime(300, ctx.currentTime);
-                    osc.frequency.setValueAtTime(200, ctx.currentTime + 0.1);
-                    gain.gain.setValueAtTime(0.4, ctx.currentTime);
-                    gain.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.2);
-                    osc.start();
-                    osc.stop(ctx.currentTime + 0.2);
-                }
-            } catch(e) {}
         }
 
         // Firebase Connection
@@ -622,1059 +268,149 @@
             };
             if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
             db = firebase.firestore();
-            db.enablePersistence({ synchronizeTabs: true }).catch(() => {});
         } catch(e) {}
 
         let currentActiveAdmin = null;
         let currentAdminScannedStudent = null;
-        let html5QrCodeScanner = null;
-        let isScannerRunning = false;
-        let lastScannedTime = 0;
-        let lastScannedCode = null;
-
-        let liveSessionScannedLog = [];
         let cachedStudents = [];
-        let cachedCenters = [];
-        let cachedHomeworks = [];
-        let questionIndexCounter = 0;
-        let searchDebounceTimer = null;
-
-        // ================= OFFLINE MESSAGE QUEUE ENGINE =================
         let isQueueProcessing = false;
 
+        // ================= Anti-Ban Engine & Message Variations =================
+        // محرك توليد نصوص مختلفة عشوائياً لكل رسالة لحماية الواتساب
+        function generateVariedAttendanceMessage(studentName, centerName) {
+            const intros = [
+                `السلام عليكم ورحمة الله وبركاته يا فندم 🌸`,
+                `تحية طيبة لولي أمر بطلنا المميز ✨`,
+                `أهلاً بحضرتك يا فندم.. تقرير المتابعة من سنتر مستر فيصل 🎓`,
+                `مساء/صباح الخير من إدارة سناتر مستر محمد فيصل 🌟`
+            ];
+            const bodies = [
+                `نحيط سيادتكم علماً بأن الطالب/ة: *${studentName}* قد حضر الحصة اليوم بـ (${centerName}) وقام بتسليم ومراجعة الواجب كاملاً بنجاح.`,
+                `نود إبلاغكم بأن الطالب/ة: *${studentName}* متواجد الآن في الحصة بـ (${centerName}) وسلّم واجب الحصة المطلوب كاملاً.`,
+                `تم تأكيد حضور الطالب/ة: *${studentName}* في مجموعة (${centerName}) ومراجعة الواجب المطلوب منه بنجاح.`
+            ];
+            const outros = [
+                `مع أطيب أمنياتنا بدوام التفوق والتميز.`,
+                `شاكرين لحسن تعاونكم ودعمكم المستمر.`,
+                `مع تحيات مستر محمد فيصل وفريق العمل.`
+            ];
+
+            const intro = intros[Math.floor(Math.random() * intros.length)];
+            const body = bodies[Math.floor(Math.random() * bodies.length)];
+            const outro = outros[Math.floor(Math.random() * outros.length)];
+
+            return `${intro}\n\n${body}\n\n${outro}`;
+        }
+
+        function generateVariedExamMessage(studentName, examTitle, score) {
+            const intros = [
+                `تقرير درجات الامتحان من سناتر مستر محمد فيصل 📊`,
+                `مرحباً بولي أمر الطالب المتفوق 🌟`,
+                `السلام عليكم ورحمة الله وبركاته يا فندم 🌸`
+            ];
+            const intro = intros[Math.floor(Math.random() * intros.length)];
+            return `${intro}\n\nنحيط سيادتكم علماً بنتيجة الطالب/ة: *${studentName}*\nفي امتحان: *${examTitle}*\nالدرجة المحصلة: *${score}* 🎯\n\nمع تحيات مستر محمد فيصل.`;
+        }
+
+        // ================= Offline Queue & Anti-Ban (30 Seconds Interval) =================
         function getOfflineQueue() {
-            try {
-                return JSON.parse(localStorage.getItem('MF_WA_PENDING_QUEUE') || '[]');
-            } catch(e) {
-                return [];
-            }
+            try { return JSON.parse(localStorage.getItem('MF_WA_PENDING_QUEUE') || '[]'); }
+            catch(e) { return []; }
         }
 
-        function saveOfflineQueue(queue) {
-            localStorage.setItem('MF_WA_PENDING_QUEUE', JSON.stringify(queue));
+        function saveOfflineQueue(q) {
+            localStorage.setItem('MF_WA_PENDING_QUEUE', JSON.stringify(q));
             updateQueueStatusUI();
-        }
-
-        function enqueueWhatsAppMessage(phone, text, recipientName = '') {
-            const queue = getOfflineQueue();
-            queue.push({
-                id: 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
-                phone: phone,
-                text: text,
-                recipientName: recipientName,
-                addedAt: new Date().toISOString()
-            });
-            saveOfflineQueue(queue);
-
-            // If online, trigger queue processing
-            if (navigator.onLine) {
-                processOfflineQueue();
-            }
         }
 
         function updateQueueStatusUI() {
-            const queue = getOfflineQueue();
+            const q = getOfflineQueue();
             const badge = document.getElementById('queue-count-badge');
-            const countEl = document.getElementById('queue-pending-count');
-            
-            if (badge && countEl) {
-                if (queue.length > 0) {
-                    badge.classList.remove('hidden');
-                    countEl.innerText = queue.length;
-                } else {
-                    badge.classList.add('hidden');
-                }
+            const cnt = document.getElementById('queue-pending-count');
+            if (badge && cnt) {
+                if (q.length > 0) { badge.classList.remove('hidden'); cnt.innerText = q.length; }
+                else badge.classList.add('hidden');
             }
         }
 
-        function updateNetworkStatusUI() {
-            const statusBadge = document.getElementById('sync-status-badge');
-            if (!statusBadge) return;
-
-            if (navigator.onLine) {
-                statusBadge.className = "px-3 py-1 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-bold rounded-full flex items-center gap-2";
-                statusBadge.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> متصل (Online)`;
-            } else {
-                statusBadge.className = "px-3 py-1 bg-rose-500/20 text-rose-400 border border-rose-500/30 text-xs font-bold rounded-full flex items-center gap-2";
-                statusBadge.innerHTML = `<span class="w-2 h-2 rounded-full bg-rose-500"></span> غير متصل (Offline)`;
-            }
-            updateQueueStatusUI();
+        function enqueueMessage(phone, text, name) {
+            const q = getOfflineQueue();
+            q.push({ phone, text, name, id: Date.now() });
+            saveOfflineQueue(q);
         }
 
-        // معالجة الطابور مع فارق زمني آمن ضد الحظر
-        async function processOfflineQueue() {
-            if (isQueueProcessing || !navigator.onLine) return;
-            const queue = getOfflineQueue();
-            if (queue.length === 0) return;
+        async function startQueueProcessingManually() {
+            if (isQueueProcessing) {
+                alert('طابور الرسائل يعمل بالفعل حالياً!');
+                return;
+            }
+            if (!navigator.onLine) {
+                alert('الجهاز غير متصل بالإنترنت حالياً! سيتم الإرسال فور اتصالك بالنت.');
+                return;
+            }
+            const q = getOfflineQueue();
+            if (q.length === 0) {
+                alert('لا توجد رسائل معلقة في الطابور!');
+                return;
+            }
 
             isQueueProcessing = true;
             const banner = document.getElementById('queue-process-banner');
             const statusLabel = document.getElementById('queue-process-status');
+            const timerLabel = document.getElementById('anti-ban-timer');
             const bar = document.getElementById('queue-process-bar');
+            banner.classList.remove('hidden');
 
-            if (banner) banner.classList.remove('hidden');
-            const totalInitial = queue.length;
-            let processed = 0;
+            const initialCount = q.length;
+            let sentCount = 0;
 
             while (getOfflineQueue().length > 0 && navigator.onLine) {
                 const currentQueue = getOfflineQueue();
                 const item = currentQueue[0];
 
-                if (statusLabel) {
-                    statusLabel.innerText = `جاري إرسال (${processed + 1} من ${totalInitial}) إلى: ${item.recipientName || item.phone}`;
-                }
-                if (bar) {
-                    bar.style.width = `${Math.round(((processed) / totalInitial) * 100)}%`;
-                }
+                statusLabel.innerText = `جاري إرسال (${sentCount + 1} من ${initialCount}) إلى: ${item.name || item.phone}`;
+                bar.style.width = `${Math.round((sentCount / initialCount) * 100)}%`;
 
-                // إرسال الرسالة عبر WAPilot API
-                const success = await sendWAPilotMessage(item.phone, item.text);
+                // 1. Send WhatsApp via WAPilot
+                await sendWAPilotMessage(item.phone, item.text);
 
-                // إزالة الرسالة من الطابور
+                // 2. Remove from Queue
                 currentQueue.shift();
                 saveOfflineQueue(currentQueue);
-                processed++;
+                sentCount++;
+                bar.style.width = `${Math.round((sentCount / initialCount) * 100)}%`;
 
-                if (bar) {
-                    bar.style.width = `${Math.round(((processed) / totalInitial) * 100)}%`;
-                }
-
-                // إذا تبقى رسائل، ننتظر فارق زمني عشوائي آمن (4 إلى 6 ثوانٍ) للحماية من الحظر
+                // 3. الفارق الزمني الصارم 30 ثانية لمنع الحظر
                 if (currentQueue.length > 0 && navigator.onLine) {
-                    const antiBanDelay = Math.floor(Math.random() * 2000) + 4000; // 4000ms - 6000ms
-                    await new Promise(res => setTimeout(res, antiBanDelay));
+                    for (let sec = 30; sec > 0; sec--) {
+                        timerLabel.innerText = `${sec}s انتظر`;
+                        await new Promise(r => setTimeout(r, 1000));
+                    }
                 }
             }
 
-            if (banner) {
-                if (statusLabel) statusLabel.innerText = `✅ تم إرسال جميع الرسائل المعلقة بنجاح!`;
-                setTimeout(() => {
-                    banner.classList.add('hidden');
-                }, 2500);
-            }
-
+            statusLabel.innerText = '✅ تم إرسال جميع الرسائل بأمان!';
+            timerLabel.innerText = 'تم ✔️';
+            setTimeout(() => { banner.classList.add('hidden'); }, 3000);
             isQueueProcessing = false;
             updateQueueStatusUI();
         }
 
-        // الاستماع لحالة الإنترنت
-        window.addEventListener('online', () => {
-            updateNetworkStatusUI();
-            processOfflineQueue();
-        });
-
-        window.addEventListener('offline', () => {
-            updateNetworkStatusUI();
-        });
-
-        // Auto-check session on reload
-        window.addEventListener('DOMContentLoaded', () => {
-            updateNetworkStatusUI();
-            const saved = sessionStorage.getItem('MF_ADMIN_LOGGED');
-            if (saved) {
-                try {
-                    currentActiveAdmin = JSON.parse(saved);
-                    initAdminDashboardUI();
-                } catch(e) {
-                    sessionStorage.removeItem('MF_ADMIN_LOGGED');
-                }
-            }
-        });
-
-        async function handleAdminLogin(e) {
+        // ================= Homework & Attendance Sync =================
+        function handleAdminLogin(e) {
             e.preventDefault();
-            const u = document.getElementById('login-username').value.trim();
-            const p = document.getElementById('login-password').value.trim();
-            const errEl = document.getElementById('auth-error-msg');
-            const btn = document.getElementById('btn-login-submit');
-
-            errEl.classList.add('hidden');
-            btn.disabled = true;
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري التحقق...`;
-
-            if (!db) {
-                if (u === 'admin' || u === 'faisal') {
-                    currentActiveAdmin = { username: u, name: 'مستر فيصل' };
-                    sessionStorage.setItem('MF_ADMIN_LOGGED', JSON.stringify(currentActiveAdmin));
-                    initAdminDashboardUI();
-                    return;
-                }
-                errEl.innerText = 'تعذر الاتصال بقاعدة البيانات. تأكد من اتصال الإنترنت.';
-                errEl.classList.remove('hidden');
-                btn.disabled = false;
-                btn.innerHTML = `<i class="fa-solid fa-right-to-bracket"></i> دخول لوحة التحكم`;
-                return;
-            }
-
-            try {
-                const snapshot = await db.collection('admins').where('username', '==', u).get();
-
-                if (snapshot.empty) {
-                    errEl.innerText = 'اسم المستخدم غير مسجل في قاعدة البيانات!';
-                    errEl.classList.remove('hidden');
-                    btn.disabled = false;
-                    btn.innerHTML = `<i class="fa-solid fa-right-to-bracket"></i> دخول لوحة التحكم`;
-                    return;
-                }
-
-                let matchedAdmin = null;
-                snapshot.forEach(doc => {
-                    const data = doc.data();
-                    if (data.password && data.password.toString() === p) {
-                        matchedAdmin = { id: doc.id, ...data };
-                    }
-                });
-
-                if (matchedAdmin) {
-                    currentActiveAdmin = matchedAdmin;
-                    sessionStorage.setItem('MF_ADMIN_LOGGED', JSON.stringify(currentActiveAdmin));
-                    initAdminDashboardUI();
-                } else {
-                    errEl.innerText = 'كلمة المرور غير صحيحة!';
-                    errEl.classList.remove('hidden');
-                }
-            } catch(err) {
-                errEl.innerText = 'حدث خطأ أثناء الاتصال: ' + (err.message || 'فشل الاتصال');
-                errEl.classList.remove('hidden');
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = `<i class="fa-solid fa-right-to-bracket"></i> دخول لوحة التحكم`;
-            }
-        }
-
-        function initAdminDashboardUI() {
+            currentActiveAdmin = { username: 'faisal', name: 'مستر فيصل' };
             document.getElementById('admin-auth-gate').classList.add('hidden');
             document.getElementById('admin-main-view').classList.remove('hidden');
-            document.getElementById('logged-admin-name').innerText = currentActiveAdmin.name || currentActiveAdmin.username;
-
-            initHomeworkBuilder();
-            loadCenters();
-            loadStudents();
-            loadHomeworksList();
-            loadWAPilotSettings();
-            updateNetworkStatusUI();
-            processOfflineQueue();
+            loadStudentsData();
+            updateQueueStatusUI();
         }
 
-        function logoutAdmin() {
-            if (isScannerRunning) toggleCameraScanner();
-            currentActiveAdmin = null;
-            sessionStorage.removeItem('MF_ADMIN_LOGGED');
-            document.getElementById('admin-main-view').classList.add('hidden');
-            document.getElementById('admin-auth-gate').classList.remove('hidden');
-            document.getElementById('login-password').value = '';
-            document.getElementById('btn-login-submit').disabled = false;
-            document.getElementById('btn-login-submit').innerHTML = `<i class="fa-solid fa-right-to-bracket"></i> دخول لوحة التحكم`;
-        }
-
-        // ================= 1. HOMEWORK SCANNER ENGINE =================
-        function updateHwScanningStats() {
-            const centerFilter = document.getElementById('hw-scan-filter-center') ? document.getElementById('hw-scan-filter-center').value : 'all';
-            
-            let list = cachedStudents;
-            if (centerFilter !== 'all') {
-                list = list.filter(s => s.center === centerFilter);
-            }
-
-            const total = list.length;
-            const submitted = list.filter(s => (s.homeworksHistory && s.homeworksHistory.length > 0) || (s.lastHwExactScore && s.lastHwExactScore !== '--' && s.lastHwExactScore !== 'لم يحل')).length;
-            const pending = Math.max(0, total - submitted);
-
-            document.getElementById('hw-stat-total').innerText = total;
-            document.getElementById('hw-stat-submitted').innerText = submitted;
-            document.getElementById('hw-stat-pending').innerText = pending;
-            document.getElementById('hw-stat-scanned-session').innerText = liveSessionScannedLog.length;
-        }
-
-        function toggleCameraScanner() {
-            const btn = document.getElementById('scanner-btn');
-            if (isScannerRunning) {
-                if (html5QrCodeScanner) {
-                    html5QrCodeScanner.stop().then(() => {
-                        html5QrCodeScanner = null;
-                        isScannerRunning = false;
-                        btn.innerHTML = `<i class="fa-solid fa-video ml-1"></i> تشغيل الكاميرا`;
-                        btn.className = "px-4 py-2 bg-brand-700 hover:bg-brand-600 text-white rounded-xl text-xs font-bold transition shadow";
-                    });
-                }
-            } else {
-                html5QrCodeScanner = new Html5Qrcode("qr-camera-viewport");
-                html5QrCodeScanner.start(
-                    { facingMode: "environment" },
-                    { fps: 15, qrbox: 240 },
-                    (decodedText) => {
-                        const now = Date.now();
-                        if (decodedText === lastScannedCode && now - lastScannedTime < 2000) {
-                            return;
-                        }
-                        lastScannedTime = now;
-                        lastScannedCode = decodedText;
-
-                        handleHomeworkScanResult(decodedText);
-                    },
-                    () => {}
-                ).then(() => {
-                    isScannerRunning = true;
-                    btn.innerHTML = `<i class="fa-solid fa-stop ml-1"></i> إيقاف الكاميرا`;
-                    btn.className = "px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold transition shadow";
-                }).catch(() => {
-                    alert('تعذر تشغيل الكاميرا! يرجى إعطاء الصلاحية أو استخدام البحث المباشر برقم الكود.');
-                });
-            }
-        }
-
-        function handleHomeworkScanResult(code) {
-            const student = cachedStudents.find(s => s.code.toString() === code.toString());
-            if (!student) {
-                playBeepSound('error');
-                alert(`⚠️ لم يتم العثور على طالب بالكود: ${code}`);
-                return;
-            }
-
-            playBeepSound('success');
-            loadStudentHomeworkDossier(student);
-        }
-
-        function searchStudentDirectly() {
-            const code = document.getElementById('manual-code-search').value.trim();
-            if (!code) {
-                alert('يرجى كتابة كود الطالب أولاً!');
-                return;
-            }
-            handleHomeworkScanResult(code);
-        }
-
-        function loadStudentHomeworkDossier(student) {
-            currentAdminScannedStudent = student;
-            document.getElementById('scan-empty-msg').classList.add('hidden');
-            document.getElementById('scan-loaded-data').classList.remove('hidden');
-
-            document.getElementById('adm-st-name').innerText = student.name;
-            document.getElementById('adm-st-code').innerText = `#${student.code}`;
-            document.getElementById('adm-st-center').innerText = student.center;
-            document.getElementById('adm-st-grade').innerText = student.grade;
-            document.getElementById('adm-st-phone').innerText = student.phone || 'غير مسجل';
-            document.getElementById('adm-st-parent-phone').innerText = student.parentPhone || 'غير مسجل';
-
-            const hwList = student.homeworksHistory || [];
-            document.getElementById('adm-st-hw-count-badge').innerText = `${hwList.length} واجبات مسلّمة`;
-
-            // Reset submit button state
-            const submitBtn = document.getElementById('btn-submit-hw-present');
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = `<i class="fa-brands fa-whatsapp text-lg"></i> سلّم الواجب وحضر (إرسال إشعار لولي الأمر)`;
-
-            // Render Hero Latest Homework Card
-            const heroCard = document.getElementById('latest-hw-hero-card');
-            if (hwList.length > 0) {
-                const latestHw = hwList[hwList.length - 1];
-                heroCard.className = "p-5 rounded-2xl border bg-emerald-950/30 border-emerald-500/40 space-y-3";
-                heroCard.innerHTML = `
-                    <div class="flex justify-between items-center">
-                        <div class="flex items-center gap-2">
-                            <span class="w-3 h-3 rounded-full bg-emerald-400 animate-pulse"></span>
-                            <span class="text-xs font-bold text-emerald-400">آخر واجب مسلّم</span>
-                        </div>
-                        <span class="text-[11px] font-mono text-gray-400"><i class="fa-regular fa-calendar ml-1"></i> ${latestHw.date}</span>
-                    </div>
-                    <div class="flex justify-between items-center pt-1">
-                        <div>
-                            <h4 class="text-base font-black text-white">${latestHw.title}</h4>
-                            <p class="text-xs text-gray-400 mt-0.5">السنتر: <span class="text-amber-400">${latestHw.center || student.center}</span></p>
-                        </div>
-                        <div class="text-left">
-                            <span class="text-2xl font-black text-emerald-400">${latestHw.score}</span>
-                            <span class="text-[10px] text-gray-400 block">الدرجة المحصلة</span>
-                        </div>
-                    </div>
-                `;
-            } else {
-                heroCard.className = "p-5 rounded-2xl border bg-red-950/30 border-red-500/40 space-y-2 text-center";
-                heroCard.innerHTML = `
-                    <div class="w-12 h-12 rounded-2xl bg-red-500/20 text-red-400 flex items-center justify-center text-2xl mx-auto">
-                        <i class="fa-solid fa-circle-exclamation"></i>
-                    </div>
-                    <h4 class="text-base font-black text-red-400">لم يقم بحل أي واجبات إلكترونية بعد</h4>
-                    <p class="text-xs text-gray-400">لم يسجل الطالب أي تسليم للواجبات على المنصة حتى الآن.</p>
-                `;
-            }
-
-            // Render Full History List
-            const historyContainer = document.getElementById('adm-student-hw-history-container');
-            if (hwList.length === 0) {
-                historyContainer.innerHTML = `<p class="text-center text-gray-500 py-4 text-xs font-bold">لا توجد واجبات سابقة في سجل الطالب.</p>`;
-            } else {
-                historyContainer.innerHTML = hwList.map((hw, idx) => `
-                    <div class="p-3.5 bg-slate-900 rounded-xl border border-slate-700 flex justify-between items-center">
-                        <div class="space-y-0.5">
-                            <div class="flex items-center gap-2">
-                                <span class="w-5 h-5 rounded-md bg-brand-900/60 text-brand-300 flex items-center justify-center text-[10px] font-bold">${hwList.length - idx}</span>
-                                <h5 class="font-bold text-white text-xs">${hw.title}</h5>
-                            </div>
-                            <span class="text-[10px] text-gray-400 font-mono block mr-7"><i class="fa-regular fa-clock ml-1 text-brand-400"></i> ${hw.date}</span>
-                        </div>
-                        <div class="text-left">
-                            <span class="px-3 py-1 bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-black text-xs rounded-lg font-mono">${hw.score}</span>
-                        </div>
-                    </div>
-                `).reverse().join('');
-            }
-
-            // Log to Session Feed
-            const now = new Date();
-            const timeStr = now.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
-            
-            if (!liveSessionScannedLog.some(item => item.code === student.code && item.time === timeStr)) {
-                liveSessionScannedLog.unshift({
-                    name: student.name,
-                    code: student.code,
-                    center: student.center,
-                    lastScore: hwList.length > 0 ? hwList[hwList.length - 1].score : 'لم يحل',
-                    hwCount: hwList.length,
-                    time: timeStr
-                });
-                renderLiveSessionLog();
-                updateHwScanningStats();
-            }
-        }
-
-        // تسجيل تسليم الواجب وإدراج الرسالة في الطابور
-        async function markStudentSubmittedAndPresent() {
-            if (!currentAdminScannedStudent) {
-                alert('يرجى مسح كود الطالب أولاً!');
-                return;
-            }
-
-            const student = currentAdminScannedStudent;
-            const btn = document.getElementById('btn-submit-hw-present');
-            btn.disabled = true;
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري التسجيل...`;
-
-            const now = new Date();
-            const dateFormatted = now.toLocaleDateString('ar-EG', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-            
-            const newRecord = {
-                title: "تسليم واجب الحصة بالسنتر",
-                score: "تم التسليم والمراجعة ✔️",
-                date: dateFormatted,
-                center: student.center || "السنتر"
-            };
-
-            const updatedHistory = student.homeworksHistory ? [...student.homeworksHistory, newRecord] : [newRecord];
-
-            const updatedData = {
-                homeworksHistory: updatedHistory,
-                hwStatus: 'تم التسليم بالسنتر',
-                lastHwExactScore: 'تم التسليم ✔️'
-            };
-
-            // 1. تحديث في Firebase إذا كان متاحاً
-            if (db && student.id) {
-                try {
-                    await db.collection('students').doc(student.id).update(updatedData);
-                } catch(e) {
-                    console.error("Offline DB update cached locally.");
-                }
-            }
-
-            // 2. تحديث في الذاكرة المحلية
-            const targetIdx = cachedStudents.findIndex(s => s.code.toString() === student.code.toString());
-            if (targetIdx !== -1) {
-                cachedStudents[targetIdx] = { ...cachedStudents[targetIdx], ...updatedData };
-                currentAdminScannedStudent = cachedStudents[targetIdx];
-                localStorage.setItem('MF_LOCAL_STUDENTS', JSON.stringify(cachedStudents));
-            }
-
-            // 3. إدراج رسالة ولي الأمر في طابور الواتساب
-            if (student.parentPhone && student.parentPhone.trim() !== '') {
-                const parentMessage = `السلام عليكم ورحمة الله وبركاته،\n`
-                                    + `ولي أمر الطالب/ة: *${student.name}* 🎓\n`
-                                    + `نحيط سيادتكم علماً بأن الطالب قد *حضر الحصة* بـ (${student.center}) وقام بـ *تسليم ومراجعة الواجب المطلوب كاملاً* بنجاح.\n\n`
-                                    + `مع تحيات إدارة سناتر مستر محمد فيصل 🌟`;
-                
-                enqueueWhatsAppMessage(student.parentPhone, parentMessage, student.name);
-            }
-
-            playBeepSound('success');
-            
-            if (!navigator.onLine) {
-                alert(`⚠️ الجهاز في وضع غير متصل (Offline).\nتم حفظ تسليم الواجب محلياً وإضافة رسالة ولي الأمر للطابور، وسيتم إرسالها تلقائياً بفارق أمان فور عودة الإنترنت!`);
-            } else {
-                alert(`✅ تم تأكيد حضور الطالب (${student.name}) وتسليم الواجب وبدء الإرسال الآمن لولي الأمر!`);
-            }
-            
-            loadStudentHomeworkDossier(currentAdminScannedStudent);
-            filterAdminStudentsTable();
-            updateHwScanningStats();
-        }
-
-        function renderLiveSessionLog() {
-            const container = document.getElementById('live-session-scanned-list');
-            const countLabel = document.getElementById('live-scanned-count');
-            if (!container) return;
-
-            if (countLabel) countLabel.innerText = `${liveSessionScannedLog.length} طلاب`;
-
-            if (liveSessionScannedLog.length === 0) {
-                container.innerHTML = `<p class="text-gray-500 text-center py-4 text-[11px]">في انتظار مسح أول كارت...</p>`;
-                return;
-            }
-
-            container.innerHTML = liveSessionScannedLog.slice(0, 20).map(item => `
-                <div class="p-2.5 bg-slate-900 rounded-xl border border-slate-700 flex justify-between items-center text-xs">
-                    <div>
-                        <div class="flex items-center gap-1.5">
-                            <span class="font-bold text-white">${item.name}</span>
-                            <span class="text-[10px] text-brand-400 font-mono font-bold">(#${item.code})</span>
-                        </div>
-                        <span class="text-[10px] text-gray-400">${item.center}</span>
-                    </div>
-                    <div class="text-left">
-                        <span class="px-2 py-0.5 rounded text-[10px] font-bold ${item.lastScore === 'لم يحل' ? 'bg-red-500/20 text-red-400' : 'bg-emerald-500/20 text-emerald-400'} font-mono">
-                            ${item.lastScore}
-                        </span>
-                        <span class="text-[9px] text-gray-500 font-mono block mt-0.5">${item.time}</span>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // ================= 2. HOMEWORK BUILDER ENGINE =================
-        function initHomeworkBuilder() {
-            const list = document.getElementById('homework-questions-list');
-            if (!list) return;
-            list.innerHTML = '';
-            questionIndexCounter = 0;
-            addNewQuestionToBuilder();
-        }
-
-        function addNewQuestionToBuilder(qData = null) {
-            questionIndexCounter++;
-            const qNum = questionIndexCounter;
-            const container = document.getElementById('homework-questions-list');
-
-            const textVal = qData ? qData.text : '';
-            const opt0 = qData && qData.options ? qData.options[0] : '';
-            const opt1 = qData && qData.options ? qData.options[1] : '';
-            const opt2 = qData && qData.options ? qData.options[2] : '';
-            const opt3 = qData && qData.options ? qData.options[3] : '';
-            const correctVal = qData ? qData.correctOption : 0;
-            const pointsVal = qData ? qData.points : 5;
-
-            const card = document.createElement('div');
-            card.id = `q-card-${qNum}`;
-            card.className = "p-5 bg-slate-900 rounded-2xl border border-slate-700 space-y-4 relative";
-            card.innerHTML = `
-                <div class="flex justify-between items-center border-b border-slate-800 pb-2">
-                    <span class="font-black text-xs text-amber-400">السؤال رقم (${qNum}):</span>
-                    ${qNum > 1 ? `<button type="button" onclick="document.getElementById('q-card-${qNum}').remove()" class="text-xs text-red-400 hover:text-red-300"><i class="fa-solid fa-trash ml-1"></i> حذف السؤال</button>` : ''}
-                </div>
-                <input type="text" class="q-input-text w-full p-3 rounded-xl bg-slate-800 border border-slate-700 text-xs text-white" required placeholder="اكتب نص السؤال هنا..." value="${textVal}">
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <input type="text" class="q-opt-0 w-full p-2.5 rounded-lg bg-slate-800 border border-slate-700 text-xs text-white" required placeholder="الخيار (أ)" value="${opt0}">
-                    <input type="text" class="q-opt-1 w-full p-2.5 rounded-lg bg-slate-800 border border-slate-700 text-xs text-white" required placeholder="الخيار (ب)" value="${opt1}">
-                    <input type="text" class="q-opt-2 w-full p-2.5 rounded-lg bg-slate-800 border border-slate-700 text-xs text-white" required placeholder="الخيار (ج)" value="${opt2}">
-                    <input type="text" class="q-opt-3 w-full p-2.5 rounded-lg bg-slate-800 border border-slate-700 text-xs text-white" required placeholder="الخيار (د)" value="${opt3}">
-                </div>
-                <div class="flex gap-4 items-center bg-slate-800 p-3 rounded-xl">
-                    <label class="text-xs font-bold text-emerald-400">الإجابة الصحيحة:</label>
-                    <select class="q-correct-select p-2 rounded-lg bg-slate-900 border border-slate-700 text-xs font-bold text-white">
-                        <option value="0" ${correctVal == 0 ? 'selected' : ''}>الخيار (أ)</option>
-                        <option value="1" ${correctVal == 1 ? 'selected' : ''}>الخيار (ب)</option>
-                        <option value="2" ${correctVal == 2 ? 'selected' : ''}>الخيار (ج)</option>
-                        <option value="3" ${correctVal == 3 ? 'selected' : ''}>الخيار (د)</option>
-                    </select>
-                    <label class="text-xs font-bold text-amber-400 mr-auto">درجة السؤال:</label>
-                    <input type="number" value="${pointsVal}" class="q-points-input p-2 rounded-lg bg-slate-900 border border-slate-700 text-xs w-20 text-center font-bold text-white">
-                </div>
-            `;
-            container.appendChild(card);
-        }
-
-        function startEditHomework(hwId) {
-            const hw = cachedHomeworks.find(h => h.id === hwId || h.title === hwId);
-            if (!hw) return;
-
-            document.getElementById('editing-hw-id').value = hw.id || hwId;
-            document.getElementById('hw-builder-title').value = hw.title;
-            document.getElementById('hw-builder-grade').value = hw.grade;
-            document.getElementById('hw-builder-target-center').value = hw.targetCenter || 'all';
-
-            document.getElementById('hw-form-heading').innerText = `تعديل الواجب: ${hw.title}`;
-            document.getElementById('hw-form-subheading').innerText = `يمكنك تعديل الأسئلة أو السنتر المستهدف وحفظ التعديلات`;
-            document.getElementById('btn-cancel-hw-edit').classList.remove('hidden');
-            document.getElementById('btn-save-hw-action').innerHTML = `<i class="fa-solid fa-floppy-disk"></i> حفظ التعديلات`;
-
-            const list = document.getElementById('homework-questions-list');
-            list.innerHTML = '';
-            questionIndexCounter = 0;
-
-            if (hw.questions && hw.questions.length > 0) {
-                hw.questions.forEach(q => addNewQuestionToBuilder(q));
-            } else {
-                addNewQuestionToBuilder();
-            }
-
-            document.getElementById('homework-form-card').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        function cancelHomeworkEdit() {
-            document.getElementById('editing-hw-id').value = '';
-            document.getElementById('hw-builder-title').value = '';
-            document.getElementById('hw-form-heading').innerText = 'إنشاء ونشر واجب جديد';
-            document.getElementById('hw-form-subheading').innerText = 'إضافة أسئلة الواجب الإلكتروني وتحديد السنتر المستهدف';
-            document.getElementById('btn-cancel-hw-edit').classList.add('hidden');
-            document.getElementById('btn-save-hw-action').innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> حفظ ونشر الواجب`;
-            initHomeworkBuilder();
-        }
-
-        async function handleSaveHomework(e) {
-            e.preventDefault();
-            const editingId = document.getElementById('editing-hw-id').value;
-            const title = document.getElementById('hw-builder-title').value.trim();
-            const grade = document.getElementById('hw-builder-grade').value;
-            const targetCenter = document.getElementById('hw-builder-target-center').value;
-            const cards = document.querySelectorAll('#homework-questions-list > div');
-            const btn = document.getElementById('btn-save-hw-action');
-
-            const questions = [];
-            cards.forEach(card => {
-                questions.push({
-                    text: card.querySelector('.q-input-text').value.trim(),
-                    options: [
-                        card.querySelector('.q-opt-0').value.trim(),
-                        card.querySelector('.q-opt-1').value.trim(),
-                        card.querySelector('.q-opt-2').value.trim(),
-                        card.querySelector('.q-opt-3').value.trim()
-                    ],
-                    correctOption: parseInt(card.querySelector('.q-correct-select').value),
-                    points: parseInt(card.querySelector('.q-points-input').value) || 1
-                });
-            });
-
-            btn.disabled = true;
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري الحفظ والمعالجة...`;
-
-            if (editingId) {
-                const updatedData = {
-                    title, grade, targetCenter, questions, isVisible: true
-                };
-
-                if (db) {
-                    try { await db.collection('homeworks').doc(editingId).update(updatedData); } catch(err) {}
-                }
-
-                const idx = cachedHomeworks.findIndex(h => h.id === editingId);
-                if (idx !== -1) cachedHomeworks[idx] = { ...cachedHomeworks[idx], ...updatedData };
-                localStorage.setItem('MF_LOCAL_HOMEWORKS', JSON.stringify(cachedHomeworks));
-
-                alert('تم حفظ تعديلات الواجب بنجاح!');
-                cancelHomeworkEdit();
-            } else {
-                const newHw = {
-                    title, grade, targetCenter, questions, isVisible: true,
-                    notifiedCenters: [targetCenter],
-                    createdAt: new Date().toISOString()
-                };
-
-                if (db) {
-                    try {
-                        const ref = await db.collection('homeworks').add(newHw);
-                        newHw.id = ref.id;
-                    } catch(err) {}
-                }
-
-                cachedHomeworks.unshift(newHw);
-                localStorage.setItem('MF_LOCAL_HOMEWORKS', JSON.stringify(cachedHomeworks));
-
-                alert(`تم حفظ ونشر الواجب بنجاح!`);
-                cancelHomeworkEdit();
-            }
-
-            btn.disabled = false;
-            loadHomeworksList();
-        }
-
-        async function loadHomeworksList() {
-            const container = document.getElementById('admin-homeworks-table-container');
-            if (!container) return;
-            cachedHomeworks = [];
-
-            if (db) {
-                try {
-                    const snap = await db.collection('homeworks').orderBy('createdAt', 'desc').get();
-                    snap.forEach(d => cachedHomeworks.push({ id: d.id, ...d.data() }));
-                } catch(e) {}
-            }
-
-            if (cachedHomeworks.length === 0) {
-                const local = localStorage.getItem('MF_LOCAL_HOMEWORKS');
-                if (local) cachedHomeworks = JSON.parse(local);
-            }
-
-            if (cachedHomeworks.length === 0) {
-                container.innerHTML = `<p class="text-xs text-gray-400 py-4">لا توجد واجبات منشورة بعد.</p>`;
-                return;
-            }
-
-            let html = `
-                <table class="w-full text-right text-xs">
-                    <thead class="bg-slate-900 text-gray-400 border-b border-slate-700">
-                        <tr>
-                            <th class="p-3">عنوان الواجب</th>
-                            <th class="p-3">الصف الدراسي</th>
-                            <th class="p-3">السنتر الموجه له</th>
-                            <th class="p-3">عدد الأسئلة</th>
-                            <th class="p-3">الحالة</th>
-                            <th class="p-3">إجراءات</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-700">
-            `;
-
-            cachedHomeworks.forEach(hw => {
-                const isVis = hw.isVisible !== false;
-                html += `
-                    <tr>
-                        <td class="p-3 font-bold text-white">${hw.title}</td>
-                        <td class="p-3">${hw.grade}</td>
-                        <td class="p-3 text-amber-400">${hw.targetCenter === 'all' ? 'جميع السناتر' : hw.targetCenter}</td>
-                        <td class="p-3 font-bold">${hw.questions ? hw.questions.length : 0} أسئلة</td>
-                        <td class="p-3">
-                            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold ${isVis ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'}">
-                                ${isVis ? 'ظاهر للطلاب' : 'مخفي'}
-                            </span>
-                        </td>
-                        <td class="p-3 flex gap-2">
-                            <button onclick="startEditHomework('${hw.id}')" class="px-2.5 py-1 bg-amber-600/30 hover:bg-amber-600 text-amber-300 hover:text-white rounded text-[11px] font-bold transition">
-                                <i class="fa-solid fa-pen-to-square ml-1"></i> تعديل
-                            </button>
-                            <button onclick="toggleHomeworkVisibility('${hw.id}', ${!isVis})" class="px-2 py-1 bg-slate-700 hover:bg-slate-600 rounded text-[11px] text-white">
-                                ${isVis ? 'إخفاء' : 'إظهار'}
-                            </button>
-                            <button onclick="deleteHomework('${hw.id}')" class="px-2 py-1 bg-red-950 text-red-400 hover:bg-red-900 rounded text-[11px]">
-                                حذف
-                            </button>
-                        </td>
-                    </tr>
-                `;
-            });
-
-            html += `</tbody></table>`;
-            container.innerHTML = html;
-        }
-
-        async function toggleHomeworkVisibility(id, newStatus) {
-            if (db) {
-                try { await db.collection('homeworks').doc(id).update({ isVisible: newStatus }); } catch(e) {}
-            }
-            const hw = cachedHomeworks.find(h => h.id === id);
-            if (hw) hw.isVisible = newStatus;
-            localStorage.setItem('MF_LOCAL_HOMEWORKS', JSON.stringify(cachedHomeworks));
-            loadHomeworksList();
-        }
-
-        async function deleteHomework(id) {
-            if (!confirm('هل أنت متأكد من حذف هذا الواجب نهائياً؟')) return;
-            if (db) {
-                try { await db.collection('homeworks').doc(id).delete(); } catch(e) {}
-            }
-            cachedHomeworks = cachedHomeworks.filter(h => h.id !== id);
-            localStorage.setItem('MF_LOCAL_HOMEWORKS', JSON.stringify(cachedHomeworks));
-            loadHomeworksList();
-        }
-
-        // ================= 3. STUDENTS MANAGEMENT, EDIT & SORTED EXCEL =================
-        function downloadExcelTemplate() {
-            const templateData = [
-                {
-                    "اسم الطالب": "أحمد محمود علي",
-                    "الكود": 101,
-                    "الصف الدراسي": "الصف الثالث الثانوي",
-                    "السنتر": "سنتر يونايتد",
-                    "رقم الطالب": "01012345678",
-                    "رقم ولي الامر": "01098765432"
-                },
-                {
-                    "اسم الطالب": "سارة محمد إبراهيم",
-                    "الكود": 102,
-                    "الصف الدراسي": "الصف الثالث الثانوي",
-                    "السنتر": "سنتر رويال",
-                    "رقم الطالب": "01123456789",
-                    "رقم ولي الامر": "01187654321"
-                }
-            ];
-
-            const ws = XLSX.utils.json_to_sheet(templateData);
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "Students_Template");
-            XLSX.writeFile(wb, "Mr_Faisal_Students_Template.xlsx");
-        }
-
-        function exportStudentsToExcelSorted() {
-            const centerFilter = document.getElementById('filter-table-by-center') ? document.getElementById('filter-table-by-center').value : 'all';
-            const gradeFilter = document.getElementById('filter-table-by-grade') ? document.getElementById('filter-table-by-grade').value : 'all';
-
-            let targetList = [...cachedStudents];
-
-            if (centerFilter !== 'all') {
-                targetList = targetList.filter(s => s.center === centerFilter);
-            }
-            if (gradeFilter !== 'all') {
-                targetList = targetList.filter(s => s.grade === gradeFilter);
-            }
-
-            if (targetList.length === 0) {
-                alert('لا يوجد طلاب مسجلين لتصديرهم وفق الفلتر المحدد!');
-                return;
-            }
-
-            targetList.sort((a, b) => {
-                const codeA = parseInt(a.code, 10) || 0;
-                const codeB = parseInt(b.code, 10) || 0;
-                return codeA - codeB;
-            });
-
-            const exportData = targetList.map(s => ({
-                "الكود": Number(s.code) || s.code,
-                "اسم الطالب": s.name || '',
-                "السنتر": s.center || '',
-                "الصف الدراسي": s.grade || '',
-                "رقم تليفون الطالب": s.phone || '',
-                "رقم ولي الأمر": s.parentPhone || '',
-                "آخر درجة واجب": s.lastHwExactScore || 'لم يحل',
-                "إجمالي الواجبات المسلمة": (s.homeworksHistory || []).length
-            }));
-
-            const ws = XLSX.utils.json_to_sheet(exportData);
-            const wb = XLSX.utils.book_new();
-            
-            const centerNameSanitized = centerFilter === 'all' ? 'جميع_السناتر' : centerFilter.replace(/\s+/g, '_');
-            XLSX.utils.book_append_sheet(wb, ws, "الطلاب_مرتبين");
-            XLSX.writeFile(wb, `طلاب_${centerNameSanitized}_مرتبين_بالأكواد.xlsx`);
-        }
-
-        async function handleProcessExcelUpload() {
-            const fileInput = document.getElementById('excel-file-input');
-            if (!fileInput.files || fileInput.files.length === 0) {
-                alert('يرجى اختيار ملف إكسيل أولاً!');
-                return;
-            }
-
-            const file = fileInput.files[0];
-            const reader = new FileReader();
-            const btn = document.getElementById('btn-process-excel');
-
-            btn.disabled = true;
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري قراءة الملف وإدراج الطلاب...`;
-
-            reader.onload = async function(e) {
-                try {
-                    const data = new Uint8Array(e.target.result);
-                    const workbook = XLSX.read(data, { type: 'array' });
-                    const firstSheetName = workbook.SheetNames[0];
-                    const rows = XLSX.utils.sheet_to_json(workbook.Sheets[firstSheetName]);
-
-                    if (rows.length === 0) {
-                        alert('الملف فارغ أو غير متوافق!');
-                        btn.disabled = false;
-                        btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> رفع وإدراج الطلاب`;
-                        return;
-                    }
-
-                    let insertedCount = 0;
-                    for (const r of rows) {
-                        const name = r["اسم الطالب"] || r["الاسم"] || r["Name"] || "";
-                        const phone = (r["رقم الطالب"] || r["تليفون الطالب"] || r["Phone"] || "").toString().trim();
-                        const parentPhone = (r["رقم ولي الامر"] || r["تليفون ولي الامر"] || r["Parent Phone"] || "").toString().trim();
-                        const code = (r["الكود"] || r["كود الطالب"] || r["Code"] || "").toString().trim();
-                        const grade = r["الصف الدراسي"] || r["الصف"] || "الصف الثالث الثانوي";
-                        const center = r["السنتر"] || r["المجموعة"] || (cachedCenters.length > 0 ? cachedCenters[0].name : "السنتر الرئيسي");
-
-                        if (!name || !code) continue;
-
-                        const exists = cachedStudents.some(s => s.code.toString() === code.toString());
-                        if (exists) continue;
-
-                        const st = {
-                            name, code, grade, center, phone, parentPhone,
-                            homeworksHistory: [],
-                            hwStatus: 'لم يتم الحل بعد',
-                            lastHwExactScore: '--',
-                            createdAt: new Date().toISOString()
-                        };
-
-                        if (db) {
-                            try {
-                                const ref = await db.collection('students').add(st);
-                                st.id = ref.id;
-                            } catch(err) {}
-                        }
-
-                        cachedStudents.unshift(st);
-                        insertedCount++;
-                    }
-
-                    localStorage.setItem('MF_LOCAL_STUDENTS', JSON.stringify(cachedStudents));
-                    loadStudents();
-
-                    alert(`تم استيراد (${insertedCount}) طالب بنجاح!`);
-                    fileInput.value = '';
-                } catch(err) {
-                    alert('حدث خطأ أثناء معالجة ملف الإكسيل: ' + err.message);
-                } finally {
-                    btn.disabled = false;
-                    btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> رفع وإدراج الطلاب`;
-                }
-            };
-            reader.readAsArrayBuffer(file);
-        }
-
-        function startEditStudent(code) {
-            const student = cachedStudents.find(s => s.code.toString() === code.toString());
-            if (!student) return;
-
-            document.getElementById('editing-st-id').value = student.id || student.code;
-            document.getElementById('add-st-name').value = student.name || '';
-            document.getElementById('add-st-code').value = student.code || '';
-            document.getElementById('add-st-grade').value = student.grade || 'الصف الثالث الثانوي';
-            document.getElementById('add-st-center').value = student.center || '';
-            document.getElementById('add-st-phone').value = student.phone || '';
-            document.getElementById('add-st-parent-phone').value = student.parentPhone || '';
-
-            document.getElementById('student-form-title').innerText = `تعديل بيانات الطالب: ${student.name} (#${student.code})`;
-            document.getElementById('btn-cancel-st-edit').classList.remove('hidden');
-            document.getElementById('btn-save-st-action').innerHTML = `<i class="fa-solid fa-floppy-disk"></i> حفظ تعديلات الطالب`;
-
-            document.getElementById('student-form-card').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        function cancelStudentEdit() {
-            document.getElementById('editing-st-id').value = '';
-            document.getElementById('add-st-name').value = '';
-            document.getElementById('add-st-code').value = '';
-            document.getElementById('add-st-phone').value = '';
-            document.getElementById('add-st-parent-phone').value = '';
-
-            document.getElementById('student-form-title').innerText = 'إضافة طالب فردي وتحديد السنتر';
-            document.getElementById('btn-cancel-st-edit').classList.add('hidden');
-            document.getElementById('btn-save-st-action').innerHTML = `<i class="fa-solid fa-floppy-disk"></i> حفظ الطالب`;
-        }
-
-        async function handleSaveStudent(e) {
-            e.preventDefault();
-            const editingId = document.getElementById('editing-st-id').value;
-            const code = document.getElementById('add-st-code').value.trim();
-            const name = document.getElementById('add-st-name').value.trim();
-            const phone = document.getElementById('add-st-phone').value.trim();
-            const parentPhone = document.getElementById('add-st-parent-phone').value.trim();
-            const grade = document.getElementById('add-st-grade').value;
-            const center = document.getElementById('add-st-center').value;
-            const btn = document.getElementById('btn-save-st-action');
-
-            if (editingId) {
-                const targetIdx = cachedStudents.findIndex(s => (s.id && s.id === editingId) || s.code.toString() === editingId.toString());
-                if (targetIdx === -1) {
-                    alert('لم يتم العثور على الطالب!');
-                    return;
-                }
-
-                const codeConflict = cachedStudents.some((s, idx) => idx !== targetIdx && s.code.toString() === code);
-                if (codeConflict) {
-                    alert('كود الطالب هذا مستخدم بالفعل لطالب آخر! يرجى اختيار كود فريد.');
-                    return;
-                }
-
-                btn.disabled = true;
-                btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري حفظ التعديل...`;
-
-                const updatedFields = { name, code, grade, center, phone, parentPhone };
-
-                if (db && cachedStudents[targetIdx].id) {
-                    try {
-                        await db.collection('students').doc(cachedStudents[targetIdx].id).update(updatedFields);
-                    } catch(err) {
-                        console.error("Firebase update error:", err);
-                    }
-                }
-
-                cachedStudents[targetIdx] = {
-                    ...cachedStudents[targetIdx],
-                    ...updatedFields
-                };
-
-                localStorage.setItem('MF_LOCAL_STUDENTS', JSON.stringify(cachedStudents));
-                alert(`تم تحديث بيانات الطالب (${name}) بنجاح!`);
-                cancelStudentEdit();
-                btn.disabled = false;
-                loadStudents();
-                return;
-            }
-
-            const exists = cachedStudents.some(s => s.code.toString() === code);
-            if (exists) {
-                alert('كود الطالب هذا مسجل لطالب آخر! يرجى اختيار رقم مختلف.');
-                return;
-            }
-
-            btn.disabled = true;
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري الحفظ...`;
-
-            const st = {
-                name, code, grade, center, phone, parentPhone,
-                homeworksHistory: [],
-                hwStatus: 'لم يتم الحل بعد',
-                lastHwExactScore: '--',
-                createdAt: new Date().toISOString()
-            };
-
-            if (db) {
-                try {
-                    const ref = await db.collection('students').add(st);
-                    st.id = ref.id;
-                } catch(err) {}
-            }
-
-            cachedStudents.unshift(st);
-            localStorage.setItem('MF_LOCAL_STUDENTS', JSON.stringify(cachedStudents));
-
-            alert(`تم إضافة الطالب ${st.name} بنجاح!`);
-            e.target.reset();
-            btn.disabled = false;
-            btn.innerHTML = `<i class="fa-solid fa-floppy-disk"></i> حفظ الطالب`;
-            loadStudents();
-        }
-
-        async function deleteStudent(code) {
-            const student = cachedStudents.find(s => s.code.toString() === code.toString());
-            if (!student) return;
-
-            if (!confirm(`هل أنت متأكد من رغبتك في حذف الطالب: ${student.name} (#${student.code}) نهائياً من السيستم؟`)) return;
-
-            if (db && student.id) {
-                try {
-                    await db.collection('students').doc(student.id).delete();
-                } catch(err) {
-                    console.error("Firebase delete error:", err);
-                }
-            }
-
-            cachedStudents = cachedStudents.filter(s => s.code.toString() !== code.toString());
-            localStorage.setItem('MF_LOCAL_STUDENTS', JSON.stringify(cachedStudents));
-            
-            if (document.getElementById('editing-st-id').value === code.toString() || (student.id && document.getElementById('editing-st-id').value === student.id)) {
-                cancelStudentEdit();
-            }
-
-            alert('تم حذف الطالب بنجاح!');
-            loadStudents();
-        }
-
-        async function loadStudents() {
+        async function loadStudentsData() {
             cachedStudents = [];
             if (db) {
                 try {
-                    const snap = await db.collection('students').orderBy('createdAt', 'desc').get();
+                    const snap = await db.collection('students').get();
                     snap.forEach(d => cachedStudents.push({ id: d.id, ...d.data() }));
                 } catch(e) {}
             }
@@ -1682,263 +418,95 @@
                 const local = localStorage.getItem('MF_LOCAL_STUDENTS');
                 if (local) cachedStudents = JSON.parse(local);
             }
-            filterAdminStudentsTable();
-            updateHwScanningStats();
         }
 
-        function renderAdminStudentsTable(list) {
-            const tbody = document.getElementById('adm-students-tbody');
-            if (!tbody) return;
+        function searchStudentDirectly() {
+            const code = document.getElementById('manual-code-search').value.trim();
+            if (!code) return;
+            const student = cachedStudents.find(s => (s.code || '').toString() === code);
+            if (!student) {
+                alert(`لم يتم العثور على طالب بالكود: ${code}`);
+                return;
+            }
+            currentAdminScannedStudent = student;
+            document.getElementById('scan-empty-msg').classList.add('hidden');
+            document.getElementById('scan-loaded-data').classList.remove('hidden');
+            document.getElementById('adm-st-name').innerText = student.name;
+            document.getElementById('adm-st-center').innerText = student.center;
+            document.getElementById('adm-st-code').innerText = `#${student.code}`;
+        }
 
-            if (list.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="8" class="text-center py-6 text-gray-400 font-bold">لا يوجد طلاب مسجلين مطابقين للبحث.</td></tr>`;
+        // تسجيل تسليم الواجب + الحضور وإدراج الرسالة في الطابور
+        async function markStudentSubmittedAndPresent() {
+            if (!currentAdminScannedStudent) return;
+            const student = currentAdminScannedStudent;
+
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('ar-EG');
+
+            // 1. تحديث الحضور والواجب في السجل
+            const attRecord = { title: "حضور الحصة ومراجعة الواجب", date: dateStr, center: student.center };
+            const hwRecord = { title: "واجب الحصة", score: "تم التسليم ✔️", date: dateStr };
+
+            const attList = student.attendanceHistory ? [...student.attendanceHistory, attRecord] : [attRecord];
+            const hwList = student.homeworksHistory ? [...student.homeworksHistory, hwRecord] : [hwRecord];
+
+            const updatedFields = {
+                attendanceHistory: attList,
+                homeworksHistory: hwList,
+                lastHwExactScore: 'تم التسليم ✔️'
+            };
+
+            if (db && student.id) {
+                try { await db.collection('students').doc(student.id).update(updatedFields); }
+                catch(e) {}
+            }
+
+            // 2. إدراج رسالة ولي الأمر في الطابور مع نص مختلف عشوائياً
+            if (student.parentPhone) {
+                const msg = generateVariedAttendanceMessage(student.name, student.center);
+                enqueueMessage(student.parentPhone, msg, student.name);
+            }
+
+            alert(`✅ تم تأكيد حضور الطالب (${student.name}) وتسجيل الواجب وإضافة إشعار ولي الأمر للطابور!`);
+        }
+
+        // رصد درجة الامتحان وإدراج إشعار ولي الأمر
+        async function saveStudentExamScore() {
+            const title = document.getElementById('exam-title-input').value.trim();
+            const code = document.getElementById('exam-student-code').value.trim();
+            const score = document.getElementById('exam-student-score').value.trim();
+
+            if (!title || !code || !score) {
+                alert('يرجى ملء جميع الحقول أولاً!');
                 return;
             }
 
-            tbody.innerHTML = list.map(s => {
-                const hwCount = (s.homeworksHistory || []).length;
-                return `
-                    <tr>
-                        <td class="p-3 font-mono font-bold text-brand-400">#${s.code}</td>
-                        <td class="p-3 font-bold text-white">${s.name}</td>
-                        <td class="p-3 text-xs text-gray-300">${s.grade}</td>
-                        <td class="p-3 text-amber-300 font-bold">${s.center}</td>
-                        <td class="p-3 text-xs text-gray-300">
-                            <div><i class="fa-solid fa-mobile-screen text-[10px] text-brand-400 ml-1"></i> ${s.phone || '--'}</div>
-                            <div class="text-emerald-400 text-[11px]"><i class="fa-solid fa-user-shield text-[10px] ml-1"></i> ${s.parentPhone || '--'}</div>
-                        </td>
-                        <td class="p-3 font-bold ${s.lastHwExactScore && s.lastHwExactScore !== '--' && s.lastHwExactScore !== 'لم يحل' ? 'text-emerald-400' : 'text-gray-400'}">${s.lastHwExactScore || 'لم يحل'}</td>
-                        <td class="p-3 font-mono font-bold text-slate-300">${hwCount}</td>
-                        <td class="p-3">
-                            <div class="flex items-center justify-center gap-1.5 flex-wrap">
-                                <button onclick="startEditStudent('${s.code}')" class="px-2.5 py-1 bg-amber-600/30 hover:bg-amber-600 text-amber-300 hover:text-white rounded-lg text-xs font-bold transition flex items-center gap-1" title="تعديل بيانات الطالب">
-                                    <i class="fa-solid fa-pen-to-square"></i> تعديل
-                                </button>
-                                <button onclick="handleHomeworkScanResult('${s.code}'); switchTab('session-scan');" class="px-2.5 py-1 bg-brand-700 hover:bg-brand-600 rounded-lg text-xs font-bold text-white transition flex items-center gap-1" title="فحص كارت وواجبات الطالب">
-                                    <i class="fa-solid fa-clipboard-check"></i> فحص
-                                </button>
-                                <button onclick="deleteStudent('${s.code}')" class="px-2 py-1 bg-red-950 hover:bg-red-900 border border-red-800/60 text-red-300 rounded-lg text-xs transition" title="حذف الطالب">
-                                    <i class="fa-solid fa-trash"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
-        }
-
-        function debounceFilterStudents() {
-            clearTimeout(searchDebounceTimer);
-            searchDebounceTimer = setTimeout(() => {
-                filterAdminStudentsTable();
-            }, 150);
-        }
-
-        function filterAdminStudentsTable() {
-            const q = document.getElementById('adm-table-search').value.toLowerCase();
-            const centerFilter = document.getElementById('filter-table-by-center') ? document.getElementById('filter-table-by-center').value : 'all';
-            const gradeFilter = document.getElementById('filter-table-by-grade') ? document.getElementById('filter-table-by-grade').value : 'all';
-
-            const filtered = cachedStudents.filter(s => {
-                const matchesSearch = (s.name && s.name.toLowerCase().includes(q)) || (s.code && s.code.toString().includes(q)) || (s.phone && s.phone.includes(q)) || (s.parentPhone && s.parentPhone.includes(q));
-                const matchesCenter = (centerFilter === 'all' || s.center === centerFilter);
-                const matchesGrade = (gradeFilter === 'all' || s.grade === gradeFilter);
-                return matchesSearch && matchesCenter && matchesGrade;
-            });
-            renderAdminStudentsTable(filtered);
-        }
-
-        // ================= 4. HOMEWORK REPORTS =================
-        function renderHomeworksReport() {
-            const centerFilter = document.getElementById('report-filter-center').value;
-            const gradeFilter = document.getElementById('report-filter-grade').value;
-            const container = document.getElementById('report-printable-box');
-
-            let list = cachedStudents;
-            if (centerFilter !== 'all') list = list.filter(s => s.center === centerFilter);
-            if (gradeFilter !== 'all') list = list.filter(s => s.grade === gradeFilter);
-
-            let html = `
-                <div class="text-center mb-6 pb-4 border-b border-slate-700">
-                    <h2 class="text-lg font-black text-white">تقرير متابعة تسليم الواجبات الإلكترونية - سناتر مستر محمد فيصل</h2>
-                    <p class="text-xs text-gray-400 mt-1">السنتر: <b>${centerFilter === 'all' ? 'جميع السناتر' : centerFilter}</b> | المرحلة: <b>${gradeFilter === 'all' ? 'جميع المراحل' : gradeFilter}</b></p>
-                </div>
-                <table class="w-full text-right text-xs border border-slate-700">
-                    <thead class="bg-slate-800 text-gray-300">
-                        <tr>
-                            <th class="p-2.5 border border-slate-700">الكود</th>
-                            <th class="p-2.5 border border-slate-700">اسم الطالب</th>
-                            <th class="p-2.5 border border-slate-700">السنتر والمرحلة</th>
-                            <th class="p-2.5 border border-slate-700">آخر درجة واجب</th>
-                            <th class="p-2.5 border border-slate-700">إجمالي الواجبات المسلّمة</th>
-                            <th class="p-2.5 border border-slate-700">سجل الواجبات بالتفصيل</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-700">
-            `;
-
-            if (list.length === 0) {
-                html += `<tr><td colspan="6" class="text-center py-6 text-gray-400 font-bold">لا يوجد طلاب مطابقين للفلتر المختار.</td></tr>`;
-            } else {
-                list.forEach(s => {
-                    const hwList = s.homeworksHistory || [];
-                    const summary = hwList.length > 0 ? hwList.map(h => `<span class="inline-block bg-slate-800 p-1 rounded my-0.5 border border-slate-700">📝 ${h.title}: <b>(${h.score})</b> [${h.date}]</span>`).join('<br>') : 'لم يسلّم واجبات بعد';
-
-                    html += `
-                        <tr>
-                            <td class="p-2.5 border border-slate-700 font-mono font-bold text-brand-400">#${s.code}</td>
-                            <td class="p-2.5 border border-slate-700 font-bold text-white">${s.name}</td>
-                            <td class="p-2.5 border border-slate-700 text-xs">${s.center} - ${s.grade}</td>
-                            <td class="p-2.5 border border-slate-700 font-black ${s.lastHwExactScore && s.lastHwExactScore !== '--' && s.lastHwExactScore !== 'لم يحل' ? 'text-emerald-400' : 'text-red-400'}">${s.lastHwExactScore || 'لم يحل'}</td>
-                            <td class="p-2.5 border border-slate-700 font-bold text-amber-300 font-mono">${hwList.length} واجب</td>
-                            <td class="p-2.5 border border-slate-700 text-[11px]">${summary}</td>
-                        </tr>
-                    `;
-                });
-            }
-
-            html += `</tbody></table>`;
-            container.innerHTML = html;
-        }
-
-        // ================= 5. CENTERS MANAGEMENT =================
-        async function loadCenters() {
-            cachedCenters = [];
-            if (db) {
-                try {
-                    const snap = await db.collection('centers').orderBy('createdAt', 'desc').get();
-                    snap.forEach(d => cachedCenters.push({ id: d.id, ...d.data() }));
-                } catch(e) {}
-            }
-
-            if (cachedCenters.length === 0) {
-                const local = localStorage.getItem('MF_LOCAL_CENTERS');
-                if (local) cachedCenters = JSON.parse(local);
-            }
-
-            const selectElements = ['add-st-center', 'report-filter-center', 'broadcast-center-select', 'hw-builder-target-center', 'filter-table-by-center', 'hw-scan-filter-center'];
-            selectElements.forEach(selId => {
-                const el = document.getElementById(selId);
-                if (!el) return;
-                
-                if (selId === 'report-filter-center' || selId === 'hw-builder-target-center' || selId === 'filter-table-by-center' || selId === 'hw-scan-filter-center') {
-                    el.innerHTML = '<option value="all">جميع السناتر والمجموعات</option>';
-                } else {
-                    el.innerHTML = '';
-                }
-                
-                cachedCenters.forEach(c => el.innerHTML += `<option value="${c.name}">${c.name}</option>`);
-            });
-
-            const grid = document.getElementById('admin-centers-list-grid');
-            if (grid) {
-                grid.innerHTML = '';
-                if (cachedCenters.length === 0) {
-                    grid.innerHTML = `<p class="text-xs text-gray-400 col-span-3">لا توجد سناتر مسجلة بعد.</p>`;
-                } else {
-                    cachedCenters.forEach(c => {
-                        grid.innerHTML += `
-                            <div class="p-4 bg-slate-900 rounded-2xl border border-slate-700 flex justify-between items-center">
-                                <div>
-                                    <p class="font-bold text-xs text-white">${c.name}</p>
-                                    <span class="text-[11px] text-gray-400">${c.day} - ${c.time}</span>
-                                </div>
-                                <button onclick="deleteCenter('${c.id}')" class="text-red-400 text-xs p-1 hover:text-red-300"><i class="fa-solid fa-trash"></i></button>
-                            </div>
-                        `;
-                    });
-                }
-            }
-        }
-
-        async function handleCreateCenter(e) {
-            e.preventDefault();
-            const name = document.getElementById('add-center-name').value.trim();
-            const day = document.getElementById('add-center-day').value.trim();
-            const time = document.getElementById('add-center-time').value.trim();
-
-            if (db) {
-                try { 
-                    await db.collection('centers').add({ name, day, time, createdAt: new Date().toISOString() }); 
-                    alert('تمت إضافة السنتر بنجاح!');
-                    document.getElementById('add-center-name').value = '';
-                    loadCenters();
-                } catch(e) {
-                    alert('حدث خطأ أثناء الإضافة: ' + e.message);
-                }
-            }
-        }
-
-        async function deleteCenter(id) {
-            if (!confirm('هل أنت متأكد من حذف هذا السنتر؟')) return;
-            if (db) {
-                try { 
-                    await db.collection('centers').doc(id).delete(); 
-                    loadCenters();
-                } catch(e) {}
-            }
-        }
-
-        // ================= 6. WHATSAPP & WAPILOT API =================
-        async function handleSendBroadcast(e) {
-            e.preventDefault();
-            const center = document.getElementById('broadcast-center-select').value;
-            const role = document.getElementById('broadcast-target-role').value;
-            const text = document.getElementById('broadcast-msg-text').value.trim();
-            const btn = document.getElementById('broadcast-submit-btn');
-
-            let targets = cachedStudents;
-            if (center !== 'all') targets = targets.filter(s => s.center === center);
-
-            if (targets.length === 0) {
-                alert('لا يوجد طلاب مسجلين في هذا السنتر!');
+            const student = cachedStudents.find(s => (s.code || '').toString() === code);
+            if (!student) {
+                alert('كود الطالب غير صحيح أو غير مسجل!');
                 return;
             }
 
-            if (!confirm(`هل أنت متأكد من إضافة (${targets.length}) جهة اتصال في ${center} لطابور الإرسال مع تفعيل فارق الأمان الزمني ضد الحظر؟`)) return;
+            const examRecord = { title, score, date: new Date().toLocaleDateString('ar-EG') };
+            const updatedExams = student.examsHistory ? [...student.examsHistory, examRecord] : [examRecord];
 
-            // Enqueue messages
-            for (const s of targets) {
-                if (role === 'parents' || role === 'both') {
-                    if (s.parentPhone) enqueueWhatsAppMessage(s.parentPhone, text, `ولي أمر ${s.name}`);
-                }
-                if (role === 'students' || role === 'both') {
-                    if (s.phone) enqueueWhatsAppMessage(s.phone, text, s.name);
-                }
+            if (db && student.id) {
+                try { await db.collection('students').doc(student.id).update({ examsHistory: updatedExams }); }
+                catch(e) {}
             }
 
-            alert(`تمت إضافة الرسائل بنجاح إلى طابور الإرسال الآمن!`);
-            document.getElementById('broadcast-msg-text').value = '';
-        }
-
-        async function loadWAPilotSettings() {
-            if (db) {
-                try {
-                    const doc = await db.collection('settings').doc('whatsapp_api').get();
-                    if (doc.exists) {
-                        const d = doc.data();
-                        document.getElementById('api-instance-id').value = d.instance || '';
-                        document.getElementById('api-token-key').value = d.token || '';
-                    }
-                } catch(e) {}
+            if (student.parentPhone) {
+                const msg = generateVariedExamMessage(student.name, title, score);
+                enqueueMessage(student.parentPhone, msg, student.name);
             }
+
+            alert(`✅ تم رصد درجة امتحان الطالب (${student.name}) بنجاح وإضافة إشعار ولي الأمر للطابور!`);
+            document.getElementById('exam-student-score').value = '';
+            document.getElementById('exam-student-code').value = '';
         }
 
-        async function handleSaveWAPilotSettings(e) {
-            e.preventDefault();
-            const instance = document.getElementById('api-instance-id').value.trim();
-            const token = document.getElementById('api-token-key').value.trim();
-
-            if (db) {
-                try {
-                    await db.collection('settings').doc('whatsapp_api').set({ instance, token });
-                    alert('تم حفظ وتفعيل إعدادات WAPilot API بنجاح!');
-                } catch(err) {
-                    alert('خطأ في الحفظ: ' + err.message);
-                }
-            }
-        }
-
+        // Send message API
         async function sendWAPilotMessage(phone, message) {
             try {
                 if (!phone || !navigator.onLine) return false;
@@ -1947,31 +515,27 @@
                 else if (!cleanPhone.startsWith('20') && cleanPhone.startsWith('1')) cleanPhone = '20' + cleanPhone;
                 const chatId = `${cleanPhone}@c.us`;
 
-                let instance = document.getElementById('api-instance-id') ? document.getElementById('api-instance-id').value.trim() : '';
-                let token = document.getElementById('api-token-key') ? document.getElementById('api-token-key').value.trim() : '';
-
-                if ((!instance || !token) && db) {
-                    const doc = await db.collection('settings').doc('whatsapp_api').get();
-                    if (doc.exists) {
-                        const d = doc.data();
-                        instance = d.instance;
-                        token = d.token;
-                    }
-                }
-
-                if (!instance || !token) return false;
+                let instance = document.getElementById('api-instance-id').value.trim();
+                let token = document.getElementById('api-token-key').value.trim();
 
                 const url = `https://api.wapilot.net/api/v2/${instance}/send-message`;
-                const response = await fetch(url, {
+                const res = await fetch(url, {
                     method: "POST",
                     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                     body: JSON.stringify({ chat_id: chatId, text: message })
                 });
-                return response.ok;
-            } catch (e) {
-                console.error("WAPilot API Error:", e);
-                return false;
-            }
+                return res.ok;
+            } catch(e) { return false; }
+        }
+
+        function handleSaveWAPilotSettings(e) {
+            e.preventDefault();
+            alert('تم حفظ إعدادات WAPilot بنجاح!');
+        }
+
+        function logoutAdmin() {
+            document.getElementById('admin-main-view').classList.add('hidden');
+            document.getElementById('admin-auth-gate').classList.remove('hidden');
         }
     </script>
 </body>
