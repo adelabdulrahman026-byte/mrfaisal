@@ -13,13 +13,16 @@
                 extend: {
                     colors: {
                         brand: {
-                            50: '#f5f3ff',
-                            100: '#ede9fe',
                             500: '#8b5cf6',
                             600: '#7c3aed',
                             700: '#6d28d9',
                             800: '#5b21b6',
                             900: '#4c1d95',
+                            950: '#2e1065'
+                        },
+                        gold: {
+                            400: '#fbbf24',
+                            500: '#f59e0b'
                         }
                     },
                     fontFamily: { cairo: ['Cairo', 'sans-serif'] }
@@ -28,7 +31,7 @@
         }
     </script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
     <!-- Firebase SDKs -->
@@ -36,72 +39,52 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
     <style>
-        body { font-family: 'Cairo', sans-serif; scroll-behavior: smooth; }
-        .hero-purple { background: linear-gradient(135deg, #3b0764 0%, #581c87 45%, #6d28d9 100%); }
-        .social-card {
-            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
+        body { font-family: 'Cairo', sans-serif; }
+        .glass-card {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
-        .social-card:hover {
-            transform: translateY(-8px) scale(1.02);
+        .hero-gradient {
+            background: radial-gradient(circle at 50% 20%, #581c87 0%, #2e1065 45%, #020617 100%);
         }
-        .social-card::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(60deg, transparent, rgba(255,255,255,0.15), transparent);
-            transform: rotate(25deg);
-            transition: 0.7s;
-            opacity: 0;
-        }
-        .social-card:hover::after {
-            opacity: 1;
-            left: 100%;
-            top: 100%;
-        }
-        .custom-scroll::-webkit-scrollbar { width: 5px; height: 5px; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: #6b7280; border-radius: 10px; }
+        .custom-scroll::-webkit-scrollbar { width: 4px; height: 4px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #64748b; border-radius: 8px; }
     </style>
 </head>
-<body class="bg-slate-900 text-slate-100 transition duration-300 min-h-screen">
+<body class="bg-slate-950 text-slate-100 min-h-screen selection:bg-brand-600 selection:text-white">
 
     <!-- NAVBAR -->
-    <nav class="sticky top-0 z-50 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 shadow-md">
+    <nav class="sticky top-0 z-50 bg-slate-900/80 backdrop-blur-md border-b border-slate-800 shadow-lg">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex justify-between items-center">
             <div class="flex items-center gap-3 cursor-pointer" onclick="showSection('home')">
-                <div class="w-12 h-12 rounded-2xl bg-brand-700 text-white flex items-center justify-center font-black text-2xl shadow-lg shadow-brand-700/40">
-                    <i class="fa-solid fa-earth-africa"></i>
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-brand-700 to-amber-500 text-white flex items-center justify-center font-black text-2xl shadow-lg shadow-brand-700/30">
+                    <i class="fa-solid fa-crown"></i>
                 </div>
                 <div>
-                    <div class="flex items-center gap-2">
-                        <span class="text-2xl font-black text-white">محمد فيصل</span>
-                        <span class="text-[10px] bg-amber-400 text-slate-950 font-black px-2 py-0.5 rounded shadow-sm">KING 👑</span>
+                    <div class="flex items-center gap-1.5">
+                        <span class="text-xl sm:text-2xl font-black text-white">محمد فيصل</span>
+                        <span class="text-[9px] bg-amber-400 text-slate-950 font-black px-1.5 py-0.5 rounded">KING</span>
                     </div>
-                    <p class="text-xs text-gray-400 font-bold">كينج التاريخ والجغرافيا للثانوية العامة</p>
+                    <p class="text-[11px] text-slate-400 font-bold">كينج التاريخ والجغرافيا</p>
                 </div>
             </div>
 
             <div class="flex items-center gap-2">
-                <!-- زر تسجيل حساب جديد أونلاين -->
-                <button onclick="openModal('registerOnlineModal')" class="px-3.5 py-2 text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl shadow-lg shadow-emerald-600/30 transition flex items-center gap-1.5">
-                    <i class="fa-solid fa-user-plus"></i> <span class="hidden sm:inline">تسجيل أونلاين جديد</span>
+                <button onclick="openModal('registerOnlineModal')" class="px-3 py-2 text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl transition flex items-center gap-1">
+                    <i class="fa-solid fa-user-plus"></i> <span class="hidden sm:inline">تسجيل أونلاين</span>
                 </button>
-                <!-- متابعة ولي الأمر -->
-                <button onclick="showSection('parent-portal')" class="px-4 py-2 text-xs sm:text-sm font-black bg-amber-400 hover:bg-amber-300 text-slate-950 rounded-xl shadow-lg shadow-amber-400/20 transition flex items-center gap-1.5">
-                    <i class="fa-solid fa-user-shield"></i> متابعة ولي الأمر
+                <button onclick="showSection('parent-portal')" class="px-3.5 py-2 text-xs font-black bg-amber-400 hover:bg-amber-300 text-slate-950 rounded-xl transition flex items-center gap-1.5 shadow-md">
+                    <i class="fa-solid fa-user-shield"></i> استعلام ولي الأمر
                 </button>
-                <!-- دخول الطالب -->
-                <button id="nav-student-btn" onclick="openModal('studentLoginModal')" class="px-4 py-2 text-xs sm:text-sm font-bold bg-brand-700 hover:bg-brand-600 text-white rounded-xl shadow transition">
+                <button id="nav-student-btn" onclick="openModal('studentLoginModal')" class="px-3.5 py-2 text-xs font-bold bg-brand-700 hover:bg-brand-600 text-white rounded-xl transition">
                     <i class="fa-solid fa-right-to-bracket ml-1"></i> دخول الطالب
                 </button>
-                <button id="nav-portal-shortcut" onclick="showSection('student-portal')" class="hidden px-4 py-2 text-xs sm:text-sm font-bold bg-slate-800 text-brand-300 border border-brand-500/30 rounded-xl transition">
+                <button id="nav-portal-shortcut" onclick="showSection('student-portal')" class="hidden px-3.5 py-2 text-xs font-bold bg-slate-800 text-brand-300 border border-brand-500/30 rounded-xl transition">
                     <i class="fa-solid fa-id-card ml-1"></i> حسابي
                 </button>
-                <button id="nav-logout-btn" onclick="logoutStudent()" class="hidden p-2 text-red-400 bg-red-950/40 border border-red-800/40 rounded-xl text-sm" title="تسجيل الخروج">
+                <button id="nav-logout-btn" onclick="logoutStudent()" class="hidden p-2 text-rose-400 bg-rose-950/40 border border-rose-800/40 rounded-xl text-xs" title="خروج">
                     <i class="fa-solid fa-power-off"></i>
                 </button>
             </div>
@@ -111,313 +94,162 @@
     <main>
         <!-- 1. HOME SECTION -->
         <section id="sec-home" class="page-sec">
-            <div class="hero-purple text-white py-16 sm:py-20 px-4 sm:px-6 rounded-b-[45px] shadow-2xl border-b border-purple-900/60">
-                <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-                    <div class="lg:col-span-7 space-y-6 text-center lg:text-right">
-                        <span class="px-4 py-1.5 rounded-full bg-white/10 border border-white/20 text-xs font-black uppercase text-amber-300 backdrop-blur-md">
-                            دفعة الثانوية العامة 2026 - 2027 🎯
-                        </span>
-                        <h1 class="text-4xl sm:text-5xl font-black leading-tight">
-                            طريقك الأسهل للدرجة النهائية في <span class="text-amber-400 underline decoration-brand-500">التاريخ والجغرافيا</span>
-                        </h1>
-                        <p class="text-base sm:text-lg text-purple-100 max-w-2xl leading-relaxed">
-                            حل واجباتك، واعرف درجات امتحاناتك ونسبة حضورك في السنتر أو الأونلاين فوراً، مع متابعة لحظية لولي أمرك خطوة بخطوة.
-                        </p>
-                        <div class="pt-2 flex flex-wrap gap-3 justify-center lg:justify-start">
-                            <button onclick="handleHeroActionButton()" class="px-7 py-3.5 bg-amber-400 hover:bg-amber-300 text-slate-950 font-black rounded-2xl shadow-xl shadow-amber-400/20 transition transform hover:-translate-y-1">
-                                <i class="fa-solid fa-pen-nib ml-1"></i> حل الواجبات الإلكترونية
-                            </button>
-                            <button onclick="showSection('parent-portal')" class="px-7 py-3.5 bg-brand-900/80 hover:bg-brand-800 border border-brand-500/50 text-white font-bold rounded-2xl shadow-xl transition transform hover:-translate-y-1">
-                                <i class="fa-solid fa-user-shield ml-1 text-amber-400"></i> استعلام ولي الأمر (الدرجات والحضور)
-                            </button>
-                        </div>
-                    </div>
-                    <div class="lg:col-span-5 flex justify-center">
-                        <div class="relative max-w-sm rounded-3xl overflow-hidden border-4 border-purple-500/40 shadow-2xl shadow-purple-900/50 bg-slate-900">
-                            <img src="https://www.mrfaisal.net/ChatGPT%20Image%20Aug%2013,%202026,%2006_14_44%20AM.png" alt="مستر محمد فيصل" class="w-full h-auto">
-                        </div>
+            <div class="hero-gradient py-16 sm:py-20 px-4 text-center border-b border-purple-900/40">
+                <div class="max-w-4xl mx-auto space-y-6">
+                    <span class="px-4 py-1.5 rounded-full bg-white/10 border border-white/20 text-xs font-black text-amber-300 backdrop-blur-md">
+                        دفعة الثانوية العامة 2026 - 2027 🎯
+                    </span>
+                    <h1 class="text-3xl sm:text-5xl font-black leading-tight text-white">
+                        المنظومة التعليمية المتكاملة في <span class="text-amber-400">التاريخ والجغرافيا</span>
+                    </h1>
+                    <p class="text-sm sm:text-base text-purple-200 max-w-xl mx-auto leading-relaxed">
+                        حل واجباتك، تابع درجاتك ونسبة حضورك بالسنتر والأونلاين أولاً بأول، مع إشعار ولي أمرك لحظياً بالنتائج.
+                    </p>
+                    <div class="pt-2 flex flex-wrap gap-3 justify-center">
+                        <button onclick="handleHeroActionButton()" class="px-6 py-3.5 bg-amber-400 hover:bg-amber-300 text-slate-950 font-black rounded-xl text-sm shadow-xl transition">
+                            <i class="fa-solid fa-pen-nib ml-1"></i> حل الواجبات الآن
+                        </button>
+                        <button onclick="showSection('parent-portal')" class="px-6 py-3.5 bg-brand-900/80 hover:bg-brand-800 border border-brand-500/40 text-white font-bold rounded-xl text-sm transition">
+                            <i class="fa-solid fa-user-shield ml-1 text-amber-400"></i> بوابة استعلام درجات ولي الأمر
+                        </button>
                     </div>
                 </div>
             </div>
 
-            <!-- ================= CHANNELS & SOCIAL MEDIA SECTION ================= -->
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 py-16">
-                <div class="text-center mb-10">
-                    <span class="px-4 py-1.5 rounded-full bg-brand-900/50 border border-brand-500/30 text-brand-300 font-black text-xs">قنوات المتابعة الرسمية 🌟</span>
-                    <h2 class="text-3xl font-black text-white mt-2">انضم لقنوات مستر محمد فيصل الرسمية</h2>
-                    <p class="text-xs sm:text-sm text-gray-400 mt-1">تابع أحدث المراجعات، المذكرات، والأسئلة الهامة الحصرية أولاً بأول</p>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <!-- WhatsApp Geography Channel -->
-                    <a href="https://whatsapp.com/channel/0029Vb5eotiHFxOvJuFpMI39" target="_blank" class="social-card bg-gradient-to-br from-emerald-950/70 via-slate-900 to-slate-900 p-6 rounded-3xl border border-emerald-500/30 shadow-xl flex flex-col justify-between group">
-                        <div class="space-y-3">
-                            <div class="w-14 h-14 rounded-2xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-3xl shadow-lg shadow-emerald-500/10 group-hover:scale-110 transition duration-300">
-                                <i class="fa-brands fa-whatsapp"></i>
-                            </div>
-                            <h3 class="text-xl font-black text-white group-hover:text-emerald-400 transition">قناة واتساب الجغرافيا</h3>
-                            <p class="text-xs text-gray-400 leading-relaxed">
-                                قناة الواتساب الرسمية المخصصة لمادة الجغرافيا السياسية، بنك الأسئلة، الخرائط والتدريبات الدورية.
-                            </p>
-                        </div>
-                        <div class="pt-6 flex items-center justify-between text-xs font-bold text-emerald-400">
-                            <span>انضم الآن مجاناً</span>
-                            <i class="fa-solid fa-arrow-left group-hover:-translate-x-2 transition duration-300"></i>
-                        </div>
-                    </a>
-
-                    <!-- WhatsApp History Channel -->
-                    <a href="https://whatsapp.com/channel/0029VbDHMqF72WTvf9tzPc1E" target="_blank" class="social-card bg-gradient-to-br from-amber-950/70 via-slate-900 to-slate-900 p-6 rounded-3xl border border-amber-500/30 shadow-xl flex flex-col justify-between group">
-                        <div class="space-y-3">
-                            <div class="w-14 h-14 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-3xl shadow-lg shadow-amber-500/10 group-hover:scale-110 transition duration-300">
-                                <i class="fa-brands fa-whatsapp"></i>
-                            </div>
-                            <h3 class="text-xl font-black text-white group-hover:text-amber-400 transition">قناة واتساب التاريخ</h3>
-                            <p class="text-xs text-gray-400 leading-relaxed">
-                                القناة المخصصة لمادة التاريخ للثانوية العامة، مفاتيح الإجابة، نواتج التعلم، والربط الزمني للأحداث.
-                            </p>
-                        </div>
-                        <div class="pt-6 flex items-center justify-between text-xs font-bold text-amber-400">
-                            <span>انضم الآن مجاناً</span>
-                            <i class="fa-solid fa-arrow-left group-hover:-translate-x-2 transition duration-300"></i>
-                        </div>
-                    </a>
-
-                    <!-- Facebook Page -->
-                    <a href="https://www.facebook.com/Mr.faisl" target="_blank" class="social-card bg-gradient-to-br from-blue-950/70 via-slate-900 to-slate-900 p-6 rounded-3xl border border-blue-500/30 shadow-xl flex flex-col justify-between group">
-                        <div class="space-y-3">
-                            <div class="w-14 h-14 rounded-2xl bg-blue-500/20 text-blue-400 flex items-center justify-center text-3xl shadow-lg shadow-blue-500/10 group-hover:scale-110 transition duration-300">
-                                <i class="fa-brands fa-facebook-f"></i>
-                            </div>
-                            <h3 class="text-xl font-black text-white group-hover:text-blue-400 transition">الصفحة الرسمية على فيسبوك</h3>
-                            <p class="text-xs text-gray-400 leading-relaxed">
-                                الصفحة الرسمية لمستر محمد فيصل لمتابعة مواعيد السناتر، الأوائل، التكريمات، والبثوث المباشرة.
-                            </p>
-                        </div>
-                        <div class="pt-6 flex items-center justify-between text-xs font-bold text-blue-400">
-                            <span>متابعة الصفحة</span>
-                            <i class="fa-solid fa-arrow-left group-hover:-translate-x-2 transition duration-300"></i>
-                        </div>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Centers Grid -->
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 pb-20">
-                <div class="text-center mb-10">
-                    <span class="px-4 py-1 rounded-full bg-slate-800 border border-slate-700 text-brand-400 font-extrabold text-xs">خريطة السناتر 🏛️</span>
-                    <h2 class="text-2xl sm:text-3xl font-black text-white mt-2">مقرات ومواعيد الحصص المعتمدة</h2>
-                </div>
-                <div id="dynamic-centers-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            <!-- Centers List -->
+            <div class="max-w-7xl mx-auto px-4 py-12">
+                <h2 class="text-xl font-black text-white text-center mb-6">مواعيد ومقرات السناتر المعتمدة</h2>
+                <div id="dynamic-centers-list" class="grid grid-cols-1 sm:grid-cols-3 gap-4"></div>
             </div>
         </section>
 
-        <!-- ================= 2. PARENT FULL DOSSIER PORTAL ================= -->
-        <section id="sec-parent-portal" class="page-sec hidden max-w-5xl mx-auto px-4 py-12">
-            <div class="bg-slate-800 rounded-3xl p-6 sm:p-10 border border-slate-700 shadow-2xl">
-                <div class="text-center mb-8">
-                    <div class="w-16 h-16 bg-amber-500/20 text-amber-400 rounded-2xl flex items-center justify-center mx-auto text-3xl mb-3 border border-amber-500/30">
+        <!-- 2. PARENT FULL DOSSIER PORTAL -->
+        <section id="sec-parent-portal" class="page-sec hidden max-w-4xl mx-auto px-4 py-10">
+            <div class="glass-card rounded-3xl p-6 sm:p-8 space-y-6">
+                <div class="text-center space-y-2">
+                    <div class="w-14 h-14 bg-amber-500/10 text-amber-400 rounded-2xl flex items-center justify-center mx-auto text-2xl border border-amber-500/20">
                         <i class="fa-solid fa-user-shield"></i>
                     </div>
-                    <h2 class="text-2xl sm:text-3xl font-black text-white">بوابة متابعة ولي الأمر الشاملة</h2>
-                    <p class="text-xs sm:text-sm text-gray-300 mt-2">
-                        ادخل رقم تليفونك، أو رقم تليفون الطالب (سواء كتبته بصفر <b class="text-amber-400 font-mono">01xxxx</b> أو من غير صفر <b class="text-amber-400 font-mono">1xxxx</b>) أو كود الطالب
-                    </p>
+                    <h2 class="text-xl font-black text-white">بوابة متابعة ولي الأمر</h2>
+                    <p class="text-xs text-slate-400">ادخل كود الطالب أو رقم الموبايل للاطلاع الفوري على الحضور والامتحانات</p>
                 </div>
 
-                <div class="max-w-lg mx-auto mb-8 space-y-3">
-                    <input type="text" id="parent-search-input" onkeydown="if(event.key==='Enter') searchParentStudentData()" placeholder="ادخل رقم الموبايل أو كود الطالب..." class="w-full p-4 rounded-2xl bg-slate-900 border border-slate-700 text-sm font-bold text-white focus:outline-none focus:border-amber-400 font-mono text-center shadow-inner">
-                    <button onclick="searchParentStudentData()" class="w-full py-4 bg-amber-400 hover:bg-amber-300 text-slate-950 font-black rounded-2xl text-sm shadow-xl shadow-amber-400/20 transition flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-magnifying-glass"></i> استعلام عن درجات الامتحانات والحضور
+                <div class="max-w-md mx-auto flex gap-2">
+                    <input type="text" id="parent-search-input" onkeydown="if(event.key==='Enter') searchParentStudentData()" placeholder="ادخل الكود أو رقم الهاتف..." class="w-full p-3.5 rounded-xl bg-slate-900 border border-slate-700 text-xs font-mono text-center font-bold text-white focus:outline-none focus:border-amber-400">
+                    <button onclick="searchParentStudentData()" class="px-6 py-3.5 bg-amber-400 hover:bg-amber-300 text-slate-950 font-black rounded-xl text-xs whitespace-nowrap transition">
+                        استعلام
                     </button>
                 </div>
 
-                <!-- Profile Result Card -->
-                <div id="parent-result-view" class="hidden space-y-8 pt-6 border-t border-slate-700">
-                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-900 p-5 rounded-2xl border border-slate-700">
+                <div id="parent-result-view" class="hidden space-y-6 pt-4 border-t border-slate-800">
+                    <div class="p-4 bg-slate-900/90 rounded-2xl border border-slate-800 flex justify-between items-center">
                         <div>
-                            <h3 id="parent-st-name" class="text-2xl font-black text-amber-400">--</h3>
-                            <p class="text-xs text-gray-300 mt-1">
-                                السنتر: <span id="parent-st-center" class="font-bold text-white">--</span> | 
-                                كود الطالب: <span id="parent-st-code" class="font-mono font-bold text-brand-400">--</span> |
-                                الصف: <span id="parent-st-grade" class="font-bold text-slate-300">--</span>
-                            </p>
+                            <h3 id="parent-st-name" class="text-lg font-black text-amber-400">--</h3>
+                            <p class="text-xs text-slate-400 mt-0.5">السنتر: <span id="parent-st-center" class="text-white font-bold">--</span> | المرحلة: <span id="parent-st-grade" class="text-slate-300 font-bold">--</span></p>
                         </div>
-                        <div>
-                            <span id="parent-st-plan-badge" class="px-4 py-1.5 bg-brand-700 text-white text-xs font-bold rounded-xl shadow-sm">طالب مسجل</span>
+                        <span id="parent-st-code" class="px-3 py-1 bg-brand-900/60 border border-brand-700 text-brand-300 font-mono font-black text-xs rounded-xl">#--</span>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-3 text-center">
+                        <div class="p-3 bg-slate-900 rounded-xl border border-slate-800">
+                            <span class="text-[10px] text-slate-400 block font-bold">الحصص</span>
+                            <span id="parent-st-attendance-count" class="text-xl font-black text-emerald-400 font-mono">0</span>
+                        </div>
+                        <div class="p-3 bg-slate-900 rounded-xl border border-slate-800">
+                            <span class="text-[10px] text-slate-400 block font-bold">الامتحانات</span>
+                            <span id="parent-st-exams-count" class="text-xl font-black text-amber-400 font-mono">0</span>
+                        </div>
+                        <div class="p-3 bg-slate-900 rounded-xl border border-slate-800">
+                            <span class="text-[10px] text-slate-400 block font-bold">الواجبات</span>
+                            <span id="parent-st-hw-count" class="text-xl font-black text-brand-400 font-mono">0</span>
                         </div>
                     </div>
 
-                    <!-- 3 Statistics Counters -->
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        <div class="p-5 bg-slate-900 rounded-2xl border border-slate-700 text-center">
-                            <span class="text-xs text-gray-400 font-bold block mb-1">إجمالي الحصص التي حضرها</span>
-                            <span id="parent-st-attendance-count" class="text-3xl font-black text-emerald-400 font-mono">0</span>
-                            <span class="text-[10px] text-gray-400 block mt-1">حصص مسجلة بالسنتر</span>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="p-4 bg-slate-900 rounded-2xl border border-slate-800 space-y-2">
+                            <h4 class="font-bold text-xs text-amber-400 border-b border-slate-800 pb-2">سجل درجات الامتحانات:</h4>
+                            <div id="parent-exams-history-list" class="space-y-1.5 max-h-48 overflow-y-auto custom-scroll text-xs"></div>
                         </div>
-                        <div class="p-5 bg-slate-900 rounded-2xl border border-slate-700 text-center">
-                            <span class="text-xs text-gray-400 font-bold block mb-1">الامتحانات المسجلة</span>
-                            <span id="parent-st-exams-count" class="text-3xl font-black text-amber-400 font-mono">0</span>
-                            <span class="text-[10px] text-gray-400 block mt-1">امتحان تم تصحيحه</span>
-                        </div>
-                        <div class="p-5 bg-slate-900 rounded-2xl border border-slate-700 text-center">
-                            <span class="text-xs text-gray-400 font-bold block mb-1">الواجبات المسلّمة</span>
-                            <span id="parent-st-hw-count" class="text-3xl font-black text-brand-400 font-mono">0</span>
-                            <span class="text-[10px] text-gray-400 block mt-1">واجب إلكتروني وبالسنتر</span>
-                        </div>
-                    </div>
-
-                    <!-- 3 Details Lists -->
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <!-- Exams History -->
-                        <div class="p-5 bg-slate-900 rounded-2xl border border-slate-700 space-y-3">
-                            <h4 class="font-black text-sm text-amber-400 flex items-center justify-between border-b border-slate-800 pb-2">
-                                <span><i class="fa-solid fa-award ml-1"></i> درجات الامتحانات</span>
-                                <span class="text-[10px] text-gray-400 font-normal">بالتفصيل</span>
-                            </h4>
-                            <div id="parent-exams-history-list" class="space-y-2 max-h-64 overflow-y-auto custom-scroll text-xs"></div>
-                        </div>
-
-                        <!-- Attendance History -->
-                        <div class="p-5 bg-slate-900 rounded-2xl border border-slate-700 space-y-3">
-                            <h4 class="font-black text-sm text-emerald-400 flex items-center justify-between border-b border-slate-800 pb-2">
-                                <span><i class="fa-solid fa-calendar-check ml-1"></i> سجل الحضور للحصص</span>
-                                <span class="text-[10px] text-gray-400 font-normal">التواريخ</span>
-                            </h4>
-                            <div id="parent-attendance-dates-list" class="space-y-2 max-h-64 overflow-y-auto custom-scroll text-xs"></div>
-                        </div>
-
-                        <!-- Homework History -->
-                        <div class="p-5 bg-slate-900 rounded-2xl border border-slate-700 space-y-3">
-                            <h4 class="font-black text-sm text-brand-400 flex items-center justify-between border-b border-slate-800 pb-2">
-                                <span><i class="fa-solid fa-book-open ml-1"></i> سجل الواجبات</span>
-                                <span class="text-[10px] text-gray-400 font-normal">الدرجة والتاريخ</span>
-                            </h4>
-                            <div id="parent-hw-history-list" class="space-y-2 max-h-64 overflow-y-auto custom-scroll text-xs"></div>
+                        <div class="p-4 bg-slate-900 rounded-2xl border border-slate-800 space-y-2">
+                            <h4 class="font-bold text-xs text-brand-400 border-b border-slate-800 pb-2">سجل الواجبات المسلّمة:</h4>
+                            <div id="parent-hw-history-list" class="space-y-1.5 max-h-48 overflow-y-auto custom-scroll text-xs"></div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- 3. STUDENT ACCOUNT & HOMEWORK HUB -->
-        <section id="sec-student-portal" class="page-sec hidden max-w-5xl mx-auto px-4 py-10">
-            <div class="bg-slate-800 rounded-3xl p-6 sm:p-8 border border-slate-700 shadow-xl mb-8">
-                <div class="flex flex-col lg:flex-row justify-between items-center gap-8">
-                    <div class="space-y-3 text-center lg:text-right flex-1">
-                        <span id="sp-grade-badge" class="px-3 py-1 bg-brand-900/60 text-brand-300 font-black text-xs rounded-lg border border-brand-700">--</span>
-                        <h2 id="sp-name" class="text-3xl font-black text-white">--</h2>
-                        <p class="text-sm text-gray-400">
-                            السنتر: <span id="sp-center" class="font-bold text-amber-400">--</span> | 
-                            الكود: <span id="sp-code" class="font-mono text-brand-400 font-bold text-base">--</span>
-                        </p>
-                        <div class="pt-2 flex flex-wrap gap-2 justify-center lg:justify-start text-xs">
-                            <span class="p-2.5 bg-slate-900 rounded-xl font-bold border border-slate-700">
-                                الواجبات المسلّمة: <span id="sp-hw-solved-count" class="text-brand-400 font-black">0</span>
-                            </span>
-                        </div>
+        <!-- 3. STUDENT PORTAL -->
+        <section id="sec-student-portal" class="page-sec hidden max-w-4xl mx-auto px-4 py-8">
+            <div class="glass-card rounded-3xl p-6 sm:p-8 mb-6">
+                <div class="flex flex-col sm:flex-row justify-between items-center gap-6">
+                    <div class="space-y-2 text-center sm:text-right">
+                        <span id="sp-grade-badge" class="px-2.5 py-0.5 bg-brand-900/60 text-brand-300 font-bold text-xs rounded-lg border border-brand-700">--</span>
+                        <h2 id="sp-name" class="text-2xl font-black text-white">--</h2>
+                        <p class="text-xs text-slate-400">السنتر: <span id="sp-center" class="text-amber-400 font-bold">--</span> | الكود: <span id="sp-code" class="text-brand-400 font-mono font-bold">--</span></p>
                     </div>
 
-                    <div id="student-verification-container" class="w-full lg:w-auto flex justify-center">
-                        <div id="center-student-qr-card" class="bg-slate-900 p-6 rounded-3xl border border-slate-700 text-center shadow-lg">
-                            <div class="bg-white p-3 rounded-2xl shadow-inner inline-block mx-auto mb-3">
-                                <div id="student-main-qr-box" class="flex justify-center"></div>
-                            </div>
-                            <p class="text-xs font-black text-brand-300 max-w-[220px] mx-auto">
-                                كارت الـ QR لمسحه بالسنتر لتسجيل الحضور والواجب
-                            </p>
-                        </div>
-
-                        <div id="online-student-notice-card" class="hidden max-w-sm p-6 bg-amber-500/10 border border-amber-500/30 rounded-3xl text-center space-y-3">
-                            <div class="w-14 h-14 bg-amber-500/20 text-amber-400 rounded-2xl flex items-center justify-center mx-auto text-2xl">
-                                <i class="fa-solid fa-laptop-code"></i>
-                            </div>
-                            <h4 class="font-black text-sm text-white">طالب بنظام الأونلاين 🌐</h4>
-                            <p class="text-xs text-gray-300 leading-relaxed">
-                                بمجرد تسليمك للواجب هنا على المنصة، يتم تسجيل درجتك وإرسال إشعار النتيجة لولي أمرك عبر الواتساب فوراً.
-                            </p>
-                        </div>
+                    <div id="center-student-qr-card" class="p-3 bg-white rounded-2xl text-center">
+                        <div id="student-main-qr-box"></div>
                     </div>
                 </div>
             </div>
 
-            <!-- VIEW 1: AVAILABLE HOMEWORKS LIST -->
-            <div id="student-homeworks-hub" class="space-y-6 mb-8">
-                <div class="flex justify-between items-center bg-slate-800 p-5 rounded-2xl border border-slate-700 shadow-sm">
-                    <div>
-                        <h3 class="text-lg font-black text-white flex items-center gap-2">
-                            <i class="fa-solid fa-list-check text-brand-400"></i> قائمة الواجبات المتاحة
-                        </h3>
-                        <p class="text-xs text-gray-400 mt-0.5">حل الواجب وسيتم إرسال درجتك مباشرة إلى ولي أمرك على الواتساب</p>
-                    </div>
-                    <span id="all-hw-count-badge" class="px-3.5 py-1.5 bg-brand-900/60 text-brand-300 font-black text-xs rounded-xl border border-brand-700">
-                        0 واجب متاح
-                    </span>
-                </div>
-                <div id="all-homeworks-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+            <!-- VIEW 1: HOMEWORKS LIST -->
+            <div id="student-homeworks-hub" class="space-y-4">
+                <h3 class="text-sm font-black text-slate-300 flex items-center gap-2">
+                    <i class="fa-solid fa-layer-group text-brand-400"></i> الواجبات المتاحة لك:
+                </h3>
+                <div id="all-homeworks-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
             </div>
 
-            <!-- VIEW 2: ACTIVE HOMEWORK QUESTIONS SOLVER -->
-            <div id="student-homework-solver-view" class="hidden bg-slate-800 rounded-3xl p-6 sm:p-8 border border-slate-700 shadow-md mb-8">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 pb-4 border-b border-slate-700">
+            <!-- VIEW 2: SOLVER -->
+            <div id="student-homework-solver-view" class="hidden glass-card rounded-3xl p-6 space-y-6">
+                <div class="flex justify-between items-center pb-4 border-b border-slate-800">
                     <div>
-                        <button onclick="backToHomeworksList()" class="px-3 py-1.5 bg-slate-900 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-bold transition flex items-center gap-1 mb-2">
-                            <i class="fa-solid fa-arrow-right"></i> رجوع لكل الواجبات
-                        </button>
-                        <h3 id="active-hw-solver-title" class="text-xl font-black text-brand-400">--</h3>
+                        <button onclick="backToHomeworksList()" class="text-xs text-slate-400 hover:text-white mb-1"><i class="fa-solid fa-arrow-right"></i> رجوع للواجبات</button>
+                        <h3 id="active-hw-solver-title" class="text-lg font-black text-brand-400">--</h3>
                     </div>
                 </div>
 
-                <div id="hw-questions-container" class="space-y-6"></div>
+                <div id="hw-questions-container" class="space-y-4"></div>
 
-                <div class="mt-8 flex flex-col sm:flex-row gap-3">
-                    <button onclick="submitHomeworkAnswers()" id="btn-submit-answers-final" class="flex-1 py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-black text-base rounded-2xl shadow-lg transition flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-paper-plane"></i>
-                        <span id="btn-submit-text">تسليم الواجب وإرسال إشعار النتيجة لولي الأمر</span>
-                    </button>
-                    <button onclick="backToHomeworksList()" class="px-6 py-4 bg-slate-700 text-white font-bold text-sm rounded-2xl transition">
-                        إلغاء
-                    </button>
-                </div>
+                <button onclick="submitHomeworkAnswers()" id="btn-submit-answers-final" class="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-black rounded-xl text-sm transition shadow-lg flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-paper-plane"></i> تسليم الواجب وإرسال النتيجة لولي الأمر
+                </button>
             </div>
         </section>
     </main>
 
-    <!-- MODAL 1: REGISTER NEW ONLINE STUDENT -->
+    <!-- MODAL 1: REGISTER ONLINE -->
     <div id="registerOnlineModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-slate-800 w-full max-w-md rounded-3xl p-7 border border-slate-700 shadow-2xl relative">
-            <button onclick="closeModal('registerOnlineModal')" class="absolute top-5 left-5 text-gray-400 hover:text-white transition"><i class="fa-solid fa-xmark text-xl"></i></button>
-            <div class="text-center mb-6">
-                <div class="w-14 h-14 bg-emerald-500/20 text-emerald-400 rounded-2xl flex items-center justify-center mx-auto text-2xl mb-3 border border-emerald-500/30">
-                    <i class="fa-solid fa-laptop-code"></i>
-                </div>
-                <h3 class="text-xl font-black text-white">تسجيل حساب أونلاين جديد</h3>
-                <p class="text-xs text-gray-400 mt-1">ادخل رقمك ورقم ولي أمرك (سواء كتبت الصفر أو لا)</p>
-            </div>
+        <div class="glass-card w-full max-w-md rounded-3xl p-6 relative border border-brand-500/20">
+            <button onclick="closeModal('registerOnlineModal')" class="absolute top-4 left-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <h3 class="text-base font-black text-white text-center mb-4">تسجيل حساب أونلاين جديد</h3>
 
-            <form onsubmit="handleRegisterOnlineStudent(event)" class="space-y-3.5">
+            <form onsubmit="handleRegisterOnlineStudent(event)" class="space-y-3">
                 <div>
-                    <label class="block text-xs font-bold mb-1 text-gray-300">اسم الطالب رباعي:</label>
-                    <input type="text" id="reg-name" required placeholder="مثال: أحمد مصطفى إبراهيم علي" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-brand-500 font-bold">
+                    <label class="block text-xs font-bold mb-1 text-slate-300">اسم الطالب رباعي:</label>
+                    <input type="text" id="reg-name" required placeholder="محمد أحمد مصطفى" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold mb-1 text-gray-300">رقم تليفون الطالب (بـ 0 أو بدونه):</label>
-                    <input type="tel" id="reg-phone" required placeholder="010xxxxxxxx أو 10xxxxxxxx" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs font-mono text-center font-bold text-white focus:outline-none focus:border-brand-500">
+                    <label class="block text-xs font-bold mb-1 text-slate-300">رقم الطالب:</label>
+                    <input type="tel" id="reg-phone" required placeholder="010xxxxxxxx" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs font-mono text-white">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold mb-1 text-gray-300">رقم ولي الأمر (لإرسال درجات الامتحانات والواجب):</label>
-                    <input type="tel" id="reg-parent-phone" required placeholder="010xxxxxxxx أو 10xxxxxxxx" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs font-mono text-center font-bold text-emerald-400 focus:outline-none focus:border-brand-500">
+                    <label class="block text-xs font-bold mb-1 text-slate-300">رقم ولي الأمر (واتساب):</label>
+                    <input type="tel" id="reg-parent-phone" required placeholder="010xxxxxxxx" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs font-mono text-white">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold mb-1 text-gray-300">السنة الدراسية:</label>
-                    <select id="reg-grade" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs font-bold text-white focus:outline-none focus:border-brand-500">
+                    <label class="block text-xs font-bold mb-1 text-slate-300">المرحلة الدراسية:</label>
+                    <select id="reg-grade" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white">
                         <option value="الصف الثالث الثانوي">الصف الثالث الثانوي</option>
                         <option value="الصف الثاني الثانوي">الصف الثاني الثانوي</option>
                         <option value="الصف الأول الثانوي">الصف الأول الثانوي</option>
                     </select>
                 </div>
-                <button type="submit" id="btn-reg-submit" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-black rounded-xl text-sm transition shadow-lg flex items-center justify-center gap-2 mt-2">
-                    <i class="fa-solid fa-user-check"></i> إنشاء الحساب ودخول المنصة فوراً
+                <button type="submit" id="btn-reg-submit" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs transition">
+                    تأكيد التسجيل والدخول
                 </button>
             </form>
         </div>
@@ -425,31 +257,21 @@
 
     <!-- MODAL 2: STUDENT LOGIN -->
     <div id="studentLoginModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-slate-800 w-full max-w-md rounded-3xl p-8 border border-slate-700 shadow-2xl relative">
-            <button onclick="closeModal('studentLoginModal')" class="absolute top-6 left-6 text-gray-400 hover:text-white transition"><i class="fa-solid fa-xmark text-xl"></i></button>
-            <div class="text-center mb-6">
-                <div class="w-14 h-14 bg-brand-700/30 text-brand-400 rounded-2xl flex items-center justify-center mx-auto text-2xl mb-3 border border-brand-500/30">
-                    <i class="fa-solid fa-id-card"></i>
-                </div>
-                <h3 class="text-2xl font-black text-white">تسجيل دخول الطالب</h3>
-                <p class="text-xs text-gray-400 mt-1">ادخل كودك أو رقم الموبايل (سواء رقمك أو رقم ولي أمرك بـ 0 أو بدونه)</p>
-            </div>
+        <div class="glass-card w-full max-w-md rounded-3xl p-6 relative border border-brand-500/20">
+            <button onclick="closeModal('studentLoginModal')" class="absolute top-4 left-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <h3 class="text-base font-black text-white text-center mb-4">تسجيل دخول الطالب</h3>
 
             <form onsubmit="handleStudentLogin(event)" class="space-y-4">
-                <input type="text" id="st-login-identity" required placeholder="كودك أو رقم الطالب أو ولي الأمر..." class="w-full p-3.5 rounded-xl bg-slate-900 border border-slate-700 text-center font-bold text-base font-mono text-white focus:outline-none focus:border-brand-500">
-                <button type="submit" id="btn-login-action" class="w-full py-3.5 bg-brand-700 hover:bg-brand-600 text-white font-bold rounded-xl text-sm shadow transition">دخول وعرض الواجبات</button>
-                <div class="text-center pt-2 flex flex-col gap-2">
-                    <button type="button" onclick="closeModal('studentLoginModal'); openModal('registerOnlineModal');" class="text-xs text-emerald-400 hover:underline font-bold">
-                        طالب جديد؟ اضغط هنا لإنشاء حساب أونلاين مجاناً
-                    </button>
-                </div>
+                <input type="text" id="st-login-identity" required placeholder="ادخل كودك أو رقم الهاتف..." class="w-full p-3.5 rounded-xl bg-slate-900 border border-slate-700 text-center font-bold text-sm font-mono text-white">
+                <button type="submit" id="btn-login-action" class="w-full py-3.5 bg-brand-700 hover:bg-brand-600 text-white font-bold rounded-xl text-xs transition">
+                    تسجيل الدخول
+                </button>
             </form>
         </div>
     </div>
 
-    <!-- JAVASCRIPT LOGIC -->
+    <!-- JAVASCRIPT CLIENT LOGIC -->
     <script>
-        // Firebase Connection
         let db = null;
         try {
             const firebaseConfig = {
@@ -469,6 +291,23 @@
         let activeHomework = null;
         let eligibleHomeworksList = [];
 
+        function toEnglishDigits(str) {
+            if (!str) return '';
+            return str.toString().replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)).trim();
+        }
+
+        function cleanAndFormatEgyptianPhone(rawPhone) {
+            if (!rawPhone) return null;
+            let digits = toEnglishDigits(rawPhone).replace(/\D/g, '');
+            if (!digits) return null;
+            if (digits.startsWith('20')) digits = digits.substring(2);
+            while (digits.startsWith('0')) digits = digits.substring(1);
+            if (digits.length === 10 && (digits.startsWith('10') || digits.startsWith('11') || digits.startsWith('12') || digits.startsWith('15') || digits.startsWith('1'))) {
+                return `20${digits}@c.us`;
+            }
+            return `${digits}@c.us`;
+        }
+
         function showSection(secId) {
             document.querySelectorAll('.page-sec').forEach(el => el.classList.add('hidden'));
             const target = document.getElementById('sec-' + secId);
@@ -476,71 +315,12 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function openModal(id) {
-            const el = document.getElementById(id);
-            if (el) el.classList.remove('hidden');
-        }
-
-        function closeModal(id) {
-            const el = document.getElementById(id);
-            if (el) el.classList.add('hidden');
-        }
+        function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
         function handleHeroActionButton() {
             if (currentActiveStudent) showSection('student-portal');
             else openModal('studentLoginModal');
-        }
-
-        // تحويل الأرقام العربية إلى إنجليزية
-        function toEnglishDigits(str) {
-            if (!str) return '';
-            return str.toString()
-                .replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d))
-                .replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d));
-        }
-
-        // ================= دالة الحل الجذري لمشكلة الأرقام بدون 0 للواتساب =================
-        function cleanAndFormatEgyptianPhone(rawPhone) {
-            if (!rawPhone) return null;
-            let digits = toEnglishDigits(rawPhone).replace(/\D/g, '');
-            if (!digits) return null;
-
-            // إزالة كود مصر إن وجد لتصفية الرقم للـ 10 أرقام الأساسية
-            if (digits.startsWith('20')) {
-                digits = digits.substring(2);
-            }
-            // إزالة الأصفار الزائدة من اليسار
-            while (digits.startsWith('0')) {
-                digits = digits.substring(1);
-            }
-
-            // الآن الرقم المصري النقي بدون صفر يبدأ بـ 10 أو 11 أو 12 أو 15 ويتكون من 10 أرقام
-            if (digits.length === 10 && (digits.startsWith('10') || digits.startsWith('11') || digits.startsWith('12') || digits.startsWith('15') || digits.startsWith('1'))) {
-                return `20${digits}@c.us`;
-            }
-
-            // fallback لو الرقم مكتوب بصيغة دولية أخرى
-            return `${digits}@c.us`;
-        }
-
-        // توليد كافة الاحتمالات للبحث (سواء كتب 0 أو لم يكتبه)
-        function getPhoneSearchVariants(rawInput) {
-            if (!rawInput) return [];
-            let digits = toEnglishDigits(rawInput).replace(/\D/g, '');
-            if (!digits) return [];
-
-            let core = digits;
-            if (core.startsWith('20')) core = core.substring(2);
-            while (core.startsWith('0')) core = core.substring(1);
-
-            const variants = new Set();
-            variants.add(digits);
-            if (core) {
-                variants.add(core);              // 10xxxxxxxx
-                variants.add('0' + core);         // 010xxxxxxxx
-                variants.add('20' + core);        // 2010xxxxxxxx
-            }
-            return Array.from(variants);
         }
 
         window.addEventListener('DOMContentLoaded', () => {
@@ -554,121 +334,59 @@
             loadCentersFromDB();
         });
 
-        // 1. تسجيل حساب أونلاين جديد
         async function handleRegisterOnlineStudent(e) {
             e.preventDefault();
             const name = document.getElementById('reg-name').value.trim();
-            const rawPhone = document.getElementById('reg-phone').value.trim();
-            const rawParentPhone = document.getElementById('reg-parent-phone').value.trim();
+            const phone = toEnglishDigits(document.getElementById('reg-phone').value.trim());
+            const parentPhone = toEnglishDigits(document.getElementById('reg-parent-phone').value.trim());
             const grade = document.getElementById('reg-grade').value;
-            const btn = document.getElementById('btn-reg-submit');
 
-            const phone = toEnglishDigits(rawPhone);
-            const parentPhone = toEnglishDigits(rawParentPhone);
-
-            btn.disabled = true;
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري تسجيل الحساب...`;
-
-            // توليد كود تلقائي
-            const autoCode = Math.floor(10000 + Math.random() * 90000).toString();
-
+            const autoCode = Math.floor(1000 + Math.random() * 9000).toString();
             const newStudent = {
-                name,
-                code: autoCode,
-                phone,
-                parentPhone,
-                grade,
+                name, code: autoCode, phone, parentPhone, grade,
                 center: 'أونلاين (المنصة الإلكترونية)',
-                studentType: 'online',
-                homeworksHistory: [],
-                examsHistory: [],
-                attendanceHistory: [],
-                hwStatus: 'لم يتم الحل بعد',
-                lastHwExactScore: '--',
-                createdAt: new Date().toISOString()
+                homeworksHistory: [], examsHistory: [], attendanceHistory: [],
+                lastHwExactScore: '--', createdAt: new Date().toISOString()
             };
 
             if (db) {
-                try {
-                    const ref = await db.collection('students').add(newStudent);
-                    newStudent.id = ref.id;
-                } catch(err) {
-                    console.error("Firebase Add Student Error:", err);
-                }
+                const ref = await db.collection('students').add(newStudent).catch(() => {});
+                if (ref) newStudent.id = ref.id;
             }
-
-            try {
-                const local = JSON.parse(localStorage.getItem('MF_LOCAL_STUDENTS') || '[]');
-                local.unshift(newStudent);
-                localStorage.setItem('MF_LOCAL_STUDENTS', JSON.stringify(local));
-            } catch(e) {}
 
             currentActiveStudent = newStudent;
             localStorage.setItem('MF_ACTIVE_STUDENT', JSON.stringify(currentActiveStudent));
-
-            // إرسال رسالة ترحيبية فورية عبر الواتساب لولي الأمر
-            sendWhatsAppToParent(parentPhone, 
-                `مرحباً بحضرتك يا فندم،\n`
-              + `تم بنجاح تسجيل الطالب/ة: *${name}* في منصة مستر محمد فيصل (كينج التاريخ والجغرافيا).\n`
-              + `كود الطالب الخاص بالدخول هو: *#${autoCode}*\n\n`
-              + `سيتم إرسال كافة درجات الامتحانات والواجبات لحضرتكم تلقائياً هنا إن شاء الله.`
-            );
-
-            btn.disabled = false;
-            btn.innerHTML = `<i class="fa-solid fa-user-check"></i> إنشاء الحساب ودخول المنصة فوراً`;
             closeModal('registerOnlineModal');
-
-            alert(`🎉 أهلاً بك يا ${name} في منظومة مستر محمد فيصل!\nكود حسابك هو: (#${autoCode})\nيمكنك تسجيل الدخول به أو برقم الموبايل في أي وقت.`);
+            alert(`🎉 مرحباً بك يا ${name}! كود حسابك هو (#${autoCode})`);
             initStudentAccountUI();
             showSection('student-portal');
         }
 
-        // 2. تسجيل دخول الطالب
         async function handleStudentLogin(e) {
-            if (e && e.preventDefault) e.preventDefault();
-            const inputVal = document.getElementById('st-login-identity').value.trim();
-            if (!inputVal) return;
-
-            const cleanDigits = toEnglishDigits(inputVal);
-            const candidates = getPhoneSearchVariants(cleanDigits);
-            candidates.push(cleanDigits);
-
-            const btn = document.getElementById('btn-login-action');
-            btn.disabled = true;
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري التحقق...`;
-
+            e.preventDefault();
+            const inputVal = toEnglishDigits(document.getElementById('st-login-identity').value.trim());
             let matched = null;
+
             if (db) {
                 try {
-                    for (const term of candidates) {
-                        let snap = await db.collection('students').where('code', '==', term).get();
-                        if (snap.empty && !isNaN(term)) snap = await db.collection('students').where('code', '==', Number(term)).get();
-                        if (!snap.empty) { matched = { id: snap.docs[0].id, ...snap.docs[0].data() }; break; }
-
-                        snap = await db.collection('students').where('phone', '==', term).get();
-                        if (!snap.empty) { matched = { id: snap.docs[0].id, ...snap.docs[0].data() }; break; }
-
-                        snap = await db.collection('students').where('parentPhone', '==', term).get();
-                        if (!snap.empty) { matched = { id: snap.docs[0].id, ...snap.docs[0].data() }; break; }
+                    // أولوية الكود الدقيق
+                    let snap = await db.collection('students').where('code', '==', inputVal).get();
+                    if (!snap.empty) matched = { id: snap.docs[0].id, ...snap.docs[0].data() };
+                    
+                    if (!matched) {
+                        snap = await db.collection('students').where('phone', '==', inputVal).get();
+                        if (!snap.empty) matched = { id: snap.docs[0].id, ...snap.docs[0].data() };
                     }
-                } catch(err) {}
+                } catch(e) {}
             }
 
             if (!matched) {
                 const local = localStorage.getItem('MF_LOCAL_STUDENTS');
                 if (local) {
                     const list = JSON.parse(local);
-                    matched = list.find(s => {
-                        const sc = (s.code || '').toString();
-                        const sp = (s.phone || '').toString();
-                        const spp = (s.parentPhone || '').toString();
-                        return candidates.some(c => c === sc || c === sp || c === spp);
-                    });
+                    matched = list.find(s => toEnglishDigits(s.code) === inputVal || toEnglishDigits(s.phone) === inputVal);
                 }
             }
-
-            btn.disabled = false;
-            btn.innerHTML = `دخول وعرض الواجبات`;
 
             if (matched) {
                 currentActiveStudent = matched;
@@ -677,48 +395,28 @@
                 initStudentAccountUI();
                 showSection('student-portal');
             } else {
-                alert('⚠️ لم يتم العثور على طالب بهذه البيانات!');
+                alert('⚠️ لم يتم العثور على حساب بهذه البيانات.');
             }
         }
 
-        // 3. تهيئة حساب الطالب
         function initStudentAccountUI() {
             if (!currentActiveStudent) return;
-
             document.getElementById('nav-student-btn').classList.add('hidden');
             document.getElementById('nav-portal-shortcut').classList.remove('hidden');
             document.getElementById('nav-logout-btn').classList.remove('hidden');
 
-            document.getElementById('sp-name').innerText = currentActiveStudent.name || '--';
-            document.getElementById('sp-center').innerText = currentActiveStudent.center || '--';
-            document.getElementById('sp-code').innerText = currentActiveStudent.code || '--';
-            document.getElementById('sp-grade-badge').innerText = currentActiveStudent.grade || '--';
+            document.getElementById('sp-name').innerText = currentActiveStudent.name;
+            document.getElementById('sp-center').innerText = currentActiveStudent.center;
+            document.getElementById('sp-code').innerText = `#${currentActiveStudent.code}`;
+            document.getElementById('sp-grade-badge').innerText = currentActiveStudent.grade;
 
-            const solvedCount = (currentActiveStudent.homeworksHistory || []).length;
-            document.getElementById('sp-hw-solved-count').innerText = solvedCount;
-
-            const centerName = (currentActiveStudent.center || '').toLowerCase();
-            const isOnlineStudent = centerName.includes('اونلاين') || centerName.includes('أونلاين') || centerName.includes('online') || currentActiveStudent.studentType === 'online';
-
-            const qrCard = document.getElementById('center-student-qr-card');
-            const noticeCard = document.getElementById('online-student-notice-card');
-
-            if (isOnlineStudent) {
-                qrCard.classList.add('hidden');
-                noticeCard.classList.remove('hidden');
-            } else {
-                noticeCard.classList.add('hidden');
-                qrCard.classList.remove('hidden');
-                const mainQrBox = document.getElementById('student-main-qr-box');
-                mainQrBox.innerHTML = '';
-                new QRCode(mainQrBox, {
-                    text: (currentActiveStudent.code || '').toString().trim(),
-                    width: 140,
-                    height: 140,
-                    colorDark: "#4c1d95",
-                    colorLight: "#ffffff"
-                });
-            }
+            const qrBox = document.getElementById('student-main-qr-box');
+            qrBox.innerHTML = '';
+            new QRCode(qrBox, {
+                text: currentActiveStudent.code.toString(),
+                width: 120, height: 120,
+                colorDark: "#2e1065", colorLight: "#ffffff"
+            });
 
             loadAllEligibleHomeworksForStudent();
         }
@@ -726,13 +424,9 @@
         function logoutStudent() {
             currentActiveStudent = null;
             localStorage.removeItem('MF_ACTIVE_STUDENT');
-            document.getElementById('nav-student-btn').classList.remove('hidden');
-            document.getElementById('nav-portal-shortcut').classList.add('hidden');
-            document.getElementById('nav-logout-btn').classList.add('hidden');
-            showSection('home');
+            location.reload();
         }
 
-        // 4. تحميل السناتر
         async function loadCentersFromDB() {
             const container = document.getElementById('dynamic-centers-list');
             let centers = [];
@@ -746,31 +440,17 @@
                 const local = localStorage.getItem('MF_LOCAL_CENTERS');
                 if (local) centers = JSON.parse(local);
             }
-
-            if (centers.length === 0) {
-                container.innerHTML = `<p class="col-span-3 text-center text-gray-400 font-bold py-6">جاري إدراج مواعيد السناتر...</p>`;
-                return;
-            }
+            if (centers.length === 0) return;
 
             container.innerHTML = centers.map(c => `
-                <div class="bg-slate-800 p-6 rounded-3xl border border-slate-700 shadow-xl relative overflow-hidden group hover:border-brand-500 transition duration-300">
-                    <div class="flex justify-between items-center mb-4">
-                        <span class="px-3 py-1 bg-amber-400 text-slate-950 font-black text-xs rounded-xl shadow-sm">
-                            <i class="fa-regular fa-calendar-check ml-1"></i> ${c.day || 'أسبوعياً'}
-                        </span>
-                        <div class="w-10 h-10 rounded-xl bg-slate-900 text-brand-400 flex items-center justify-center text-lg">
-                            🏛️
-                        </div>
-                    </div>
-                    <h3 class="text-xl font-black text-white mb-2">${c.name}</h3>
-                    <p class="text-xs text-gray-400 font-bold flex items-center gap-1.5">
-                        <i class="fa-regular fa-clock text-amber-400"></i> التوقيت: <span class="text-amber-400">${c.time || 'حسب الجدول'}</span>
-                    </p>
+                <div class="glass-card p-4 rounded-2xl border border-slate-800">
+                    <span class="text-[10px] text-amber-400 font-bold block mb-1">${c.day || 'أسبوعياً'}</span>
+                    <h3 class="text-sm font-bold text-white">${c.name}</h3>
+                    <p class="text-xs text-slate-400 mt-1">${c.time || ''}</p>
                 </div>
             `).join('');
         }
 
-        // 5. تحميل الواجبات
         async function loadAllEligibleHomeworksForStudent() {
             const grid = document.getElementById('all-homeworks-grid');
             let homeworkList = [];
@@ -785,23 +465,33 @@
                 if (local) homeworkList = JSON.parse(local);
             }
 
-            eligibleHomeworksList = homeworkList.filter(h => h.isVisible !== false);
-            document.getElementById('all-hw-count-badge').innerText = `${eligibleHomeworksList.length} واجب متاح`;
+            // فحص المرونة لضمان ظهور الواجب لجميع الطلاب المستهدفين
+            eligibleHomeworksList = homeworkList.filter(h => {
+                if (h.isVisible === false) return false;
+                const matchGrade = (h.grade === 'all' || !h.grade || h.grade === currentActiveStudent.grade);
+                const matchCenter = (h.targetCenter === 'all' || !h.targetCenter || h.targetCenter === currentActiveStudent.center);
+                return matchGrade && matchCenter;
+            });
 
-            const studentHwHistory = currentActiveStudent.homeworksHistory || [];
+            if (eligibleHomeworksList.length === 0) {
+                grid.innerHTML = `<p class="col-span-2 text-center text-slate-500 py-6 text-xs font-bold">لا توجد واجبات مطلوبة منك حالياً.</p>`;
+                return;
+            }
+
+            const history = currentActiveStudent.homeworksHistory || [];
             grid.innerHTML = eligibleHomeworksList.map(hw => {
-                const isSolved = studentHwHistory.find(h => h.title === hw.title);
+                const isSolved = history.find(item => item.title === hw.title);
                 return `
-                    <div class="p-5 rounded-3xl border ${isSolved ? 'bg-slate-900 border-slate-700' : 'bg-slate-800 border-brand-500/50 shadow-md'} flex flex-col justify-between space-y-4">
+                    <div class="glass-card p-4 rounded-2xl flex flex-col justify-between space-y-3">
                         <div>
-                            <div class="flex justify-between items-center mb-2">
-                                <span class="px-2.5 py-0.5 bg-brand-900/60 text-brand-300 text-[10px] font-bold rounded-md border border-brand-700">${hw.grade}</span>
-                                ${isSolved ? `<span class="text-xs font-black text-emerald-400">تم التسليم (${isSolved.score}) ✔️</span>` : `<span class="text-xs font-black text-amber-400">مطلوب تسليمه ⏳</span>`}
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-[10px] text-brand-300 font-mono">${(hw.questions||[]).length} أسئلة</span>
+                                ${isSolved ? `<span class="text-[11px] font-black text-emerald-400">تم التسليم (${isSolved.score}) ✔️</span>` : `<span class="text-[11px] font-black text-amber-400">مطلوب تسليمه ⏳</span>`}
                             </div>
-                            <h4 class="text-base font-black text-white">${hw.title}</h4>
+                            <h4 class="text-sm font-black text-white">${hw.title}</h4>
                         </div>
-                        <button onclick="openHomeworkSolver('${hw.id}')" class="w-full py-2.5 ${isSolved ? 'bg-slate-700 text-gray-300' : 'bg-brand-700 text-white hover:bg-brand-600'} rounded-xl text-xs font-bold transition">
-                            ${isSolved ? 'مراجعة الأسئلة' : 'بدء حل الواجب الآن 🚀'}
+                        <button onclick="openHomeworkSolver('${hw.id}')" class="w-full py-2.5 ${isSolved ? 'bg-slate-800 text-slate-400' : 'bg-brand-700 hover:bg-brand-600 text-white'} rounded-xl text-xs font-bold transition">
+                            ${isSolved ? 'إعادة مراجعة الأسئلة' : 'بدء حل الواجب الآن 🚀'}
                         </button>
                     </div>
                 `;
@@ -818,13 +508,13 @@
 
             const container = document.getElementById('hw-questions-container');
             container.innerHTML = (activeHomework.questions || []).map((q, idx) => `
-                <div class="p-5 bg-slate-900 rounded-2xl border border-slate-700">
-                    <p class="font-bold text-sm mb-3 text-white">س${idx+1}: ${q.text} <span class="text-xs text-amber-400">(${q.points || 1} درجات)</span></p>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <div class="p-4 bg-slate-900 rounded-2xl border border-slate-800 space-y-2">
+                    <p class="font-bold text-xs text-white">س${idx+1}: ${q.text} <span class="text-amber-400">(${q.points || 1} درجات)</span></p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
                         ${q.options.map((opt, oIdx) => `
-                            <label class="flex items-center gap-2.5 p-3 bg-slate-800 rounded-xl border border-slate-700 cursor-pointer hover:border-brand-500 transition">
-                                <input type="radio" name="q_${idx}" value="${oIdx}" class="text-brand-600 focus:ring-brand-600">
-                                <span class="text-xs font-bold text-gray-200">${opt}</span>
+                            <label class="flex items-center gap-2 p-2.5 bg-slate-800/80 rounded-xl border border-slate-700/60 cursor-pointer text-xs">
+                                <input type="radio" name="q_${idx}" value="${oIdx}" class="text-brand-600">
+                                <span>${opt}</span>
                             </label>
                         `).join('')}
                     </div>
@@ -838,7 +528,6 @@
             document.getElementById('student-homeworks-hub').classList.remove('hidden');
         }
 
-        // 6. تسليم الواجب وإرسال النتيجة فوراً
         async function submitHomeworkAnswers() {
             if (!activeHomework || !currentActiveStudent) return;
 
@@ -847,16 +536,17 @@
             let allAnswered = true;
 
             activeHomework.questions.forEach((q, idx) => {
-                maxScore += parseInt(q.points || 1);
+                const pts = parseFloat(q.points || 1);
+                maxScore += pts;
                 const selected = document.querySelector(`input[name="q_${idx}"]:checked`);
                 if (!selected) allAnswered = false;
                 else if (parseInt(selected.value) === parseInt(q.correctOption)) {
-                    totalScore += parseInt(q.points || 1);
+                    totalScore += pts;
                 }
             });
 
             if (!allAnswered) {
-                alert('يرجى الإجابة على جميع الأسئلة أولاً قبل التسليم!');
+                alert('يرجى الإجابة على جميع الأسئلة قبل التسليم!');
                 return;
             }
 
@@ -868,83 +558,60 @@
             };
 
             const history = currentActiveStudent.homeworksHistory ? [...currentActiveStudent.homeworksHistory, hwRecord] : [hwRecord];
+            currentActiveStudent.homeworksHistory = history;
+            currentActiveStudent.lastHwExactScore = scoreFormatted;
 
             if (db && currentActiveStudent.id) {
-                try {
-                    await db.collection('students').doc(currentActiveStudent.id).update({
-                        homeworksHistory: history,
-                        lastHwExactScore: scoreFormatted,
-                        hwStatus: 'تم التسليم'
-                    });
-                } catch(e) {}
+                await db.collection('students').doc(currentActiveStudent.id).update({
+                    homeworksHistory: history,
+                    lastHwExactScore: scoreFormatted
+                }).catch(() => {});
             }
-
-            // إرسال إشعار ولي الأمر الفوري
-            if (currentActiveStudent.parentPhone) {
-                const parentMsg = `السلام عليكم ورحمة الله وبركاته،\n`
-                                + `ولي أمر الطالب/ة: *${currentActiveStudent.name}* 🎓\n`
-                                + `نحيط سيادتكم علماً بأن الطالب قد أتم بنجاح تسليم *(${activeHomework.title})* لدى مستر محمد فيصل.\n`
-                                + `🎯 الدرجة المحصلة: *${scoreFormatted}* 🌟\n\n`
-                                + `مع تحيات إدارة مستر محمد فيصل.`;
-
-                sendWhatsAppToParent(currentActiveStudent.parentPhone, parentMsg);
-            }
-
-            currentActiveStudent.homeworksHistory = history;
             localStorage.setItem('MF_ACTIVE_STUDENT', JSON.stringify(currentActiveStudent));
 
-            alert(`✅ تم تسليم واجب (${activeHomework.title}) بنجاح!\nدرجتك: (${scoreFormatted}) وتم إرسال إشعار النتيجة لولي أمرك.`);
+            // إرسال واتساب فوري لولي الأمر
+            if (currentActiveStudent.parentPhone) {
+                sendClientWhatsApp(currentActiveStudent.parentPhone, `السلام عليكم ولي أمر الطالب/ة: *${currentActiveStudent.name}* 🎓\nأتم الطالب تسليم: *(${activeHomework.title})*\n🎯 الدرجة المحصلة: *(${scoreFormatted})*`);
+            }
+
+            alert(`✅ تم تسليم الواجب بنجاح! درجتك: (${scoreFormatted})`);
             backToHomeworksList();
             initStudentAccountUI();
         }
 
-        // إرسال واتساب مع التنسيق المحكم للرقم
-        async function sendWhatsAppToParent(rawPhone, text) {
+        async function sendClientWhatsApp(phone, text) {
             try {
-                if (!rawPhone || !navigator.onLine) return;
-                const chatId = cleanAndFormatEgyptianPhone(rawPhone);
-                if (!chatId) return;
-
-                if (!db) return;
+                if (!phone || !db) return;
+                const chatId = cleanAndFormatEgyptianPhone(phone);
                 const doc = await db.collection('settings').doc('whatsapp_api').get();
                 if (!doc.exists) return;
                 const { instance, token } = doc.data();
-
                 if (!instance || !token) return;
 
                 fetch(`https://api.wapilot.net/api/v2/${instance}/send-message`, {
                     method: "POST",
                     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                    body: JSON.stringify({ chat_id: chatId, text: text })
-                }).catch(e => console.error("Client WA error:", e));
+                    body: JSON.stringify({ chat_id: chatId, text })
+                }).catch(() => {});
             } catch(e) {}
         }
 
-        // ================= 7. استعلام ولي الأمر المطور (الامتحانات + الحضور + الواجبات) =================
         async function searchParentStudentData() {
-            const rawVal = document.getElementById('parent-search-input').value.trim();
-            if (!rawVal) {
-                alert('يرجى إدخال رقم الموبايل أو كود الطالب!');
-                return;
-            }
-
-            const cleanDigits = toEnglishDigits(rawVal);
-            const candidates = getPhoneSearchVariants(cleanDigits);
-            candidates.push(cleanDigits);
+            const rawVal = toEnglishDigits(document.getElementById('parent-search-input').value.trim());
+            if (!rawVal) { alert('ادخل الكود أو الرقم!'); return; }
 
             let s = null;
             if (db) {
                 try {
-                    for (const c of candidates) {
-                        let snap = await db.collection('students').where('code', '==', c).get();
-                        if (snap.empty && !isNaN(c)) snap = await db.collection('students').where('code', '==', Number(c)).get();
-                        if (!snap.empty) { s = snap.docs[0].data(); break; }
-
-                        snap = await db.collection('students').where('phone', '==', c).get();
-                        if (!snap.empty) { s = snap.docs[0].data(); break; }
-
-                        snap = await db.collection('students').where('parentPhone', '==', c).get();
-                        if (!snap.empty) { s = snap.docs[0].data(); break; }
+                    let snap = await db.collection('students').where('code', '==', rawVal).get();
+                    if (!snap.empty) s = snap.docs[0].data();
+                    if (!s) {
+                        snap = await db.collection('students').where('phone', '==', rawVal).get();
+                        if (!snap.empty) s = snap.docs[0].data();
+                    }
+                    if (!s) {
+                        snap = await db.collection('students').where('parentPhone', '==', rawVal).get();
+                        if (!snap.empty) s = snap.docs[0].data();
                     }
                 } catch(e) {}
             }
@@ -953,59 +620,42 @@
                 const local = localStorage.getItem('MF_LOCAL_STUDENTS');
                 if (local) {
                     const list = JSON.parse(local);
-                    s = list.find(item => candidates.some(c => c === (item.code || '').toString() || c === (item.phone || '').toString() || c === (item.parentPhone || '').toString()));
+                    s = list.find(item => toEnglishDigits(item.code) === rawVal || toEnglishDigits(item.phone) === rawVal || toEnglishDigits(item.parentPhone) === rawVal);
                 }
             }
 
             if (!s) {
-                alert('⚠️ لم يتم العثور على أي طالب مسجل بهذه البيانات!\nتأكد من كتابة الرقم الصحيح أو كود الطالب.');
+                alert('⚠️ لم يتم العثور على بيانات الطالب!');
                 return;
             }
 
             document.getElementById('parent-result-view').classList.remove('hidden');
             document.getElementById('parent-st-name').innerText = s.name;
             document.getElementById('parent-st-center').innerText = s.center;
-            document.getElementById('parent-st-code').innerText = `#${s.code}`;
             document.getElementById('parent-st-grade').innerText = s.grade;
+            document.getElementById('parent-st-code').innerText = `#${s.code}`;
 
-            // إحصائيات الحصص والامتحانات والواجبات
-            const attList = s.attendanceHistory || [];
-            const examList = s.examsHistory || [];
-            const hwList = s.homeworksHistory || [];
+            const exams = s.examsHistory || [];
+            const att = s.attendanceHistory || [];
+            const hw = s.homeworksHistory || [];
 
-            document.getElementById('parent-st-attendance-count').innerText = attList.length;
-            document.getElementById('parent-st-exams-count').innerText = examList.length;
-            document.getElementById('parent-st-hw-count').innerText = hwList.length;
+            document.getElementById('parent-st-attendance-count').innerText = att.length;
+            document.getElementById('parent-st-exams-count').innerText = exams.length;
+            document.getElementById('parent-st-hw-count').innerText = hw.length;
 
-            // كشف الامتحانات
-            document.getElementById('parent-exams-history-list').innerHTML = examList.length > 0 ? examList.map(e => `
-                <div class="p-3 bg-slate-800 rounded-xl border border-slate-700 flex justify-between items-center">
-                    <div>
-                        <span class="font-bold text-white block">${e.title}</span>
-                        <span class="text-[10px] text-gray-400 font-mono"><i class="fa-regular fa-clock ml-1"></i> ${e.date}</span>
-                    </div>
-                    <span class="px-2.5 py-1 bg-amber-500/20 text-amber-400 font-mono font-black rounded-lg text-xs border border-amber-500/30">${e.score}</span>
+            document.getElementById('parent-exams-history-list').innerHTML = exams.length > 0 ? exams.map(e => `
+                <div class="p-2 bg-slate-800 rounded-lg flex justify-between items-center text-xs">
+                    <span>${e.title}</span>
+                    <span class="font-mono text-amber-400 font-bold">${e.score}</span>
                 </div>
-            `).reverse().join('') : '<p class="text-gray-400 text-center py-4">لم يتم رصد امتحانات بعد.</p>';
+            `).reverse().join('') : '<p class="text-slate-500 text-center py-2">لا يوجد امتحانات مسجلة.</p>';
 
-            // كشف الحضور
-            document.getElementById('parent-attendance-dates-list').innerHTML = attList.length > 0 ? attList.map(a => `
-                <div class="p-3 bg-slate-800 rounded-xl border border-slate-700 flex justify-between items-center">
-                    <span class="font-bold text-white">${a.title || 'حضور حصة بالسنتر'}</span>
-                    <span class="text-[11px] text-emerald-400 font-mono font-bold"><i class="fa-solid fa-check ml-1"></i> ${a.date}</span>
+            document.getElementById('parent-hw-history-list').innerHTML = hw.length > 0 ? hw.map(h => `
+                <div class="p-2 bg-slate-800 rounded-lg flex justify-between items-center text-xs">
+                    <span>${h.title}</span>
+                    <span class="font-mono text-brand-300 font-bold">${h.score}</span>
                 </div>
-            `).reverse().join('') : '<p class="text-gray-400 text-center py-4">لم يتم تسجيل حضور بعد.</p>';
-
-            // كشف الواجبات
-            document.getElementById('parent-hw-history-list').innerHTML = hwList.length > 0 ? hwList.map(h => `
-                <div class="p-3 bg-slate-800 rounded-xl border border-slate-700 flex justify-between items-center">
-                    <div>
-                        <span class="font-bold text-white block">${h.title}</span>
-                        <span class="text-[10px] text-gray-400 font-mono">${h.date}</span>
-                    </div>
-                    <span class="px-2.5 py-1 bg-brand-900/60 text-brand-300 font-mono font-bold rounded-lg text-xs border border-brand-700">${h.score}</span>
-                </div>
-            `).reverse().join('') : '<p class="text-gray-400 text-center py-4">لم يتم تسليم واجبات بعد.</p>';
+            `).reverse().join('') : '<p class="text-slate-500 text-center py-2">لا يوجد واجبات مسجلة.</p>';
         }
     </script>
 </body>
