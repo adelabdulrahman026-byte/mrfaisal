@@ -12,19 +12,12 @@
                 extend: {
                     colors: {
                         brand: {
-                            50: '#faf5ff',
-                            100: '#f3e8ff',
                             500: '#a855f7',
                             600: '#9333ea',
                             700: '#7e22ce',
                             800: '#6b21a8',
                             900: '#581c87',
                             950: '#3b0764'
-                        },
-                        gold: {
-                            400: '#fbbf24',
-                            500: '#f59e0b',
-                            600: '#d97706'
                         }
                     },
                     fontFamily: { cairo: ['Cairo', 'sans-serif'] }
@@ -48,12 +41,12 @@
             background: radial-gradient(circle at 50% 0%, #1e1135 0%, #0d0918 100%);
         }
         .glass-card {
-            background: rgba(22, 16, 38, 0.75);
+            background: rgba(26, 18, 44, 0.8);
             backdrop-filter: blur(16px);
-            border: 1px solid rgba(168, 85, 247, 0.15);
+            border: 1px solid rgba(168, 85, 247, 0.2);
         }
         .custom-scroll::-webkit-scrollbar { width: 5px; height: 5px; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: #6b21a8; border-radius: 10px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #7e22ce; border-radius: 10px; }
     </style>
 </head>
 <body class="text-slate-100 min-h-screen antialiased selection:bg-brand-600 selection:text-white">
@@ -61,22 +54,22 @@
     <!-- ================= LOGIN SCREEN ================= -->
     <div id="admin-auth-gate" class="fixed inset-0 z-50 bg-[#0d0918]/90 backdrop-blur-2xl flex items-center justify-center p-4">
         <div class="glass-card p-8 sm:p-10 rounded-3xl w-full max-w-md shadow-2xl shadow-purple-950/80 relative border border-purple-500/30">
-            <div class="w-18 h-18 bg-gradient-to-tr from-brand-700 via-purple-600 to-amber-400 p-4 rounded-2xl flex items-center justify-center mx-auto text-3xl mb-4 text-white shadow-xl shadow-brand-700/40">
+            <div class="w-16 h-16 bg-gradient-to-tr from-brand-700 via-purple-600 to-amber-400 rounded-2xl flex items-center justify-center mx-auto text-3xl mb-4 text-white shadow-xl shadow-brand-700/40">
                 <i class="fa-solid fa-crown text-amber-300"></i>
             </div>
-            <h2 class="text-2xl font-black text-center text-white mb-1">لوحة إدارة السناتر</h2>
-            <p class="text-xs text-purple-200/60 text-center mb-6">منظومة مستر محمد فيصل الذكية</p>
+            <h2 class="text-2xl font-black text-center text-white mb-1">لوحة تحكم المنظومة</h2>
+            <p class="text-xs text-purple-200/60 text-center mb-6">إدارة سناتر مستر محمد فيصل</p>
 
             <form onsubmit="handleAdminLogin(event)" class="space-y-4">
                 <div>
                     <label class="block text-xs font-bold text-purple-200 mb-1.5">اسم المستخدم</label>
-                    <input type="text" id="login-username" required placeholder="اسم المستخدم" class="w-full p-3.5 rounded-2xl bg-slate-900/80 border border-purple-500/20 text-sm text-white focus:outline-none focus:border-brand-500 transition">
+                    <input type="text" id="login-username" required placeholder="اسم المستخدم" class="w-full p-3.5 rounded-2xl bg-slate-950/80 border border-purple-500/20 text-sm text-white focus:outline-none focus:border-brand-500 transition">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-purple-200 mb-1.5">كلمة المرور</label>
-                    <input type="password" id="login-password" required placeholder="••••••••" class="w-full p-3.5 rounded-2xl bg-slate-900/80 border border-purple-500/20 text-sm text-white focus:outline-none focus:border-brand-500 transition">
+                    <input type="password" id="login-password" required placeholder="••••••••" class="w-full p-3.5 rounded-2xl bg-slate-950/80 border border-purple-500/20 text-sm text-white focus:outline-none focus:border-brand-500 transition">
                 </div>
-                <button type="submit" id="btn-login-submit" class="w-full py-3.5 bg-gradient-to-r from-brand-700 via-brand-600 to-purple-600 hover:from-brand-600 hover:to-purple-500 text-white font-black rounded-2xl text-sm transition shadow-lg shadow-brand-700/30 flex items-center justify-center gap-2">
+                <button type="submit" id="btn-login-submit" class="w-full py-3.5 bg-gradient-to-r from-brand-700 via-brand-600 to-purple-600 hover:from-brand-600 text-white font-black rounded-2xl text-sm transition shadow-lg shadow-brand-700/30 flex items-center justify-center gap-2">
                     <i class="fa-solid fa-right-to-bracket"></i> دخول لوحة التحكم
                 </button>
             </form>
@@ -94,8 +87,8 @@
                         <i class="fa-solid fa-crown text-amber-300"></i>
                     </div>
                     <div>
-                        <h1 class="font-black text-lg text-white">منظومة كينج التاريخ والجغرافيا</h1>
-                        <p class="text-xs text-purple-300/70">مرحباً: <span id="logged-admin-name" class="font-bold text-amber-400">مستر فيصل</span></p>
+                        <h1 class="font-black text-lg text-white">منظومة سناتر مستر محمد فيصل</h1>
+                        <p class="text-xs text-purple-300/70">المسؤول: <span id="logged-admin-name" class="font-bold text-amber-400">مستر فيصل</span></p>
                     </div>
                 </div>
 
@@ -105,7 +98,7 @@
                             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> متصل (Online)
                         </span>
                         <span id="queue-count-badge" class="hidden px-3 py-1 bg-amber-500/10 text-amber-400 border border-amber-500/30 text-xs font-bold rounded-full flex items-center gap-1.5">
-                            <i class="fa-solid fa-paper-plane"></i> رسائل معلقة: <b id="queue-pending-count" class="font-mono">0</b>
+                            <i class="fa-solid fa-paper-plane"></i> رسائل في الانتظار: <b id="queue-pending-count" class="font-mono">0</b>
                         </span>
                     </div>
 
@@ -126,7 +119,7 @@
                 <button onclick="switchTab('reports')" id="tab-btn-reports" class="tab-btn px-5 py-3 rounded-2xl bg-slate-900/60 hover:bg-slate-800 text-purple-200 font-bold text-xs sm:text-sm whitespace-nowrap border border-purple-500/10"><i class="fa-solid fa-chart-pie ml-1.5"></i> تقارير المتابعة</button>
                 <button onclick="switchTab('broadcast')" id="tab-btn-broadcast" class="tab-btn px-5 py-3 rounded-2xl bg-slate-900/60 hover:bg-slate-800 text-purple-200 font-bold text-xs sm:text-sm whitespace-nowrap border border-purple-500/10"><i class="fa-brands fa-whatsapp ml-1.5"></i> إرسال جماعي</button>
                 <button onclick="switchTab('centers')" id="tab-btn-centers" class="tab-btn px-5 py-3 rounded-2xl bg-slate-900/60 hover:bg-slate-800 text-purple-200 font-bold text-xs sm:text-sm whitespace-nowrap border border-purple-500/10"><i class="fa-solid fa-landmark ml-1.5"></i> السناتر والمواعيد</button>
-                <button onclick="switchTab('api')" id="tab-btn-api" class="tab-btn px-5 py-3 rounded-2xl bg-slate-900/60 hover:bg-slate-800 text-purple-200 font-bold text-xs sm:text-sm whitespace-nowrap border border-purple-500/10"><i class="fa-solid fa-sliders ml-1.5"></i> إعدادات الواتساب</button>
+                <button onclick="switchTab('api')" id="tab-btn-api" class="tab-btn px-5 py-3 rounded-2xl bg-slate-900/60 hover:bg-slate-800 text-purple-200 font-bold text-xs sm:text-sm whitespace-nowrap border border-purple-500/10"><i class="fa-solid fa-sliders ml-1.5"></i> إعدادات واختبار الواتساب</button>
             </div>
 
             <!-- ================= TAB 1: SCANNER & INSTANT ATTENDANCE ================= -->
@@ -138,7 +131,7 @@
                         </div>
                         <div>
                             <h3 class="font-black text-lg text-white">الماسح الفوري لتسجيل الحضور وفحص الواجب</h3>
-                            <p class="text-xs text-purple-200/70">كل عملية فحص تسجل حضور الطالب تلقائياً وتزيد عداده وتكشف فوراً عن حل الواجب وإشعار ولي الأمر</p>
+                            <p class="text-xs text-purple-200/70">كل فحص يسجل حضور الطالب تلقائياً بالسنتر، ويرسل إشعار الواتساب فوراً لولي أمره</p>
                         </div>
                     </div>
                     <div class="w-full sm:w-auto">
@@ -158,7 +151,7 @@
                         <span id="hw-stat-submitted" class="text-3xl font-black text-emerald-400">0</span>
                     </div>
                     <div class="p-5 glass-card rounded-3xl text-center border-b-4 border-b-amber-500">
-                        <span class="text-xs text-amber-400 font-bold block mb-1">حضروا اليوم بالسنتر</span>
+                        <span class="text-xs text-amber-400 font-bold block mb-1">حضروا اليوم بالجلسة</span>
                         <span id="hw-stat-scanned-session" class="text-3xl font-black text-amber-300">0</span>
                     </div>
                     <div class="p-5 glass-card rounded-3xl text-center border-b-4 border-b-rose-500">
@@ -171,16 +164,16 @@
                     <div class="lg:col-span-5 glass-card rounded-3xl p-6 space-y-4">
                         <div class="flex justify-between items-center">
                             <h3 class="font-black text-sm text-white flex items-center gap-2">
-                                <i class="fa-solid fa-camera text-brand-400"></i> ماسح كارت الطالب
+                                <i class="fa-solid fa-camera text-brand-400"></i> كاميرا فحص الكارت
                             </h3>
-                            <button onclick="toggleCameraScanner()" id="scanner-btn" class="px-4 py-2 bg-gradient-to-r from-brand-700 to-purple-600 hover:from-brand-600 hover:to-purple-500 text-white rounded-xl text-xs font-bold transition shadow-md">
+                            <button onclick="toggleCameraScanner()" id="scanner-btn" class="px-4 py-2 bg-gradient-to-r from-brand-700 to-purple-600 hover:from-brand-600 text-white rounded-xl text-xs font-bold transition shadow-md">
                                 <i class="fa-solid fa-video ml-1"></i> تشغيل الكاميرا
                             </button>
                         </div>
 
                         <div id="qr-camera-viewport" class="w-full rounded-2xl overflow-hidden border-2 border-dashed border-purple-500/30 min-h-[220px] bg-slate-950/70 flex flex-col items-center justify-center text-xs text-purple-300 p-4 text-center">
                             <i class="fa-solid fa-qrcode text-4xl mb-2 text-purple-600 animate-pulse"></i>
-                            شغل الكاميرا أو اكتب كود الطالب الدقيق بالأسفل
+                            شغل الكاميرا لمسح الكارت أو اكتب الكود بالأسفل
                         </div>
 
                         <div class="flex gap-2">
@@ -192,11 +185,11 @@
 
                         <div class="pt-3 border-t border-purple-500/20">
                             <div class="flex justify-between items-center mb-2">
-                                <span class="text-xs font-bold text-purple-300"><i class="fa-solid fa-clock-rotate-left ml-1 text-amber-400"></i> آخر حضور بالجلسة:</span>
+                                <span class="text-xs font-bold text-purple-300"><i class="fa-solid fa-clock-rotate-left ml-1 text-amber-400"></i> الحضور بهذه الجلسة:</span>
                                 <span id="live-scanned-count" class="text-[11px] text-amber-400 font-mono font-bold">0 طلاب</span>
                             </div>
                             <div id="live-session-scanned-list" class="space-y-2 max-h-48 overflow-y-auto custom-scroll text-xs">
-                                <p class="text-purple-300/50 text-center py-4 text-[11px]">في انتظار فحص أول كارت...</p>
+                                <p class="text-purple-300/50 text-center py-4 text-[11px]">في انتظار مسح أول كارت...</p>
                             </div>
                         </div>
                     </div>
@@ -207,7 +200,7 @@
                                 <i class="fa-solid fa-id-card-clip"></i>
                             </div>
                             <p class="font-bold text-lg text-white">في انتظار مسح كود الطالب</p>
-                            <p class="text-xs text-purple-300/70 mt-1 max-w-sm">بمجرد المسح، يتم تسجيل حصة حضور جديدة فوراً في ملف الطالب، ويظهر موقفه من الواجب</p>
+                            <p class="text-xs text-purple-300/70 mt-1 max-w-sm">بمجرد المسح، يتم تسجيل الحضور الفعلي فوراً، وإشعار ولي الأمر عبر الواتساب</p>
                         </div>
 
                         <div id="scan-loaded-data" class="hidden space-y-5">
@@ -247,19 +240,18 @@
                                     </div>
                                 </div>
 
-                                <div class="pt-2 flex flex-col sm:flex-row gap-3">
-                                    <button onclick="confirmStudentHomeworkDelivered()" id="btn-submit-hw-present" class="flex-1 py-3.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black rounded-2xl text-xs transition shadow-lg flex items-center justify-center gap-2">
+                                <div class="pt-2">
+                                    <button onclick="confirmStudentHomeworkDelivered()" id="btn-submit-hw-present" class="w-full py-3.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 text-white font-black rounded-2xl text-xs transition shadow-lg flex items-center justify-center gap-2">
                                         <i class="fa-solid fa-check-double text-amber-300"></i> تأكيد استلام ومراجعة واجب الحصة بالسنتر
                                     </button>
                                 </div>
                             </div>
 
-                            <!-- حالة الواجب -->
                             <div id="latest-hw-hero-card" class="p-5 rounded-3xl border transition-all"></div>
 
                             <div>
                                 <h4 class="font-black text-sm text-white mb-3 flex items-center justify-between">
-                                    <span><i class="fa-solid fa-list-check ml-1.5 text-brand-400"></i> سجل الواجبات المسلّمة</span>
+                                    <span><i class="fa-solid fa-list-check ml-1.5 text-brand-400"></i> سجل الواجبات الكامل للطالب</span>
                                     <span class="text-[11px] text-purple-300/70 font-normal">من الأحدث للأقدم</span>
                                 </h4>
                                 <div id="adm-student-hw-history-container" class="space-y-2.5 max-h-60 overflow-y-auto custom-scroll text-xs"></div>
@@ -277,7 +269,7 @@
                             <h3 class="text-xl font-black text-amber-400 flex items-center gap-2">
                                 <i class="fa-solid fa-square-poll-vertical text-2xl"></i> رصد درجات الامتحانات والملاحظات
                             </h3>
-                            <p class="text-xs text-purple-200/70 mt-1">يصل إشعار واتساب مفصل لولي الأمر فوراً متضمناً الدرجة والملاحظات المسجلة</p>
+                            <p class="text-xs text-purple-200/70 mt-1">يصل إشعار واتساب فوري لولي الأمر متضمناً النتيجة والملاحظات.</p>
                         </div>
                     </div>
 
@@ -285,7 +277,7 @@
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                             <div>
                                 <label class="block text-xs font-bold mb-1.5 text-purple-200">كود الطالب الدقيق أو الهاتف:</label>
-                                <input type="text" id="grade-st-input" required placeholder="الكود الدقيق" class="w-full p-3.5 rounded-2xl bg-slate-950/80 border border-purple-500/30 text-xs text-white font-mono font-bold focus:border-amber-500 focus:outline-none" oninput="fetchStudentForGrading()">
+                                <input type="text" id="grade-st-input" required placeholder="الكود الدقيق (مثال: 101)" class="w-full p-3.5 rounded-2xl bg-slate-950/80 border border-purple-500/30 text-xs text-white font-mono font-bold focus:border-amber-500 focus:outline-none" oninput="fetchStudentForGrading()">
                                 <p id="grade-st-found-name" class="text-[11px] text-brand-300 font-bold mt-1.5"></p>
                             </div>
                             <div>
@@ -304,9 +296,9 @@
 
                         <div>
                             <label class="block text-xs font-bold mb-1.5 text-purple-200">
-                                <i class="fa-solid fa-comment-dots text-amber-400 ml-1"></i> نص الملاحظات لولي الأمر (اختياري - يظهر في الواتساب):
+                                <i class="fa-solid fa-comment-dots text-amber-400 ml-1"></i> ملاحظات المعلم لولي الأمر (تضاف لنص رسالة الواتساب):
                             </label>
-                            <input type="text" id="grade-exam-notes" placeholder="مثال: ممتاز جداً استمر، أو مطلوب التركيز على الخرائط وعدم التسرع..." class="w-full p-3.5 rounded-2xl bg-slate-950/80 border border-purple-500/30 text-xs text-white focus:border-amber-500 focus:outline-none">
+                            <input type="text" id="grade-exam-notes" placeholder="مثال: ممتاز جداً، مطلوب مراجعة درس الخرائط وعدم التسرع..." class="w-full p-3.5 rounded-2xl bg-slate-950/80 border border-purple-500/30 text-xs text-white focus:border-amber-500 focus:outline-none">
                         </div>
 
                         <div class="pt-2 flex justify-end">
@@ -351,7 +343,7 @@
                                 </select>
                             </div>
                             <div>
-                                <label class="block text-xs font-bold mb-1.5 text-purple-200">السنتر الموجه له:</label>
+                                <label class="block text-xs font-bold mb-1.5 text-purple-200">السنتر المستهدف:</label>
                                 <select id="hw-builder-target-center" class="w-full p-3.5 rounded-2xl bg-slate-950/80 border border-purple-500/30 text-xs text-white">
                                     <option value="all">جميع السناتر والمنصة</option>
                                 </select>
@@ -374,14 +366,13 @@
 
             <!-- ================= TAB 4: STUDENTS DIRECTORY ================= -->
             <div id="tab-content-students" class="tab-sec hidden space-y-6">
-                <!-- Excel Upload -->
                 <div class="glass-card rounded-3xl p-6 border border-purple-500/20">
                     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
                         <div>
                             <h3 class="text-lg font-black text-emerald-400 flex items-center gap-2">
-                                <i class="fa-solid fa-file-excel text-xl"></i> رفع وتسجيل شيت الإكسيل (Excel)
+                                <i class="fa-solid fa-file-excel text-xl"></i> رفع شيت الإكسيل (Excel)
                             </h3>
-                            <p class="text-xs text-purple-200/70 mt-1">تأكد من وجود الأعمدة: اسم الطالب، الكود، السنتر، رقم الطالب، رقم ولي الأمر</p>
+                            <p class="text-xs text-purple-200/70 mt-1">الأعمدة المطلوبة: اسم الطالب، الكود، السنتر، رقم الطالب، رقم ولي الأمر</p>
                         </div>
                         <button onclick="downloadExcelTemplate()" class="px-4 py-2 bg-slate-800 text-white font-bold rounded-xl text-xs flex items-center gap-2 border border-purple-500/20">
                             <i class="fa-solid fa-download"></i> تحميل شيت تجريبي
@@ -396,7 +387,6 @@
                     </div>
                 </div>
 
-                <!-- Manual Add Form -->
                 <div class="glass-card rounded-3xl p-6 border border-purple-500/20">
                     <h3 class="font-black text-lg text-amber-400 mb-4">إضافة طالب فردي</h3>
                     <form onsubmit="handleSaveStudent(event)" class="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -436,12 +426,11 @@
                     </form>
                 </div>
 
-                <!-- Students Table -->
                 <div class="glass-card rounded-3xl p-6 border border-purple-500/20">
                     <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-3 mb-4">
                         <div>
                             <h3 class="font-black text-base text-white">سجل جميع الطلاب</h3>
-                            <p class="text-[11px] text-purple-300/70">مطابقة الكود دقيقة بنسبة 100%</p>
+                            <p class="text-[11px] text-purple-300/70">تطابق الكود دقيق 100%</p>
                         </div>
                         <div class="flex flex-wrap items-center gap-2 w-full lg:w-auto">
                             <button onclick="exportStudentsToExcelSorted()" class="px-3.5 py-2.5 bg-emerald-700 hover:bg-emerald-600 text-white font-bold rounded-xl text-xs flex items-center gap-1.5 shadow whitespace-nowrap">
@@ -476,27 +465,20 @@
             <div id="tab-content-reports" class="tab-sec hidden glass-card rounded-3xl p-6 space-y-6 border border-purple-500/20">
                 <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 border-b border-purple-500/20 pb-4">
                     <div>
-                        <h3 class="font-black text-lg text-white">تقرير المتابعة والدرجات الشامل</h3>
+                        <h3 class="font-black text-lg text-white">تقرير سناتر مستر فيصل الشامل</h3>
                         <p class="text-xs text-purple-300/70">كشف مفصل بجميع الطلاب وحالات الواجبات ودرجات الامتحانات والحضور</p>
                     </div>
                     <div class="flex flex-wrap gap-2 w-full lg:w-auto">
                         <select id="report-filter-center" onchange="renderHomeworksReport()" class="p-2.5 rounded-xl bg-slate-950/80 border border-purple-500/30 text-xs font-bold text-white"></select>
-                        <select id="report-filter-grade" onchange="renderHomeworksReport()" class="p-2.5 rounded-xl bg-slate-950/80 border border-purple-500/30 text-xs font-bold text-white">
-                            <option value="all">جميع المراحل</option>
-                            <option value="الصف الثالث الثانوي">الصف الثالث الثانوي</option>
-                            <option value="الصف الثاني الثانوي">الصف الثاني الثانوي</option>
-                            <option value="الصف الأول الثانوي">الصف الأول الثانوي</option>
-                        </select>
                         <button onclick="window.print()" class="px-4 py-2.5 bg-amber-400 hover:bg-amber-300 text-slate-950 font-black rounded-xl text-xs"><i class="fa-solid fa-print ml-1"></i> طباعة التقرير</button>
                     </div>
                 </div>
-
                 <div id="report-printable-box" class="bg-slate-950/90 p-6 rounded-2xl border border-purple-500/20 print-area overflow-x-auto"></div>
             </div>
 
             <!-- ================= TAB 6: BROADCAST ================= -->
             <div id="tab-content-broadcast" class="tab-sec hidden max-w-2xl glass-card rounded-3xl p-6 border border-purple-500/20">
-                <h3 class="font-black text-lg mb-2 text-emerald-400"><i class="fa-brands fa-whatsapp ml-1"></i> إرسال جماعي لأولياء الأمور والطلاب</h3>
+                <h3 class="font-black text-lg mb-2 text-emerald-400"><i class="fa-brands fa-whatsapp ml-1"></i> إرسال جماعي للطلاب وأولياء الأمور</h3>
                 <form onsubmit="handleSendBroadcast(event)" class="space-y-4">
                     <div>
                         <label class="block text-xs font-bold mb-1.5 text-purple-200">السنتر المستهدف:</label>
@@ -512,7 +494,7 @@
                     </div>
                     <div>
                         <label class="block text-xs font-bold mb-1.5 text-purple-200">نص الرسالة:</label>
-                        <textarea id="broadcast-msg-text" required rows="4" placeholder="اكتب الرسالة هنا..." class="w-full p-3 rounded-xl bg-slate-950/80 border border-purple-500/30 text-xs text-white"></textarea>
+                        <textarea id="broadcast-msg-text" required rows="4" placeholder="اكتب نص الرسالة هنا..." class="w-full p-3 rounded-xl bg-slate-950/80 border border-purple-500/30 text-xs text-white"></textarea>
                     </div>
                     <button type="submit" id="broadcast-submit-btn" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-500 font-bold rounded-xl text-xs text-white transition flex items-center justify-center gap-2">
                         <i class="fa-solid fa-paper-plane"></i> بدء الإرسال الجماعي
@@ -543,25 +525,41 @@
                     </form>
                 </div>
                 <div class="glass-card rounded-3xl p-6 border border-purple-500/20">
-                    <h3 class="font-black text-base mb-4 text-white">السناتر المعتمدة حالياً</h3>
+                    <h3 class="font-black text-base mb-4 text-white">السناتر المعتمدة</h3>
                     <div id="admin-centers-list-grid" class="grid grid-cols-1 sm:grid-cols-3 gap-4"></div>
                 </div>
             </div>
 
-            <!-- ================= TAB 8: WAPILOT SETTINGS ================= -->
-            <div id="tab-content-api" class="tab-sec hidden max-w-xl glass-card rounded-3xl p-6 border border-purple-500/20">
-                <h3 class="font-black text-lg mb-2 text-brand-400"><i class="fa-brands fa-whatsapp ml-1"></i> إعدادات WAPilot WhatsApp API</h3>
+            <!-- ================= TAB 8: WAPILOT SETTINGS & TEST TOOL ================= -->
+            <div id="tab-content-api" class="tab-sec hidden max-w-xl glass-card rounded-3xl p-6 border border-purple-500/20 space-y-6">
+                <div>
+                    <h3 class="font-black text-lg mb-1 text-brand-400"><i class="fa-brands fa-whatsapp ml-1"></i> إعدادات WAPilot API</h3>
+                    <p class="text-xs text-purple-200/70">ادخل بيانات الحساب واضغط "حفظ"، ثم جرب زر الفحص لإرسال رسالة تجريبية لهاتفك للتأكد من عمل الخدمة.</p>
+                </div>
+
                 <form onsubmit="handleSaveWAPilotSettings(event)" class="space-y-4">
                     <div>
                         <label class="block text-xs font-bold mb-1.5 text-purple-200">Instance ID:</label>
-                        <input type="text" id="api-instance-id" required placeholder="instanceXXXX" class="w-full p-3.5 rounded-xl bg-slate-950/80 border border-purple-500/30 text-xs font-mono text-white">
+                        <input type="text" id="api-instance-id" required placeholder="مثال: instance12345" class="w-full p-3.5 rounded-xl bg-slate-950/80 border border-purple-500/30 text-xs font-mono text-white">
                     </div>
                     <div>
                         <label class="block text-xs font-bold mb-1.5 text-purple-200">Bearer Token:</label>
-                        <input type="text" id="api-token-key" required placeholder="Bearer Token" class="w-full p-3.5 rounded-xl bg-slate-950/80 border border-purple-500/30 text-xs font-mono text-white">
+                        <input type="text" id="api-token-key" required placeholder="Bearer Token من لوحة WAPilot" class="w-full p-3.5 rounded-xl bg-slate-950/80 border border-purple-500/30 text-xs font-mono text-white">
                     </div>
-                    <button type="submit" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs transition">حفظ الإعدادات</button>
+                    <button type="submit" class="w-full py-3 bg-brand-700 hover:bg-brand-600 text-white font-bold rounded-xl text-xs transition">حفظ الإعدادات</button>
                 </form>
+
+                <!-- أداة اختبار وإرسال رسالة تجريبية -->
+                <div class="pt-4 border-t border-purple-500/20 space-y-3">
+                    <h4 class="font-bold text-xs text-amber-300"><i class="fa-solid fa-vial ml-1"></i> اختبار فوري للواتساب (Test Connection):</h4>
+                    <div class="flex gap-2">
+                        <input type="tel" id="test-wa-phone" placeholder="ادخل رقم هاتفك (01xxxxxxxxx)" class="w-full p-3 rounded-xl bg-slate-950/80 border border-purple-500/30 text-xs font-mono text-white">
+                        <button type="button" onclick="testWAPilotLive()" id="btn-test-wa" class="px-5 py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl whitespace-nowrap">
+                            إرسال تجربة الآن
+                        </button>
+                    </div>
+                    <p id="test-wa-result" class="text-xs font-bold hidden"></p>
+                </div>
             </div>
         </div>
     </div>
@@ -585,9 +583,9 @@
             while (digits.startsWith('0')) digits = digits.substring(1);
 
             if (digits.length === 10 && (digits.startsWith('10') || digits.startsWith('11') || digits.startsWith('12') || digits.startsWith('15') || digits.startsWith('1'))) {
-                return `20${digits}@c.us`;
+                return `20${digits}`;
             }
-            return `${digits}@c.us`;
+            return digits;
         }
 
         let db = null;
@@ -659,6 +657,93 @@
             } catch(e) {}
         }
 
+        // ================= WAPILOT CORE ENGINE =================
+        async function sendWAPilotMessage(phone, message) {
+            try {
+                if (!phone || !navigator.onLine) return false;
+                const formattedNum = cleanAndFormatEgyptianPhone(phone);
+                if (!formattedNum) return false;
+
+                // قراءة الـ Token والـ Instance من localStorage أو Firestore
+                let instance = localStorage.getItem('MF_WAPILOT_INSTANCE') || '';
+                let token = localStorage.getItem('MF_WAPILOT_TOKEN') || '';
+
+                if ((!instance || !token) && db) {
+                    try {
+                        const doc = await db.collection('settings').doc('whatsapp_api').get();
+                        if (doc.exists) {
+                            const d = doc.data();
+                            instance = d.instance;
+                            token = d.token;
+                            localStorage.setItem('MF_WAPILOT_INSTANCE', instance);
+                            localStorage.setItem('MF_WAPILOT_TOKEN', token);
+                        }
+                    } catch(err) {}
+                }
+
+                if (!instance || !token) {
+                    console.error("WAPilot credentials missing!");
+                    return false;
+                }
+
+                // إرسال الـ Payload المتوافق مع نسختي WAPilot
+                const chatId = `${formattedNum}@c.us`;
+                const payload = {
+                    phone: formattedNum,
+                    number: formattedNum,
+                    chat_id: chatId,
+                    chatId: chatId,
+                    message: message,
+                    text: message
+                };
+
+                const url = `https://api.wapilot.net/api/v2/${instance}/send-message`;
+                const res = await fetch(url, {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!res.ok) {
+                    console.error("WAPilot Response Status:", res.status);
+                    return false;
+                }
+                return true;
+            } catch (e) {
+                console.error("WAPilot Error:", e);
+                return false;
+            }
+        }
+
+        async function testWAPilotLive() {
+            const phone = document.getElementById('test-wa-phone').value.trim();
+            const resEl = document.getElementById('test-wa-result');
+            const btn = document.getElementById('btn-test-wa');
+
+            if (!phone) { alert('ادخل رقم هاتفك للاختبار!'); return; }
+
+            resEl.classList.remove('hidden');
+            resEl.className = "text-xs font-bold text-amber-300";
+            resEl.innerText = "جاري إرسال الرسالة التجريبية...";
+            btn.disabled = true;
+
+            const msg = `مرحباً بك! هذه رسالة تجريبية ناجحة من منظومة مستر محمد فيصل ✅\nتأكيد الربط مع WAPilot يعمل بنجاح تام.`;
+            const success = await sendWAPilotMessage(phone, msg);
+
+            btn.disabled = false;
+            if (success) {
+                resEl.className = "text-xs font-bold text-emerald-400";
+                resEl.innerText = "✅ تم إرسال الرسالة التجريبية بنجاح! راجع تطبيق الواتساب على هاتفك الآن.";
+            } else {
+                resEl.className = "text-xs font-bold text-rose-400";
+                resEl.innerText = "❌ تعذر الإرسال! تأكد من صحة الـ Instance ID والـ Bearer Token وأن باقة الواتساب مفعّلة بحسابك.";
+            }
+        }
+
+        // WhatsApp Queue Management
         function getOfflineQueue() {
             try { return JSON.parse(localStorage.getItem('MF_WA_PENDING_QUEUE') || '[]'); } catch(e) { return []; }
         }
@@ -793,7 +878,7 @@
             document.getElementById('admin-auth-gate').classList.remove('hidden');
         }
 
-        // ================= 1. SCANNER & INSTANT ATTENDANCE =================
+        // ================= 1. SCANNER & EXACT ATTENDANCE =================
         function updateHwScanningStats() {
             const centerFilter = document.getElementById('hw-scan-filter-center') ? document.getElementById('hw-scan-filter-center').value : 'all';
             let list = cachedStudents;
@@ -836,12 +921,11 @@
                     isScannerRunning = true;
                     btn.innerHTML = `<i class="fa-solid fa-stop ml-1"></i> إيقاف الكاميرا`;
                 }).catch(() => {
-                    alert('يرجى إعطاء الإذن لتشغيل الكاميرا.');
+                    alert('يرجى إعطاء الصلاحية لتشغيل الكاميرا.');
                 });
             }
         }
 
-        // بحث دقيق بالكود حصراً لحل مشكلة خلط الطلاب
         function findStudentStrict(query) {
             if (!query) return null;
             const cleanQuery = toEnglishDigits(query).trim();
@@ -862,7 +946,7 @@
             return cachedStudents.find(s => s.name && s.name.trim() === cleanQuery);
         }
 
-        // تسجيل الحضور التلقائي الفوري بمجرد الفحص
+        // تسجيل الحضور الفعلي وتحديث العداد وإرسال الواتساب
         async function handleHomeworkScanResult(code) {
             const student = findStudentStrict(code);
             if (!student) {
@@ -873,14 +957,12 @@
 
             playBeepSound('success');
 
-            // تسجيل حضور تلقائي للحصة فوراً وتحديث العداد
             const now = new Date();
             const dateFormatted = now.toLocaleDateString('ar-EG', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
             const todayDateOnly = now.toLocaleDateString('ar-EG');
 
             if (!student.attendanceHistory) student.attendanceHistory = [];
 
-            // تجنب التكرار لنفس الطالب في نفس الدقيقة
             const alreadyLoggedRecently = student.attendanceHistory.some(a => a.date && a.date.includes(todayDateOnly));
             
             if (!alreadyLoggedRecently) {
@@ -892,7 +974,6 @@
                 }
                 localStorage.setItem('MF_LOCAL_STUDENTS', JSON.stringify(cachedStudents));
 
-                // إشعار ولي الأمر الفوري بحضور الحصة
                 if (student.parentPhone) {
                     const parentMsg = `السلام عليكم ورحمة الله وبركاته،\n`
                                     + `ولي أمر الطالب/ة: *${student.name}* 🎓\n`
@@ -1028,7 +1109,7 @@
             if (student.parentPhone) {
                 const parentMsg = `السلام عليكم ورحمة الله وبركاته،\n`
                                 + `ولي أمر الطالب/ة: *${student.name}* 🎓\n`
-                                + `نحيط سيادتكم علماً بأن الطالب قد قام بـ *تسليم ومراجعة الواجب المطلوب كاملاً* بالسنتر بنجاح.\n\n`
+                                + `نحيط سيادتكم علماً بأن الطالب قد قام بـ *تسليم ومراجعة الواجب المطلوب كاملاً* بنجاح.\n\n`
                                 + `مع تحيات إدارة مستر محمد فيصل 🌟`;
                 enqueueWhatsAppMessage(student.parentPhone, parentMsg, student.name);
             }
@@ -1584,12 +1665,10 @@
         // ================= 5. HOMEWORK REPORTS =================
         function renderHomeworksReport() {
             const centerFilter = document.getElementById('report-filter-center').value;
-            const gradeFilter = document.getElementById('report-filter-grade').value;
             const container = document.getElementById('report-printable-box');
 
             let list = cachedStudents;
             if (centerFilter !== 'all') list = list.filter(s => s.center === centerFilter);
-            if (gradeFilter !== 'all') list = list.filter(s => s.grade === gradeFilter);
 
             let html = `
                 <div class="text-center mb-6 pb-4 border-b border-purple-500/20">
@@ -1632,7 +1711,7 @@
             container.innerHTML = html;
         }
 
-        // ================= 6. CENTERS & WAPILOT =================
+        // ================= 6. CENTERS & WAPILOT SETTINGS =================
         async function loadCenters() {
             cachedCenters = [];
             if (db) {
@@ -1709,7 +1788,7 @@
             if (center !== 'all') targets = targets.filter(s => s.center === center);
 
             if (targets.length === 0) { alert('لا يوجد طلاب مسجلين!'); return; }
-            if (!confirm(`إرسال الرسالة إلى (${targets.length}) طالب/ولي أمر؟`)) return;
+            if (!confirm(`إرسال الرسالة إلى (${targets.length}) جهة اتصال؟`)) return;
 
             for (const s of targets) {
                 if (role === 'parents' || role === 'both') {
@@ -1725,16 +1804,24 @@
         }
 
         async function loadWAPilotSettings() {
-            if (db) {
+            let instance = localStorage.getItem('MF_WAPILOT_INSTANCE') || '';
+            let token = localStorage.getItem('MF_WAPILOT_TOKEN') || '';
+
+            if (db && (!instance || !token)) {
                 try {
                     const doc = await db.collection('settings').doc('whatsapp_api').get();
                     if (doc.exists) {
                         const d = doc.data();
-                        document.getElementById('api-instance-id').value = d.instance || '';
-                        document.getElementById('api-token-key').value = d.token || '';
+                        instance = d.instance || '';
+                        token = d.token || '';
+                        localStorage.setItem('MF_WAPILOT_INSTANCE', instance);
+                        localStorage.setItem('MF_WAPILOT_TOKEN', token);
                     }
                 } catch(e) {}
             }
+
+            document.getElementById('api-instance-id').value = instance;
+            document.getElementById('api-token-key').value = token;
         }
 
         async function handleSaveWAPilotSettings(e) {
@@ -1742,44 +1829,16 @@
             const instance = document.getElementById('api-instance-id').value.trim();
             const token = document.getElementById('api-token-key').value.trim();
 
+            localStorage.setItem('MF_WAPILOT_INSTANCE', instance);
+            localStorage.setItem('MF_WAPILOT_TOKEN', token);
+
             if (db) {
                 try {
                     await db.collection('settings').doc('whatsapp_api').set({ instance, token });
-                    alert('تم حفظ وتفعيل إعدادات WAPilot API بنجاح!');
-                } catch(err) { alert('خطأ في الحفظ: ' + err.message); }
+                } catch(err) {}
             }
-        }
 
-        async function sendWAPilotMessage(phone, message) {
-            try {
-                if (!phone || !navigator.onLine) return false;
-                const chatId = cleanAndFormatEgyptianPhone(phone);
-                if (!chatId) return false;
-
-                let instance = document.getElementById('api-instance-id') ? document.getElementById('api-instance-id').value.trim() : '';
-                let token = document.getElementById('api-token-key') ? document.getElementById('api-token-key').value.trim() : '';
-
-                if ((!instance || !token) && db) {
-                    const doc = await db.collection('settings').doc('whatsapp_api').get();
-                    if (doc.exists) {
-                        const d = doc.data();
-                        instance = d.instance;
-                        token = d.token;
-                    }
-                }
-
-                if (!instance || !token) return false;
-
-                const url = `https://api.wapilot.net/api/v2/${instance}/send-message`;
-                const response = await fetch(url, {
-                    method: "POST",
-                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                    body: JSON.stringify({ chat_id: chatId, text: message })
-                });
-                return response.ok;
-            } catch (e) {
-                return false;
-            }
+            alert('✅ تم حفظ وتفعيل إعدادات WAPilot API بنجاح في المنظومة!');
         }
     </script>
 </body>
