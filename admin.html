@@ -447,12 +447,22 @@
                     <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-3 mb-4">
                         <div>
                             <h3 class="font-black text-base">دليل طلاب السناتر والمنصة</h3>
-                            <p class="text-[11px] text-gray-400">يمكنك فحص سجل الطالب، تعديل بياناته، أو تصدير الشيت كاملاً</p>
+                            <p class="text-[11px] text-gray-400">يمكنك فحص سجل الطالب، تعديل بياناته، أو تصدير الشيت كاملاً أو لكل سنتر</p>
                         </div>
                         <div class="flex flex-wrap items-center gap-2 w-full lg:w-auto">
-                            <button onclick="exportStudentsToExcelSorted()" class="px-3.5 py-2.5 bg-emerald-700 hover:bg-emerald-600 text-white font-bold rounded-xl text-xs flex items-center gap-1.5 transition shadow whitespace-nowrap">
-                                <i class="fa-solid fa-file-excel text-sm"></i> تصدير إكسيل
-                            </button>
+                            <!-- أزرار التصدير الذكية للإكسيل -->
+                            <div class="flex items-center gap-1.5 flex-wrap">
+                                <button onclick="exportStudentsToExcelSorted()" class="px-3 py-2 bg-emerald-700 hover:bg-emerald-600 text-white font-bold rounded-xl text-xs flex items-center gap-1.5 transition shadow whitespace-nowrap" title="تصدير السنتر والمرحلة المحددة حالياً في الفلتر">
+                                    <i class="fa-solid fa-file-excel"></i> تصدير السنتر الحالي
+                                </button>
+                                <button onclick="exportAllCentersWorkbook()" class="px-3 py-2 bg-teal-700 hover:bg-teal-600 text-white font-bold rounded-xl text-xs flex items-center gap-1.5 transition shadow whitespace-nowrap" title="ملف إكسيل واحد يحتوي على شيت منفصل لكل سنتر">
+                                    <i class="fa-solid fa-table-cells"></i> تصدير كل السناتر (شيت لكل سنتر)
+                                </button>
+                                <button onclick="exportAllCentersSeparateFiles()" class="px-3 py-2 bg-purple-700 hover:bg-purple-600 text-white font-bold rounded-xl text-xs flex items-center gap-1.5 transition shadow whitespace-nowrap" title="تنزيل ملف إكسيل منفصل لكل سنتر على حدة">
+                                    <i class="fa-solid fa-boxes-packing"></i> تنزيل كل السناتر (ملفات منفصلة)
+                                </button>
+                            </div>
+
                             <select id="filter-table-by-center" onchange="filterAdminStudentsTable()" class="p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs font-bold text-white"></select>
                             <select id="filter-table-by-grade" onchange="filterAdminStudentsTable()" class="p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs font-bold text-white">
                                 <option value="all">جميع المراحل</option>
@@ -1523,7 +1533,7 @@
             loadHomeworksList();
         }
 
-        // ================= 4. STUDENTS DIRECTORY =================
+        // ================= 4. STUDENTS DIRECTORY & EXCEL EXPORTS =================
         function downloadExcelTemplate() {
             const templateData = [
                 {
@@ -1542,6 +1552,23 @@
             XLSX.writeFile(wb, "Mr_Faisal_Students_Template.xlsx");
         }
 
+        // دالة مساعدة لتحويل قائمة الطلاب إلى صيغة نظيفة لملف الإكسيل
+        function formatStudentsForExport(studentList) {
+            const sorted = [...studentList].sort((a, b) => (parseInt(a.code, 10) || 0) - (parseInt(b.code, 10) || 0));
+            return sorted.map(s => ({
+                "الكود": Number(s.code) || s.code,
+                "اسم الطالب": s.name || '',
+                "السنتر": s.center || '',
+                "الصف الدراسي": s.grade || '',
+                "رقم تليفون الطالب": s.phone || '',
+                "رقم ولي الأمر": s.parentPhone || '',
+                "آخر درجة واجب": s.lastHwExactScore || 'لم يحل',
+                "آخر درجة امتحان": s.lastExamScore || 'لم يرصد',
+                "إجمالي الحصص الحاضرة": (s.attendanceHistory || []).length
+            }));
+        }
+
+        // 1. تصدير السنتر الحالي المختار وفق الفلتر
         function exportStudentsToExcelSorted() {
             const centerFilter = document.getElementById('filter-table-by-center') ? document.getElementById('filter-table-by-center').value : 'all';
             const gradeFilter = document.getElementById('filter-table-by-grade') ? document.getElementById('filter-table-by-grade').value : 'all';
@@ -1556,25 +1583,82 @@
                 return;
             }
 
-            targetList.sort((a, b) => (parseInt(a.code, 10) || 0) - (parseInt(b.code, 10) || 0));
-
-            const exportData = targetList.map(s => ({
-                "الكود": Number(s.code) || s.code,
-                "اسم الطالب": s.name || '',
-                "السنتر": s.center || '',
-                "الصف الدراسي": s.grade || '',
-                "رقم تليفون الطالب": s.phone || '',
-                "رقم ولي الأمر": s.parentPhone || '',
-                "آخر درجة واجب": s.lastHwExactScore || 'لم يحل',
-                "آخر درجة امتحان": s.lastExamScore || 'لم يرصد',
-                "إجمالي الحصص الحاضرة": (s.attendanceHistory || []).length
-            }));
-
+            const exportData = formatStudentsForExport(targetList);
             const ws = XLSX.utils.json_to_sheet(exportData);
             const wb = XLSX.utils.book_new();
+            const sheetTitle = (centerFilter === 'all' ? 'جميع الطلاب' : centerFilter).substring(0, 31).replace(/[:\\\/\?\*\[\]]/g, '_');
+            XLSX.utils.book_append_sheet(wb, ws, sheetTitle);
+            
             const centerNameSanitized = centerFilter === 'all' ? 'جميع_السناتر' : centerFilter.replace(/\s+/g, '_');
-            XLSX.utils.book_append_sheet(wb, ws, "الطلاب_مرتبين");
-            XLSX.writeFile(wb, `طلاب_${centerNameSanitized}_مرتبين_بالأكواد.xlsx`);
+            XLSX.writeFile(wb, `طلاب_${centerNameSanitized}_مرتبين.xlsx`);
+        }
+
+        // 2. تصدير كل السناتر في شيتات منفصلة داخل ملف واحد (Workbook)
+        function exportAllCentersWorkbook() {
+            if (!cachedStudents || cachedStudents.length === 0) {
+                alert('لا يوجد طلاب في المنظومة لتصديرهم!');
+                return;
+            }
+
+            const wb = XLSX.utils.book_new();
+            const centersMap = {};
+
+            cachedStudents.forEach(s => {
+                const cName = s.center ? s.center.trim() : 'غير محدد';
+                if (!centersMap[cName]) centersMap[cName] = [];
+                centersMap[cName].push(s);
+            });
+
+            const centerKeys = Object.keys(centersMap);
+            if (centerKeys.length === 0) {
+                alert('لم يتم العثور على سناتر مسجلة!');
+                return;
+            }
+
+            centerKeys.forEach(centerName => {
+                const exportData = formatStudentsForExport(centersMap[centerName]);
+                const ws = XLSX.utils.json_to_sheet(exportData);
+                // Sheet names cannot exceed 31 chars in Excel and cannot contain certain chars
+                let sanitizedSheetName = centerName.replace(/[:\\\/\?\*\[\]]/g, '_').substring(0, 31);
+                XLSX.utils.book_append_sheet(wb, ws, sanitizedSheetName);
+            });
+
+            XLSX.writeFile(wb, "طلاب_كل_السناتر_شيتات_مستقلة.xlsx");
+        }
+
+        // 3. تصدير كل سنتر في ملف إكسيل منفصل تماماً (تنزيل ملفات متتابعة)
+        async function exportAllCentersSeparateFiles() {
+            if (!cachedStudents || cachedStudents.length === 0) {
+                alert('لا يوجد طلاب مسجلين للتصدير!');
+                return;
+            }
+
+            const centersMap = {};
+            cachedStudents.forEach(s => {
+                const cName = s.center ? s.center.trim() : 'بدون_سنتر';
+                if (!centersMap[cName]) centersMap[cName] = [];
+                centersMap[cName].push(s);
+            });
+
+            const centerKeys = Object.keys(centersMap);
+            if (centerKeys.length === 0) return;
+
+            if (!confirm(`سيتم الآن تنزيل (${centerKeys.length}) ملف إكسيل منفصل، ملف لكل سنتر. هل تريد المتابعة؟`)) return;
+
+            for (let i = 0; i < centerKeys.length; i++) {
+                const centerName = centerKeys[i];
+                const exportData = formatStudentsForExport(centersMap[centerName]);
+                const ws = XLSX.utils.json_to_sheet(exportData);
+                const wb = XLSX.utils.book_new();
+                const sanitizedSheetName = centerName.substring(0, 31).replace(/[:\\\/\?\*\[\]]/g, '_');
+                XLSX.utils.book_append_sheet(wb, ws, sanitizedSheetName);
+                
+                const sanitizedFileName = `كشف_سنتر_${centerName.replace(/\s+/g, '_').replace(/[:\\\/\?\*\[\]]/g, '_')}.xlsx`;
+                XLSX.writeFile(wb, sanitizedFileName);
+
+                // تأخير بسيط بين الملف والآخر لضمان عدم حظر المتصفح لعمليات التحميل المتعددة
+                await new Promise(resolve => setTimeout(resolve, 400));
+            }
         }
 
         async function handleProcessExcelUpload() {
