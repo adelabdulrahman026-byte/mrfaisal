@@ -311,14 +311,14 @@
                 </div>
             </div>
 
-            <!-- ================= TAB 4: دليل الطلاب وإضافة سنتر وتعديل ================= -->
+            <!-- ================= TAB 4: دليل الطلاب وإدارة السناتر وتعديلهم ================= -->
             <div id="tab-content-students" class="tab-sec hidden space-y-6">
-                <!-- إدارة السناتر -->
+                <!-- إدارة السناتر مع إمكانية الحذف والإضافة -->
                 <div class="glass-panel border border-brand-500/20 p-5 rounded-3xl">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
                         <div>
                             <h3 class="font-black text-sm text-brand-300"><i class="fa-solid fa-map-location-dot ml-1"></i> السناتر والمقرات الدراسية</h3>
-                            <p class="text-xs text-slate-400">إضافة وتعديل مقرات الحصص مباشرة</p>
+                            <p class="text-xs text-slate-400">إضافة وتعديل وحذف مقرات الحصص مباشرة</p>
                         </div>
                         <button onclick="toggleNewCenterForm()" class="px-3.5 py-2 bg-brand-700 hover:bg-brand-600 text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5">
                             <i class="fa-solid fa-plus"></i> إضافة سنتر جديد
@@ -383,7 +383,7 @@
                                     <th class="p-3 text-center">الإجراءات</th>
                                 </tr>
                             </thead>
-                            <tbody id="students-table-body" class="divide-y divide-slate-800"></tbody>
+                            <tbody id="students-table-body" class="divide-y border-slate-800"></tbody>
                         </table>
                     </div>
                 </div>
@@ -490,7 +490,7 @@
                 .replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).trim();
         }
 
-        // تسجيل الدخول الحصري عبر فايربيز أوتوميشن
+        // تسجيل الدخول الحصري عبر فايربيز
         auth.onAuthStateChanged(user => {
             if (user) {
                 document.getElementById('admin-auth-gate').classList.add('hidden');
@@ -744,7 +744,6 @@
             const attendanceCount = (st.attendanceHistory || []).length;
             const homeworkCount = (st.homeworksHistory || []).length;
 
-            // الرسالة الأنيقة جداً لولي الأمر
             if (st.parentPhone) {
                 const message = `✨ *منظومة مستر محمد فيصل التعليمية* ✨
 ━━━━━━━━━━━━━━━━━━━━━
@@ -758,6 +757,7 @@
 
 📈 *مؤشرات الالتزام والمتابعة حتى اليوم:*
 🗓️ *إجمالي الحصص المحضورة:* *${attendanceCount} حصص*
+📚 *الواجبات المنجزة والمراجعة:* *${homeworkCount} واجبات*
 
 ━━━━━━━━━━━━━━━━━━━━━
 💡 *لمتابعة درجات ابنكم بالكامل، سجل الحضور، وملاحظات الحصص عبر بوابة ولي الأمر:*
@@ -1009,7 +1009,7 @@
             loadHomeworks();
         }
 
-        // ================= TAB 4: السناتر ودليل الطلاب وتعديلهم =================
+        // ================= TAB 4: السناتر (إضافة وحذف) ودليل الطلاب =================
         function toggleNewCenterForm() {
             document.getElementById('new-center-form').classList.toggle('hidden');
         }
@@ -1058,11 +1058,30 @@
                 }
             });
 
+            // عرض بطاقات السناتر مع زر حذف لكل سنتر
             document.getElementById('centers-tag-list').innerHTML = cachedCenters.map(c => `
-                <span class="px-3 py-1.5 bg-slate-900 border border-slate-800 rounded-xl text-slate-300">
-                    <b class="text-amber-400">${c.name}</b> (${c.day} - ${c.time})
-                </span>
+                <div class="flex items-center gap-2 px-3 py-1.5 bg-slate-900 border border-slate-800 rounded-xl text-slate-300">
+                    <span><b class="text-amber-400">${c.name}</b> (${c.day} - ${c.time})</span>
+                    <button type="button" onclick="deleteCenter('${c.id || ''}', '${c.name}')" class="text-rose-400 hover:text-rose-300 mr-1 p-0.5" title="حذف السنتر">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
             `).join('');
+        }
+
+        // حذف السنتر وتحديث كل القوائم
+        async function deleteCenter(id, name) {
+            if (!confirm(`هل أنت متأكد من حذف سنتر (${name}) نهائياً؟`)) return;
+
+            if (db && id) {
+                await db.collection('centers').doc(id).delete().catch(() => {});
+            }
+
+            cachedCenters = cachedCenters.filter(c => (id && c.id ? c.id !== id : c.name !== name));
+            localStorage.setItem('MF_LOCAL_CENTERS', JSON.stringify(cachedCenters));
+
+            alert(`✅ تم حذف سنتر (${name}) بنجاح.`);
+            loadCenters();
         }
 
         async function loadStudents() {
