@@ -73,7 +73,7 @@
         </div>
     </div>
 
-    <!-- ================= شريط حالة الإرسال وطابور درجات الواتساب (Progress Bar) ================= -->
+    <!-- ================= شريط حالة الإرسال وطابور درجات الواتساب ================= -->
     <div id="wa-queue-banner" class="hidden sticky top-0 z-50 bg-slate-900/95 border-b border-brand-500/30 px-4 py-3 shadow-2xl backdrop-blur-md">
         <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
             <div class="flex items-center gap-3 w-full sm:w-auto">
@@ -84,7 +84,6 @@
                 </div>
             </div>
 
-            <!-- شريط التقدم والعداد -->
             <div class="w-full sm:w-1/2 flex items-center gap-3">
                 <div class="w-full bg-slate-800 rounded-full h-2.5 overflow-hidden border border-slate-700">
                     <div id="queue-progress-bar" class="bg-gradient-to-r from-emerald-500 to-teal-400 h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
@@ -170,7 +169,7 @@
                                 <p class="text-xs text-slate-400 mt-1">السنتر المقيد به: <span id="dos-st-center" class="text-amber-400 font-bold">--</span></p>
                             </div>
                             <div class="flex items-center gap-2 flex-wrap">
-                                <button onclick="openEditStudentModal(currentLoadedStudent.id)" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+                                <button onclick="openEditStudentModal(currentLoadedStudent.id || currentLoadedStudent.code)" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
                                     <i class="fa-solid fa-pen-to-square text-amber-400"></i> تعديل بيانات الطالب
                                 </button>
                                 <button onclick="markStudentAttendanceDirect()" class="px-5 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black rounded-xl text-xs shadow-lg transition flex items-center gap-1.5">
@@ -232,7 +231,7 @@
                 </div>
             </div>
 
-            <!-- ================= TAB 2: رصد درجات الاختبارات (واتساب لولي الأمر) ================= -->
+            <!-- ================= TAB 2: رصد درجات الاختبارات ================= -->
             <div id="tab-content-grading" class="tab-sec hidden space-y-6">
                 <div class="glass-panel border border-amber-500/30 p-6 rounded-3xl max-w-2xl">
                     <h3 class="text-base font-black text-amber-400 flex items-center gap-2 mb-1">
@@ -267,7 +266,7 @@
                 </div>
             </div>
 
-            <!-- ================= TAB 3: بنك الواجبات (متاح لجميع الطلاب) ================= -->
+            <!-- ================= TAB 3: بنك الواجبات ================= -->
             <div id="tab-content-homework" class="tab-sec hidden space-y-6">
                 <div class="glass-panel p-6 rounded-3xl">
                     <div class="flex justify-between items-center mb-6">
@@ -311,9 +310,9 @@
                 </div>
             </div>
 
-            <!-- ================= TAB 4: دليل الطلاب وإدارة السناتر وتعديلهم ================= -->
+            <!-- ================= TAB 4: دليل الطلاب والسناتر ================= -->
             <div id="tab-content-students" class="tab-sec hidden space-y-6">
-                <!-- إدارة السناتر مع إمكانية الحذف والإضافة -->
+                <!-- إدارة السناتر مع الإضافة والتعديل والحذف -->
                 <div class="glass-panel border border-brand-500/20 p-5 rounded-3xl">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
                         <div>
@@ -335,15 +334,23 @@
                     <div id="centers-tag-list" class="flex flex-wrap gap-2 text-xs"></div>
                 </div>
 
-                <!-- استيراد إكسيل وإضافة طالب -->
+                <!-- استيراد شيت إكسيل وتحميل النموذج -->
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                    <div class="lg:col-span-4 glass-panel p-6 rounded-3xl">
-                        <h3 class="font-black text-sm text-emerald-400 mb-3"><i class="fa-solid fa-file-excel ml-1"></i> استيراد شيت إكسيل</h3>
-                        <input type="file" id="excel-file-selector" accept=".xlsx, .xls, .csv" class="w-full text-xs text-slate-300 bg-slate-900 p-2 rounded-xl border border-slate-700 mb-3 file:mr-2 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:bg-brand-700 file:text-white">
-                        <button onclick="handleExcelImport()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 font-bold rounded-xl text-xs text-white transition">بدء الرفع</button>
+                    <div class="lg:col-span-5 glass-panel p-6 rounded-3xl space-y-4">
+                        <div class="flex items-center justify-between">
+                            <h3 class="font-black text-sm text-emerald-400"><i class="fa-solid fa-file-excel ml-1"></i> استيراد شيت إكسيل</h3>
+                            <button type="button" onclick="downloadStudentExcelTemplate()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-amber-300 text-xs font-bold rounded-xl border border-slate-700 transition flex items-center gap-1.5 shadow-sm">
+                                <i class="fa-solid fa-file-arrow-down"></i> تحميل نموذج فارغ
+                            </button>
+                        </div>
+                        <p class="text-[11px] text-slate-400">حمل النموذج الفارغ وضع به الطلاب ثم ارفعه هنا. في حال وجود كود مكرر سيطلب النظام موافقتك على الاستبدال.</p>
+                        <input type="file" id="excel-file-selector" accept=".xlsx, .xls, .csv" class="w-full text-xs text-slate-300 bg-slate-900 p-2.5 rounded-xl border border-slate-700 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:bg-brand-700 file:text-white">
+                        <button onclick="handleExcelImport()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 font-bold rounded-xl text-xs text-white transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-upload"></i> بدء استيراد البيانات
+                        </button>
                     </div>
 
-                    <div class="lg:col-span-8 glass-panel p-6 rounded-3xl">
+                    <div class="lg:col-span-7 glass-panel p-6 rounded-3xl">
                         <h3 class="font-black text-sm text-brand-400 mb-3">إضافة طالب يدوي جديد</h3>
                         <form onsubmit="handleManualStudentAdd(event)" class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                             <input type="text" id="manual-name" required placeholder="الاسم رباعي" class="p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white">
@@ -383,7 +390,7 @@
                                     <th class="p-3 text-center">الإجراءات</th>
                                 </tr>
                             </thead>
-                            <tbody id="students-table-body" class="divide-y border-slate-800"></tbody>
+                            <tbody id="students-table-body" class="divide-y divide-slate-800"></tbody>
                         </table>
                     </div>
                 </div>
@@ -403,10 +410,12 @@
     </div>
 
     <!-- ================= MODAL: تعديل بيانات الطالب ================= -->
-    <div id="edit-student-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 hidden">
-        <div class="glass-panel p-6 rounded-3xl max-w-lg w-full border border-slate-700 space-y-4">
+    <div id="edit-student-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md items-center justify-center p-4 hidden">
+        <div class="glass-panel p-6 rounded-3xl max-w-lg w-full border border-slate-700 space-y-4 shadow-2xl">
             <div class="flex justify-between items-center pb-2 border-b border-slate-800">
-                <h3 class="font-black text-sm text-white">تعديل بيانات الطالب</h3>
+                <h3 class="font-black text-sm text-white flex items-center gap-2">
+                    <i class="fa-solid fa-pen-to-square text-amber-400"></i> تعديل بيانات الطالب
+                </h3>
                 <button onclick="closeEditStudentModal()" class="text-slate-400 hover:text-white text-base"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <form onsubmit="handleSaveEditedStudent(event)" class="space-y-3 text-xs">
@@ -445,7 +454,41 @@
                 </div>
                 <div class="pt-2 flex justify-end gap-2">
                     <button type="button" onclick="closeEditStudentModal()" class="px-4 py-2 bg-slate-800 rounded-xl text-slate-300 font-bold">إلغاء</button>
-                    <button type="submit" class="px-6 py-2 bg-brand-600 hover:bg-brand-500 text-white font-bold rounded-xl">حفظ التعديلات</button>
+                    <button type="submit" class="px-6 py-2 bg-brand-600 hover:bg-brand-500 text-white font-bold rounded-xl shadow-lg">حفظ التعديلات</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ================= MODAL: تعديل السنتر ================= -->
+    <div id="edit-center-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md items-center justify-center p-4 hidden">
+        <div class="glass-panel p-6 rounded-3xl max-w-md w-full border border-slate-700 space-y-4 shadow-2xl">
+            <div class="flex justify-between items-center pb-2 border-b border-slate-800">
+                <h3 class="font-black text-sm text-white flex items-center gap-2">
+                    <i class="fa-solid fa-map-location-dot text-amber-400"></i> تعديل بيانات السنتر
+                </h3>
+                <button onclick="closeEditCenterModal()" class="text-slate-400 hover:text-white text-base"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form onsubmit="handleSaveEditedCenter(event)" class="space-y-3 text-xs">
+                <input type="hidden" id="edit-center-id">
+                <input type="hidden" id="edit-center-old-name">
+                <div>
+                    <label class="block font-bold mb-1 text-slate-300">اسم السنتر والمقر:</label>
+                    <input type="text" id="edit-center-name" required class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-bold mb-1 text-slate-300">اليوم:</label>
+                        <input type="text" id="edit-center-day" required placeholder="مثال: السبت" class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white">
+                    </div>
+                    <div>
+                        <label class="block font-bold mb-1 text-slate-300">الميعاد:</label>
+                        <input type="text" id="edit-center-time" required placeholder="مثال: 12:00 م" class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white">
+                    </div>
+                </div>
+                <div class="pt-2 flex justify-end gap-2">
+                    <button type="button" onclick="closeEditCenterModal()" class="px-4 py-2 bg-slate-800 rounded-xl text-slate-300 font-bold">إلغاء</button>
+                    <button type="submit" class="px-6 py-2 bg-brand-600 hover:bg-brand-500 text-white font-bold rounded-xl shadow-lg">حفظ السنتر</button>
                 </div>
             </form>
         </div>
@@ -479,7 +522,6 @@
         let currentLoadedStudent = null;
         let questionCounter = 0;
 
-        // طابور رسائل الواتساب
         let messageQueue = JSON.parse(localStorage.getItem('MF_WA_QUEUE') || '[]');
         let isQueueProcessing = false;
 
@@ -490,7 +532,7 @@
                 .replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).trim();
         }
 
-        // تسجيل الدخول الحصري عبر فايربيز
+        // تسجيل الدخول الحصري عبر فايربيز أوتوميشن
         auth.onAuthStateChanged(user => {
             if (user) {
                 document.getElementById('admin-auth-gate').classList.add('hidden');
@@ -623,7 +665,6 @@
             `).reverse().join('');
         }
 
-        // ================= تعديل وحذف سجلات الطالب =================
         async function quickAddRecord(type) {
             if (!currentLoadedStudent) return;
             const dateStr = new Date().toLocaleDateString('ar-EG');
@@ -691,7 +732,6 @@
             localStorage.setItem('MF_LOCAL_STUDENTS', JSON.stringify(cachedStudents));
         }
 
-        // تسجيل الحضور (بدون إرسال واتساب نهائياً)
         async function markStudentAttendanceDirect() {
             const st = currentLoadedStudent;
             if (!st) return;
@@ -705,7 +745,7 @@
             alert(`✅ تم تسجيل حضور الطالب (${st.name}) بنجاح.`);
         }
 
-        // ================= TAB 2: رصد الدرجات وإرسال تقرير الواتساب الأنيق =================
+        // ================= TAB 2: رصد الدرجات وإرسال تقرير الواتساب =================
         function fetchGradingStudentName() {
             const code = toEnglish(document.getElementById('grade-input-code').value.trim()).toLowerCase();
             const preview = document.getElementById('grade-student-name-preview');
@@ -770,12 +810,11 @@
 
             alert(`✅ تم رصد درجة الطالب: ${st.name} (${scoreFormatted}) وإدراج التقرير في طابور الواتساب.`);
             document.getElementById('grade-input-score').value = '';
-            if (currentLoadedStudent && currentLoadedStudent.id === st.id) {
+            if (currentLoadedStudent && ((currentLoadedStudent.id && currentLoadedStudent.id === st.id) || currentLoadedStudent.code === st.code)) {
                 renderStudentDossier(st);
             }
         }
 
-        // ================= طابور الواتساب الذكي (أوفلاين + تأخير 15 ثانية) =================
         function enqueueWhatsAppMessage(stName, phone, text) {
             messageQueue.push({
                 id: 'MSG_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
@@ -886,7 +925,7 @@
             document.getElementById('queue-time-remaining').innerText = `المتبقي: ${pending} (~${mins} د و ${secs} ث)`;
         }
 
-        // ================= TAB 3: بنك الواجبات (عام للكل) =================
+        // ================= TAB 3: بنك الواجبات =================
         function addQuestionFieldToBuilder() {
             questionCounter++;
             const qNum = questionCounter;
@@ -1009,7 +1048,7 @@
             loadHomeworks();
         }
 
-        // ================= TAB 4: السناتر (إضافة وحذف) ودليل الطلاب =================
+        // ================= TAB 4: السناتر (إضافة وتعديل وحذف) =================
         function toggleNewCenterForm() {
             document.getElementById('new-center-form').classList.toggle('hidden');
         }
@@ -1050,26 +1089,87 @@
                 cachedCenters.push({ name: 'السنتر الرئيسي', day: 'السبت', time: '12:00 م' });
             }
 
-            const selects = ['manual-center', 'edit-modal-center'];
-            selects.forEach(id => {
-                const el = document.getElementById(id);
-                if (el) {
-                    el.innerHTML = cachedCenters.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
-                }
-            });
+            populateCenterSelects();
 
-            // عرض بطاقات السناتر مع زر حذف لكل سنتر
-            document.getElementById('centers-tag-list').innerHTML = cachedCenters.map(c => `
+            // عرض السناتر مع زر تعديل وزر حذف
+            document.getElementById('centers-tag-list').innerHTML = cachedCenters.map((c, idx) => `
                 <div class="flex items-center gap-2 px-3 py-1.5 bg-slate-900 border border-slate-800 rounded-xl text-slate-300">
                     <span><b class="text-amber-400">${c.name}</b> (${c.day} - ${c.time})</span>
-                    <button type="button" onclick="deleteCenter('${c.id || ''}', '${c.name}')" class="text-rose-400 hover:text-rose-300 mr-1 p-0.5" title="حذف السنتر">
+                    <button type="button" onclick="openEditCenterModal('${c.id || ''}', '${c.name}', '${c.day}', '${c.time}')" class="text-amber-400 hover:text-amber-300 p-0.5" title="تعديل السنتر">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                    </button>
+                    <button type="button" onclick="deleteCenter('${c.id || ''}', '${c.name}')" class="text-rose-400 hover:text-rose-300 p-0.5" title="حذف السنتر">
                         <i class="fa-solid fa-xmark"></i>
                     </button>
                 </div>
             `).join('');
         }
 
-        // حذف السنتر وتحديث كل القوائم
+        function populateCenterSelects() {
+            const selects = ['manual-center', 'edit-modal-center'];
+            selects.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    const prevVal = el.value;
+                    el.innerHTML = cachedCenters.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+                    if (prevVal) el.value = prevVal;
+                }
+            });
+        }
+
+        // مودال تعديل السنتر
+        function openEditCenterModal(id, name, day, time) {
+            document.getElementById('edit-center-id').value = id || '';
+            document.getElementById('edit-center-old-name').value = name || '';
+            document.getElementById('edit-center-name').value = name || '';
+            document.getElementById('edit-center-day').value = day || '';
+            document.getElementById('edit-center-time').value = time || '';
+
+            const modal = document.getElementById('edit-center-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeEditCenterModal() {
+            const modal = document.getElementById('edit-center-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        async function handleSaveEditedCenter(e) {
+            e.preventDefault();
+            const id = document.getElementById('edit-center-id').value;
+            const oldName = document.getElementById('edit-center-old-name').value;
+            const newName = document.getElementById('edit-center-name').value.trim();
+            const newDay = document.getElementById('edit-center-day').value.trim();
+            const newTime = document.getElementById('edit-center-time').value.trim();
+
+            const c = cachedCenters.find(item => (id && item.id === id) || item.name === oldName);
+            if (c) {
+                c.name = newName;
+                c.day = newDay;
+                c.time = newTime;
+
+                if (db && c.id) {
+                    await db.collection('centers').doc(c.id).update({ name: newName, day: newDay, time: newTime }).catch(() => {});
+                }
+            }
+
+            // تحديث السنتر في بيانات الطلاب إذا تغير الاسم
+            if (oldName !== newName) {
+                cachedStudents.forEach(st => {
+                    if (st.center === oldName) st.center = newName;
+                });
+                localStorage.setItem('MF_LOCAL_STUDENTS', JSON.stringify(cachedStudents));
+                renderStudentsTable(cachedStudents);
+            }
+
+            localStorage.setItem('MF_LOCAL_CENTERS', JSON.stringify(cachedCenters));
+            closeEditCenterModal();
+            loadCenters();
+            alert(`✅ تم تحديث بيانات سنتر: ${newName}`);
+        }
+
         async function deleteCenter(id, name) {
             if (!confirm(`هل أنت متأكد من حذف سنتر (${name}) نهائياً؟`)) return;
 
@@ -1084,6 +1184,7 @@
             loadCenters();
         }
 
+        // ================= إدارة الطلاب وتعديلهم والإكسيل =================
         async function loadStudents() {
             cachedStudents = [];
             if (db) {
@@ -1117,8 +1218,8 @@
                     <td class="p-3 font-mono text-emerald-400">${s.parentPhone || '--'}</td>
                     <td class="p-3 text-center space-x-2 space-x-reverse">
                         <button onclick="lookupStudentByCode('${s.code}'); switchTab('student-dossier');" class="px-2 py-1 bg-brand-700 hover:bg-brand-600 text-white rounded text-[11px] font-bold">الملف</button>
-                        <button onclick="openEditStudentModal('${s.id}')" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-amber-400 rounded text-[11px] font-bold">تعديل</button>
-                        <button onclick="deleteStudentRecord('${s.id}')" class="px-2 py-1 bg-rose-900/40 hover:bg-rose-900 text-rose-400 rounded text-[11px]"><i class="fa-solid fa-trash"></i></button>
+                        <button onclick="openEditStudentModal('${s.id || s.code}')" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-amber-400 rounded text-[11px] font-bold">تعديل</button>
+                        <button onclick="deleteStudentRecord('${s.id || s.code}')" class="px-2 py-1 bg-rose-900/40 hover:bg-rose-900 text-rose-400 rounded text-[11px]"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 </tr>
             `).join('');
@@ -1157,31 +1258,46 @@
             renderStudentsTable(cachedStudents);
         }
 
-        function openEditStudentModal(id) {
-            const st = cachedStudents.find(s => s.id === id);
-            if (!st) return;
+        // ================= فتح وغلق وتعديل الطالب =================
+        function openEditStudentModal(identifier) {
+            populateCenterSelects();
+            const idStr = identifier.toString();
+            const st = cachedStudents.find(s => (s.id && s.id.toString() === idStr) || (s.code && s.code.toString() === idStr));
+            if (!st) {
+                alert("تعذر العثور على بيانات الطالب للتعديل!");
+                return;
+            }
 
-            document.getElementById('edit-modal-id').value = st.id;
-            document.getElementById('edit-modal-name').value = st.name;
-            document.getElementById('edit-modal-code').value = st.code;
-            document.getElementById('edit-modal-grade').value = st.grade;
-            document.getElementById('edit-modal-center').value = st.center;
+            document.getElementById('edit-modal-id').value = st.id || st.code;
+            document.getElementById('edit-modal-name').value = st.name || '';
+            document.getElementById('edit-modal-code').value = st.code || '';
+            document.getElementById('edit-modal-grade').value = st.grade || 'الصف الثالث الثانوي';
+            document.getElementById('edit-modal-center').value = st.center || '';
             document.getElementById('edit-modal-phone').value = st.phone || '';
             document.getElementById('edit-modal-parent-phone').value = st.parentPhone || '';
 
-            document.getElementById('edit-student-modal').classList.remove('hidden');
+            const modal = document.getElementById('edit-student-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
         }
 
         function closeEditStudentModal() {
-            document.getElementById('edit-student-modal').classList.add('hidden');
+            const modal = document.getElementById('edit-student-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
         }
 
         async function handleSaveEditedStudent(e) {
             e.preventDefault();
-            const id = document.getElementById('edit-modal-id').value;
-            const st = cachedStudents.find(s => s.id === id);
-            if (!st) return;
+            const targetId = document.getElementById('edit-modal-id').value;
+            const stIndex = cachedStudents.findIndex(s => (s.id && s.id.toString() === targetId) || (s.code && s.code.toString() === targetId));
+            
+            if (stIndex === -1) {
+                alert("تعذر العثور على الطالب في الذاكرة!");
+                return;
+            }
 
+            const st = cachedStudents[stIndex];
             st.name = document.getElementById('edit-modal-name').value.trim();
             st.code = toEnglish(document.getElementById('edit-modal-code').value.trim());
             st.grade = document.getElementById('edit-modal-grade').value;
@@ -1192,16 +1308,50 @@
             await syncStudentUpdates(st);
             closeEditStudentModal();
             renderStudentsTable(cachedStudents);
-            if (currentLoadedStudent && currentLoadedStudent.id === id) renderStudentDossier(st);
-            alert('✅ تم تحديث بيانات الطالب بنجاح!');
+
+            if (currentLoadedStudent && ((currentLoadedStudent.id && currentLoadedStudent.id === st.id) || currentLoadedStudent.code === st.code)) {
+                renderStudentDossier(st);
+            }
+            alert(`✅ تم تحديث بيانات الطالب (${st.name}) بنجاح!`);
         }
 
-        async function deleteStudentRecord(id) {
+        async function deleteStudentRecord(identifier) {
             if (!confirm('حذف هذا الطالب بالكامل من المنظومة؟')) return;
-            if (db) await db.collection('students').doc(id).delete().catch(() => {});
-            cachedStudents = cachedStudents.filter(s => s.id !== id);
+            const idStr = identifier.toString();
+            const st = cachedStudents.find(s => (s.id && s.id.toString() === idStr) || (s.code && s.code.toString() === idStr));
+            if (db && st && st.id) {
+                await db.collection('students').doc(st.id).delete().catch(() => {});
+            }
+            cachedStudents = cachedStudents.filter(s => (s.id && s.id.toString() === idStr ? false : s.code.toString() !== idStr));
             localStorage.setItem('MF_LOCAL_STUDENTS', JSON.stringify(cachedStudents));
             renderStudentsTable(cachedStudents);
+        }
+
+        // ================= تحميل نموذج الإكسيل واستيراده مع التحقق من التكرار =================
+        function downloadStudentExcelTemplate() {
+            const templateData = [
+                {
+                    "اسم الطالب": "أحمد محمود علي",
+                    "الكود": "101",
+                    "الصف الدراسي": "الصف الثالث الثانوي",
+                    "السنتر": "السنتر الرئيسي",
+                    "رقم الطالب": "01012345678",
+                    "رقم ولي الامر": "01198765432"
+                },
+                {
+                    "اسم الطالب": "مريم حسام محمد",
+                    "الكود": "102",
+                    "الصف الدراسي": "الصف الثاني الثانوي",
+                    "السنتر": "السنتر الرئيسي",
+                    "رقم الطالب": "01212345678",
+                    "رقم ولي الامر": "01598765432"
+                }
+            ];
+
+            const ws = XLSX.utils.json_to_sheet(templateData);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "الطلاب");
+            XLSX.writeFile(wb, "نموذج_تسجيل_الطلاب.xlsx");
         }
 
         function handleExcelImport() {
@@ -1212,35 +1362,57 @@
             reader.onload = async (e) => {
                 const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
                 const rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
-                let count = 0;
+                let addedCount = 0;
+                let updatedCount = 0;
+                let skippedCount = 0;
 
                 for (const r of rows) {
                     const name = r["اسم الطالب"] || r["الاسم"];
                     const code = toEnglish((r["الكود"] || r["Code"] || '').toString());
                     if (!name || !code) continue;
-                    if (cachedStudents.some(s => toEnglish(s.code) === code)) continue;
 
-                    const st = {
-                        name, code,
-                        grade: r["الصف الدراسي"] || "الصف الثالث الثانوي",
-                        center: r["السنتر"] || "السنتر الرئيسي",
-                        phone: toEnglish((r["رقم الطالب"] || '').toString()),
-                        parentPhone: toEnglish((r["رقم ولي الامر"] || '').toString()),
-                        attendanceHistory: [], examsHistory: [], homeworksHistory: [],
-                        createdAt: new Date().toISOString()
-                    };
+                    const grade = r["الصف الدراسي"] || r["المرحلة"] || "الصف الثالث الثانوي";
+                    const center = r["السنتر"] || "السنتر الرئيسي";
+                    const phone = toEnglish((r["رقم الطالب"] || '').toString());
+                    const parentPhone = toEnglish((r["رقم ولي الامر"] || r["رقم ولي الأمر"] || '').toString());
 
-                    if (db) {
-                        const ref = await db.collection('students').add(st).catch(() => {});
-                        if (ref) st.id = ref.id;
+                    // فحص هل الكود مكرر
+                    const existingIdx = cachedStudents.findIndex(s => toEnglish(s.code).toLowerCase() === code.toLowerCase());
+
+                    if (existingIdx !== -1) {
+                        const existing = cachedStudents[existingIdx];
+                        const shouldReplace = confirm(`⚠️ كود الطالب (#${code}) مسجل مسبقاً باسم: "${existing.name}"\nالاسم في الشيت: "${name}"\n\nهل تريد استبدال وتحديث بيانات هذا الطالب؟\n(موافق = استبدال | إلغاء = تخطي)`);
+                        
+                        if (shouldReplace) {
+                            existing.name = name;
+                            existing.grade = grade;
+                            existing.center = center;
+                            existing.phone = phone;
+                            existing.parentPhone = parentPhone;
+                            await syncStudentUpdates(existing);
+                            updatedCount++;
+                        } else {
+                            skippedCount++;
+                        }
+                    } else {
+                        const st = {
+                            name, code, grade, center, phone, parentPhone,
+                            attendanceHistory: [], examsHistory: [], homeworksHistory: [],
+                            createdAt: new Date().toISOString()
+                        };
+
+                        if (db) {
+                            const ref = await db.collection('students').add(st).catch(() => {});
+                            if (ref) st.id = ref.id;
+                        }
+                        cachedStudents.unshift(st);
+                        addedCount++;
                     }
-                    cachedStudents.unshift(st);
-                    count++;
                 }
 
                 localStorage.setItem('MF_LOCAL_STUDENTS', JSON.stringify(cachedStudents));
                 renderStudentsTable(cachedStudents);
-                alert(`✅ تم استيراد (${count}) طالب بنجاح!`);
+                alert(`📊 تقرير الاستيراد:\n✔️ تم إضافة: ${addedCount} طالب جديد\n🔄 تم تحديث واستبدال: ${updatedCount} طالب\n⏭️ تم تخطي: ${skippedCount} طالب`);
             };
             reader.readAsArrayBuffer(file);
         }
