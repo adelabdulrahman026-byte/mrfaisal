@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>منظومة مستر محمد فيصل | كينج التاريخ والجغرافيا</title>
     
-    <!-- Tailwind CSS -->
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -39,7 +39,9 @@
             border: 1px solid rgba(255, 255, 255, 0.07);
         }
         .glass-card:hover {
-            border-color: rgba(245, 158, 11, 0.25);
+            border-color: rgba(245, 158, 11, 0.3);
+            transform: translateY(-2px);
+            transition: all 0.25s ease;
         }
         .custom-scroll::-webkit-scrollbar { width: 4px; height: 4px; }
         .custom-scroll::-webkit-scrollbar-thumb { background: #334155; border-radius: 99px; }
@@ -306,7 +308,7 @@
                         </div>
                     </div>
 
-                    <!-- كارت الـ QR المنسق -->
+                    <!-- كارت الـ QR المنسق بدون مساحات بيضاء فارغة -->
                     <div class="bg-dark-900 p-4 rounded-2xl border border-white/10 text-center shadow-2xl shrink-0 flex flex-col items-center">
                         <div class="bg-white p-2.5 rounded-xl shadow-inner flex items-center justify-center w-[130px] h-[130px] overflow-hidden">
                             <div id="student-live-qr" class="flex items-center justify-center"></div>
@@ -505,7 +507,7 @@
             db = firebase.firestore();
         } catch(e) { console.error("Firebase Init Error:", e); }
 
-        // ذاكرة التشغيل اللحظية (RAM فقط)
+        // ذاكرة التشغيل اللحظية (RAM فقط بدون LocalStorage)
         window.LIVE_STUDENTS = [];
         let liveCenters = [];
         let liveHomeworks = [];
@@ -654,10 +656,8 @@
             btn.disabled = true;
             btn.innerText = "جاري التحقق من الكود بالسحابة...";
 
-            // فحص التكرار في الذاكرة أولاً
             let isDuplicate = window.LIVE_STUDENTS.some(s => toEnglish(s.code).toLowerCase() === code.toLowerCase());
 
-            // فحص إضافي مباشر بالسحابة كـ String و Number
             if (!isDuplicate && db) {
                 try {
                     let q = await db.collection('students').where('code', '==', code).get();
@@ -770,7 +770,6 @@
 
             if (window.LIVE_STUDENTS.length === 0) await syncAllStudentsToRAM();
 
-            // 1. البحث في الذاكرة بكل الطرق الممكنة (كود، هاتف طالب، هاتف ولي أمر)
             let matched = window.LIVE_STUDENTS.find(s => {
                 const c = toEnglish(s.code || '').toLowerCase();
                 const p = toEnglish(s.phone || '');
@@ -778,7 +777,6 @@
                 return c === inputClean || p === inputClean || pp === inputClean;
             });
 
-            // 2. إذا لم يجد في الذاكرة، ابحث مباشرة من فايربيز مع مطابقة النوعين
             if (!matched && db) {
                 try {
                     let snap = await db.collection('students').where('code', '==', inputClean).get();
