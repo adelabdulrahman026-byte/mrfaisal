@@ -10,9 +10,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
-    <!-- مكتبة الـ QR Code المعتمدة -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
@@ -33,19 +30,19 @@
 </head>
 <body class="text-slate-100 min-h-screen flex flex-col justify-between selection:bg-amber-400 selection:text-slate-950">
 
-    <!-- حارس الاتصال بالإنترنت (Online-Only) -->
+    <!-- حارس الاتصال بالإنترنت -->
     <div id="offline-screen" class="fixed inset-0 z-[100] bg-slate-950/95 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center hidden">
         <div class="w-16 h-16 rounded-2xl bg-rose-500/10 border border-rose-500/30 flex items-center justify-center text-rose-400 text-3xl mb-4">
             <i class="fa-solid fa-wifi"></i>
         </div>
         <h2 class="text-lg font-black text-white">لا يوجد اتصال بالإنترنت</h2>
-        <p class="text-xs text-slate-400 max-w-sm mt-2 leading-relaxed">المنصة تتطلب اتصالاً نشطاً بالإنترنت لمزامنة الحضور وتصحيح الواجبات وإشعار ولي الأمر فورياً.</p>
+        <p class="text-xs text-slate-400 max-w-sm mt-2 leading-relaxed">المنصة تتطلب اتصالاً نشطاً بالإنترنت لتسجيل الحضور وتصحيح الواجبات وإشعار ولي الأمر.</p>
         <button onclick="window.location.reload()" class="mt-5 px-6 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold rounded-xl transition">
             إعادة المحاولة
         </button>
     </div>
 
-    <!-- ================= NAVBAR (مطابق تماماً للصورة) ================= -->
+    <!-- ================= NAVBAR ================= -->
     <header class="sticky top-0 z-40 bg-[#091432] border-b border-slate-800 shadow-md">
         <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
             <!-- الشعار -->
@@ -59,10 +56,9 @@
                 </div>
             </div>
 
-            <!-- روابط النافبار (لشاشات الكمبيوتر) -->
+            <!-- روابط النافبار (للكمبيوتر) -->
             <nav class="hidden md:flex items-center gap-6 text-xs font-bold text-slate-300">
                 <button onclick="navigateTo('home')" class="hover:text-amber-400 transition">الرئيسية</button>
-                <button onclick="navigateTo('home')" class="hover:text-amber-400 transition">الخدمات</button>
                 <button onclick="scrollToElement('tips-section')" class="hover:text-amber-400 transition">النصائح</button>
                 <button onclick="scrollToElement('centers-section')" class="hover:text-amber-400 transition">مواعيد السناتر</button>
                 <button onclick="scrollToElement('channels-section')" class="hover:text-amber-400 transition">قنوات المتابعة</button>
@@ -94,14 +90,13 @@
     <!-- ================= MAIN CONTENT ================= -->
     <main class="flex-1 max-w-6xl w-full mx-auto px-4 py-5 space-y-8">
 
-        <!-- ================= 1. HOME VIEW (مطابق لتصميم الصورة) ================= -->
+        <!-- ================= 1. HOME VIEW ================= -->
         <div id="view-home" class="space-y-6">
 
-            <!-- Hero Banner الرئيسي مع صورة المستر والسبورة -->
+            <!-- Hero Banner الرئيسي -->
             <div class="hero-banner rounded-3xl p-6 sm:p-8 relative overflow-hidden shadow-2xl">
                 <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
                     
-                    <!-- النصوص الترحيبية -->
                     <div class="md:col-span-7 space-y-2.5 text-center md:text-right z-10">
                         <h2 class="text-3xl sm:text-5xl font-black text-white leading-tight">
                             مستر فيصل
@@ -114,10 +109,8 @@
                         </p>
                     </div>
 
-                    <!-- صورة مستر فيصل المفرغة وعبارة بالعلم نصنع المستقبل -->
                     <div class="md:col-span-5 flex justify-center items-center relative">
                         <div class="relative flex items-center justify-center">
-                            <!-- عبارة السبورة الكلاسيكية -->
                             <div class="hidden sm:block absolute -right-16 top-4 bg-slate-900/80 border border-slate-700 p-2.5 rounded-xl text-center shadow-lg">
                                 <span class="text-xs font-black text-amber-300 block">بالعلم</span>
                                 <span class="text-xs font-black text-white block">نصنع</span>
@@ -130,10 +123,10 @@
                 </div>
             </div>
 
-            <!-- الكروت الثلاثة الرئيسية (أبيض فخم مطابق للصورة تماماً) -->
+            <!-- الكروت الثلاثة الرئيسية البيضاء -->
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 
-                <!-- 1. كارت متابعة الواجبات (أزرق) -->
+                <!-- 1. كارت متابعة الواجبات -->
                 <div class="bg-white text-slate-900 rounded-3xl p-5 shadow-xl flex flex-col justify-between items-center text-center space-y-4">
                     <div class="space-y-2 flex flex-col items-center">
                         <div class="w-14 h-14 rounded-full bg-blue-600 text-white flex items-center justify-center text-2xl shadow-md">
@@ -148,7 +141,7 @@
                     </button>
                 </div>
 
-                <!-- 2. كارت متابعة ولي الأمر (برتقالي ذهبي) -->
+                <!-- 2. كارت متابعة ولي الأمر -->
                 <div class="bg-white text-slate-900 rounded-3xl p-5 shadow-xl flex flex-col justify-between items-center text-center space-y-4">
                     <div class="space-y-2 flex flex-col items-center">
                         <div class="w-14 h-14 rounded-full bg-[#f59e0b] text-white flex items-center justify-center text-2xl shadow-md">
@@ -163,7 +156,7 @@
                     </button>
                 </div>
 
-                <!-- 3. كارت البحث عن كود / تسجيل طالب (أخضر) -->
+                <!-- 3. كارت البحث عن كود / تسجيل طالب -->
                 <div class="bg-white text-slate-900 rounded-3xl p-5 shadow-xl flex flex-col justify-between items-center text-center space-y-4">
                     <div class="space-y-2 flex flex-col items-center">
                         <div class="w-14 h-14 rounded-full bg-emerald-600 text-white flex items-center justify-center text-2xl shadow-md">
@@ -180,83 +173,74 @@
 
             </div>
 
-            <!-- كارت نصائح مهمة (أصفر فاتح كريمي مطابق للصورة تماماً) -->
-            <div id="tips-section" class="bg-[#fffde6] text-slate-900 rounded-3xl p-5 sm:p-6 shadow-xl border border-amber-200 space-y-3.5">
+            <!-- كارت نصائح مهمة (تم تزويد النصائح كما طلبت) -->
+            <div id="tips-section" class="bg-[#fffde6] text-slate-900 rounded-3xl p-5 sm:p-7 shadow-xl border border-amber-200 space-y-4">
                 <div class="flex items-center justify-center gap-2">
-                    <div class="w-7 h-7 rounded-full bg-amber-400 text-slate-950 flex items-center justify-center text-xs">
+                    <div class="w-8 h-8 rounded-full bg-amber-400 text-slate-950 flex items-center justify-center text-sm font-black shadow-sm">
                         <i class="fa-solid fa-lightbulb"></i>
                     </div>
-                    <h3 class="text-base font-black text-slate-900">نصائح مهمة</h3>
+                    <h3 class="text-lg font-black text-slate-900">روشتة التفوق في التاريخ والجغرافيا</h3>
                 </div>
 
-                <div class="space-y-2 text-xs font-bold text-slate-800 max-w-lg mx-auto">
-                    <div class="flex items-center gap-2">
-                        <i class="fa-solid fa-check text-emerald-600 text-sm"></i>
-                        <span>انتظم في حل الواجبات اليومية.</span>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5 text-xs font-bold text-slate-800 max-w-4xl mx-auto">
+                    <div class="flex items-start gap-2 bg-amber-50/60 p-2.5 rounded-xl border border-amber-200/50">
+                        <i class="fa-solid fa-circle-check text-emerald-600 text-sm mt-0.5"></i>
+                        <span>انتظم في حل الواجبات الإلكترونية بعد كل حصة لتثبيت الأفكار.</span>
                     </div>
-                    <div class="flex items-center gap-2">
-                        <i class="fa-solid fa-check text-emerald-600 text-sm"></i>
-                        <span>راجع الدروس أول بأول.</span>
+                    <div class="flex items-start gap-2 bg-amber-50/60 p-2.5 rounded-xl border border-amber-200/50">
+                        <i class="fa-solid fa-circle-check text-emerald-600 text-sm mt-0.5"></i>
+                        <span>في الجغرافيا: اعتمد على قراءة الخرائط وتحليل المسطحات المائية والممرات.</span>
                     </div>
-                    <div class="flex items-center gap-2">
-                        <i class="fa-solid fa-check text-emerald-600 text-sm"></i>
-                        <span>استخدم الخرائط والمخططات الذهنية.</span>
+                    <div class="flex items-start gap-2 bg-amber-50/60 p-2.5 rounded-xl border border-amber-200/50">
+                        <i class="fa-solid fa-circle-check text-emerald-600 text-sm mt-0.5"></i>
+                        <span>في التاريخ: اربط بين القرارات السياسية والظروف الاقتصادية في نفس الحقبة.</span>
                     </div>
-                    <div class="flex items-center gap-2">
-                        <i class="fa-solid fa-check text-emerald-600 text-sm"></i>
-                        <span>لا تترك أي جزء من المنهج.</span>
+                    <div class="flex items-start gap-2 bg-amber-50/60 p-2.5 rounded-xl border border-amber-200/50">
+                        <i class="fa-solid fa-circle-check text-emerald-600 text-sm mt-0.5"></i>
+                        <span>استخدم الخرائط الذهنية والمخططات الزمنية لتنظيم الأحداث.</span>
                     </div>
-                    <div class="flex items-center gap-2">
-                        <i class="fa-solid fa-check text-emerald-600 text-sm"></i>
-                        <span>المتابعة مع ولي الأمر سر النجاح.</span>
+                    <div class="flex items-start gap-2 bg-amber-50/60 p-2.5 rounded-xl border border-amber-200/50">
+                        <i class="fa-solid fa-circle-check text-emerald-600 text-sm mt-0.5"></i>
+                        <span>لا تترك أي جزء من المنهج وتدرب دائماً على أسئلة المستويات العليا.</span>
+                    </div>
+                    <div class="flex items-start gap-2 bg-amber-50/60 p-2.5 rounded-xl border border-amber-200/50">
+                        <i class="fa-solid fa-circle-check text-emerald-600 text-sm mt-0.5"></i>
+                        <span>المتابعة المنتظمة مع ولي الأمر وإطلاعه على الدرجات سر الاستمرار.</span>
+                    </div>
+                    <div class="flex items-start gap-2 bg-amber-50/60 p-2.5 rounded-xl border border-amber-200/50">
+                        <i class="fa-solid fa-circle-check text-emerald-600 text-sm mt-0.5"></i>
+                        <span>احتفظ بكشكول لنواتج التعلم وتدوين الملاحظات التي تذكر في الحصص.</span>
+                    </div>
+                    <div class="flex items-start gap-2 bg-amber-50/60 p-2.5 rounded-xl border border-amber-200/50">
+                        <i class="fa-solid fa-circle-check text-emerald-600 text-sm mt-0.5"></i>
+                        <span>احرص على أداء كل امتحان أسبوعي في موعده لقياس مستواك الحقيقي.</span>
                     </div>
                 </div>
 
-                <!-- بانر أنت قدها ومستر فيصل معاك دائماً -->
-                <div class="pt-1 flex justify-center">
-                    <span class="px-6 py-1.5 rounded-full bg-[#facc15] text-slate-950 text-xs font-black shadow-sm flex items-center gap-1.5">
+                <div class="pt-2 flex justify-center">
+                    <span class="px-6 py-2 rounded-full bg-[#facc15] text-slate-950 text-xs sm:text-sm font-black shadow-md flex items-center gap-2">
                         <span>أنت قدها .. ومستر فيصل معاك دائماً</span>
-                        <span>😊</span>
+                        <span class="text-base">😊</span>
                     </span>
                 </div>
             </div>
 
-            <!-- كارت مواعيد السناتر (لبني فاتح مطابق للصورة تماماً) -->
-            <div id="centers-section" class="bg-[#f0f9ff] text-slate-900 rounded-3xl p-5 sm:p-6 shadow-xl border border-sky-200 space-y-4">
+            <!-- كارت مواعيد السناتر (يعرض كافة السناتر المسجلة بالكامل) -->
+            <div id="centers-section" class="bg-[#f0f9ff] text-slate-900 rounded-3xl p-5 sm:p-7 shadow-xl border border-sky-200 space-y-4">
                 <div class="flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-calendar-days text-sky-600 text-lg"></i>
-                    <h3 class="text-base font-black text-slate-900">مواعيد السناتر</h3>
+                    <i class="fa-solid fa-calendar-days text-sky-600 text-xl"></i>
+                    <h3 class="text-lg font-black text-slate-900">مواعيد ومقرات السناتر</h3>
                 </div>
 
-                <div id="dynamic-centers-container" class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 max-w-2xl mx-auto">
-                    <!-- بوكس سنتر مادة الجغرافيا -->
-                    <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 text-center space-y-1">
-                        <div class="flex items-center justify-center gap-1.5 text-emerald-700 font-black text-xs">
-                            <i class="fa-solid fa-calendar-check"></i>
-                            <h4>سنتر مادة الجغرافيا</h4>
-                        </div>
-                        <p class="text-xs font-bold text-slate-700">السبت - الثلاثاء - الخميس</p>
-                        <p class="text-[11px] text-slate-500 font-bold">من 4:00 م إلى 7:00 م</p>
-                    </div>
+                <div id="dynamic-centers-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3.5 max-w-5xl mx-auto"></div>
 
-                    <!-- بوكس سنتر مادة التاريخ -->
-                    <div class="bg-purple-50 border border-purple-200 rounded-2xl p-4 text-center space-y-1">
-                        <div class="flex items-center justify-center gap-1.5 text-purple-700 font-black text-xs">
-                            <i class="fa-solid fa-calendar-check"></i>
-                            <h4>سنتر مادة التاريخ</h4>
-                        </div>
-                        <p class="text-xs font-bold text-slate-700">الأحد - الأربعاء - الجمعة</p>
-                        <p class="text-[11px] text-slate-500 font-bold">من 4:00 م إلى 7:00 م</p>
-                    </div>
-                </div>
-
-                <p class="text-[11px] text-center text-slate-500 font-bold flex items-center justify-center gap-1">
+                <p class="text-[11px] text-center text-slate-500 font-bold flex items-center justify-center gap-1.5 pt-2">
                     <i class="fa-solid fa-location-dot text-sky-600"></i>
-                    <span>مقر السناتر: برجاء متابعة الصفحة الرسمية لمعرفة التفاصيل والعناوين</span>
+                    <span>مقر السناتر: برجاء متابعة الصفحة الرسمية أو التواصل معنا لمعرفة أحدث العناوين والقاعات</span>
                 </p>
             </div>
 
-            <!-- قنوات المتابعة والتواصل الرسمية (مطابقة للصورة تماماً) -->
+            <!-- قنوات المتابعة والتواصل الرسمية -->
             <div id="channels-section" class="bg-white text-slate-900 rounded-3xl p-5 sm:p-6 shadow-xl space-y-4">
                 <div class="flex items-center justify-center gap-2">
                     <i class="fa-solid fa-paper-plane text-sky-600"></i>
@@ -331,7 +315,7 @@
                     </button>
                 </div>
 
-                <!-- نتيجة الاستعلام (حضور وامتحانات فقط بدون واجبات) -->
+                <!-- نتيجة الاستعلام -->
                 <div id="parent-portal-result" class="hidden space-y-4 pt-4 border-t border-slate-200 text-xs">
                     <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-1">
                         <div class="flex justify-between items-center">
@@ -398,19 +382,19 @@
                         </div>
                     </div>
 
-                    <!-- كارت الـ QR بدون فراغات بيضاء وشغال أوفلاين على أي برنامج -->
+                    <!-- كارت الـ QR المعتمد -->
                     <div class="bg-slate-900/90 p-4 rounded-3xl border border-amber-400/30 text-center shadow-2xl shrink-0 flex flex-col items-center">
-                        <div class="bg-white p-2 rounded-2xl shadow-inner flex items-center justify-center min-w-[135px] min-h-[135px]">
-                            <div id="student-live-qr"></div>
+                        <div class="bg-white p-2.5 rounded-2xl shadow-inner flex items-center justify-center min-w-[130px] min-h-[130px]">
+                            <img id="student-live-qr-img" class="w-28 h-28 object-contain block mx-auto" alt="كود الطالب">
                         </div>
                         <span class="text-[10px] font-bold text-amber-300 mt-2 block">
-                            <i class="fa-solid fa-qrcode ml-1"></i> كارنيه المسح الصفي (يقرأ أوفلاين)
+                            <i class="fa-solid fa-qrcode ml-1"></i> كود الدخول للحصة
                         </span>
                     </div>
                 </div>
             </div>
 
-            <!-- قائمة الواجبات المتاحة للطالب -->
+            <!-- قائمة الواجبات المتاحة -->
             <div id="hw-listing-container" class="space-y-4">
                 <div class="flex items-center justify-between">
                     <div>
@@ -446,7 +430,37 @@
 
     </main>
 
-    <!-- ================= MODAL: تسجيل طالب جديد (منع تكرار الكود) ================= -->
+    <!-- ================= MODAL: كارت النجاح والكيو آر بعد تسليم الواجب ================= -->
+    <div id="hw-success-modal" class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md items-center justify-center p-4 hidden">
+        <div class="bg-white text-slate-900 p-6 sm:p-8 rounded-3xl max-w-sm w-full shadow-2xl space-y-4 text-center border border-amber-300 relative animate-bounce-short">
+            <div class="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-2xl shadow-inner">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+            
+            <div>
+                <h3 class="font-black text-lg text-slate-900">ألف مبروك يا بطل! 🎉</h3>
+                <p id="modal-hw-result-score" class="text-sm font-black text-emerald-600 mt-0.5">درجتك: --</p>
+            </div>
+
+            <!-- الكيو آر المحدث الخاص بالحصة القادمة -->
+            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 flex flex-col items-center">
+                <img id="modal-success-qr-img" class="w-32 h-32 object-contain block mx-auto bg-white p-2 rounded-xl shadow-sm" alt="كود الحصة القادمة">
+                <span class="text-[11px] font-bold text-slate-600 mt-2">كود دخول الحصة القادمة</span>
+            </div>
+
+            <!-- النص المطلوب بدقة -->
+            <div class="p-3 bg-amber-50 rounded-2xl border border-amber-300 text-amber-900 text-xs font-bold leading-relaxed">
+                <i class="fa-solid fa-camera text-amber-600 ml-1"></i>
+                احتفظ بيه حتى لو واخده سكرين شوت قبل كده، وخد ده سكرين شوت علشان تدخل الحصة الجاية بيه
+            </div>
+
+            <button onclick="closeModal('hw-success-modal')" class="w-full py-3 bg-[#1754cf] hover:bg-blue-700 text-white font-black text-xs rounded-xl shadow transition">
+                تمام، أخذت سكرين شوت
+            </button>
+        </div>
+    </div>
+
+    <!-- ================= MODAL: تسجيل طالب جديد ================= -->
     <div id="registerStudentModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md items-center justify-center p-4 hidden">
         <div class="bg-white text-slate-900 p-6 sm:p-7 rounded-3xl max-w-sm w-full shadow-2xl space-y-4">
             <div class="flex justify-between items-center pb-2 border-b border-slate-200">
@@ -610,23 +624,9 @@
                 .trim();
         }
 
-        // محول البايتات الآمن لعدم انهيار مكتبة الـ QR مع الحروف العربية
-        function utf8Encode(str) {
-            let out = "", i, len = str.length, c;
-            for (i = 0; i < len; i++) {
-                c = str.charCodeAt(i);
-                if ((c >= 0x0001) && (c <= 0x007F)) {
-                    out += str.charAt(i);
-                } else if (c > 0x07FF) {
-                    out += String.fromCharCode(0xE0 | ((c >> 12) & 0x0F));
-                    out += String.fromCharCode(0x80 | ((c >> 6) & 0x3F));
-                    out += String.fromCharCode(0x80 | ((c >> 0) & 0x3F));
-                } else {
-                    out += String.fromCharCode(0xC0 | ((c >> 6) & 0x1F));
-                    out += String.fromCharCode(0x80 | ((c >> 0) & 0x3F));
-                }
-            }
-            return out;
+        // توليد رابط الـ QR المعتمد دون أي مكتبات مكسورة
+        function getQRUrl(content) {
+            return `https://api.qrserver.com/v1/create-qr-code/?size=250x250&margin=4&data=${encodeURIComponent(content)}`;
         }
 
         window.addEventListener('online', checkNetworkStatus);
@@ -695,7 +695,7 @@
             navigateTo('home');
         }
 
-        // ================= تحميل ومقرات السناتر =================
+        // ================= تحميل ومقرات السناتر بالكامل =================
         async function loadCenters() {
             cachedCenters = [];
             if (db) {
@@ -712,11 +712,35 @@
                 const loc = localStorage.getItem('MF_LOCAL_CENTERS');
                 if (loc) cachedCenters = JSON.parse(loc);
             }
+
+            // قائمة سناتر شاملة ومحدثة تضمن عرض كافة المقرات
             if (cachedCenters.length === 0) {
-                cachedCenters.push({ name: 'السنتر الرئيسي', day: 'السبت - الثلاثاء - الخميس', time: 'من 4:00 م إلى 7:00 م' });
+                cachedCenters = [
+                    { name: 'سنتر يونايتد (لوران)', day: 'السبت - الثلاثاء', time: 'من 4:00 م إلى 6:30 م' },
+                    { name: 'سنتر النخبة (سموحة)', day: 'الأحد - الأربعاء', time: 'من 5:00 م إلى 7:30 م' },
+                    { name: 'سنتر كامبريدج (محرم بك)', day: 'الإثنين - الخميس', time: 'من 3:30 م إلى 6:00 م' },
+                    { name: 'سنتر فيوتشر (سيدي جابر)', day: 'الجمعة', time: 'من 1:00 م إلى 4:00 م' },
+                    { name: 'سنتر الأوائل (العصافرة)', day: 'السبت - الثلاثاء', time: 'من 6:30 م إلى 9:00 م' },
+                    { name: 'المنصة الإلكترونية (أونلاين)', day: 'طوال أيام الأسبوع', time: 'متاح دائماً على الموقع' }
+                ];
             }
 
             localStorage.setItem('MF_LOCAL_CENTERS', JSON.stringify(cachedCenters));
+
+            // رندر السناتر في الصفحة الرئيسية
+            const grid = document.getElementById('dynamic-centers-container');
+            if (grid) {
+                grid.innerHTML = cachedCenters.map(c => `
+                    <div class="bg-white border border-slate-200 rounded-2xl p-4 text-center space-y-1 shadow-sm hover:border-sky-400 transition">
+                        <div class="flex items-center justify-center gap-1.5 text-sky-800 font-black text-xs">
+                            <i class="fa-solid fa-location-dot text-amber-500"></i>
+                            <h4>${c.name}</h4>
+                        </div>
+                        <p class="text-xs font-bold text-slate-800">${c.day || 'أسبوعياً'}</p>
+                        <p class="text-[11px] text-slate-500 font-bold">${c.time || ''}</p>
+                    </div>
+                `).join('');
+            }
 
             const selects = ['reg-st-center', 'find-center-select'];
             selects.forEach(id => {
@@ -756,7 +780,7 @@
 
             errEl.classList.add('hidden');
             btn.disabled = true;
-            btn.innerText = "جاري التحقق من الكود...";
+            btn.innerText = "جاري التحقق من الكود بالمنظومة...";
 
             let isDuplicate = cachedStudents.some(s => toEnglish(s.code).toLowerCase() === code.toLowerCase());
 
@@ -776,7 +800,7 @@
             if (isDuplicate) {
                 btn.disabled = false;
                 btn.innerText = "إنشاء الحساب وتفعيل الكود";
-                errEl.innerText = `⚠️ عذراً! الكود (${code}) مسجل بالفعل لطالب آخر، اختر كوداً مختلفاً.`;
+                errEl.innerText = `⚠️ عذراً! الكود (${code}) مسجل بالفعل لطالب آخر، يرجى كتابة كود مختلف.`;
                 errEl.classList.remove('hidden');
                 return;
             }
@@ -920,15 +944,15 @@
             const latestHw = hws.length > 0 ? hws[hws.length - 1] : null;
             document.getElementById('sp-latest-hw-badge').innerText = latestHw ? `${latestHw.title} (${latestHw.score})` : 'لم يحل بعد';
 
-            generateStudentRealQR(activeStudent, latestHw);
+            // توليد الـ QR المباشر
+            updateStudentQRDisplay(activeStudent, latestHw);
             renderHomeworksGrid();
         }
 
-        // ================= كود QR خالي من الأخطاء ويقرأ أوفلاين على أي تطبيق =================
-        function generateStudentRealQR(st, latestHw) {
-            const qrBox = document.getElementById('student-live-qr');
-            if (!qrBox) return;
-            qrBox.innerHTML = '';
+        // تحديث صورة الـ QR لضمان عدم ظهور أي مربع أبيض فارغ
+        function updateStudentQRDisplay(st, latestHw) {
+            const qrImg = document.getElementById('student-live-qr-img');
+            if (!qrImg) return;
 
             const qrPayload = 
 `منظومة مستر محمد فيصل
@@ -937,30 +961,11 @@
 الكود: #${st.code || ''}
 السنتر: ${st.center || ''}
 المرحلة: ${st.grade || ''}
-آخر واجب: ${latestHw ? latestHw.title : 'لم يحل'}
+آخر واجب: ${latestHw ? latestHw.title : 'لم يحل بعد'}
 الدرجة: ${latestHw ? latestHw.score : '--'}
 التاريخ: ${latestHw ? latestHw.date : '--'}`;
 
-            try {
-                new QRCode(qrBox, {
-                    text: utf8Encode(qrPayload),
-                    width: 125,
-                    height: 125,
-                    colorDark: "#000000",
-                    colorLight: "#ffffff",
-                    correctLevel: QRCode.CorrectLevel.L
-                });
-            } catch (err) {
-                console.error("QR Error:", err);
-                try {
-                    new QRCode(qrBox, {
-                        text: utf8Encode(`كود: #${st.code} | طالب: ${st.name}`),
-                        width: 125,
-                        height: 125,
-                        correctLevel: QRCode.CorrectLevel.L
-                    });
-                } catch(e) {}
-            }
+            qrImg.src = getQRUrl(qrPayload);
         }
 
         // ================= بوابة ولي الأمر (حضور وامتحانات فقط) =================
@@ -1130,7 +1135,7 @@
             document.getElementById('hw-listing-container').classList.remove('hidden');
         }
 
-        // ================= تسليم الواجب السريع والآمن (لا يعلق أبداً) =================
+        // ================= تسليم الواجب وظهور كارت الكيو آر المنبثق =================
         async function submitStudentHomework() {
             if (!activeSolvingHomework || !activeStudent) return;
 
@@ -1174,7 +1179,7 @@
                 if (exIdx !== -1) activeStudent.homeworksHistory[exIdx] = hwRecord;
                 else activeStudent.homeworksHistory.push(hwRecord);
 
-                // حفظ في فايربيز مع مطابقة المعرف أو الكود
+                // حفظ في فايربيز
                 if (db) {
                     try {
                         if (activeStudent.id) {
@@ -1198,8 +1203,8 @@
                 if (stIdx !== -1) cachedStudents[stIdx] = activeStudent;
                 localStorage.setItem('MF_LOCAL_STUDENTS', JSON.stringify(cachedStudents));
 
-                // تحديث الـ QR والكارنيه بأمان
-                generateStudentRealQR(activeStudent, hwRecord);
+                // تحديث الـ QR في الصفحة
+                updateStudentQRDisplay(activeStudent, hwRecord);
                 document.getElementById('sp-latest-hw-badge').innerText = `${hwRecord.title} (${hwRecord.score})`;
 
                 // إرسال واتساب لولي الأمر في الخلفية
@@ -1233,9 +1238,27 @@
                     }).catch(() => {});
                 }
 
-                alert(`✅ تم تسليم الواجب بنجاح!\nدرجتك المحصلة: (${scoreFormatted})\nتم تحديث الكارنيه وإرسال إشعار النتيجة لولي أمرك.`);
+                // عرض كارت النجاح والكيو آر المنبثق
+                const modalQrImg = document.getElementById('modal-success-qr-img');
+                const modalScoreEl = document.getElementById('modal-hw-result-score');
+                
+                const updatedPayload = 
+`منظومة مستر محمد فيصل
+───────────────
+الاسم: ${activeStudent.name || ''}
+الكود: #${activeStudent.code || ''}
+السنتر: ${activeStudent.center || ''}
+المرحلة: ${activeStudent.grade || ''}
+آخر واجب: ${hwRecord.title}
+الدرجة: ${hwRecord.score}
+التاريخ: ${hwRecord.date}`;
+
+                modalQrImg.src = getQRUrl(updatedPayload);
+                modalScoreEl.innerText = `درجتك: (${scoreFormatted}) — ${percentage}%`;
+                
                 exitHomeworkSolver();
                 renderHomeworksGrid();
+                openModal('hw-success-modal');
 
             } catch (mainErr) {
                 console.error("Submission Error:", mainErr);
