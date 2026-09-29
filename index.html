@@ -5,14 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>منظومة مستر محمد فيصل | كينج التاريخ والجغرافيا</title>
     
-    <!-- Tailwind CSS CDN -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        dark: { 950: '#070a12', 900: '#0d1322', 850: '#131b2e', 800: '#1a243b' },
+                        dark: { 950: '#070a13', 900: '#0c1222', 850: '#11192e', 800: '#17223b' },
                         gold: { 400: '#fbbf24', 500: '#f59e0b', 600: '#d97706' },
                         brand: { 500: '#8b5cf6', 600: '#7c3aed', 700: '#6d28d9' }
                     },
@@ -33,24 +33,22 @@
         * { -webkit-tap-highlight-color: transparent; }
         body { font-family: 'Cairo', sans-serif; }
         .glass-card {
-            background: rgba(13, 19, 34, 0.75);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: rgba(12, 18, 34, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.07);
         }
-        .glass-card-hover:hover {
-            border-color: rgba(245, 158, 11, 0.3);
-            transform: translateY(-2px);
-            transition: all 0.25s ease;
+        .glass-card:hover {
+            border-color: rgba(245, 158, 11, 0.25);
         }
         .custom-scroll::-webkit-scrollbar { width: 4px; height: 4px; }
         .custom-scroll::-webkit-scrollbar-thumb { background: #334155; border-radius: 99px; }
         .nav-active { color: #f59e0b !important; }
     </style>
 </head>
-<body class="bg-dark-950 text-slate-100 min-h-screen flex flex-col justify-between selection:bg-gold-500 selection:text-slate-950">
+<body class="bg-dark-950 text-slate-100 min-h-screen flex flex-col justify-between selection:bg-gold-500 selection:text-slate-950 pb-20 md:pb-0">
 
-    <!-- شاشة حظر الأوفلاين -->
+    <!-- حارس الاتصال بالإنترنت -->
     <div id="offline-screen" class="fixed inset-0 z-50 bg-dark-950/95 backdrop-blur-xl flex flex-col items-center justify-center p-6 text-center hidden">
         <div class="w-16 h-16 rounded-2xl bg-rose-500/10 border border-rose-500/30 flex items-center justify-center text-rose-400 text-3xl mb-4">
             <i class="fa-solid fa-wifi"></i>
@@ -63,7 +61,7 @@
     </div>
 
     <!-- ================= NAVBAR ================= -->
-    <header class="sticky top-0 z-40 bg-dark-950/80 backdrop-blur-md border-b border-white/5">
+    <header class="sticky top-0 z-40 bg-dark-950/90 backdrop-blur-md border-b border-white/5">
         <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
             <div class="flex items-center gap-2.5 cursor-pointer" onclick="navigateTo('home')">
                 <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-gold-500 text-white flex items-center justify-center text-lg font-black shadow-lg border border-white/10">
@@ -89,7 +87,7 @@
                     <span>متابعة ولي الأمر</span>
                 </button>
 
-                <button id="nav-login-btn" onclick="openModal('studentLoginModal')" class="px-4 py-2 text-xs font-black text-slate-950 bg-gradient-to-r from-gold-400 to-gold-500 hover:from-gold-500 hover:to-gold-600 rounded-xl transition flex items-center gap-1.5 shadow-md">
+                <button id="nav-login-btn" onclick="openModal('studentLoginModal')" class="px-4 py-2 text-xs font-black text-slate-950 bg-gradient-to-r from-gold-400 to-gold-500 hover:from-gold-500 rounded-xl transition flex items-center gap-1.5 shadow-md">
                     <i class="fa-solid fa-right-to-bracket"></i>
                     <span>دخول الطالب</span>
                 </button>
@@ -109,9 +107,6 @@
         <div id="view-home" class="space-y-12">
             <!-- Hero Card -->
             <div class="glass-card rounded-3xl p-6 sm:p-10 relative overflow-hidden">
-                <div class="absolute -top-24 -right-24 w-72 h-72 bg-brand-600/10 rounded-full blur-3xl pointer-events-none"></div>
-                <div class="absolute -bottom-24 -left-24 w-72 h-72 bg-gold-500/10 rounded-full blur-3xl pointer-events-none"></div>
-
                 <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center relative z-10">
                     <div class="md:col-span-8 space-y-4 text-center md:text-right">
                         <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[11px] font-bold text-gold-400">
@@ -127,7 +122,7 @@
                         </p>
                         
                         <div class="pt-2 flex flex-wrap gap-3 justify-center md:justify-start">
-                            <button onclick="handleStudentEntry()" class="px-6 py-3 bg-gradient-to-r from-gold-400 to-gold-500 hover:from-gold-500 hover:to-gold-600 text-slate-950 font-black rounded-xl text-xs sm:text-sm shadow-lg transition flex items-center gap-2">
+                            <button onclick="handleStudentEntry()" class="px-6 py-3 bg-gradient-to-r from-gold-400 to-gold-500 hover:from-gold-500 text-slate-950 font-black rounded-xl text-xs sm:text-sm shadow-lg transition flex items-center gap-2">
                                 <i class="fa-solid fa-pen-nib"></i> ابدأ حل الواجب الآن
                             </button>
                             <button onclick="openRegisterModal()" class="px-5 py-3 bg-dark-900 hover:bg-dark-850 text-slate-200 border border-white/10 font-bold rounded-xl text-xs sm:text-sm transition flex items-center gap-2">
@@ -151,7 +146,7 @@
                 </h2>
 
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
-                    <a href="https://whatsapp.com/channel/0029Vb5eotiHFxOvJuFpMI39" target="_blank" class="glass-card glass-card-hover p-4 rounded-2xl flex items-center gap-3.5">
+                    <a href="https://whatsapp.com/channel/0029Vb5eotiHFxOvJuFpMI39" target="_blank" class="glass-card p-4 rounded-2xl flex items-center gap-3.5 transition hover:border-emerald-500/40">
                         <div class="w-11 h-11 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center text-xl shrink-0">
                             <i class="fa-brands fa-whatsapp"></i>
                         </div>
@@ -162,7 +157,7 @@
                         </div>
                     </a>
 
-                    <a href="https://whatsapp.com/channel/0029VbDHMqF72WTvf9tzPc1E" target="_blank" class="glass-card glass-card-hover p-4 rounded-2xl flex items-center gap-3.5">
+                    <a href="https://whatsapp.com/channel/0029VbDHMqF72WTvf9tzPc1E" target="_blank" class="glass-card p-4 rounded-2xl flex items-center gap-3.5 transition hover:border-gold-500/40">
                         <div class="w-11 h-11 rounded-xl bg-gold-500/10 text-gold-400 border border-gold-500/20 flex items-center justify-center text-xl shrink-0">
                             <i class="fa-brands fa-whatsapp"></i>
                         </div>
@@ -173,7 +168,7 @@
                         </div>
                     </a>
 
-                    <a href="https://www.facebook.com/Mr.faisl" target="_blank" class="glass-card glass-card-hover p-4 rounded-2xl flex items-center gap-3.5">
+                    <a href="https://www.facebook.com/Mr.faisl" target="_blank" class="glass-card p-4 rounded-2xl flex items-center gap-3.5 transition hover:border-blue-500/40">
                         <div class="w-11 h-11 rounded-xl bg-blue-500/10 text-blue-400 border border-blue-500/20 flex items-center justify-center text-xl shrink-0">
                             <i class="fa-brands fa-facebook-f"></i>
                         </div>
@@ -219,14 +214,12 @@
                 </div>
             </div>
 
-            <!-- Centers Schedules (أسفل الصفحة) -->
+            <!-- Centers Schedules (في أسفل الصفحة) -->
             <div class="space-y-4 pt-4 border-t border-white/5">
                 <h2 class="text-sm sm:text-base font-black text-white flex items-center gap-2">
                     <i class="fa-solid fa-location-dot text-gold-400"></i> مواعيد ومقرات الحصص في السناتر
                 </h2>
-                <div id="home-centers-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
-                    <div class="glass-card p-4 rounded-2xl text-center text-xs text-slate-400">جاري تحميل السناتر مباشرة من السحابة...</div>
-                </div>
+                <div id="home-centers-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5"></div>
             </div>
         </div>
 
@@ -313,7 +306,7 @@
                         </div>
                     </div>
 
-                    <!-- كارت الـ QR المنسق بدون مساحات بيضاء فارغة -->
+                    <!-- كارت الـ QR المنسق -->
                     <div class="bg-dark-900 p-4 rounded-2xl border border-white/10 text-center shadow-2xl shrink-0 flex flex-col items-center">
                         <div class="bg-white p-2.5 rounded-xl shadow-inner flex items-center justify-center w-[130px] h-[130px] overflow-hidden">
                             <div id="student-live-qr" class="flex items-center justify-center"></div>
@@ -375,7 +368,7 @@
         </button>
     </div>
 
-    <!-- ================= MODAL: تسجيل طالب جديد (التحقق السحابي اللحظي) ================= -->
+    <!-- ================= MODAL: تسجيل طالب جديد ================= -->
     <div id="registerStudentModal" class="fixed inset-0 z-50 bg-dark-950/80 backdrop-blur-md items-center justify-center p-4 hidden">
         <div class="glass-card p-6 sm:p-7 rounded-3xl max-w-sm w-full border border-white/10 shadow-2xl space-y-4">
             <div class="flex justify-between items-center pb-2 border-b border-white/5">
@@ -512,12 +505,12 @@
             db = firebase.firestore();
         } catch(e) { console.error("Firebase Init Error:", e); }
 
-        // متغيرات في الذاكرة الحية فقط (بدون LocalStorage)
+        // ذاكرة التشغيل اللحظية (RAM فقط)
+        window.LIVE_STUDENTS = [];
         let liveCenters = [];
         let liveHomeworks = [];
         let activeStudent = null;
         let activeSolvingHomework = null;
-        let findCodeStudentsCache = [];
 
         function toEnglish(str) {
             if (!str && str !== 0) return '';
@@ -528,9 +521,17 @@
                 .trim();
         }
 
-        // تحويل النص العربي لدعم QRCode بدون أخطاء
-        function toUTF8Bytes(str) {
-            return unescape(encodeURIComponent(str));
+        // تشفير الحروف العربية UTF-8 لمنع انهيار مكتبة qrcodejs
+        function encodeUTF8(s) {
+            var i, r = [], c;
+            for (i = 0; i < s.length; i++) {
+                c = s.charCodeAt(i);
+                if (c < 0x80) r.push(c);
+                else if (c < 0x800) r.push(0xC0 | (c >> 6), 0x80 | (c & 0x3F));
+                else if (c < 0x10000) r.push(0xE0 | (c >> 12), 0x80 | ((c >> 6) & 0x3F), 0x80 | (c & 0x3F));
+                else r.push(0xF0 | (c >> 18), 0x80 | ((c >> 12) & 0x3F), 0x80 | ((c >> 6) & 0x3F), 0x80 | (c & 0x3F));
+            }
+            return String.fromCharCode.apply(String, r);
         }
 
         window.addEventListener('online', checkNetwork);
@@ -544,9 +545,22 @@
 
         window.addEventListener('DOMContentLoaded', async () => {
             checkNetwork();
+            await syncAllStudentsToRAM();
             await loadLiveCenters();
             await loadLiveHomeworks();
         });
+
+        // مزامنة كافة الطلاب إلى الذاكرة الحية لحل مشكلة عدم العثور على الطالب
+        async function syncAllStudentsToRAM() {
+            if (!db) return;
+            try {
+                const snap = await db.collection('students').get();
+                window.LIVE_STUDENTS = [];
+                snap.forEach(d => {
+                    window.LIVE_STUDENTS.push({ id: d.id, ...d.data() });
+                });
+            } catch(e) { console.error("Sync RAM Error:", e); }
+        }
 
         function navigateTo(viewId) {
             document.querySelectorAll('main > div').forEach(el => el.classList.add('hidden'));
@@ -581,7 +595,7 @@
             openModal('registerStudentModal');
         }
 
-        // ================= تحميل السناتر مباشرة من فايربيز =================
+        // ================= مراكز ومقرات الحصص (في الأسفل) =================
         async function loadLiveCenters() {
             liveCenters = [];
             if (db) {
@@ -591,7 +605,7 @@
                         const data = d.data();
                         if (data && data.name) liveCenters.push({ id: d.id, ...data });
                     });
-                } catch(e) { console.error("Live Centers Error:", e); }
+                } catch(e) { console.error("Centers Error:", e); }
             }
 
             if (liveCenters.length === 0) {
@@ -624,7 +638,7 @@
             });
         }
 
-        // ================= تسجيل طالب جديد مع فحص الكود السحابي اللحظي =================
+        // ================= تسجيل طالب جديد مع منع التكرار =================
         async function handleNewStudentRegistration(e) {
             e.preventDefault();
             const name = document.getElementById('reg-st-name').value.trim();
@@ -640,11 +654,12 @@
             btn.disabled = true;
             btn.innerText = "جاري التحقق من الكود بالسحابة...";
 
-            let isDuplicate = false;
+            // فحص التكرار في الذاكرة أولاً
+            let isDuplicate = window.LIVE_STUDENTS.some(s => toEnglish(s.code).toLowerCase() === code.toLowerCase());
 
-            if (db) {
+            // فحص إضافي مباشر بالسحابة كـ String و Number
+            if (!isDuplicate && db) {
                 try {
-                    // فحص الكود كـ String و Number
                     let q = await db.collection('students').where('code', '==', code).get();
                     if (!q.empty) isDuplicate = true;
 
@@ -681,6 +696,7 @@
                 }
             }
 
+            window.LIVE_STUDENTS.unshift(newSt);
             activeStudent = newSt;
 
             btn.disabled = false;
@@ -692,21 +708,13 @@
             navigateTo('student-portal');
         }
 
-        // ================= ابحث عن كودي (جلب مباشر من فايربيز) =================
+        // ================= ابحث عن كودي =================
         async function openFindCodeModal() {
             populateCenterSelects();
             openModal('findCodeModal');
             document.getElementById('find-code-result-box').classList.add('hidden');
             document.getElementById('find-student-select').innerHTML = '<option value="">اختر المرحلة والسنتر أولاً</option>';
-
-            // جلب قائمة الطلاب الحية من فايربيز فور فتح النافذة
-            if (db) {
-                try {
-                    const snap = await db.collection('students').get();
-                    findCodeStudentsCache = [];
-                    snap.forEach(d => findCodeStudentsCache.push(d.data()));
-                } catch(e) {}
-            }
+            if (window.LIVE_STUDENTS.length === 0) await syncAllStudentsToRAM();
         }
 
         function filterFindCodeStudents() {
@@ -718,7 +726,7 @@
             selectEl.innerHTML = '<option value="">اختر اسمك من هنا</option>';
             if (!grade || !center) return;
 
-            const filtered = findCodeStudentsCache.filter(s => s.grade === grade && s.center === center);
+            const filtered = window.LIVE_STUDENTS.filter(s => s.grade === grade && s.center === center);
             if (filtered.length === 0) {
                 selectEl.innerHTML = '<option value="">لا يوجد طلاب مسجلين بهذه المجموعة حالياً</option>';
                 return;
@@ -747,7 +755,7 @@
             await executeLoginWithKey(code);
         }
 
-        // ================= تسجيل دخول الطالب (سحابي مباشر) =================
+        // ================= تسجيل دخول الطالب =================
         async function handleStudentLogin(e) {
             e.preventDefault();
             const inputRaw = document.getElementById('login-identity-val').value.trim();
@@ -758,32 +766,37 @@
         async function executeLoginWithKey(inputClean, originalText = '') {
             const btn = document.getElementById('btn-login-submit');
             btn.disabled = true;
-            btn.innerText = "جاري الدخول...";
+            btn.innerText = "جاري التحقق والدخول...";
 
-            let matched = null;
+            if (window.LIVE_STUDENTS.length === 0) await syncAllStudentsToRAM();
 
-            if (db) {
+            // 1. البحث في الذاكرة بكل الطرق الممكنة (كود، هاتف طالب، هاتف ولي أمر)
+            let matched = window.LIVE_STUDENTS.find(s => {
+                const c = toEnglish(s.code || '').toLowerCase();
+                const p = toEnglish(s.phone || '');
+                const pp = toEnglish(s.parentPhone || '');
+                return c === inputClean || p === inputClean || pp === inputClean;
+            });
+
+            // 2. إذا لم يجد في الذاكرة، ابحث مباشرة من فايربيز مع مطابقة النوعين
+            if (!matched && db) {
                 try {
-                    // 1. بحث بالكود كنص
                     let snap = await db.collection('students').where('code', '==', inputClean).get();
                     if (!snap.empty) {
                         matched = { id: snap.docs[0].id, ...snap.docs[0].data() };
                     } else {
-                        // 2. بحث بالكود كرقم
                         const numVal = parseInt(inputClean, 10);
                         if (!isNaN(numVal)) {
                             snap = await db.collection('students').where('code', '==', numVal).get();
                             if (!snap.empty) matched = { id: snap.docs[0].id, ...snap.docs[0].data() };
                         }
                     }
-
-                    // 3. بحث برقم الهاتف
                     if (!matched) {
                         snap = await db.collection('students').where('phone', '==', inputClean).get();
                         if (!snap.empty) matched = { id: snap.docs[0].id, ...snap.docs[0].data() };
                     }
                 } catch(err) {
-                    console.error("Student Login Error:", err);
+                    console.error("Login Fetch Error:", err);
                 }
             }
 
@@ -796,7 +809,7 @@
                 initStudentUI();
                 navigateTo('student-portal');
             } else {
-                alert(`⚠️ لم يتم العثور على طالب بالكود (${originalText || inputClean})! تأكد من الكود أو سجل كطالب جديد.`);
+                alert(`⚠️ لم يتم العثور على طالب بالكود (${originalText || inputClean})! تأكد من الكود المكتوب.`);
             }
         }
 
@@ -819,17 +832,16 @@
             renderHomeworksGrid();
         }
 
-        // ================= كود QR الأوفلاين المقاوم للأخطاء =================
+        // ================= كود QR يقرأه أي ماسح أوفلاين كنص عربي =================
         function generateStudentOfflineQR(st, latestHw) {
             const qrBox = document.getElementById('student-live-qr');
             if (!qrBox) return;
             qrBox.innerHTML = '';
 
-            // نص عربي منظم بصيغة ملائمة ومختصرة لضمان رسم الكود بأعلى دقة
             const qrText = 
-`سناتر مستر محمد فيصل
-الطالب: ${st.name || ''}
-الكود: #${st.code || ''}
+`منظومة مستر محمد فيصل
+اسم الطالب: ${st.name || ''}
+كود الطالب: #${st.code || ''}
 السنتر: ${st.center || ''}
 المرحلة: ${st.grade || ''}
 آخر واجب: ${latestHw ? latestHw.title : 'لم يحل'}
@@ -838,10 +850,10 @@
 
             try {
                 new QRCode(qrBox, {
-                    text: toUTF8Bytes(qrText),
+                    text: encodeUTF8(qrText),
                     width: 110,
                     height: 110,
-                    colorDark: "#070a12",
+                    colorDark: "#070a13",
                     colorLight: "#ffffff",
                     correctLevel: QRCode.CorrectLevel.L
                 });
@@ -849,10 +861,10 @@
                 console.error("QR Code Render Error:", err);
                 try {
                     new QRCode(qrBox, {
-                        text: toUTF8Bytes(`كود الطالب: #${st.code}\nالاسم: ${st.name}`),
+                        text: encodeUTF8(`كود: #${st.code}\nطالب: ${st.name}`),
                         width: 110,
                         height: 110,
-                        colorDark: "#070a12",
+                        colorDark: "#070a13",
                         colorLight: "#ffffff",
                         correctLevel: QRCode.CorrectLevel.L
                     });
@@ -860,7 +872,7 @@
             }
         }
 
-        // ================= بوابة ولي الأمر (حضور وامتحانات فقط مباشرة من السحابة) =================
+        // ================= بوابة ولي الأمر (حضور وامتحانات فقط) =================
         async function executeParentSearch() {
             const rawVal = document.getElementById('parent-search-key').value.trim();
             const cleanVal = toEnglish(rawVal).toLowerCase();
@@ -869,11 +881,18 @@
             if (!cleanVal) { alert('اكتب كود الطالب أو رقم الهاتف أولاً!'); return; }
 
             btn.disabled = true;
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري الاستعلام بالسحابة...`;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري الاستعلام...`;
 
-            let st = null;
+            if (window.LIVE_STUDENTS.length === 0) await syncAllStudentsToRAM();
 
-            if (db) {
+            let st = window.LIVE_STUDENTS.find(s => {
+                const c = toEnglish(s.code || '').toLowerCase();
+                const p = toEnglish(s.phone || '');
+                const pp = toEnglish(s.parentPhone || '');
+                return c === cleanVal || p === cleanVal || pp === cleanVal;
+            });
+
+            if (!st && db) {
                 try {
                     let snap = await db.collection('students').where('code', '==', cleanVal).get();
                     if (!snap.empty) {
@@ -885,16 +904,11 @@
                             if (!snap.empty) st = snap.docs[0].data();
                         }
                     }
-
                     if (!st) {
                         snap = await db.collection('students').where('parentPhone', '==', cleanVal).get();
                         if (!snap.empty) st = snap.docs[0].data();
                     }
-                    if (!st) {
-                        snap = await db.collection('students').where('phone', '==', cleanVal).get();
-                        if (!snap.empty) st = snap.docs[0].data();
-                    }
-                } catch(e) { console.error("Parent Query Error:", e); }
+                } catch(e) {}
             }
 
             btn.disabled = false;
@@ -1024,7 +1038,7 @@
             document.getElementById('hw-listing-container').classList.remove('hidden');
         }
 
-        // ================= تسليم الواجب الآمن (لا يعلق أبداً) =================
+        // ================= تسليم الواجب بدون أي تعليق نهائياً =================
         async function submitStudentHomework() {
             if (!activeSolvingHomework || !activeStudent) return;
 
@@ -1068,7 +1082,7 @@
                 if (exIdx !== -1) activeStudent.homeworksHistory[exIdx] = hwRecord;
                 else activeStudent.homeworksHistory.push(hwRecord);
 
-                // حفظ مباشر في فايربيز
+                // حفظ في فايربيز مع مطابقة المعرف أو الكود
                 if (db) {
                     try {
                         if (activeStudent.id) {
@@ -1089,11 +1103,15 @@
                     }
                 }
 
-                // تحديث الـ QR والشاشة مباشرة
+                // تحديث الذاكرة الحية
+                const ramIdx = window.LIVE_STUDENTS.findIndex(s => toEnglish(s.code) === toEnglish(activeStudent.code));
+                if (ramIdx !== -1) window.LIVE_STUDENTS[ramIdx] = activeStudent;
+
+                // تحديث الـ QR والشاشة
                 generateStudentOfflineQR(activeStudent, hwRecord);
                 document.getElementById('sp-latest-hw-badge').innerText = `${hwRecord.title} (${hwRecord.score})`;
 
-                // إرسال إشعار الواتساب في الخلفية
+                // إرسال واتساب في الخلفية لولي الأمر
                 if (activeStudent.parentPhone) {
                     let badge = "ممتاز وبطل متألق 🌟👏";
                     if (percentage < 50) badge = "يحتاج إلى مراجعة فورية ومزيد من التركيز ⚠️";
