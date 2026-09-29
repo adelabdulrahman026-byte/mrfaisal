@@ -137,24 +137,26 @@
 
             <!-- ================= TAB 1: كود الطالب والملف الشامل والحضور ================= -->
             <div id="tab-content-student-dossier" class="tab-sec space-y-6">
-                <!-- البحث المباشر بالكود -->
+                <!-- البحث الذكي المباشر (كود أو اسم أو هاتف) -->
                 <div class="glass-panel p-6 rounded-3xl">
                     <h3 class="font-black text-sm text-brand-400 mb-2 flex items-center gap-2">
-                        <i class="fa-solid fa-magnifying-glass"></i> إدخال كود الطالب المباشر
+                        <i class="fa-solid fa-magnifying-glass"></i> البحث عن طالب وعرض الملف الشامل
                     </h3>
-                    <p class="text-xs text-slate-400 mb-4">اكتب كود الطالب واضغط Enter لعرض كامل حصصه، واجباته، امتحاناته، وتسجيل الحضور المباشر.</p>
+                    <p class="text-xs text-slate-400 mb-4">اكتب كود الطالب، اسمه، أو رقم هاتفه واضغط Enter لعرض ملفه الشامل وتسجيل الحضور المباشر.</p>
                     <div class="flex gap-2 max-w-xl">
-                        <input type="text" id="direct-student-code-input" onkeydown="if(event.key==='Enter') lookupStudentByCode()" placeholder="اكتب كود الطالب هنا..." class="w-full p-3.5 rounded-xl bg-slate-900 border border-slate-700 text-base font-mono text-center font-bold text-white focus:outline-none focus:border-brand-500">
-                        <button onclick="lookupStudentByCode()" class="px-6 py-3.5 bg-brand-600 hover:bg-brand-500 font-black rounded-xl text-xs whitespace-nowrap text-white transition flex items-center gap-2">
+                        <input type="text" id="direct-student-code-input" onkeydown="if(event.key==='Enter') lookupStudent()" placeholder="اكتب كود الطالب، اسمه، أو رقم الهاتف..." class="w-full p-3.5 rounded-xl bg-slate-900 border border-slate-700 text-sm font-bold text-white focus:outline-none focus:border-brand-500">
+                        <button onclick="lookupStudent()" class="px-6 py-3.5 bg-brand-600 hover:bg-brand-500 font-black rounded-xl text-xs whitespace-nowrap text-white transition flex items-center gap-2">
                             <i class="fa-solid fa-user-check"></i> عرض الملف
                         </button>
                     </div>
+                    <!-- نتائج البحث المتعددة إن وجدت -->
+                    <div id="search-candidates-box" class="hidden mt-3 max-w-xl p-3 bg-slate-900/90 rounded-2xl border border-slate-800 space-y-1.5 text-xs"></div>
                 </div>
 
                 <!-- مساحة عرض الملف الشامل -->
                 <div id="dossier-empty-view" class="glass-panel p-12 rounded-3xl text-center text-slate-500">
                     <i class="fa-solid fa-id-badge text-5xl mb-3 text-slate-700"></i>
-                    <p class="font-bold text-base text-slate-400">في انتظار كتابة كود الطالب لعرض بياناته بالكامل</p>
+                    <p class="font-bold text-base text-slate-400">في انتظار كتابة كود أو اسم الطالب لعرض بياناته بالكامل</p>
                 </div>
 
                 <div id="dossier-full-view" class="hidden space-y-6">
@@ -242,7 +244,7 @@
                     <form onsubmit="handleGradeEntrySubmit(event)" class="space-y-4">
                         <div>
                             <label class="block text-xs font-bold mb-1 text-slate-300">كود الطالب:</label>
-                            <input type="text" id="grade-input-code" required placeholder="مثال: 101" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white font-mono font-bold focus:border-amber-400 focus:outline-none" onblur="fetchGradingStudentName()">
+                            <input type="text" id="grade-input-code" required placeholder="مثال: 101" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white font-mono font-bold focus:border-amber-400 focus:outline-none" oninput="fetchGradingStudentName()">
                             <p id="grade-student-name-preview" class="text-xs text-amber-400 font-bold mt-1"></p>
                         </div>
                         <div>
@@ -343,7 +345,7 @@
                                 <i class="fa-solid fa-file-arrow-down"></i> تحميل نموذج فارغ
                             </button>
                         </div>
-                        <p class="text-[11px] text-slate-400">حمل النموذج الفارغ وضع به الطلاب ثم ارفعه هنا. في حال وجود كود مكرر سيطلب النظام موافقتك على الاستبدال.</p>
+                        <p class="text-[11px] text-slate-400">حمل النموذج الفارغ وضع به الطلاب ثم ارفعه هنا. في حال وجود كود مكرر ستظهر نافذة تسألك لتحديث المكررين دفعة واحدة.</p>
                         <input type="file" id="excel-file-selector" accept=".xlsx, .xls, .csv" class="w-full text-xs text-slate-300 bg-slate-900 p-2.5 rounded-xl border border-slate-700 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:bg-brand-700 file:text-white">
                         <button onclick="handleExcelImport()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 font-bold rounded-xl text-xs text-white transition flex items-center justify-center gap-2">
                             <i class="fa-solid fa-upload"></i> بدء استيراد البيانات
@@ -370,11 +372,14 @@
                     </div>
                 </div>
 
-                <!-- جدول دليل الطلاب -->
+                <!-- جدول دليل الطلاب مع شريط بحث يعمل بدقة على كل الخانات -->
                 <div class="glass-panel p-6 rounded-3xl">
                     <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
-                        <h3 class="font-black text-sm text-white">دليل الطلاب المسجلين</h3>
-                        <input type="text" id="students-search-filter" oninput="filterStudentsTable()" placeholder="بحث بالاسم أو الكود..." class="p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs font-mono text-white w-64">
+                        <div>
+                            <h3 class="font-black text-sm text-white">دليل الطلاب المسجلين</h3>
+                            <span id="students-count-badge" class="text-[11px] text-slate-400 font-mono">الإجمالي: 0 طالب</span>
+                        </div>
+                        <input type="text" id="students-search-filter" oninput="filterStudentsTable()" placeholder="ابحث بالاسم، الكود، السنتر، الهاتف..." class="p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white w-72 focus:outline-none focus:border-brand-500">
                     </div>
                     <div class="overflow-x-auto custom-scroll">
                         <table class="w-full text-right text-xs">
@@ -494,6 +499,40 @@
         </div>
     </div>
 
+    <!-- ================= MODAL: الموافقة الجماعية على الطلاب المكررين في الإكسيل ================= -->
+    <div id="excel-duplicate-modal" class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md items-center justify-center p-4 hidden">
+        <div class="glass-panel p-6 sm:p-8 rounded-3xl max-w-md w-full border border-amber-500/30 space-y-4 shadow-2xl text-center">
+            <div class="w-14 h-14 bg-amber-500/20 text-amber-400 rounded-2xl flex items-center justify-center mx-auto text-2xl">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <h3 class="font-black text-base text-white">تم العثور على طلاب مكررين!</h3>
+            <div class="p-3.5 bg-slate-900 rounded-2xl border border-slate-800 text-xs space-y-2 text-right">
+                <div class="flex justify-between items-center text-slate-300">
+                    <span>عدد الطلاب الجدد:</span>
+                    <b id="dup-modal-new-count" class="text-emerald-400 font-mono text-sm">0</b>
+                </div>
+                <div class="flex justify-between items-center text-slate-300">
+                    <span>عدد الطلاب المكررين بالكود:</span>
+                    <b id="dup-modal-dup-count" class="text-amber-400 font-mono text-sm">0</b>
+                </div>
+                <p class="text-[11px] text-slate-400 pt-2 border-t border-slate-800">
+                    كيف ترغب في معالجة الطلاب المكررين دفعة واحدة؟
+                </p>
+            </div>
+            <div class="space-y-2 pt-2 text-xs font-bold">
+                <button type="button" onclick="resolveExcelDuplicates(true)" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl shadow-lg flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-arrows-rotate"></i> استبدال وتحديث كل المكررين + إضافة الجدد
+                </button>
+                <button type="button" onclick="resolveExcelDuplicates(false)" class="w-full py-3 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-forward"></i> تخطي المكررين وإضافة الطلاب الجدد فقط
+                </button>
+                <button type="button" onclick="closeExcelDuplicateModal()" class="w-full py-2.5 text-rose-400 hover:text-rose-300 text-[11px]">
+                    إلغاء العملية بالكامل
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- ================= JAVASCRIPT CORE ================= -->
     <script>
         const WORKER_URL = "https://icy-mud-934b.adelabdulrahman026.workers.dev/";
@@ -522,12 +561,15 @@
         let currentLoadedStudent = null;
         let questionCounter = 0;
 
+        let pendingExcelData = null; // تخزين بيانات الإكسيل المؤقتة للتعامل مع التكرار
+
         let messageQueue = JSON.parse(localStorage.getItem('MF_WA_QUEUE') || '[]');
         let isQueueProcessing = false;
 
         function toEnglish(str) {
-            if (!str) return '';
+            if (!str && str !== 0) return '';
             return str.toString()
+                .replace(/#/g, '')
                 .replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d))
                 .replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).trim();
         }
@@ -606,18 +648,64 @@
             if (tabId === 'reports') renderReports();
         }
 
-        // ================= DOSSIER & CODE LOOKUP =================
-        function lookupStudentByCode(codeToFind = null) {
-            const inputVal = codeToFind || document.getElementById('direct-student-code-input').value.trim();
-            if (!inputVal) { alert('اكتب كود الطالب أولاً!'); return; }
-            const clean = toEnglish(inputVal).toLowerCase();
+        // ================= محرك البحث الذكي الشامل =================
+        function lookupStudent(explicitQuery = null) {
+            const rawVal = explicitQuery || document.getElementById('direct-student-code-input').value.trim();
+            const candidatesBox = document.getElementById('search-candidates-box');
+            candidatesBox.innerHTML = '';
+            candidatesBox.classList.add('hidden');
 
-            const student = cachedStudents.find(s => toEnglish(s.code).toLowerCase() === clean);
-            if (!student) {
-                alert(`⚠️ لم يتم العثور على طالب بالكود: (${inputVal})`);
+            if (!rawVal) {
+                alert('اكتب كود أو اسم أو هاتف الطالب أولاً!');
                 return;
             }
-            renderStudentDossier(student);
+
+            const cleanEn = toEnglish(rawVal).toLowerCase();
+            const cleanRaw = rawVal.toLowerCase();
+
+            // 1. أولاً: فحص التطابق الدقيق بالكود
+            let matches = cachedStudents.filter(s => toEnglish(s.code).toLowerCase() === cleanEn);
+
+            // 2. إذا لم يجد تطابقاً دقيقاً بالكود، ابحث بالاسم أو الهاتف
+            if (matches.length === 0) {
+                matches = cachedStudents.filter(s => {
+                    const name = (s.name || '').toLowerCase();
+                    const phone = toEnglish(s.phone || '');
+                    const parentPhone = toEnglish(s.parentPhone || '');
+                    return name.includes(cleanRaw) || phone.includes(cleanEn) || parentPhone.includes(cleanEn);
+                });
+            }
+
+            if (matches.length === 0) {
+                alert(`⚠️ لم يتم العثور على أي طالب يطابق: (${rawVal})`);
+                return;
+            }
+
+            if (matches.length === 1) {
+                renderStudentDossier(matches[0]);
+            } else {
+                // إذا وجد أكثر من طالب (مثال: بحث باسم مكرر كـ "محمد")
+                candidatesBox.classList.remove('hidden');
+                candidatesBox.innerHTML = `<span class="text-amber-400 font-bold block mb-1">تم العثور على أكثر من طالب، اختر المطلوب:</span>` + 
+                    matches.map(st => `
+                        <div onclick="renderStudentDossierByCode('${st.code}')" class="p-2 hover:bg-slate-800 rounded-xl cursor-pointer flex justify-between items-center border border-slate-800">
+                            <div>
+                                <span class="font-bold text-white">${st.name}</span>
+                                <span class="text-slate-400 text-[10px]">(${st.center} - ${st.grade})</span>
+                            </div>
+                            <span class="font-mono text-brand-400 font-bold">#${st.code}</span>
+                        </div>
+                    `).join('');
+                renderStudentDossier(matches[0]);
+            }
+        }
+
+        function renderStudentDossierByCode(code) {
+            const st = cachedStudents.find(s => toEnglish(s.code) === toEnglish(code));
+            if (st) {
+                document.getElementById('search-candidates-box').classList.add('hidden');
+                renderStudentDossier(st);
+            }
         }
 
         function renderStudentDossier(st) {
@@ -999,8 +1087,9 @@
             cachedHomeworks = [];
             if (db) {
                 try {
-                    const snap = await db.collection('homeworks').orderBy('createdAt', 'desc').get();
+                    const snap = await db.collection('homeworks').get();
                     snap.forEach(d => cachedHomeworks.push({ id: d.id, ...d.data() }));
+                    cachedHomeworks.sort((a,b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
                 } catch(e) {}
             }
             if (cachedHomeworks.length === 0) {
@@ -1091,8 +1180,7 @@
 
             populateCenterSelects();
 
-            // عرض السناتر مع زر تعديل وزر حذف
-            document.getElementById('centers-tag-list').innerHTML = cachedCenters.map((c, idx) => `
+            document.getElementById('centers-tag-list').innerHTML = cachedCenters.map(c => `
                 <div class="flex items-center gap-2 px-3 py-1.5 bg-slate-900 border border-slate-800 rounded-xl text-slate-300">
                     <span><b class="text-amber-400">${c.name}</b> (${c.day} - ${c.time})</span>
                     <button type="button" onclick="openEditCenterModal('${c.id || ''}', '${c.name}', '${c.day}', '${c.time}')" class="text-amber-400 hover:text-amber-300 p-0.5" title="تعديل السنتر">
@@ -1117,7 +1205,6 @@
             });
         }
 
-        // مودال تعديل السنتر
         function openEditCenterModal(id, name, day, time) {
             document.getElementById('edit-center-id').value = id || '';
             document.getElementById('edit-center-old-name').value = name || '';
@@ -1155,7 +1242,6 @@
                 }
             }
 
-            // تحديث السنتر في بيانات الطلاب إذا تغير الاسم
             if (oldName !== newName) {
                 cachedStudents.forEach(st => {
                     if (st.center === oldName) st.center = newName;
@@ -1184,26 +1270,35 @@
             loadCenters();
         }
 
-        // ================= إدارة الطلاب وتعديلهم والإكسيل =================
+        // ================= تحميل وإدارة الطلاب والبحث الدقيق =================
         async function loadStudents() {
             cachedStudents = [];
             if (db) {
                 try {
-                    const snap = await db.collection('students').orderBy('createdAt', 'desc').get();
+                    // بدون orderBy لضمان جلب 100% من الطلاب حتى لو حقل createdAt مفقود
+                    const snap = await db.collection('students').get();
                     snap.forEach(d => cachedStudents.push({ id: d.id, ...d.data() }));
-                } catch(e) {}
+                    cachedStudents.sort((a,b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+                } catch(e) {
+                    console.error("Firestore Error:", e);
+                }
             }
             if (cachedStudents.length === 0) {
                 const loc = localStorage.getItem('MF_LOCAL_STUDENTS');
                 if (loc) cachedStudents = JSON.parse(loc);
+            } else {
+                localStorage.setItem('MF_LOCAL_STUDENTS', JSON.stringify(cachedStudents));
             }
             renderStudentsTable(cachedStudents);
         }
 
         function renderStudentsTable(list) {
             const tbody = document.getElementById('students-table-body');
+            const counter = document.getElementById('students-count-badge');
+            if (counter) counter.innerText = `الإجمالي: ${list.length} طالب`;
+
             if (list.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="8" class="text-center py-4 text-slate-500">لا يوجد طلاب مسجلين.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="8" class="text-center py-6 text-slate-500 font-bold">لا يوجد طلاب يطابقون البحث.</td></tr>`;
                 return;
             }
 
@@ -1216,18 +1311,39 @@
                     <td class="p-3 font-mono">${(s.attendanceHistory || []).length}</td>
                     <td class="p-3 font-mono">${(s.homeworksHistory || []).length}</td>
                     <td class="p-3 font-mono text-emerald-400">${s.parentPhone || '--'}</td>
-                    <td class="p-3 text-center space-x-2 space-x-reverse">
-                        <button onclick="lookupStudentByCode('${s.code}'); switchTab('student-dossier');" class="px-2 py-1 bg-brand-700 hover:bg-brand-600 text-white rounded text-[11px] font-bold">الملف</button>
-                        <button onclick="openEditStudentModal('${s.id || s.code}')" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-amber-400 rounded text-[11px] font-bold">تعديل</button>
+                    <td class="p-3 text-center space-x-2 space-x-reverse whitespace-nowrap">
+                        <button onclick="lookupStudent('${s.code}'); switchTab('student-dossier');" class="px-2.5 py-1 bg-brand-700 hover:bg-brand-600 text-white rounded text-[11px] font-bold">الملف</button>
+                        <button onclick="openEditStudentModal('${s.id || s.code}')" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-amber-400 rounded text-[11px] font-bold">تعديل</button>
                         <button onclick="deleteStudentRecord('${s.id || s.code}')" class="px-2 py-1 bg-rose-900/40 hover:bg-rose-900 text-rose-400 rounded text-[11px]"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 </tr>
             `).join('');
         }
 
+        // فلترة جدول الطلاب بشكل فوري وشامل
         function filterStudentsTable() {
-            const q = document.getElementById('students-search-filter').value.toLowerCase().trim();
-            const filtered = cachedStudents.filter(s => (s.name && s.name.toLowerCase().includes(q)) || (s.code && s.code.toString().includes(q)));
+            const rawQ = document.getElementById('students-search-filter').value.trim().toLowerCase();
+            if (!rawQ) {
+                renderStudentsTable(cachedStudents);
+                return;
+            }
+            const enQ = toEnglish(rawQ).toLowerCase();
+
+            const filtered = cachedStudents.filter(s => {
+                const name = (s.name || '').toLowerCase();
+                const code = toEnglish(s.code || '').toLowerCase();
+                const phone = toEnglish(s.phone || '');
+                const parentPhone = toEnglish(s.parentPhone || '');
+                const center = (s.center || '').toLowerCase();
+                const grade = (s.grade || '').toLowerCase();
+
+                return name.includes(rawQ) ||
+                       code.includes(enQ) ||
+                       phone.includes(enQ) ||
+                       parentPhone.includes(enQ) ||
+                       center.includes(rawQ) ||
+                       grade.includes(rawQ);
+            });
             renderStudentsTable(filtered);
         }
 
@@ -1327,7 +1443,7 @@
             renderStudentsTable(cachedStudents);
         }
 
-        // ================= تحميل نموذج الإكسيل واستيراده مع التحقق من التكرار =================
+        // ================= تحميل نموذج الإكسيل واستيراده بقرار جماعي =================
         function downloadStudentExcelTemplate() {
             const templateData = [
                 {
@@ -1362,9 +1478,9 @@
             reader.onload = async (e) => {
                 const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
                 const rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
-                let addedCount = 0;
-                let updatedCount = 0;
-                let skippedCount = 0;
+                
+                const newStudents = [];
+                const duplicateStudents = [];
 
                 for (const r of rows) {
                     const name = r["اسم الطالب"] || r["الاسم"];
@@ -1376,45 +1492,102 @@
                     const phone = toEnglish((r["رقم الطالب"] || '').toString());
                     const parentPhone = toEnglish((r["رقم ولي الامر"] || r["رقم ولي الأمر"] || '').toString());
 
-                    // فحص هل الكود مكرر
-                    const existingIdx = cachedStudents.findIndex(s => toEnglish(s.code).toLowerCase() === code.toLowerCase());
+                    const studentObj = { name, code, grade, center, phone, parentPhone };
 
-                    if (existingIdx !== -1) {
-                        const existing = cachedStudents[existingIdx];
-                        const shouldReplace = confirm(`⚠️ كود الطالب (#${code}) مسجل مسبقاً باسم: "${existing.name}"\nالاسم في الشيت: "${name}"\n\nهل تريد استبدال وتحديث بيانات هذا الطالب؟\n(موافق = استبدال | إلغاء = تخطي)`);
-                        
-                        if (shouldReplace) {
-                            existing.name = name;
-                            existing.grade = grade;
-                            existing.center = center;
-                            existing.phone = phone;
-                            existing.parentPhone = parentPhone;
-                            await syncStudentUpdates(existing);
-                            updatedCount++;
-                        } else {
-                            skippedCount++;
-                        }
+                    const existing = cachedStudents.find(s => toEnglish(s.code).toLowerCase() === code.toLowerCase());
+                    if (existing) {
+                        duplicateStudents.push({ incoming: studentObj, existing: existing });
                     } else {
-                        const st = {
-                            name, code, grade, center, phone, parentPhone,
-                            attendanceHistory: [], examsHistory: [], homeworksHistory: [],
-                            createdAt: new Date().toISOString()
-                        };
-
-                        if (db) {
-                            const ref = await db.collection('students').add(st).catch(() => {});
-                            if (ref) st.id = ref.id;
-                        }
-                        cachedStudents.unshift(st);
-                        addedCount++;
+                        newStudents.push(studentObj);
                     }
                 }
 
-                localStorage.setItem('MF_LOCAL_STUDENTS', JSON.stringify(cachedStudents));
-                renderStudentsTable(cachedStudents);
-                alert(`📊 تقرير الاستيراد:\n✔️ تم إضافة: ${addedCount} طالب جديد\n🔄 تم تحديث واستبدال: ${updatedCount} طالب\n⏭️ تم تخطي: ${skippedCount} طالب`);
+                if (newStudents.length === 0 && duplicateStudents.length === 0) {
+                    alert('الملف فارغ أو لا يحتوي على بيانات صالحة.');
+                    return;
+                }
+
+                // إذا وجد مكررين، اعرض المودال للقرار الجماعي
+                if (duplicateStudents.length > 0) {
+                    pendingExcelData = { newStudents, duplicateStudents };
+                    document.getElementById('dup-modal-new-count').innerText = newStudents.length;
+                    document.getElementById('dup-modal-dup-count').innerText = duplicateStudents.length;
+                    
+                    const modal = document.getElementById('excel-duplicate-modal');
+                    modal.classList.remove('hidden');
+                    modal.classList.add('flex');
+                } else {
+                    // لا يوجد مكررين إطلاقاً، استورد الجدد مباشرة
+                    await commitNewStudentsOnly(newStudents);
+                    alert(`✅ تم استيراد (${newStudents.length}) طالب جديد بنجاح!`);
+                }
             };
             reader.readAsArrayBuffer(file);
+        }
+
+        function closeExcelDuplicateModal() {
+            pendingExcelData = null;
+            const modal = document.getElementById('excel-duplicate-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.getElementById('excel-file-selector').value = '';
+        }
+
+        // اتخاذ القرار الجماعي للمكررين (استبدال الكل أو تخطي الكل)
+        async function resolveExcelDuplicates(shouldReplaceAll) {
+            if (!pendingExcelData) return;
+            const { newStudents, duplicateStudents } = pendingExcelData;
+
+            let updatedCount = 0;
+
+            // 1. معالجة المكررين دفعة واحدة
+            if (shouldReplaceAll) {
+                for (const item of duplicateStudents) {
+                    const ex = item.existing;
+                    const inc = item.incoming;
+
+                    ex.name = inc.name;
+                    ex.grade = inc.grade;
+                    ex.center = inc.center;
+                    ex.phone = inc.phone;
+                    ex.parentPhone = inc.parentPhone;
+
+                    await syncStudentUpdates(ex);
+                    updatedCount++;
+                }
+            }
+
+            // 2. إضافة الطلاب الجدد
+            await commitNewStudentsOnly(newStudents);
+
+            closeExcelDuplicateModal();
+            renderStudentsTable(cachedStudents);
+
+            alert(`📊 تم الانتهاء بنجاح:\n✔️ تمت إضافة: ${newStudents.length} طالب جديد\n${shouldReplaceAll ? `🔄 تم تحديث واستبدال: ${updatedCount} طالب مكرر` : `⏭️ تم تخطي: ${duplicateStudents.length} طالب مكرر`}`);
+        }
+
+        async function commitNewStudentsOnly(studentsList) {
+            for (const item of studentsList) {
+                const st = {
+                    name: item.name,
+                    code: item.code,
+                    grade: item.grade,
+                    center: item.center,
+                    phone: item.phone,
+                    parentPhone: item.parentPhone,
+                    attendanceHistory: [],
+                    examsHistory: [],
+                    homeworksHistory: [],
+                    createdAt: new Date().toISOString()
+                };
+
+                if (db) {
+                    const ref = await db.collection('students').add(st).catch(() => {});
+                    if (ref) st.id = ref.id;
+                }
+                cachedStudents.unshift(st);
+            }
+            localStorage.setItem('MF_LOCAL_STUDENTS', JSON.stringify(cachedStudents));
         }
 
         // ================= TAB 5: التقارير =================
