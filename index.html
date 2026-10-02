@@ -114,7 +114,6 @@
 
             <!-- الكروت الثلاثة الرئيسية -->
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <!-- 1. كارت متابعة الواجبات -->
                 <div class="bg-white text-slate-900 rounded-3xl p-5 shadow-xl flex flex-col justify-between items-center text-center space-y-4">
                     <div class="space-y-2 flex flex-col items-center">
                         <div class="w-14 h-14 rounded-full bg-blue-600 text-white flex items-center justify-center text-2xl shadow-md">
@@ -129,7 +128,6 @@
                     </button>
                 </div>
 
-                <!-- 2. كارت متابعة ولي الأمر -->
                 <div class="bg-white text-slate-900 rounded-3xl p-5 shadow-xl flex flex-col justify-between items-center text-center space-y-4">
                     <div class="space-y-2 flex flex-col items-center">
                         <div class="w-14 h-14 rounded-full bg-[#f59e0b] text-white flex items-center justify-center text-2xl shadow-md">
@@ -144,7 +142,6 @@
                     </button>
                 </div>
 
-                <!-- 3. كارت البحث عن الكود -->
                 <div class="bg-white text-slate-900 rounded-3xl p-5 shadow-xl flex flex-col justify-between items-center text-center space-y-4">
                     <div class="space-y-2 flex flex-col items-center">
                         <div class="w-14 h-14 rounded-full bg-emerald-600 text-white flex items-center justify-center text-2xl shadow-md">
@@ -423,7 +420,7 @@
         </div>
     </div>
 
-    <!-- ================= MODAL: تسجيل دخول الطالب (سنتر / أونلاين) ================= -->
+    <!-- ================= MODAL: تسجيل دخول الطالب ================= -->
     <div id="studentLoginModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md items-center justify-center p-4 hidden">
         <div class="bg-white text-slate-900 p-6 rounded-3xl max-w-sm w-full shadow-2xl space-y-4">
             <div class="flex justify-between items-center pb-2 border-b border-slate-200">
@@ -431,7 +428,6 @@
                 <button onclick="closeModal('studentLoginModal')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
 
-            <!-- اختيار نوع الطالب -->
             <div class="grid grid-cols-2 gap-2 p-1 bg-slate-100 rounded-2xl text-xs font-bold">
                 <button type="button" id="tab-login-center" onclick="setLoginType('center')" class="py-2.5 rounded-xl bg-amber-400 text-slate-950 shadow-sm transition">
                     <i class="fa-solid fa-building ml-1"></i> طالب سنتر
@@ -441,7 +437,7 @@
                 </button>
             </div>
 
-            <!-- 1. نموذج طالب السنتر (الكود فقط) -->
+            <!-- نموذج طالب السنتر -->
             <form id="form-login-center" onsubmit="handleCenterLogin(event)" class="space-y-3 text-xs">
                 <div>
                     <label class="block font-bold mb-1 text-slate-700">كود الطالب المسجل بالسنتر:</label>
@@ -461,7 +457,7 @@
                 </div>
             </form>
 
-            <!-- 2. نموذج طالب الأونلاين (رقمه ورقم ولي الأمر) -->
+            <!-- نموذج طالب الأونلاين -->
             <form id="form-login-online" onsubmit="handleOnlineLogin(event)" class="hidden space-y-3 text-xs">
                 <div>
                     <label class="block font-bold mb-1 text-slate-700">رقم هاتف الطالب:</label>
@@ -472,7 +468,6 @@
                     <input type="tel" id="login-online-parent-phone" required placeholder="010xxxxxxxx" class="w-full p-2.5 rounded-xl bg-slate-50 border border-slate-300 text-center font-bold text-slate-900 focus:border-amber-500 focus:outline-none">
                 </div>
 
-                <!-- التحذير المطلوب -->
                 <div class="p-2.5 bg-rose-50 border border-rose-200 rounded-xl text-rose-800 text-[11px] font-bold leading-relaxed text-center">
                     <i class="fa-solid fa-triangle-exclamation text-rose-600 ml-1"></i>
                     يرجى كتابة رقم الهاتف ورقم ولي الأمر بشكل صحيح لتجنب الحظر من المنصة.
@@ -573,6 +568,17 @@
                 .trim();
         }
 
+        // دالة مطابقة الأكواد بدقة فائقة لمنع مشاكل اختلاف الأنواع
+        function isCodeMatch(codeA, codeB) {
+            const a = toEnglish(codeA).toLowerCase();
+            const b = toEnglish(codeB).toLowerCase();
+            if (a === b) return true;
+            const aNum = parseInt(a, 10);
+            const bNum = parseInt(b, 10);
+            if (!isNaN(aNum) && !isNaN(bNum) && aNum === bNum) return true;
+            return false;
+        }
+
         function getQRUrl(content) {
             return `https://api.qrserver.com/v1/create-qr-code/?size=250x250&margin=4&data=${encodeURIComponent(content)}`;
         }
@@ -640,7 +646,6 @@
             navigateTo('home');
         }
 
-        // تبديل نوع تسجيل الدخول
         function setLoginType(type) {
             currentLoginMode = type;
             const btnCenter = document.getElementById('tab-login-center');
@@ -661,7 +666,7 @@
             }
         }
 
-        // ================= تحميل ومقرات السناتر =================
+        // ================= تحميل المراكز =================
         async function loadCenters() {
             cachedCenters = [];
             if (db) {
@@ -710,7 +715,7 @@
             }
         }
 
-        // ================= تحميل بيانات الطلاب =================
+        // ================= تحميل الطلاب =================
         async function loadStudentsData() {
             cachedStudents = [];
             if (db) {
@@ -727,11 +732,11 @@
             }
         }
 
-        // ================= تسجيل دخول طالب السنتر (الكود فقط) =================
+        // ================= تسجيل دخول طالب السنتر (الكود) =================
         async function handleCenterLogin(e) {
             e.preventDefault();
             const codeRaw = document.getElementById('login-center-code').value.trim();
-            const codeClean = toEnglish(codeRaw).toLowerCase();
+            const codeClean = toEnglish(codeRaw);
             const btn = document.getElementById('btn-login-center-submit');
 
             if (!codeClean) return;
@@ -739,26 +744,39 @@
             btn.disabled = true;
             btn.innerText = "جاري التحقق من الكود...";
 
-            let matched = cachedStudents.find(s => toEnglish(s.code).toLowerCase() === codeClean);
+            // 1. الفحص الفوري في الذاكرة المحلية أولاً
+            let matched = cachedStudents.find(s => isCodeMatch(s.code, codeClean));
 
+            // 2. إذا لم يُعثر عليه محلياً، نفحص السيرفر بشكل مباشر وموسع
             if (!matched && db) {
                 try {
+                    // فحص الكود كنص
                     let snap = await db.collection('students').where('code', '==', codeClean).get();
                     if (!snap.empty) {
                         matched = { id: snap.docs[0].id, ...snap.docs[0].data() };
                     } else {
+                        // فحص الكود كرقم
                         const numVal = parseInt(codeClean, 10);
                         if (!isNaN(numVal)) {
                             snap = await db.collection('students').where('code', '==', numVal).get();
                             if (!snap.empty) matched = { id: snap.docs[0].id, ...snap.docs[0].data() };
                         }
                     }
-                } catch(err) {}
+
+                    // تحديث الكاش المحلي في حال وُجد
+                    if (matched && !cachedStudents.some(s => s.id === matched.id)) {
+                        cachedStudents.unshift(matched);
+                        localStorage.setItem('MF_LOCAL_STUDENTS', JSON.stringify(cachedStudents));
+                    }
+                } catch(err) {
+                    console.error("Login server check error:", err);
+                }
             }
 
             btn.disabled = false;
             btn.innerText = "دخول المنصة";
 
+            // 3. التحقق النهائي من النتيجة
             if (matched) {
                 activeStudent = matched;
                 localStorage.setItem('MF_ONLINE_ACTIVE_ST', JSON.stringify(activeStudent));
@@ -770,7 +788,7 @@
             }
         }
 
-        // ================= تسجيل دخول طالب الأونلاين (رقم الطالب + رقم ولي الأمر) =================
+        // ================= تسجيل دخول طالب الأونلاين =================
         async function handleOnlineLogin(e) {
             e.preventDefault();
             const phoneRaw = document.getElementById('login-online-phone').value.trim();
@@ -784,7 +802,6 @@
             btn.disabled = true;
             btn.innerText = "جاري التحقق من الأرقام...";
 
-            // البحث عن طالب مسجل بهذه الأرقام
             let matched = cachedStudents.find(s => 
                 toEnglish(s.phone) === phoneClean && toEnglish(s.parentPhone) === parentPhoneClean
             );
@@ -801,7 +818,6 @@
                 } catch(err) {}
             }
 
-            // إذا لم يتم العثور عليه، يتم إنشاء ملف أونلاين له مباشرة
             if (!matched) {
                 const autoCode = 'ON_' + phoneClean.slice(-4);
                 matched = {
@@ -872,7 +888,7 @@
 
         function autoLoginWithFoundCode() {
             const code = toEnglish(document.getElementById('find-student-select').value);
-            const st = cachedStudents.find(s => toEnglish(s.code) === code);
+            const st = cachedStudents.find(s => isCodeMatch(s.code, code));
             if (st) {
                 activeStudent = st;
                 localStorage.setItem('MF_ONLINE_ACTIVE_ST', JSON.stringify(activeStudent));
@@ -923,7 +939,7 @@
         // ================= بوابة ولي الأمر =================
         async function executeParentSearch() {
             const rawVal = document.getElementById('parent-search-key').value.trim();
-            const cleanVal = toEnglish(rawVal).toLowerCase();
+            const cleanVal = toEnglish(rawVal);
             const btn = document.getElementById('btn-parent-search');
 
             if (!cleanVal) { alert('اكتب كود الطالب أو رقم الهاتف أولاً!'); return; }
@@ -932,7 +948,7 @@
             btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري البحث...`;
 
             let st = cachedStudents.find(s => 
-                toEnglish(s.code).toLowerCase() === cleanVal || 
+                isCodeMatch(s.code, cleanVal) || 
                 toEnglish(s.phone) === cleanVal || 
                 toEnglish(s.parentPhone) === cleanVal
             );
@@ -943,8 +959,15 @@
                     if (!snap.empty) {
                         st = snap.docs[0].data();
                     } else {
-                        snap = await db.collection('students').where('parentPhone', '==', cleanVal).get();
-                        if (!snap.empty) st = snap.docs[0].data();
+                        const numVal = parseInt(cleanVal, 10);
+                        if (!isNaN(numVal)) {
+                            snap = await db.collection('students').where('code', '==', numVal).get();
+                            if (!snap.empty) st = snap.docs[0].data();
+                        }
+                        if (!st) {
+                            snap = await db.collection('students').where('parentPhone', '==', cleanVal).get();
+                            if (!snap.empty) st = snap.docs[0].data();
+                        }
                     }
                 } catch(e) {}
             }
@@ -990,7 +1013,7 @@
             `).reverse().join('') : '<p class="text-slate-400 text-center py-3">لا يوجد حضور مسجل بعد.</p>';
         }
 
-        // ================= إدارة الواجبات وحلها =================
+        // ================= إدارة الواجبات =================
         async function loadHomeworks() {
             cachedHomeworks = [];
             if (db) {
@@ -998,7 +1021,6 @@
                     const snap = await db.collection('homeworks').get();
                     snap.forEach(d => {
                         const data = d.data();
-                        // عرض الواجبات غير المخفية فقط للطلاب
                         if (data && data.isVisible !== false) {
                             cachedHomeworks.push({ id: d.id, ...data });
                         }
@@ -1041,7 +1063,7 @@
                         <div class="space-y-1">
                             <div class="flex justify-between items-center text-[10px]">
                                 <span class="text-amber-800 font-black bg-amber-100 px-2 py-0.5 rounded-full">${hw.grade}</span>
-                                <span class="${isSolved ? 'text-emerald-600 font-black' : 'text-slate-500 font-bold'}">${isSolved ? 'تم التسليم ✔️' : 'متاح للحل'}</span>
+                                <span class="${isSolved ? 'text-emerald-600 font-black' : 'text-slate-500 font-bold'}">${isSolved ? 'تم التسليم ✔️️' : 'متاح للحل'}</span>
                             </div>
                             <h4 class="font-black text-slate-900 text-base">${hw.title}</h4>
                             <span class="text-xs text-slate-500 font-mono font-bold">${(hw.questions || []).length} أسئلة</span>
@@ -1090,7 +1112,7 @@
             document.getElementById('hw-listing-container').classList.remove('hidden');
         }
 
-        // ================= تسليم الواجب وإرسال التقرير لولي الأمر فوراً =================
+        // ================= تسليم الواجب =================
         async function submitStudentHomework() {
             if (!activeSolvingHomework || !activeStudent) return;
 
@@ -1134,34 +1156,25 @@
                 if (exIdx !== -1) activeStudent.homeworksHistory[exIdx] = hwRecord;
                 else activeStudent.homeworksHistory.push(hwRecord);
 
-                // حفظ التعديل في السيرفر
                 if (db) {
                     try {
                         if (activeStudent.id) {
                             await db.collection('students').doc(activeStudent.id).update({
                                 homeworksHistory: activeStudent.homeworksHistory
                             });
-                        } else {
-                            const qSnap = await db.collection('students').where('code', '==', activeStudent.code).get();
-                            if (!qSnap.empty) {
-                                activeStudent.id = qSnap.docs[0].id;
-                                await db.collection('students').doc(activeStudent.id).update({
-                                    homeworksHistory: activeStudent.homeworksHistory
-                                });
-                            }
                         }
                     } catch(err) { console.error("Update Error:", err); }
                 }
 
                 localStorage.setItem('MF_ONLINE_ACTIVE_ST', JSON.stringify(activeStudent));
-                const stIdx = cachedStudents.findIndex(s => toEnglish(s.code) === toEnglish(activeStudent.code));
+                const stIdx = cachedStudents.findIndex(s => isCodeMatch(s.code, activeStudent.code));
                 if (stIdx !== -1) cachedStudents[stIdx] = activeStudent;
                 localStorage.setItem('MF_LOCAL_STUDENTS', JSON.stringify(cachedStudents));
 
                 updateStudentQRDisplay(activeStudent, hwRecord);
                 document.getElementById('sp-latest-hw-badge').innerText = `${hwRecord.title} (${hwRecord.score})`;
 
-                // إرسال واتساب فوري لولي الأمر (سنتر أو أونلاين)
+                // إرسال واتساب لولي الأمر
                 if (activeStudent.parentPhone) {
                     let badge = "ممتاز وبطل متألق 🌟👏";
                     if (percentage < 50) badge = "يحتاج إلى مراجعة فورية ومزيد من التركيز ⚠️";
@@ -1178,7 +1191,7 @@
 🎯 *الدرجة المحققة:* *${scoreFormatted}* (${percentage}%)
 🏅 *التقييم:* ${badge}
 
-🗓️️ *تاريخ الإنجاز:* ${dateStr}
+🗓 *تاريخ الإنجاز:* ${dateStr}
 ━━━━━━━━━━━━━━━━━━━━━
 💡 *لمتابعة حضور الطالب ودرجات الامتحانات الدورية عبر الموقع:*
 🌐 *https://www.mrfaisal.net*
@@ -1192,7 +1205,6 @@
                     }).catch(() => {});
                 }
 
-                // عرض كارت النجاح والـ QR
                 const modalQrImg = document.getElementById('modal-success-qr-img');
                 const modalScoreEl = document.getElementById('modal-hw-result-score');
                 
