@@ -36,7 +36,7 @@
             <i class="fa-solid fa-wifi"></i>
         </div>
         <h2 class="text-lg font-black text-white">لا يوجد اتصال بالإنترنت</h2>
-        <p class="text-xs text-slate-400 max-w-sm mt-2 leading-relaxed">المنصة تتطلب اتصالاً نشطاً بالإنترنت لتسجيل الحضور وتصحيح الواجبات وإشعار ولي الأمر.</p>
+        <p class="text-xs text-slate-400 max-w-sm mt-2 leading-relaxed">المنظومة تتطلب اتصالاً نشطاً بالإنترنت لحل الواجبات ومزامنة الدرجات مع السيرفر السحابي.</p>
         <button onclick="window.location.reload()" class="mt-5 px-6 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold rounded-xl transition">
             إعادة المحاولة
         </button>
@@ -45,7 +45,6 @@
     <!-- ================= NAVBAR ================= -->
     <header class="sticky top-0 z-40 bg-[#091432] border-b border-slate-800 shadow-md">
         <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
-            <!-- الشعار -->
             <div class="flex items-center gap-2.5 cursor-pointer" onclick="navigateTo('home')">
                 <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-yellow-400 text-slate-950 flex items-center justify-center text-lg font-black shadow-md border border-white/20">
                     <i class="fa-solid fa-book-open"></i>
@@ -56,7 +55,6 @@
                 </div>
             </div>
 
-            <!-- روابط النافبار (للكمبيوتر) -->
             <nav class="hidden md:flex items-center gap-6 text-xs font-bold text-slate-300">
                 <button onclick="navigateTo('home')" class="hover:text-amber-400 transition">الرئيسية</button>
                 <button onclick="scrollToElement('tips-section')" class="hover:text-amber-400 transition">النصائح</button>
@@ -64,7 +62,6 @@
                 <button onclick="scrollToElement('channels-section')" class="hover:text-amber-400 transition">قنوات المتابعة</button>
             </nav>
 
-            <!-- أزرار الإجراءات وتسجيل الدخول / الخروج -->
             <div class="flex items-center gap-2">
                 <div id="guest-nav-controls" class="flex items-center gap-2">
                     <button onclick="openModal('studentLoginModal')" class="px-4 py-2 text-xs font-black text-slate-950 bg-amber-400 hover:bg-amber-500 rounded-full transition flex items-center gap-1.5 shadow-md">
@@ -93,20 +90,13 @@
         <!-- ================= 1. HOME VIEW ================= -->
         <div id="view-home" class="space-y-6">
 
-            <!-- Hero Banner الرئيسي -->
+            <!-- Hero Banner -->
             <div class="hero-banner rounded-3xl p-6 sm:p-8 relative overflow-hidden shadow-2xl">
                 <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
-                    
                     <div class="md:col-span-7 space-y-2.5 text-center md:text-right z-10">
-                        <h2 class="text-3xl sm:text-5xl font-black text-white leading-tight">
-                            مستر فيصل
-                        </h2>
-                        <p class="text-lg sm:text-2xl font-black text-slate-200">
-                            معك في كل خطوة .. نحو التفوق
-                        </p>
-                        <p class="text-xs sm:text-sm text-slate-300/80 font-bold pt-1">
-                            تعليم مبسط .. متابعة مستمرة .. نجاح مضمون
-                        </p>
+                        <h2 class="text-3xl sm:text-5xl font-black text-white leading-tight">مستر فيصل</h2>
+                        <p class="text-lg sm:text-2xl font-black text-slate-200">معك في كل خطوة .. نحو التفوق</p>
+                        <p class="text-xs sm:text-sm text-slate-300/80 font-bold pt-1">تعليم مبسط .. متابعة مستمرة .. نجاح مضمون</p>
                     </div>
 
                     <div class="md:col-span-5 flex justify-center items-center relative">
@@ -116,16 +106,14 @@
                                 <span class="text-xs font-black text-white block">نصنع</span>
                                 <span class="text-xs font-black text-amber-300 block">المستقبل</span>
                             </div>
-
                             <img src="https://www.mrfaisal.net/ChatGPT%20Image%20Aug%2013,%202026,%2006_14_44%20AM.png" alt="مستر محمد فيصل" class="w-48 sm:w-60 h-auto object-cover rounded-2xl drop-shadow-2xl">
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- الكروت الثلاثة الرئيسية البيضاء -->
+            <!-- الكروت الثلاثة الرئيسية -->
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                
                 <!-- 1. كارت متابعة الواجبات -->
                 <div class="bg-white text-slate-900 rounded-3xl p-5 shadow-xl flex flex-col justify-between items-center text-center space-y-4">
                     <div class="space-y-2 flex flex-col items-center">
@@ -133,7 +121,7 @@
                             <i class="fa-solid fa-list-check"></i>
                         </div>
                         <h3 class="text-base font-black text-slate-900">متابعة الواجبات</h3>
-                        <p class="text-xs text-slate-500 font-bold">اعرف واجباتك أول بأول</p>
+                        <p class="text-xs text-slate-500 font-bold">اعرف واجباتك وحلها أول بأول</p>
                     </div>
                     <button onclick="handleEnterHomeworks()" class="w-full py-2.5 bg-[#1754cf] hover:bg-blue-700 text-white font-black text-xs rounded-full shadow transition flex items-center justify-center gap-1.5">
                         <span>دخول الواجبات</span>
@@ -148,7 +136,7 @@
                             <i class="fa-solid fa-users"></i>
                         </div>
                         <h3 class="text-base font-black text-slate-900">متابعة ولي الأمر</h3>
-                        <p class="text-xs text-slate-500 font-bold">متابعة درجات الطالب والحضور</p>
+                        <p class="text-xs text-slate-500 font-bold">متابعة درجات الطالب وحضور الحصص</p>
                     </div>
                     <button onclick="navigateTo('parent-portal')" class="w-full py-2.5 bg-[#f59e0b] hover:bg-amber-600 text-white font-black text-xs rounded-full shadow transition flex items-center justify-center gap-1.5">
                         <span>دخول المتابعة</span>
@@ -156,24 +144,23 @@
                     </button>
                 </div>
 
-                <!-- 3. كارت البحث عن كود / تسجيل طالب -->
+                <!-- 3. كارت البحث عن الكود -->
                 <div class="bg-white text-slate-900 rounded-3xl p-5 shadow-xl flex flex-col justify-between items-center text-center space-y-4">
                     <div class="space-y-2 flex flex-col items-center">
                         <div class="w-14 h-14 rounded-full bg-emerald-600 text-white flex items-center justify-center text-2xl shadow-md">
-                            <i class="fa-solid fa-address-card"></i>
+                            <i class="fa-solid fa-key"></i>
                         </div>
-                        <h3 class="text-base font-black text-slate-900">البحث عن كود</h3>
-                        <p class="text-xs text-slate-500 font-bold">تسجيل طالب جديد أو معرفة الكود</p>
+                        <h3 class="text-base font-black text-slate-900">البحث عن كودك</h3>
+                        <p class="text-xs text-slate-500 font-bold">معرفة كود الطالب المسجل بالسنتر</p>
                     </div>
                     <button onclick="openModal('findCodeModal')" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs rounded-full shadow transition flex items-center justify-center gap-1.5">
-                        <span>ابدأ البحث</span>
+                        <span>ابدأ البحث عن الكود</span>
                         <i class="fa-solid fa-chevron-left text-[10px]"></i>
                     </button>
                 </div>
-
             </div>
 
-            <!-- كارت نصائح مهمة (تم تزويد النصائح كما طلبت) -->
+            <!-- كارت النصائح -->
             <div id="tips-section" class="bg-[#fffde6] text-slate-900 rounded-3xl p-5 sm:p-7 shadow-xl border border-amber-200 space-y-4">
                 <div class="flex items-center justify-center gap-2">
                     <div class="w-8 h-8 rounded-full bg-amber-400 text-slate-950 flex items-center justify-center text-sm font-black shadow-sm">
@@ -197,23 +184,7 @@
                     </div>
                     <div class="flex items-start gap-2 bg-amber-50/60 p-2.5 rounded-xl border border-amber-200/50">
                         <i class="fa-solid fa-circle-check text-emerald-600 text-sm mt-0.5"></i>
-                        <span>استخدم الخرائط الذهنية والمخططات الزمنية لتنظيم الأحداث.</span>
-                    </div>
-                    <div class="flex items-start gap-2 bg-amber-50/60 p-2.5 rounded-xl border border-amber-200/50">
-                        <i class="fa-solid fa-circle-check text-emerald-600 text-sm mt-0.5"></i>
-                        <span>لا تترك أي جزء من المنهج وتدرب دائماً على أسئلة المستويات العليا.</span>
-                    </div>
-                    <div class="flex items-start gap-2 bg-amber-50/60 p-2.5 rounded-xl border border-amber-200/50">
-                        <i class="fa-solid fa-circle-check text-emerald-600 text-sm mt-0.5"></i>
-                        <span>المتابعة المنتظمة مع ولي الأمر وإطلاعه على الدرجات سر الاستمرار.</span>
-                    </div>
-                    <div class="flex items-start gap-2 bg-amber-50/60 p-2.5 rounded-xl border border-amber-200/50">
-                        <i class="fa-solid fa-circle-check text-emerald-600 text-sm mt-0.5"></i>
-                        <span>احتفظ بكشكول لنواتج التعلم وتدوين الملاحظات التي تذكر في الحصص.</span>
-                    </div>
-                    <div class="flex items-start gap-2 bg-amber-50/60 p-2.5 rounded-xl border border-amber-200/50">
-                        <i class="fa-solid fa-circle-check text-emerald-600 text-sm mt-0.5"></i>
-                        <span>احرص على أداء كل امتحان أسبوعي في موعده لقياس مستواك الحقيقي.</span>
+                        <span>استخدم الخرائط الذهنية والمخططات الزمنية لتنظيم الأحداث وتسهيل استرجاعها.</span>
                     </div>
                 </div>
 
@@ -225,7 +196,7 @@
                 </div>
             </div>
 
-            <!-- كارت مواعيد السناتر (يعرض كافة السناتر المسجلة بالكامل) -->
+            <!-- كارت مواعيد ومقرات السناتر -->
             <div id="centers-section" class="bg-[#f0f9ff] text-slate-900 rounded-3xl p-5 sm:p-7 shadow-xl border border-sky-200 space-y-4">
                 <div class="flex items-center justify-center gap-2">
                     <i class="fa-solid fa-calendar-days text-sky-600 text-xl"></i>
@@ -240,7 +211,7 @@
                 </p>
             </div>
 
-            <!-- قنوات المتابعة والتواصل الرسمية -->
+            <!-- قنوات المتابعة الرسمية -->
             <div id="channels-section" class="bg-white text-slate-900 rounded-3xl p-5 sm:p-6 shadow-xl space-y-4">
                 <div class="flex items-center justify-center gap-2">
                     <i class="fa-solid fa-paper-plane text-sky-600"></i>
@@ -248,7 +219,6 @@
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                    <!-- فيسبوك -->
                     <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 flex flex-col justify-between items-center text-center space-y-3">
                         <div class="space-y-1 flex flex-col items-center">
                             <div class="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center text-xl shadow">
@@ -263,7 +233,6 @@
                         </a>
                     </div>
 
-                    <!-- مادة التاريخ -->
                     <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 flex flex-col justify-between items-center text-center space-y-3">
                         <div class="space-y-1 flex flex-col items-center">
                             <div class="w-12 h-12 rounded-full bg-[#991b1b] text-white flex items-center justify-center text-xl shadow">
@@ -278,7 +247,6 @@
                         </a>
                     </div>
 
-                    <!-- مادة الجغرافيا -->
                     <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 flex flex-col justify-between items-center text-center space-y-3">
                         <div class="space-y-1 flex flex-col items-center">
                             <div class="w-12 h-12 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xl shadow">
@@ -294,10 +262,9 @@
                     </div>
                 </div>
             </div>
-
         </div>
 
-        <!-- ================= 2. PARENT PORTAL (حضور وامتحانات فقط) ================= -->
+        <!-- ================= 2. PARENT PORTAL ================= -->
         <div id="view-parent-portal" class="hidden space-y-6">
             <div class="bg-white text-slate-900 rounded-3xl p-6 sm:p-8 max-w-xl mx-auto shadow-2xl space-y-5">
                 <div class="text-center space-y-1">
@@ -315,7 +282,6 @@
                     </button>
                 </div>
 
-                <!-- نتيجة الاستعلام -->
                 <div id="parent-portal-result" class="hidden space-y-4 pt-4 border-t border-slate-200 text-xs">
                     <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-1">
                         <div class="flex justify-between items-center">
@@ -355,10 +321,8 @@
             </div>
         </div>
 
-        <!-- ================= 3. STUDENT PORTAL (الكارنيه والواجبات) ================= -->
+        <!-- ================= 3. STUDENT PORTAL ================= -->
         <div id="view-student-portal" class="hidden space-y-6">
-            
-            <!-- كارنيه الطالب والـ QR Code الشغال 100% -->
             <div class="hero-banner rounded-3xl p-5 sm:p-7 relative overflow-hidden shadow-2xl border border-slate-800">
                 <div class="flex flex-col md:flex-row justify-between items-center gap-6">
                     <div class="space-y-2.5 text-center md:text-right flex-1 w-full">
@@ -371,7 +335,7 @@
                         <h2 id="sp-name" class="text-2xl sm:text-3xl font-black text-white">--</h2>
                         <div class="flex flex-wrap items-center justify-center md:justify-start gap-2 text-xs text-slate-300 pt-1">
                             <span class="px-3 py-1 bg-slate-900/90 rounded-xl border border-slate-700">
-                                السنتر: <strong id="sp-center" class="text-amber-300 font-bold">--</strong>
+                                السنتر / النظام: <strong id="sp-center" class="text-amber-300 font-bold">--</strong>
                             </span>
                             <span class="px-3 py-1 bg-slate-900/90 rounded-xl border border-slate-700 font-mono">
                                 الكود: <strong id="sp-code" class="text-white font-bold">--</strong>
@@ -382,7 +346,7 @@
                         </div>
                     </div>
 
-                    <!-- كارت الـ QR المعتمد -->
+                    <!-- الـ QR المباشر -->
                     <div class="bg-slate-900/90 p-4 rounded-3xl border border-amber-400/30 text-center shadow-2xl shrink-0 flex flex-col items-center">
                         <div class="bg-white p-2.5 rounded-2xl shadow-inner flex items-center justify-center min-w-[130px] min-h-[130px]">
                             <img id="student-live-qr-img" class="w-28 h-28 object-contain block mx-auto" alt="كود الطالب">
@@ -399,7 +363,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <h3 class="font-black text-base text-white">الواجبات الإلكترونية المقررة</h3>
-                        <p class="text-xs text-slate-400">يتم إرسال إشعار النتيجة لولي أمرك عبر الواتساب فور التسليم</p>
+                        <p class="text-xs text-slate-400">يتم إرسال إشعار النتيجة لولي أمرك فوراً بمجرد التسليم</p>
                     </div>
                     <span id="hw-total-count-badge" class="px-3 py-1 bg-slate-800 text-amber-300 rounded-full text-xs font-bold font-mono">0 واجب</span>
                 </div>
@@ -407,7 +371,7 @@
                 <div id="homeworks-grid-view" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
             </div>
 
-            <!-- شاشة حل الواجب التفاعلي -->
+            <!-- شاشة حل الواجب -->
             <div id="hw-solver-container" class="hidden bg-white text-slate-900 rounded-3xl p-5 sm:p-8 shadow-2xl space-y-6">
                 <div class="flex justify-between items-center pb-4 border-b border-slate-200">
                     <div>
@@ -430,9 +394,9 @@
 
     </main>
 
-    <!-- ================= MODAL: كارت النجاح والكيو آر بعد تسليم الواجب ================= -->
+    <!-- ================= MODAL: كارت النجاح بعد التسليم ================= -->
     <div id="hw-success-modal" class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md items-center justify-center p-4 hidden">
-        <div class="bg-white text-slate-900 p-6 sm:p-8 rounded-3xl max-w-sm w-full shadow-2xl space-y-4 text-center border border-amber-300 relative animate-bounce-short">
+        <div class="bg-white text-slate-900 p-6 sm:p-8 rounded-3xl max-w-sm w-full shadow-2xl space-y-4 text-center border border-amber-300 relative">
             <div class="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-2xl shadow-inner">
                 <i class="fa-solid fa-circle-check"></i>
             </div>
@@ -440,15 +404,14 @@
             <div>
                 <h3 class="font-black text-lg text-slate-900">ألف مبروك يا بطل! 🎉</h3>
                 <p id="modal-hw-result-score" class="text-sm font-black text-emerald-600 mt-0.5">درجتك: --</p>
+                <p class="text-xs text-slate-500 font-bold mt-1">تم إرسال تقرير الواجب والدرجة لولي أمرك بنجاح ✅</p>
             </div>
 
-            <!-- الكيو آر المحدث الخاص بالحصة القادمة -->
             <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 flex flex-col items-center">
                 <img id="modal-success-qr-img" class="w-32 h-32 object-contain block mx-auto bg-white p-2 rounded-xl shadow-sm" alt="كود الحصة القادمة">
                 <span class="text-[11px] font-bold text-slate-600 mt-2">كود دخول الحصة القادمة</span>
             </div>
 
-            <!-- النص المطلوب بدقة -->
             <div class="p-3 bg-amber-50 rounded-2xl border border-amber-300 text-amber-900 text-xs font-bold leading-relaxed">
                 <i class="fa-solid fa-camera text-amber-600 ml-1"></i>
                 احتفظ بيه حتى لو واخده سكرين شوت قبل كده، وخد ده سكرين شوت علشان تدخل الحصة الجاية بيه
@@ -460,50 +423,63 @@
         </div>
     </div>
 
-    <!-- ================= MODAL: تسجيل طالب جديد ================= -->
-    <div id="registerStudentModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md items-center justify-center p-4 hidden">
-        <div class="bg-white text-slate-900 p-6 sm:p-7 rounded-3xl max-w-sm w-full shadow-2xl space-y-4">
+    <!-- ================= MODAL: تسجيل دخول الطالب (سنتر / أونلاين) ================= -->
+    <div id="studentLoginModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md items-center justify-center p-4 hidden">
+        <div class="bg-white text-slate-900 p-6 rounded-3xl max-w-sm w-full shadow-2xl space-y-4">
             <div class="flex justify-between items-center pb-2 border-b border-slate-200">
-                <h3 class="font-black text-sm text-slate-900">تسجيل حساب طالب جديد</h3>
-                <button onclick="closeModal('registerStudentModal')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+                <h3 class="font-black text-sm text-slate-900">تسجيل دخول الطالب</h3>
+                <button onclick="closeModal('studentLoginModal')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
 
-            <form onsubmit="handleNewStudentRegistration(event)" class="space-y-3 text-xs">
+            <!-- اختيار نوع الطالب -->
+            <div class="grid grid-cols-2 gap-2 p-1 bg-slate-100 rounded-2xl text-xs font-bold">
+                <button type="button" id="tab-login-center" onclick="setLoginType('center')" class="py-2.5 rounded-xl bg-amber-400 text-slate-950 shadow-sm transition">
+                    <i class="fa-solid fa-building ml-1"></i> طالب سنتر
+                </button>
+                <button type="button" id="tab-login-online" onclick="setLoginType('online')" class="py-2.5 rounded-xl text-slate-600 hover:text-slate-900 transition">
+                    <i class="fa-solid fa-globe ml-1"></i> طالب أونلاين
+                </button>
+            </div>
+
+            <!-- 1. نموذج طالب السنتر (الكود فقط) -->
+            <form id="form-login-center" onsubmit="handleCenterLogin(event)" class="space-y-3 text-xs">
                 <div>
-                    <label class="block font-bold mb-1 text-slate-700">اسم الطالب رباعي:</label>
-                    <input type="text" id="reg-st-name" required placeholder="محمد أحمد محمود علي" class="w-full p-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 font-bold focus:border-blue-600 focus:outline-none">
+                    <label class="block font-bold mb-1 text-slate-700">كود الطالب المسجل بالسنتر:</label>
+                    <input type="text" id="login-center-code" required placeholder="اكتب كودك هنا..." class="w-full p-3 rounded-xl bg-slate-50 border border-slate-300 text-center font-black text-sm text-slate-900 font-mono focus:border-amber-500 focus:outline-none">
                 </div>
-                <div>
-                    <label class="block font-bold mb-1 text-slate-700">كود الطالب المطلوب (سيتم التأكد من عدم تكراره):</label>
-                    <input type="text" id="reg-st-code" required placeholder="مثال: 105" class="w-full p-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 font-mono font-bold focus:border-blue-600 focus:outline-none">
+                <button type="submit" id="btn-login-center-submit" class="w-full py-3 bg-[#f59e0b] hover:bg-amber-600 text-slate-950 font-black rounded-xl text-xs transition shadow">
+                    دخول المنصة
+                </button>
+
+                <div class="pt-2 text-center text-[11px] space-y-2 border-t border-slate-100">
+                    <button type="button" onclick="closeModal('studentLoginModal'); openModal('findCodeModal');" class="text-blue-600 hover:underline font-bold block mx-auto">
+                        <i class="fa-solid fa-magnifying-glass ml-1"></i> نسيت كودك؟ ابحث عنه بالاسم
+                    </button>
+                    <a href="https://wa.me/201200962601?text=السلام%20عليكم%20محتاج%20استعلام%20عن%20كود%20الطالب" target="_blank" class="text-emerald-600 hover:underline font-bold block">
+                        <i class="fa-brands fa-whatsapp ml-1"></i> استعلام عن الكود عبر واتساب (01200962601)
+                    </a>
                 </div>
+            </form>
+
+            <!-- 2. نموذج طالب الأونلاين (رقمه ورقم ولي الأمر) -->
+            <form id="form-login-online" onsubmit="handleOnlineLogin(event)" class="hidden space-y-3 text-xs">
                 <div>
                     <label class="block font-bold mb-1 text-slate-700">رقم هاتف الطالب:</label>
-                    <input type="tel" id="reg-st-phone" required placeholder="010xxxxxxxx" class="w-full p-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 focus:border-blue-600 focus:outline-none">
+                    <input type="tel" id="login-online-phone" required placeholder="010xxxxxxxx" class="w-full p-2.5 rounded-xl bg-slate-50 border border-slate-300 text-center font-bold text-slate-900 focus:border-amber-500 focus:outline-none">
                 </div>
                 <div>
-                    <label class="block font-bold mb-1 text-slate-700">رقم واتساب ولي الأمر (لإرسال النتيجة):</label>
-                    <input type="tel" id="reg-st-parent-phone" required placeholder="010xxxxxxxx" class="w-full p-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 focus:border-blue-600 focus:outline-none">
-                </div>
-                <div class="grid grid-cols-2 gap-2">
-                    <div>
-                        <label class="block font-bold mb-1 text-slate-700">المرحلة:</label>
-                        <select id="reg-st-grade" class="w-full p-2 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 font-bold">
-                            <option value="الصف الثالث الثانوي">الصف الثالث الثانوي</option>
-                            <option value="الصف الثاني الثانوي">الصف الثاني الثانوي</option>
-                            <option value="الصف الأول الثانوي">الصف الأول الثانوي</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block font-bold mb-1 text-slate-700">السنتر:</label>
-                        <select id="reg-st-center" class="w-full p-2 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 font-bold"></select>
-                    </div>
+                    <label class="block font-bold mb-1 text-slate-700">رقم واتساب ولي الأمر:</label>
+                    <input type="tel" id="login-online-parent-phone" required placeholder="010xxxxxxxx" class="w-full p-2.5 rounded-xl bg-slate-50 border border-slate-300 text-center font-bold text-slate-900 focus:border-amber-500 focus:outline-none">
                 </div>
 
-                <p id="reg-error-msg" class="text-rose-600 font-bold text-[11px] hidden"></p>
+                <!-- التحذير المطلوب -->
+                <div class="p-2.5 bg-rose-50 border border-rose-200 rounded-xl text-rose-800 text-[11px] font-bold leading-relaxed text-center">
+                    <i class="fa-solid fa-triangle-exclamation text-rose-600 ml-1"></i>
+                    يرجى كتابة رقم الهاتف ورقم ولي الأمر بشكل صحيح لتجنب الحظر من المنصة.
+                </div>
 
-                <button type="submit" id="btn-reg-action" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-black rounded-xl transition shadow mt-2">
-                    إنشاء الحساب وتفعيل الكود
+                <button type="submit" id="btn-login-online-submit" class="w-full py-3 bg-[#f59e0b] hover:bg-amber-600 text-slate-950 font-black rounded-xl text-xs transition shadow">
+                    دخول المنصة
                 </button>
             </form>
         </div>
@@ -549,38 +525,10 @@
                 </div>
 
                 <div class="pt-2 text-center border-t border-slate-100">
-                    <button type="button" onclick="closeModal('findCodeModal'); openModal('registerStudentModal');" class="text-emerald-600 hover:underline font-bold">
-                        طالب جديد؟ اضغط هنا للتسجيل
-                    </button>
+                    <a href="https://wa.me/201200962601?text=السلام%20عليكم%20محتاج%20مساعدة%20في%20معرفة%20كودي" target="_blank" class="text-emerald-600 hover:underline font-bold">
+                        <i class="fa-brands fa-whatsapp ml-1"></i> لم تجد اسمك؟ تواصل معنا عبر واتساب
+                    </a>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ================= MODAL: تسجيل دخول الطالب ================= -->
-    <div id="studentLoginModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md items-center justify-center p-4 hidden">
-        <div class="bg-white text-slate-900 p-6 rounded-3xl max-w-sm w-full shadow-2xl space-y-4">
-            <div class="flex justify-between items-center pb-2 border-b border-slate-200">
-                <h3 class="font-black text-sm text-slate-900">تسجيل دخول الطالب</h3>
-                <button onclick="closeModal('studentLoginModal')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
-            </div>
-
-            <form onsubmit="handleStudentLogin(event)" class="space-y-3 text-xs">
-                <div>
-                    <label class="block font-bold mb-1 text-slate-700">كود الطالب الدقيق أو الهاتف:</label>
-                    <input type="text" id="login-identity-val" required placeholder="اكتب كودك هنا..." class="w-full p-3 rounded-xl bg-slate-50 border border-slate-300 text-center font-black text-sm text-slate-900 font-mono focus:border-amber-500 focus:outline-none">
-                </div>
-                <button type="submit" id="btn-login-submit" class="w-full py-3 bg-[#f59e0b] hover:bg-amber-600 text-slate-950 font-black rounded-xl text-xs transition shadow">
-                    دخول المنصة
-                </button>
-            </form>
-            <div class="text-center pt-1 text-[11px] space-y-1">
-                <button type="button" onclick="closeModal('studentLoginModal'); openModal('findCodeModal');" class="text-blue-600 hover:underline font-bold block mx-auto">
-                    نسيت كودك؟ اضغط هنا للبحث عنه
-                </button>
-                <button type="button" onclick="closeModal('studentLoginModal'); openModal('registerStudentModal');" class="text-emerald-600 hover:underline font-bold block mx-auto">
-                    طالب جديد؟ اضغط هنا لإنشاء حساب
-                </button>
             </div>
         </div>
     </div>
@@ -614,6 +562,7 @@
         let cachedHomeworks = [];
         let activeStudent = null;
         let activeSolvingHomework = null;
+        let currentLoginMode = 'center';
 
         function toEnglish(str) {
             if (!str && str !== 0) return '';
@@ -624,7 +573,6 @@
                 .trim();
         }
 
-        // توليد رابط الـ QR المعتمد دون أي مكتبات مكسورة
         function getQRUrl(content) {
             return `https://api.qrserver.com/v1/create-qr-code/?size=250x250&margin=4&data=${encodeURIComponent(content)}`;
         }
@@ -634,11 +582,8 @@
 
         function checkNetworkStatus() {
             const offlineScreen = document.getElementById('offline-screen');
-            if (navigator.onLine) {
-                offlineScreen.classList.add('hidden');
-            } else {
-                offlineScreen.classList.remove('hidden');
-            }
+            if (navigator.onLine) offlineScreen.classList.add('hidden');
+            else offlineScreen.classList.remove('hidden');
         }
 
         window.addEventListener('DOMContentLoaded', async () => {
@@ -695,7 +640,28 @@
             navigateTo('home');
         }
 
-        // ================= تحميل ومقرات السناتر بالكامل =================
+        // تبديل نوع تسجيل الدخول
+        function setLoginType(type) {
+            currentLoginMode = type;
+            const btnCenter = document.getElementById('tab-login-center');
+            const btnOnline = document.getElementById('tab-login-online');
+            const formCenter = document.getElementById('form-login-center');
+            const formOnline = document.getElementById('form-login-online');
+
+            if (type === 'center') {
+                btnCenter.className = "py-2.5 rounded-xl bg-amber-400 text-slate-950 shadow-sm transition";
+                btnOnline.className = "py-2.5 rounded-xl text-slate-600 hover:text-slate-900 transition";
+                formCenter.classList.remove('hidden');
+                formOnline.classList.add('hidden');
+            } else {
+                btnOnline.className = "py-2.5 rounded-xl bg-amber-400 text-slate-950 shadow-sm transition";
+                btnCenter.className = "py-2.5 rounded-xl text-slate-600 hover:text-slate-900 transition";
+                formOnline.classList.remove('hidden');
+                formCenter.classList.add('hidden');
+            }
+        }
+
+        // ================= تحميل ومقرات السناتر =================
         async function loadCenters() {
             cachedCenters = [];
             if (db) {
@@ -713,21 +679,17 @@
                 if (loc) cachedCenters = JSON.parse(loc);
             }
 
-            // قائمة سناتر شاملة ومحدثة تضمن عرض كافة المقرات
             if (cachedCenters.length === 0) {
                 cachedCenters = [
                     { name: 'سنتر يونايتد (لوران)', day: 'السبت - الثلاثاء', time: 'من 4:00 م إلى 6:30 م' },
                     { name: 'سنتر النخبة (سموحة)', day: 'الأحد - الأربعاء', time: 'من 5:00 م إلى 7:30 م' },
                     { name: 'سنتر كامبريدج (محرم بك)', day: 'الإثنين - الخميس', time: 'من 3:30 م إلى 6:00 م' },
-                    { name: 'سنتر فيوتشر (سيدي جابر)', day: 'الجمعة', time: 'من 1:00 م إلى 4:00 م' },
-                    { name: 'سنتر الأوائل (العصافرة)', day: 'السبت - الثلاثاء', time: 'من 6:30 م إلى 9:00 م' },
                     { name: 'المنصة الإلكترونية (أونلاين)', day: 'طوال أيام الأسبوع', time: 'متاح دائماً على الموقع' }
                 ];
             }
 
             localStorage.setItem('MF_LOCAL_CENTERS', JSON.stringify(cachedCenters));
 
-            // رندر السناتر في الصفحة الرئيسية
             const grid = document.getElementById('dynamic-centers-container');
             if (grid) {
                 grid.innerHTML = cachedCenters.map(c => `
@@ -742,11 +704,10 @@
                 `).join('');
             }
 
-            const selects = ['reg-st-center', 'find-center-select'];
-            selects.forEach(id => {
-                const el = document.getElementById(id);
-                if (el) el.innerHTML = cachedCenters.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
-            });
+            const centerSelect = document.getElementById('find-center-select');
+            if (centerSelect) {
+                centerSelect.innerHTML = '<option value="">اختر السنتر</option>' + cachedCenters.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+            }
         }
 
         // ================= تحميل بيانات الطلاب =================
@@ -766,69 +727,113 @@
             }
         }
 
-        // ================= تسجيل طالب جديد مع منع تكرار الكود =================
-        async function handleNewStudentRegistration(e) {
+        // ================= تسجيل دخول طالب السنتر (الكود فقط) =================
+        async function handleCenterLogin(e) {
             e.preventDefault();
-            const name = document.getElementById('reg-st-name').value.trim();
-            const code = toEnglish(document.getElementById('reg-st-code').value.trim());
-            const phone = toEnglish(document.getElementById('reg-st-phone').value.trim());
-            const parentPhone = toEnglish(document.getElementById('reg-st-parent-phone').value.trim());
-            const grade = document.getElementById('reg-st-grade').value;
-            const center = document.getElementById('reg-st-center').value;
-            const errEl = document.getElementById('reg-error-msg');
-            const btn = document.getElementById('btn-reg-action');
+            const codeRaw = document.getElementById('login-center-code').value.trim();
+            const codeClean = toEnglish(codeRaw).toLowerCase();
+            const btn = document.getElementById('btn-login-center-submit');
 
-            errEl.classList.add('hidden');
+            if (!codeClean) return;
+
             btn.disabled = true;
-            btn.innerText = "جاري التحقق من الكود بالمنظومة...";
+            btn.innerText = "جاري التحقق من الكود...";
 
-            let isDuplicate = cachedStudents.some(s => toEnglish(s.code).toLowerCase() === code.toLowerCase());
+            let matched = cachedStudents.find(s => toEnglish(s.code).toLowerCase() === codeClean);
 
-            if (!isDuplicate && db) {
+            if (!matched && db) {
                 try {
-                    const qStr = await db.collection('students').where('code', '==', code).get();
-                    if (!qStr.empty) isDuplicate = true;
-
-                    const numVal = parseInt(code, 10);
-                    if (!isDuplicate && !isNaN(numVal)) {
-                        const qNum = await db.collection('students').where('code', '==', numVal).get();
-                        if (!qNum.empty) isDuplicate = true;
+                    let snap = await db.collection('students').where('code', '==', codeClean).get();
+                    if (!snap.empty) {
+                        matched = { id: snap.docs[0].id, ...snap.docs[0].data() };
+                    } else {
+                        const numVal = parseInt(codeClean, 10);
+                        if (!isNaN(numVal)) {
+                            snap = await db.collection('students').where('code', '==', numVal).get();
+                            if (!snap.empty) matched = { id: snap.docs[0].id, ...snap.docs[0].data() };
+                        }
                     }
-                } catch(err) { console.error("Dup check:", err); }
-            }
-
-            if (isDuplicate) {
-                btn.disabled = false;
-                btn.innerText = "إنشاء الحساب وتفعيل الكود";
-                errEl.innerText = `⚠️ عذراً! الكود (${code}) مسجل بالفعل لطالب آخر، يرجى كتابة كود مختلف.`;
-                errEl.classList.remove('hidden');
-                return;
-            }
-
-            const newSt = {
-                name, code, phone, parentPhone, grade, center,
-                attendanceHistory: [], examsHistory: [], homeworksHistory: [],
-                createdAt: new Date().toISOString()
-            };
-
-            if (db) {
-                try {
-                    const ref = await db.collection('students').add(newSt);
-                    newSt.id = ref.id;
                 } catch(err) {}
             }
 
-            cachedStudents.unshift(newSt);
-            localStorage.setItem('MF_LOCAL_STUDENTS', JSON.stringify(cachedStudents));
+            btn.disabled = false;
+            btn.innerText = "دخول المنصة";
 
-            activeStudent = newSt;
-            localStorage.setItem('MF_ONLINE_ACTIVE_ST', JSON.stringify(activeStudent));
+            if (matched) {
+                activeStudent = matched;
+                localStorage.setItem('MF_ONLINE_ACTIVE_ST', JSON.stringify(activeStudent));
+                closeModal('studentLoginModal');
+                initStudentUI();
+                navigateTo('student-portal');
+            } else {
+                alert(`⚠️ الكود (${codeRaw}) غير موجود! يرجى التأكد من كودك أو الاستعلام عبر الواتساب.`);
+            }
+        }
+
+        // ================= تسجيل دخول طالب الأونلاين (رقم الطالب + رقم ولي الأمر) =================
+        async function handleOnlineLogin(e) {
+            e.preventDefault();
+            const phoneRaw = document.getElementById('login-online-phone').value.trim();
+            const parentPhoneRaw = document.getElementById('login-online-parent-phone').value.trim();
+            const phoneClean = toEnglish(phoneRaw);
+            const parentPhoneClean = toEnglish(parentPhoneRaw);
+            const btn = document.getElementById('btn-login-online-submit');
+
+            if (!phoneClean || !parentPhoneClean) return;
+
+            btn.disabled = true;
+            btn.innerText = "جاري التحقق من الأرقام...";
+
+            // البحث عن طالب مسجل بهذه الأرقام
+            let matched = cachedStudents.find(s => 
+                toEnglish(s.phone) === phoneClean && toEnglish(s.parentPhone) === parentPhoneClean
+            );
+
+            if (!matched && db) {
+                try {
+                    const snap = await db.collection('students')
+                        .where('phone', '==', phoneClean)
+                        .where('parentPhone', '==', parentPhoneClean)
+                        .get();
+                    if (!snap.empty) {
+                        matched = { id: snap.docs[0].id, ...snap.docs[0].data() };
+                    }
+                } catch(err) {}
+            }
+
+            // إذا لم يتم العثور عليه، يتم إنشاء ملف أونلاين له مباشرة
+            if (!matched) {
+                const autoCode = 'ON_' + phoneClean.slice(-4);
+                matched = {
+                    name: `طالب أونلاين (${phoneClean.slice(-4)})`,
+                    code: autoCode,
+                    phone: phoneClean,
+                    parentPhone: parentPhoneClean,
+                    grade: 'الصف الثالث الثانوي',
+                    center: 'المنصة الإلكترونية (أونلاين)',
+                    attendanceHistory: [],
+                    examsHistory: [],
+                    homeworksHistory: [],
+                    createdAt: new Date().toISOString()
+                };
+
+                if (db) {
+                    try {
+                        const ref = await db.collection('students').add(matched);
+                        matched.id = ref.id;
+                    } catch(e) {}
+                }
+
+                cachedStudents.unshift(matched);
+                localStorage.setItem('MF_LOCAL_STUDENTS', JSON.stringify(cachedStudents));
+            }
 
             btn.disabled = false;
-            btn.innerText = "إنشاء الحساب وتفعيل الكود";
-            closeModal('registerStudentModal');
+            btn.innerText = "دخول المنصة";
 
-            alert(`🎉 مرحباً بك يا ${name}!\nتم تسجيلك بنجاح، كودك الخاص هو: (#${code})`);
+            activeStudent = matched;
+            localStorage.setItem('MF_ONLINE_ACTIVE_ST', JSON.stringify(activeStudent));
+            closeModal('studentLoginModal');
             initStudentUI();
             navigateTo('student-portal');
         }
@@ -877,63 +882,12 @@
             }
         }
 
-        // ================= تسجيل دخول الطالب =================
-        async function handleStudentLogin(e) {
-            e.preventDefault();
-            const inputRaw = document.getElementById('login-identity-val').value.trim();
-            const inputClean = toEnglish(inputRaw).toLowerCase();
-            const btn = document.getElementById('btn-login-submit');
-
-            if (!inputClean) return;
-
-            btn.disabled = true;
-            btn.innerText = "جاري التحقق...";
-
-            let matched = cachedStudents.find(s => 
-                toEnglish(s.code).toLowerCase() === inputClean || 
-                toEnglish(s.phone) === inputClean
-            );
-
-            if (!matched && db) {
-                try {
-                    let snap = await db.collection('students').where('code', '==', inputClean).get();
-                    if (!snap.empty) {
-                        matched = { id: snap.docs[0].id, ...snap.docs[0].data() };
-                    } else {
-                        const numVal = parseInt(inputClean, 10);
-                        if (!isNaN(numVal)) {
-                            snap = await db.collection('students').where('code', '==', numVal).get();
-                            if (!snap.empty) matched = { id: snap.docs[0].id, ...snap.docs[0].data() };
-                        }
-                    }
-
-                    if (!matched) {
-                        snap = await db.collection('students').where('phone', '==', inputClean).get();
-                        if (!snap.empty) matched = { id: snap.docs[0].id, ...snap.docs[0].data() };
-                    }
-                } catch(err) {}
-            }
-
-            btn.disabled = false;
-            btn.innerText = "دخول المنصة";
-
-            if (matched) {
-                activeStudent = matched;
-                localStorage.setItem('MF_ONLINE_ACTIVE_ST', JSON.stringify(activeStudent));
-                closeModal('studentLoginModal');
-                initStudentUI();
-                navigateTo('student-portal');
-            } else {
-                alert(`⚠️ لم يتم العثور على طالب بالكود (${inputRaw})!`);
-            }
-        }
-
         function initStudentUI() {
             if (!activeStudent) return;
 
             document.getElementById('guest-nav-controls').classList.add('hidden');
             document.getElementById('logged-nav-controls').classList.remove('hidden');
-            document.getElementById('nav-student-name').innerText = activeStudent.name.split(' ')[0];
+            document.getElementById('nav-student-name').innerText = (activeStudent.name || 'طالب').split(' ')[0];
 
             document.getElementById('sp-name').innerText = activeStudent.name || '--';
             document.getElementById('sp-center').innerText = activeStudent.center || '--';
@@ -944,12 +898,10 @@
             const latestHw = hws.length > 0 ? hws[hws.length - 1] : null;
             document.getElementById('sp-latest-hw-badge').innerText = latestHw ? `${latestHw.title} (${latestHw.score})` : 'لم يحل بعد';
 
-            // توليد الـ QR المباشر
             updateStudentQRDisplay(activeStudent, latestHw);
             renderHomeworksGrid();
         }
 
-        // تحديث صورة الـ QR لضمان عدم ظهور أي مربع أبيض فارغ
         function updateStudentQRDisplay(st, latestHw) {
             const qrImg = document.getElementById('student-live-qr-img');
             if (!qrImg) return;
@@ -968,7 +920,7 @@
             qrImg.src = getQRUrl(qrPayload);
         }
 
-        // ================= بوابة ولي الأمر (حضور وامتحانات فقط) =================
+        // ================= بوابة ولي الأمر =================
         async function executeParentSearch() {
             const rawVal = document.getElementById('parent-search-key').value.trim();
             const cleanVal = toEnglish(rawVal).toLowerCase();
@@ -991,13 +943,6 @@
                     if (!snap.empty) {
                         st = snap.docs[0].data();
                     } else {
-                        const numVal = parseInt(cleanVal, 10);
-                        if (!isNaN(numVal)) {
-                            snap = await db.collection('students').where('code', '==', numVal).get();
-                            if (!snap.empty) st = snap.docs[0].data();
-                        }
-                    }
-                    if (!st) {
                         snap = await db.collection('students').where('parentPhone', '==', cleanVal).get();
                         if (!snap.empty) st = snap.docs[0].data();
                     }
@@ -1020,8 +965,9 @@
 
             const att = st.attendanceHistory || [];
             const exams = st.examsHistory || [];
+            const attCount = (st.customAttendanceCount !== undefined) ? st.customAttendanceCount : att.length;
 
-            document.getElementById('parent-view-att-count').innerText = att.length;
+            document.getElementById('parent-view-att-count').innerText = attCount;
             document.getElementById('parent-view-exam-count').innerText = exams.length;
 
             const examsListEl = document.getElementById('parent-view-exams-list');
@@ -1050,12 +996,21 @@
             if (db) {
                 try {
                     const snap = await db.collection('homeworks').get();
-                    snap.forEach(d => cachedHomeworks.push({ id: d.id, ...d.data() }));
+                    snap.forEach(d => {
+                        const data = d.data();
+                        // عرض الواجبات غير المخفية فقط للطلاب
+                        if (data && data.isVisible !== false) {
+                            cachedHomeworks.push({ id: d.id, ...data });
+                        }
+                    });
                 } catch(e) {}
             }
             if (cachedHomeworks.length === 0) {
                 const loc = localStorage.getItem('MF_LOCAL_HOMEWORKS');
-                if (loc) cachedHomeworks = JSON.parse(loc);
+                if (loc) {
+                    const list = JSON.parse(loc);
+                    cachedHomeworks = list.filter(h => h.isVisible !== false);
+                }
             }
             renderHomeworksGrid();
         }
@@ -1135,7 +1090,7 @@
             document.getElementById('hw-listing-container').classList.remove('hidden');
         }
 
-        // ================= تسليم الواجب وظهور كارت الكيو آر المنبثق =================
+        // ================= تسليم الواجب وإرسال التقرير لولي الأمر فوراً =================
         async function submitStudentHomework() {
             if (!activeSolvingHomework || !activeStudent) return;
 
@@ -1179,7 +1134,7 @@
                 if (exIdx !== -1) activeStudent.homeworksHistory[exIdx] = hwRecord;
                 else activeStudent.homeworksHistory.push(hwRecord);
 
-                // حفظ في فايربيز
+                // حفظ التعديل في السيرفر
                 if (db) {
                     try {
                         if (activeStudent.id) {
@@ -1195,7 +1150,7 @@
                                 });
                             }
                         }
-                    } catch(err) { console.error("Firestore Update Error:", err); }
+                    } catch(err) { console.error("Update Error:", err); }
                 }
 
                 localStorage.setItem('MF_ONLINE_ACTIVE_ST', JSON.stringify(activeStudent));
@@ -1203,11 +1158,10 @@
                 if (stIdx !== -1) cachedStudents[stIdx] = activeStudent;
                 localStorage.setItem('MF_LOCAL_STUDENTS', JSON.stringify(cachedStudents));
 
-                // تحديث الـ QR في الصفحة
                 updateStudentQRDisplay(activeStudent, hwRecord);
                 document.getElementById('sp-latest-hw-badge').innerText = `${hwRecord.title} (${hwRecord.score})`;
 
-                // إرسال واتساب لولي الأمر في الخلفية
+                // إرسال واتساب فوري لولي الأمر (سنتر أو أونلاين)
                 if (activeStudent.parentPhone) {
                     let badge = "ممتاز وبطل متألق 🌟👏";
                     if (percentage < 50) badge = "يحتاج إلى مراجعة فورية ومزيد من التركيز ⚠️";
@@ -1224,7 +1178,7 @@
 🎯 *الدرجة المحققة:* *${scoreFormatted}* (${percentage}%)
 🏅 *التقييم:* ${badge}
 
-🗓️ *تاريخ الإنجاز:* ${dateStr}
+🗓️️ *تاريخ الإنجاز:* ${dateStr}
 ━━━━━━━━━━━━━━━━━━━━━
 💡 *لمتابعة حضور الطالب ودرجات الامتحانات الدورية عبر الموقع:*
 🌐 *https://www.mrfaisal.net*
@@ -1238,7 +1192,7 @@
                     }).catch(() => {});
                 }
 
-                // عرض كارت النجاح والكيو آر المنبثق
+                // عرض كارت النجاح والـ QR
                 const modalQrImg = document.getElementById('modal-success-qr-img');
                 const modalScoreEl = document.getElementById('modal-hw-result-score');
                 
