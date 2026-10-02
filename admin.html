@@ -46,19 +46,19 @@
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen selection:bg-brand-600 selection:text-white">
 
-    <!-- حارس النظام: أونلاين فقط (Online-Only Gate) -->
+    <!-- حارس النظام: أونلاين فقط -->
     <div id="offline-screen" class="fixed inset-0 z-[1000] bg-slate-950/95 backdrop-blur-xl flex flex-col items-center justify-center p-6 text-center hidden">
         <div class="w-16 h-16 rounded-2xl bg-rose-500/10 border border-rose-500/30 flex items-center justify-center text-rose-400 text-3xl mb-4">
             <i class="fa-solid fa-wifi"></i>
         </div>
         <h2 class="text-xl font-black text-white">المنظومة تعمل بنظام الأونلاين فقط</h2>
-        <p class="text-xs text-slate-400 max-w-sm mt-2 leading-relaxed">تم إيقاف العمل أوفلاين. يرجى التحقق من اتصالك بالإنترنت لمتابعة العمل على لوحة الإدارة ومزامنة البيانات.</p>
+        <p class="text-xs text-slate-400 max-w-sm mt-2 leading-relaxed">تم إيقاف العمل أوفلاين. يرجى التحقق من اتصالك بالإنترنت لمتابعة العمل ومزامنة البيانات مع السيرفر السحابي.</p>
         <button onclick="window.location.reload()" class="mt-5 px-6 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold rounded-xl border border-slate-700 transition">
             إعادة المحاولة
         </button>
     </div>
 
-    <!-- ================= شاشة تسجيل الدخول (Firebase Auth فقط) ================= -->
+    <!-- شاشة تسجيل الدخول -->
     <div id="admin-auth-gate" class="fixed inset-0 z-50 bg-slate-950 flex items-center justify-center p-4">
         <div class="glass-panel p-8 sm:p-10 rounded-3xl w-full max-w-md shadow-2xl border border-brand-500/20 text-center relative overflow-hidden">
             <div class="absolute -top-16 -right-16 w-36 h-36 bg-brand-600/20 rounded-full blur-3xl"></div>
@@ -85,7 +85,7 @@
         </div>
     </div>
 
-    <!-- ================= شريط حالة الإرسال وطابور درجات الواتساب ================= -->
+    <!-- شريط حالة طابور درجات الواتساب -->
     <div id="wa-queue-banner" class="hidden sticky top-0 z-50 bg-slate-900/95 border-b border-brand-500/30 px-4 py-3 shadow-2xl backdrop-blur-md">
         <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
             <div class="flex items-center gap-3 w-full sm:w-auto">
@@ -110,9 +110,8 @@
         </div>
     </div>
 
-    <!-- ================= لوحة الإدارة الرئيسية ================= -->
+    <!-- لوحة الإدارة الرئيسية -->
     <div id="admin-main-view" class="hidden">
-        <!-- Top Navigation -->
         <header class="bg-slate-900/80 backdrop-blur-md border-b border-slate-800 sticky top-0 z-40">
             <div class="max-w-7xl mx-auto px-4 sm:px-8 py-3.5 flex flex-wrap items-center justify-between gap-4">
                 <div class="flex items-center gap-3">
@@ -127,7 +126,7 @@
 
                 <div class="flex items-center gap-3">
                     <span class="px-3 py-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-bold rounded-full flex items-center gap-1.5">
-                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> المنظومة متصلة أونلاين
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> متصل مباشرة بالسيرفر السحابي
                     </span>
                     <button onclick="logoutAdmin()" class="px-3 py-1.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
                         <i class="fa-solid fa-power-off"></i> خروج
@@ -136,7 +135,6 @@
             </div>
         </header>
 
-        <!-- Main Body -->
         <div class="max-w-7xl mx-auto px-4 sm:px-8 py-6">
             <!-- Tabs Menu -->
             <div class="flex items-center gap-2 overflow-x-auto pb-3 mb-6 custom-scroll border-b border-slate-800 text-xs">
@@ -147,14 +145,13 @@
                 <button onclick="switchTab('reports')" id="tab-btn-reports" class="tab-btn px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 font-bold whitespace-nowrap"><i class="fa-solid fa-chart-pie ml-1.5"></i> التقارير والطباعة</button>
             </div>
 
-            <!-- ================= TAB 1: كود الطالب والملف الشامل والحضور ================= -->
+            <!-- TAB 1: كود الطالب والملف الشامل والحضور -->
             <div id="tab-content-student-dossier" class="tab-sec space-y-6">
-                <!-- البحث الذكي المباشر -->
                 <div class="glass-panel p-6 rounded-3xl">
                     <h3 class="font-black text-sm text-brand-400 mb-2 flex items-center gap-2">
                         <i class="fa-solid fa-magnifying-glass"></i> البحث عن طالب وعرض الملف الشامل
                     </h3>
-                    <p class="text-xs text-slate-400 mb-4">اكتب كود الطالب، اسمه، أو رقم هاتفه واضغط Enter لعرض ملفه الشامل وتسجيل الحضور المباشر.</p>
+                    <p class="text-xs text-slate-400 mb-4">اكتب كود الطالب، اسمه، أو رقم هاتفه واضغط Enter لعرض ملفه وتسجيل الحضور.</p>
                     <div class="flex gap-2 max-w-xl">
                         <input type="text" id="direct-student-code-input" onkeydown="if(event.key==='Enter') lookupStudent()" placeholder="اكتب كود الطالب، اسمه، أو رقم الهاتف..." class="w-full p-3.5 rounded-xl bg-slate-900 border border-slate-700 text-sm font-bold text-white focus:outline-none focus:border-brand-500">
                         <button onclick="lookupStudent()" class="px-6 py-3.5 bg-brand-600 hover:bg-brand-500 font-black rounded-xl text-xs whitespace-nowrap text-white transition flex items-center gap-2">
@@ -164,7 +161,6 @@
                     <div id="search-candidates-box" class="hidden mt-3 max-w-xl p-3 bg-slate-900/90 rounded-2xl border border-slate-800 space-y-1.5 text-xs"></div>
                 </div>
 
-                <!-- مساحة عرض الملف الشامل -->
                 <div id="dossier-empty-view" class="glass-panel p-12 rounded-3xl text-center text-slate-500">
                     <i class="fa-solid fa-id-badge text-5xl mb-3 text-slate-700"></i>
                     <p class="font-bold text-base text-slate-400">في انتظار كتابة كود أو اسم الطالب لعرض بياناته بالكامل</p>
@@ -191,7 +187,6 @@
                             </div>
                         </div>
 
-                        <!-- إحصائيات الطالب -->
                         <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4">
                             <div class="p-3.5 bg-slate-900 rounded-2xl text-center border border-slate-800">
                                 <span class="text-[11px] text-slate-400 block font-bold">إجمالي الحصص المحضورة</span>
@@ -212,9 +207,7 @@
                         </div>
                     </div>
 
-                    <!-- السجلات الثلاثة -->
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                        <!-- 1: الحضور -->
                         <div class="glass-panel p-5 rounded-3xl space-y-3">
                             <div class="flex justify-between items-center pb-2 border-b border-slate-800">
                                 <h4 class="font-black text-xs text-white"><i class="fa-solid fa-calendar-check text-brand-400 ml-1"></i> سجل الحضور</h4>
@@ -223,7 +216,6 @@
                             <div id="dos-attendance-list" class="space-y-2 max-h-60 overflow-y-auto custom-scroll text-xs"></div>
                         </div>
 
-                        <!-- 2: الامتحانات -->
                         <div class="glass-panel p-5 rounded-3xl space-y-3">
                             <div class="flex justify-between items-center pb-2 border-b border-slate-800">
                                 <h4 class="font-black text-xs text-white"><i class="fa-solid fa-award text-amber-400 ml-1"></i> سجل الامتحانات</h4>
@@ -232,7 +224,6 @@
                             <div id="dos-exams-list" class="space-y-2 max-h-60 overflow-y-auto custom-scroll text-xs"></div>
                         </div>
 
-                        <!-- 3: الواجبات -->
                         <div class="glass-panel p-5 rounded-3xl space-y-3">
                             <div class="flex justify-between items-center pb-2 border-b border-slate-800">
                                 <h4 class="font-black text-xs text-white"><i class="fa-solid fa-list-check text-emerald-400 ml-1"></i> الواجبات المسلّمة</h4>
@@ -244,13 +235,13 @@
                 </div>
             </div>
 
-            <!-- ================= TAB 2: رصد درجات الاختبارات ================= -->
+            <!-- TAB 2: رصد درجات الاختبارات -->
             <div id="tab-content-grading" class="tab-sec hidden space-y-6">
                 <div class="glass-panel border border-amber-500/30 p-6 rounded-3xl max-w-2xl">
                     <h3 class="text-base font-black text-amber-400 flex items-center gap-2 mb-1">
                         <i class="fa-solid fa-square-poll-vertical"></i> رصد درجات الاختبارات وإشعار ولي الأمر
                     </h3>
-                    <p class="text-xs text-slate-400 mb-6">يتم تسجيل الدرجة، وإرسال تقرير شامل لولي الأمر عبر الواتساب برابط المتابعة عبر موقع <b class="text-amber-300">www.mrfaisal.net</b>.</p>
+                    <p class="text-xs text-slate-400 mb-6">يتم تسجيل الدرجة مباشرة في فايرستور، وإرسال تقرير لولي الأمر عبر الواتساب برابط متابعة على <b class="text-amber-300">www.mrfaisal.net</b>.</p>
 
                     <form onsubmit="handleGradeEntrySubmit(event)" class="space-y-4">
                         <div>
@@ -272,20 +263,20 @@
                                 <input type="number" step="any" id="grade-input-max" value="20" required class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-center font-mono font-bold text-white focus:border-amber-400 focus:outline-none">
                             </div>
                         </div>
-                        <button type="submit" class="w-full py-3.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black rounded-xl text-xs transition shadow-lg flex items-center justify-center gap-2">
+                        <button type="submit" id="btn-submit-grade" class="w-full py-3.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black rounded-xl text-xs transition shadow-lg flex items-center justify-center gap-2">
                             <i class="fa-brands fa-whatsapp text-base"></i> رصد الدرجة وإرسال التقرير فوراً لولي الأمر
                         </button>
                     </form>
                 </div>
             </div>
 
-            <!-- ================= TAB 3: بنك الواجبات (تحميل وعرض كافة الواجبات) ================= -->
+            <!-- TAB 3: بنك الواجبات -->
             <div id="tab-content-homework" class="tab-sec hidden space-y-6">
                 <div class="glass-panel p-6 rounded-3xl">
                     <div class="flex justify-between items-center mb-6">
                         <div>
                             <h3 class="font-black text-base text-brand-400">إضافة واجب دراسي جديد (لكافة الطلاب)</h3>
-                            <p class="text-xs text-slate-400">يظهر الواجب تلقائياً لكل الطلاب المسجلين بالمرحلة بدون قيد السنتر.</p>
+                            <p class="text-xs text-slate-400">يظهر الواجب تلقائياً لكل الطلاب في المرحلة الدراسية المحددة.</p>
                         </div>
                         <button type="button" onclick="addQuestionFieldToBuilder()" class="px-3.5 py-2 bg-brand-700 hover:bg-brand-600 text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5">
                             <i class="fa-solid fa-plus"></i> إضافة سؤال
@@ -311,8 +302,8 @@
 
                         <div id="homework-questions-container" class="space-y-4 pt-2"></div>
 
-                        <button type="submit" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-black rounded-xl text-sm transition shadow-lg flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-cloud-arrow-up"></i> حفظ ونشر الواجب
+                        <button type="submit" id="btn-save-hw" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-black rounded-xl text-sm transition shadow-lg flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-cloud-arrow-up"></i> حفظ ونشر الواجب على السيرفر
                         </button>
                     </form>
                 </div>
@@ -328,14 +319,14 @@
                 </div>
             </div>
 
-            <!-- ================= TAB 4: دليل الطلاب (مع التحديد والحذف المتعدد) ================= -->
+            <!-- TAB 4: دليل الطلاب -->
             <div id="tab-content-students" class="tab-sec hidden space-y-6">
                 <!-- إدارة السناتر -->
                 <div class="glass-panel border border-brand-500/20 p-5 rounded-3xl">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
                         <div>
                             <h3 class="font-black text-sm text-brand-300"><i class="fa-solid fa-map-location-dot ml-1"></i> السناتر والمقرات الدراسية</h3>
-                            <p class="text-xs text-slate-400">إضافة وتعديل وحذف مقرات الحصص مباشرة</p>
+                            <p class="text-xs text-slate-400">إضافة وتعديل وحذف مقرات الحصص مباشرة في السحابة</p>
                         </div>
                         <button onclick="toggleNewCenterForm()" class="px-3.5 py-2 bg-brand-700 hover:bg-brand-600 text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5">
                             <i class="fa-solid fa-plus"></i> إضافة سنتر جديد
@@ -352,7 +343,7 @@
                     <div id="centers-tag-list" class="flex flex-wrap gap-2 text-xs"></div>
                 </div>
 
-                <!-- استيراد إكسيل وإضافة طالب يدوي -->
+                <!-- استيراد وإضافة -->
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
                     <div class="lg:col-span-5 glass-panel p-6 rounded-3xl space-y-4">
                         <div class="flex items-center justify-between">
@@ -361,10 +352,10 @@
                                 <i class="fa-solid fa-file-arrow-down"></i> تحميل نموذج فارغ
                             </button>
                         </div>
-                        <p class="text-[11px] text-slate-400">في حال وجود كود مكرر ستظهر نافذة للموافقة على تحديث المكررين دفعة واحدة.</p>
+                        <p class="text-[11px] text-slate-400">يتم الرفع المباشر لفايرستور ليكون متاحاً لجميع الأجهزة فوراً.</p>
                         <input type="file" id="excel-file-selector" accept=".xlsx, .xls, .csv" class="w-full text-xs text-slate-300 bg-slate-900 p-2.5 rounded-xl border border-slate-700 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:bg-brand-700 file:text-white">
-                        <button onclick="handleExcelImport()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 font-bold rounded-xl text-xs text-white transition flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-upload"></i> بدء استيراد البيانات
+                        <button id="btn-excel-import" onclick="handleExcelImport()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 font-bold rounded-xl text-xs text-white transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-upload"></i> بدء استيراد البيانات للسيرفر
                         </button>
                     </div>
 
@@ -382,13 +373,13 @@
                             <input type="tel" id="manual-phone" required placeholder="هاتف الطالب" class="p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white">
                             <input type="tel" id="manual-parent-phone" required placeholder="واتساب ولي الأمر" class="p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white">
                             <div class="sm:col-span-3 flex justify-end">
-                                <button type="submit" class="px-6 py-2.5 bg-brand-700 hover:bg-brand-600 font-bold rounded-xl text-xs text-white transition">حفظ الطالب</button>
+                                <button type="submit" id="btn-add-student" class="px-6 py-2.5 bg-brand-700 hover:bg-brand-600 font-bold rounded-xl text-xs text-white transition">حفظ الطالب</button>
                             </div>
                         </form>
                     </div>
                 </div>
 
-                <!-- جدول دليل الطلاب مع التحديد والحذف المتعدد -->
+                <!-- جدول دليل الطلاب -->
                 <div class="glass-panel p-6 rounded-3xl">
                     <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
                         <div class="flex items-center gap-3">
@@ -397,7 +388,6 @@
                         </div>
                         
                         <div class="flex items-center gap-2">
-                            <!-- زر الحذف المتعدد -->
                             <button id="btn-bulk-delete" onclick="handleBulkDeleteSelectedStudents()" class="hidden px-3.5 py-2 bg-rose-600 hover:bg-rose-500 text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-md">
                                 <i class="fa-solid fa-trash-can"></i>
                                 <span>حذف المحدد (<span id="bulk-delete-count">0</span>)</span>
@@ -429,7 +419,7 @@
                 </div>
             </div>
 
-            <!-- ================= TAB 5: التقارير ================= -->
+            <!-- TAB 5: التقارير -->
             <div id="tab-content-reports" class="tab-sec hidden glass-panel p-6 rounded-3xl space-y-4">
                 <div class="flex justify-between items-center pb-4 border-b border-slate-800">
                     <h3 class="font-black text-sm text-white">تقرير شامل للطباعة والمتابعة</h3>
@@ -442,7 +432,7 @@
         </div>
     </div>
 
-    <!-- ================= MODAL: تعديل بيانات الطالب ================= -->
+    <!-- MODAL: تعديل بيانات الطالب -->
     <div id="edit-student-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md items-center justify-center p-4 hidden">
         <div class="glass-panel p-6 rounded-3xl max-w-lg w-full border border-slate-700 space-y-4 shadow-2xl">
             <div class="flex justify-between items-center pb-2 border-b border-slate-800">
@@ -487,13 +477,13 @@
                 </div>
                 <div class="pt-2 flex justify-end gap-2">
                     <button type="button" onclick="closeEditStudentModal()" class="px-4 py-2 bg-slate-800 rounded-xl text-slate-300 font-bold">إلغاء</button>
-                    <button type="submit" class="px-6 py-2 bg-brand-600 hover:bg-brand-500 text-white font-bold rounded-xl shadow-lg">حفظ التعديلات</button>
+                    <button type="submit" id="btn-edit-student-save" class="px-6 py-2 bg-brand-600 hover:bg-brand-500 text-white font-bold rounded-xl shadow-lg">حفظ التعديلات</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- ================= MODAL: تعديل السنتر ================= -->
+    <!-- MODAL: تعديل السنتر -->
     <div id="edit-center-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md items-center justify-center p-4 hidden">
         <div class="glass-panel p-6 rounded-3xl max-w-md w-full border border-slate-700 space-y-4 shadow-2xl">
             <div class="flex justify-between items-center pb-2 border-b border-slate-800">
@@ -527,7 +517,7 @@
         </div>
     </div>
 
-    <!-- ================= MODAL: الموافقة الجماعية على الطلاب المكررين ================= -->
+    <!-- MODAL: الموافقة الجماعية على الطلاب المكررين -->
     <div id="excel-duplicate-modal" class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md items-center justify-center p-4 hidden">
         <div class="glass-panel p-6 sm:p-8 rounded-3xl max-w-md w-full border border-amber-500/30 space-y-4 shadow-2xl text-center">
             <div class="w-14 h-14 bg-amber-500/20 text-amber-400 rounded-2xl flex items-center justify-center mx-auto text-2xl">
@@ -544,15 +534,15 @@
                     <b id="dup-modal-dup-count" class="text-amber-400 font-mono text-sm">0</b>
                 </div>
                 <p class="text-[11px] text-slate-400 pt-2 border-t border-slate-800">
-                    كيف ترغب في معالجة الطلاب المكررين دفعة واحدة؟
+                    كيف ترغب في معالجة الطلاب المكررين في السيرفر؟
                 </p>
             </div>
             <div class="space-y-2 pt-2 text-xs font-bold">
                 <button type="button" onclick="resolveExcelDuplicates(true)" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl shadow-lg flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-arrows-rotate"></i> استبدال وتحديث كل المكررين + إضافة الجدد
+                    <i class="fa-solid fa-arrows-rotate"></i> تحديث كل المكررين + إضافة الجدد
                 </button>
                 <button type="button" onclick="resolveExcelDuplicates(false)" class="w-full py-3 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-forward"></i> تخطي المكررين وإضافة الطلاب الجدد فقط
+                    <i class="fa-solid fa-forward"></i> تخطي المكررين وإضافة الجدد فقط
                 </button>
                 <button type="button" onclick="closeExcelDuplicateModal()" class="w-full py-2.5 text-rose-400 hover:text-rose-300 text-[11px]">
                     إلغاء العملية بالكامل
@@ -561,7 +551,7 @@
         </div>
     </div>
 
-    <!-- ================= JAVASCRIPT CORE ================= -->
+    <!-- JAVASCRIPT CORE -->
     <script>
         const WORKER_URL = "https://icy-mud-934b.adelabdulrahman026.workers.dev/";
 
@@ -590,8 +580,11 @@
         let questionCounter = 0;
 
         let pendingExcelData = null;
-        let messageQueue = JSON.parse(localStorage.getItem('MF_WA_QUEUE') || '[]');
+        let messageQueue = [];
         let isQueueProcessing = false;
+
+        let studentsUnsubscribe = null;
+        let centersUnsubscribe = null;
 
         function toEnglish(str) {
             if (!str && str !== 0) return '';
@@ -624,6 +617,8 @@
                 document.getElementById('logged-admin-email').innerText = user.email;
                 initDashboard();
             } else {
+                if (studentsUnsubscribe) studentsUnsubscribe();
+                if (centersUnsubscribe) centersUnsubscribe();
                 document.getElementById('admin-auth-gate').classList.remove('hidden');
                 document.getElementById('admin-main-view').classList.add('hidden');
             }
@@ -658,11 +653,10 @@
 
         async function initDashboard() {
             checkOnlineStrict();
-            await loadCenters();
-            await loadStudents();
+            setupCentersRealtime();
+            setupStudentsRealtime();
             await loadHomeworks();
             addQuestionFieldToBuilder();
-            resumeQueueIfNeeded();
         }
 
         function switchTab(tabId) {
@@ -829,7 +823,7 @@
 
         async function deleteDossierItem(type, index) {
             if (!navigator.onLine) { alert("⚠️ المنظومة أونلاين فقط!"); return; }
-            if (!confirm('حذف هذا السجل نهائياً؟')) return;
+            if (!confirm('حذف هذا السجل نهائياً من السيرفر؟')) return;
             const st = currentLoadedStudent;
             if (!st) return;
 
@@ -842,10 +836,16 @@
         }
 
         async function syncStudentUpdates(st) {
-            if (db && st.id) {
-                await db.collection('students').doc(st.id).set(st, { merge: true }).catch(() => {});
+            if (!db || !st.id) {
+                alert("⚠️ خطأ: معرّف الطالب غير موجود في فايرستور!");
+                return;
             }
-            localStorage.setItem('MF_LOCAL_STUDENTS', JSON.stringify(cachedStudents));
+            try {
+                await db.collection('students').doc(st.id).set(st, { merge: true });
+            } catch(e) {
+                console.error("Sync Error:", e);
+                alert("تعذر حفظ التعديلات في السيرفر! يرجى مراجعة الصلاحيات.");
+            }
         }
 
         async function markStudentAttendanceDirect() {
@@ -859,7 +859,7 @@
             
             await syncStudentUpdates(st);
             renderStudentDossier(st);
-            alert(`✅ تم تسجيل حضور الطالب (${st.name}) بنجاح.`);
+            alert(`✅ تم تسجيل حضور الطالب (${st.name}) في السيرفر بنجاح.`);
         }
 
         // ================= TAB 2: رصد الدرجات =================
@@ -870,7 +870,7 @@
             if (st) {
                 preview.innerText = `الطالب: ${st.name} (${st.center})`;
             } else {
-                preview.innerText = code ? '⚠️ الطالب غير موجود!' : '';
+                preview.innerText = code ? '⚠️ الطالب غير مسجل في السيرفر!' : '';
             }
         }
 
@@ -884,27 +884,32 @@
             const max = parseFloat(document.getElementById('grade-input-max').value);
 
             const st = cachedStudents.find(s => toEnglish(s.code).toLowerCase() === code);
-            if (!st) { alert('⚠️ الطالب غير موجود!'); return; }
+            if (!st) { alert('⚠️ الطالب غير موجود في قاعدة البيانات!'); return; }
 
-            const scoreFormatted = `${score} / ${max}`;
-            const percentage = Math.round((score / max) * 100);
+            const btn = document.getElementById('btn-submit-grade');
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري التسجيل والمزامنة...`;
 
-            let badge = "ممتاز وبطل متألق 🌟👏";
-            if (percentage < 50) badge = "يحتاج إلى تركيز ومراجعة فورية ⚠️";
-            else if (percentage < 70) badge = "جيد مع إمكانية لتحقيق الأفضل 📈";
-            else if (percentage < 85) badge = "جيد جداً ومتميز ✨";
+            try {
+                const scoreFormatted = `${score} / ${max}`;
+                const percentage = Math.round((score / max) * 100);
 
-            const examRecord = { title, score: scoreFormatted, date: new Date().toLocaleDateString('ar-EG') };
-            st.examsHistory = st.examsHistory || [];
-            st.examsHistory.push(examRecord);
+                let badge = "ممتاز وبطل متألق 🌟👏";
+                if (percentage < 50) badge = "يحتاج إلى تركيز ومراجعة فورية ⚠️";
+                else if (percentage < 70) badge = "جيد مع إمكانية لتحقيق الأفضل 📈";
+                else if (percentage < 85) badge = "جيد جداً ومتميز ✨";
 
-            await syncStudentUpdates(st);
+                const examRecord = { title, score: scoreFormatted, date: new Date().toLocaleDateString('ar-EG') };
+                st.examsHistory = st.examsHistory || [];
+                st.examsHistory.push(examRecord);
 
-            const attendanceCount = (st.attendanceHistory || []).length;
-            const homeworkCount = (st.homeworksHistory || []).length;
+                await syncStudentUpdates(st);
 
-            if (st.parentPhone) {
-                const message = `✨ *منظومة مستر محمد فيصل التعليمية* ✨
+                const attendanceCount = (st.attendanceHistory || []).length;
+                const homeworkCount = (st.homeworksHistory || []).length;
+
+                if (st.parentPhone) {
+                    const message = `✨ *منظومة مستر محمد فيصل التعليمية* ✨
 ━━━━━━━━━━━━━━━━━━━━━
 السيد/ة ولي أمر بطلنا: *${st.name}* 🎓
 تحية طيبة وبعد،،
@@ -924,13 +929,17 @@
 
 ✨ *معاً نصنع التفوق ونبني القمة دائماً* 🚀`;
 
-                enqueueWhatsAppMessage(st.name, st.parentPhone, message);
-            }
+                    enqueueWhatsAppMessage(st.name, st.parentPhone, message);
+                }
 
-            alert(`✅ تم رصد درجة الطالب: ${st.name} (${scoreFormatted}) وإدراج التقرير في طابور الواتساب.`);
-            document.getElementById('grade-input-score').value = '';
-            if (currentLoadedStudent && ((currentLoadedStudent.id && currentLoadedStudent.id === st.id) || currentLoadedStudent.code === st.code)) {
-                renderStudentDossier(st);
+                alert(`✅ تم رصد درجة الطالب: ${st.name} (${scoreFormatted}) على السيرفر وإدراج التقرير في الإرسال.`);
+                document.getElementById('grade-input-score').value = '';
+                if (currentLoadedStudent && currentLoadedStudent.id === st.id) {
+                    renderStudentDossier(st);
+                }
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fa-brands fa-whatsapp text-base"></i> رصد الدرجة وإرسال التقرير فوراً لولي الأمر`;
             }
         }
 
@@ -942,20 +951,8 @@
                 message: text,
                 status: 'pending'
             });
-            saveQueue();
             updateQueueUI();
             processQueue();
-        }
-
-        function saveQueue() {
-            localStorage.setItem('MF_WA_QUEUE', JSON.stringify(messageQueue));
-        }
-
-        function resumeQueueIfNeeded() {
-            updateQueueUI();
-            if (messageQueue.some(m => m.status === 'pending')) {
-                processQueue();
-            }
         }
 
         async function processQueue() {
@@ -997,7 +994,6 @@
                     nextMsg.status = 'failed';
                 }
 
-                saveQueue();
                 updateQueueUI();
 
                 const hasMore = messageQueue.some(m => m.status === 'pending');
@@ -1044,7 +1040,7 @@
             document.getElementById('queue-time-remaining').innerText = `المتبقي: ${pending} (~${mins} د و ${secs} ث)`;
         }
 
-        // ================= TAB 3: بنك الواجبات (جلب كافة الواجبات) =================
+        // ================= TAB 3: بنك الواجبات =================
         function addQuestionFieldToBuilder() {
             questionCounter++;
             const qNum = questionCounter;
@@ -1104,22 +1100,30 @@
             });
 
             const hwData = { title, grade, questions, createdAt: new Date().toISOString() };
-            if (db) {
-                const ref = await db.collection('homeworks').add(hwData).catch(() => {});
-                if (ref) hwData.id = ref.id;
-            }
-            cachedHomeworks.unshift(hwData);
-            localStorage.setItem('MF_LOCAL_HOMEWORKS', JSON.stringify(cachedHomeworks));
+            const btn = document.getElementById('btn-save-hw');
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري النشر في السيرفر...`;
 
-            alert('✅ تم نشر الواجب بنجاح!');
-            document.getElementById('hw-new-title').value = '';
-            loadHomeworks();
+            try {
+                if (db) {
+                    await db.collection('homeworks').add(hwData);
+                }
+                alert('✅ تم نشر الواجب على السيرفر بنجاح وسيظهر لكافة الأجهزة!');
+                document.getElementById('hw-new-title').value = '';
+                await loadHomeworks();
+            } catch(err) {
+                console.error("Save HW Error:", err);
+                alert("حدث خطأ أثناء حفظ الواجب في السيرفر!");
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> حفظ ونشر الواجب على السيرفر`;
+            }
         }
 
         async function loadHomeworks() {
             const box = document.getElementById('homeworks-table-box');
             if (!box) return;
-            box.innerHTML = `<div class="p-6 text-center text-slate-400 text-xs"><i class="fa-solid fa-spinner fa-spin ml-2"></i> جاري مزامنة كافة الواجبات من فايرستور...</div>`;
+            box.innerHTML = `<div class="p-6 text-center text-slate-400 text-xs"><i class="fa-solid fa-spinner fa-spin ml-2"></i> جاري مزامنة الواجبات مباشرة من فايرستور...</div>`;
 
             cachedHomeworks = [];
             if (db) {
@@ -1136,16 +1140,8 @@
                         });
                     });
                     cachedHomeworks.sort((a,b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
-                    localStorage.setItem('MF_LOCAL_HOMEWORKS', JSON.stringify(cachedHomeworks));
                 } catch(e) {
                     console.error("Firestore Homeworks Load Error:", e);
-                }
-            }
-
-            if (cachedHomeworks.length === 0) {
-                const loc = localStorage.getItem('MF_LOCAL_HOMEWORKS');
-                if (loc) {
-                    try { cachedHomeworks = JSON.parse(loc); } catch(err){}
                 }
             }
 
@@ -1182,58 +1178,38 @@
 
         async function deleteHomework(id) {
             if (!navigator.onLine) { alert("⚠️ المنظومة أونلاين فقط!"); return; }
-            if (!confirm('حذف هذا الواجب نهائياً؟')) return;
-            if (db) await db.collection('homeworks').doc(id).delete().catch(() => {});
-            cachedHomeworks = cachedHomeworks.filter(h => h.id !== id);
-            localStorage.setItem('MF_LOCAL_HOMEWORKS', JSON.stringify(cachedHomeworks));
-            loadHomeworks();
+            if (!confirm('حذف هذا الواجب نهائياً من السيرفر؟')) return;
+            if (db) {
+                await db.collection('homeworks').doc(id).delete().catch(err => alert("خطأ بالحذف: " + err.message));
+                await loadHomeworks();
+            }
         }
 
-        // ================= TAB 4: السناتر =================
+        // ================= TAB 4: السناتر (ربط سحابي لحظي) =================
         function toggleNewCenterForm() {
             document.getElementById('new-center-form').classList.toggle('hidden');
         }
 
-        async function handleQuickCreateCenter(e) {
-            e.preventDefault();
-            if (!navigator.onLine) { alert("⚠️ المنظومة أونلاين فقط!"); return; }
+        function setupCentersRealtime() {
+            if (!db) return;
+            if (centersUnsubscribe) centersUnsubscribe();
 
-            const name = document.getElementById('center-name-input').value.trim();
-            const day = document.getElementById('center-day-input').value.trim();
-            const time = document.getElementById('center-time-input').value.trim();
+            centersUnsubscribe = db.collection('centers').onSnapshot(snap => {
+                cachedCenters = [];
+                snap.forEach(d => cachedCenters.push({ id: d.id, ...d.data() }));
+                
+                if (cachedCenters.length === 0) {
+                    cachedCenters.push({ name: 'السنتر الرئيسي', day: 'السبت', time: '12:00 م' });
+                }
 
-            const cData = { name, day, time, createdAt: new Date().toISOString() };
-            if (db) {
-                const ref = await db.collection('centers').add(cData).catch(() => {});
-                if (ref) cData.id = ref.id;
-            }
-            cachedCenters.push(cData);
-            localStorage.setItem('MF_LOCAL_CENTERS', JSON.stringify(cachedCenters));
-
-            alert(`✅ تمت إضافة سنتر: ${name}`);
-            e.target.reset();
-            toggleNewCenterForm();
-            loadCenters();
+                populateCenterSelects();
+                renderCentersUI();
+            }, err => {
+                console.error("Centers snapshot error:", err);
+            });
         }
 
-        async function loadCenters() {
-            cachedCenters = [];
-            if (db) {
-                try {
-                    const snap = await db.collection('centers').get();
-                    snap.forEach(d => cachedCenters.push({ id: d.id, ...d.data() }));
-                } catch(e) {}
-            }
-            if (cachedCenters.length === 0) {
-                const loc = localStorage.getItem('MF_LOCAL_CENTERS');
-                if (loc) cachedCenters = JSON.parse(loc);
-            }
-            if (cachedCenters.length === 0) {
-                cachedCenters.push({ name: 'السنتر الرئيسي', day: 'السبت', time: '12:00 م' });
-            }
-
-            populateCenterSelects();
-
+        function renderCentersUI() {
             document.getElementById('centers-tag-list').innerHTML = cachedCenters.map(c => `
                 <div class="flex items-center gap-2 px-3 py-1.5 bg-slate-900 border border-slate-800 rounded-xl text-slate-300">
                     <span><b class="text-amber-400">${c.name}</b> (${c.day} - ${c.time})</span>
@@ -1245,6 +1221,25 @@
                     </button>
                 </div>
             `).join('');
+        }
+
+        async function handleQuickCreateCenter(e) {
+            e.preventDefault();
+            if (!navigator.onLine) { alert("⚠️ المنظومة أونلاين فقط!"); return; }
+
+            const name = document.getElementById('center-name-input').value.trim();
+            const day = document.getElementById('center-day-input').value.trim();
+            const time = document.getElementById('center-time-input').value.trim();
+
+            const cData = { name, day, time, createdAt: new Date().toISOString() };
+            try {
+                if (db) await db.collection('centers').add(cData);
+                alert(`✅ تمت إضافة سنتر: ${name} في السيرفر بنجاح`);
+                e.target.reset();
+                toggleNewCenterForm();
+            } catch(err) {
+                alert("تعذر إضافة السنتر: " + err.message);
+            }
         }
 
         function populateCenterSelects() {
@@ -1287,65 +1282,66 @@
             const newDay = document.getElementById('edit-center-day').value.trim();
             const newTime = document.getElementById('edit-center-time').value.trim();
 
-            const c = cachedCenters.find(item => (id && item.id === id) || item.name === oldName);
-            if (c) {
-                c.name = newName;
-                c.day = newDay;
-                c.time = newTime;
-
-                if (db && c.id) {
-                    await db.collection('centers').doc(c.id).update({ name: newName, day: newDay, time: newTime }).catch(() => {});
+            try {
+                if (db && id) {
+                    await db.collection('centers').doc(id).update({ name: newName, day: newDay, time: newTime });
                 }
-            }
 
-            if (oldName !== newName) {
-                cachedStudents.forEach(st => {
-                    if (st.center === oldName) st.center = newName;
-                });
-                localStorage.setItem('MF_LOCAL_STUDENTS', JSON.stringify(cachedStudents));
-                renderStudentsTable(cachedStudents);
-            }
+                if (oldName !== newName && db) {
+                    const batch = db.batch();
+                    const affectedStudents = cachedStudents.filter(st => st.center === oldName);
+                    affectedStudents.forEach(st => {
+                        if (st.id) {
+                            batch.update(db.collection('students').doc(st.id), { center: newName });
+                        }
+                    });
+                    if (affectedStudents.length > 0) await batch.commit();
+                }
 
-            localStorage.setItem('MF_LOCAL_CENTERS', JSON.stringify(cachedCenters));
-            closeEditCenterModal();
-            loadCenters();
-            alert(`✅ تم تحديث بيانات سنتر: ${newName}`);
+                closeEditCenterModal();
+                alert(`✅ تم تحديث بيانات سنتر: ${newName} في السيرفر بنجاح`);
+            } catch(err) {
+                alert("تعذر حفظ التعديلات: " + err.message);
+            }
         }
 
         async function deleteCenter(id, name) {
             if (!navigator.onLine) { alert("⚠️ المنظومة أونلاين فقط!"); return; }
-            if (!confirm(`هل أنت متأكد من حذف سنتر (${name}) نهائياً؟`)) return;
+            if (!confirm(`هل أنت متأكد من حذف سنتر (${name}) نهائياً من السيرفر؟`)) return;
 
-            if (db && id) {
-                await db.collection('centers').doc(id).delete().catch(() => {});
+            try {
+                if (db && id) {
+                    await db.collection('centers').doc(id).delete();
+                    alert(`✅ تم حذف سنتر (${name}) بنجاح.`);
+                }
+            } catch(err) {
+                alert("تعذر حذف السنتر: " + err.message);
             }
-
-            cachedCenters = cachedCenters.filter(c => (id && c.id ? c.id !== id : c.name !== name));
-            localStorage.setItem('MF_LOCAL_CENTERS', JSON.stringify(cachedCenters));
-
-            alert(`✅ تم حذف سنتر (${name}) بنجاح.`);
-            loadCenters();
         }
 
-        // ================= إدارة الطلاب (التحديد والحذف المتعدد) =================
-        async function loadStudents() {
-            cachedStudents = [];
-            if (db) {
-                try {
-                    const snap = await db.collection('students').get();
-                    snap.forEach(d => cachedStudents.push({ id: d.id, ...d.data() }));
-                    cachedStudents.sort((a,b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
-                } catch(e) {
-                    console.error("Firestore Error:", e);
+        // ================= إدارة الطلاب (ربط سحابي لحظي ومباشر) =================
+        function setupStudentsRealtime() {
+            if (!db) return;
+            if (studentsUnsubscribe) studentsUnsubscribe();
+
+            const tbody = document.getElementById('students-table-body');
+            tbody.innerHTML = `<tr><td colspan="9" class="text-center py-6 text-slate-400 font-bold"><i class="fa-solid fa-spinner fa-spin ml-2"></i> جاري مزامنة بيانات الطلاب من السيرفر السحابي...</td></tr>`;
+
+            studentsUnsubscribe = db.collection('students').onSnapshot(snap => {
+                cachedStudents = [];
+                snap.forEach(d => cachedStudents.push({ id: d.id, ...d.data() }));
+                cachedStudents.sort((a,b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+
+                renderStudentsTable(cachedStudents);
+
+                if (currentLoadedStudent) {
+                    const updatedCurrent = cachedStudents.find(s => s.id === currentLoadedStudent.id || toEnglish(s.code) === toEnglish(currentLoadedStudent.code));
+                    if (updatedCurrent) renderStudentDossier(updatedCurrent);
                 }
-            }
-            if (cachedStudents.length === 0) {
-                const loc = localStorage.getItem('MF_LOCAL_STUDENTS');
-                if (loc) cachedStudents = JSON.parse(loc);
-            } else {
-                localStorage.setItem('MF_LOCAL_STUDENTS', JSON.stringify(cachedStudents));
-            }
-            renderStudentsTable(cachedStudents);
+            }, err => {
+                console.error("Students Listener Error:", err);
+                tbody.innerHTML = `<tr><td colspan="9" class="text-center py-6 text-rose-400 font-bold">تعذر تحميل الطلاب! تحقق من أذونات وقواعد Firebase Firestore.</td></tr>`;
+            });
         }
 
         function renderStudentsTable(list) {
@@ -1353,19 +1349,18 @@
             const counter = document.getElementById('students-count-badge');
             if (counter) counter.innerText = `الإجمالي: ${list.length} طالب`;
 
-            // إعادة ضبط زر الحذف المتعدد
             document.getElementById('select-all-students').checked = false;
             updateBulkDeleteButtonUI();
 
             if (list.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="9" class="text-center py-6 text-slate-500 font-bold">لا يوجد طلاب يطابقون البحث.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="9" class="text-center py-6 text-slate-500 font-bold">لا يوجد طلاب مسجلين في السيرفر حالياً.</td></tr>`;
                 return;
             }
 
             tbody.innerHTML = list.map(s => `
                 <tr class="hover:bg-slate-900/50 transition">
                     <td class="p-3 text-center">
-                        <input type="checkbox" value="${s.id || s.code}" class="student-select-cb w-4 h-4 rounded bg-slate-900 border-slate-700 text-brand-600 focus:ring-0 cursor-pointer" onchange="updateBulkDeleteButtonUI()">
+                        <input type="checkbox" value="${s.id}" class="student-select-cb w-4 h-4 rounded bg-slate-900 border-slate-700 text-brand-600 focus:ring-0 cursor-pointer" onchange="updateBulkDeleteButtonUI()">
                     </td>
                     <td class="p-3 font-mono font-bold text-brand-400">#${s.code}</td>
                     <td class="p-3 font-bold text-white">${s.name}</td>
@@ -1376,21 +1371,19 @@
                     <td class="p-3 font-mono text-emerald-400">${s.parentPhone || '--'}</td>
                     <td class="p-3 text-center space-x-2 space-x-reverse whitespace-nowrap">
                         <button onclick="lookupStudent('${s.code}'); switchTab('student-dossier');" class="px-2.5 py-1 bg-brand-700 hover:bg-brand-600 text-white rounded text-[11px] font-bold">الملف</button>
-                        <button onclick="openEditStudentModal('${s.id || s.code}')" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-amber-400 rounded text-[11px] font-bold">تعديل</button>
-                        <button onclick="deleteStudentRecord('${s.id || s.code}')" class="px-2 py-1 bg-rose-900/40 hover:bg-rose-900 text-rose-400 rounded text-[11px]"><i class="fa-solid fa-trash"></i></button>
+                        <button onclick="openEditStudentModal('${s.id}')" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-amber-400 rounded text-[11px] font-bold">تعديل</button>
+                        <button onclick="deleteStudentRecord('${s.id}')" class="px-2 py-1 bg-rose-900/40 hover:bg-rose-900 text-rose-400 rounded text-[11px]"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 </tr>
             `).join('');
         }
 
-        // تحديد كل الطلاب
         function toggleSelectAllStudents(masterCb) {
             const checkboxes = document.querySelectorAll('.student-select-cb');
             checkboxes.forEach(cb => cb.checked = masterCb.checked);
             updateBulkDeleteButtonUI();
         }
 
-        // تحديث حالة زر الحذف المتعدد
         function updateBulkDeleteButtonUI() {
             const checkedBoxes = document.querySelectorAll('.student-select-cb:checked');
             const bulkBtn = document.getElementById('btn-bulk-delete');
@@ -1404,43 +1397,32 @@
             }
         }
 
-        // تنفيذ الحذف المتعدد من فايرستور
         async function handleBulkDeleteSelectedStudents() {
             if (!navigator.onLine) { alert("⚠️ المنظومة أونلاين فقط!"); return; }
 
             const checkedBoxes = document.querySelectorAll('.student-select-cb:checked');
-            const selectedVals = Array.from(checkedBoxes).map(cb => cb.value);
+            const selectedIds = Array.from(checkedBoxes).map(cb => cb.value);
 
-            if (selectedVals.length === 0) return;
+            if (selectedIds.length === 0) return;
 
-            if (!confirm(`هل أنت متأكد تماماً من حذف (${selectedVals.length}) طالب محدد نهائياً من قاعدة البيانات والمنظومة؟`)) return;
+            if (!confirm(`هل أنت متأكد تماماً من حذف (${selectedIds.length}) طالب محدد نهائياً من قاعدة بيانات فايرستور؟`)) return;
 
             const bulkBtn = document.getElementById('btn-bulk-delete');
             bulkBtn.disabled = true;
-            bulkBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري الحذف...`;
+            bulkBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري الحذف من السيرفر...`;
 
             try {
                 if (db) {
                     const batch = db.batch();
-                    for (const val of selectedVals) {
-                        const st = cachedStudents.find(s => (s.id && s.id.toString() === val) || (s.code && s.code.toString() === val));
-                        if (st && st.id) {
-                            const docRef = db.collection('students').doc(st.id);
-                            batch.delete(docRef);
-                        }
+                    for (const docId of selectedIds) {
+                        batch.delete(db.collection('students').doc(docId));
                     }
                     await batch.commit();
                 }
-
-                // التصفية من الكاش
-                cachedStudents = cachedStudents.filter(s => !selectedVals.includes(s.id?.toString()) && !selectedVals.includes(s.code?.toString()));
-                localStorage.setItem('MF_LOCAL_STUDENTS', JSON.stringify(cachedStudents));
-
-                renderStudentsTable(cachedStudents);
-                alert(`✅ تم حذف (${selectedVals.length}) طالب بنجاح!`);
+                alert(`✅ تم حذف (${selectedIds.length}) طالب بنجاح من كافة الأجهزة!`);
             } catch (err) {
                 console.error("Bulk delete error:", err);
-                alert("حدث خطأ أثناء تنفيذ الحذف، تأكد من الاتصال بالإنترنت.");
+                alert("حدث خطأ أثناء تنفيذ الحذف من السيرفر: " + err.message);
             } finally {
                 bulkBtn.disabled = false;
                 updateBulkDeleteButtonUI();
@@ -1485,31 +1467,36 @@
             const parentPhone = toEnglish(document.getElementById('manual-parent-phone').value.trim());
 
             if (cachedStudents.some(s => toEnglish(s.code) === code)) {
-                alert('⚠️ كود الطالب مسجل بالفعل!');
+                alert('⚠️ كود الطالب مسجل بالفعل في السيرفر!');
                 return;
             }
 
-            const newSt = { name, code, grade, center, phone, parentPhone, attendanceHistory: [], examsHistory: [], homeworksHistory: [], createdAt: new Date().toISOString() };
-            if (db) {
-                const ref = await db.collection('students').add(newSt).catch(() => {});
-                if (ref) newSt.id = ref.id;
-            }
-            cachedStudents.unshift(newSt);
-            localStorage.setItem('MF_LOCAL_STUDENTS', JSON.stringify(cachedStudents));
+            const btn = document.getElementById('btn-add-student');
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري الحفظ...`;
 
-            alert(`✅ تم إضافة الطالب ${name}`);
-            e.target.reset();
-            renderStudentsTable(cachedStudents);
+            try {
+                const newSt = { name, code, grade, center, phone, parentPhone, attendanceHistory: [], examsHistory: [], homeworksHistory: [], createdAt: new Date().toISOString() };
+                if (db) {
+                    await db.collection('students').add(newSt);
+                }
+                alert(`✅ تم إضافة الطالب ${name} إلى السيرفر وسيظهر لكل الأجهزة.`);
+                e.target.reset();
+            } catch(err) {
+                console.error("Add student error:", err);
+                alert("حدث خطأ أثناء إضافة الطالب: " + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `حفظ الطالب`;
+            }
         }
 
-        // ================= فتح وغلق وتعديل الطالب =================
-        function openEditStudentModal(identifier) {
+        function openEditStudentModal(docId) {
             populateCenterSelects();
-            const idStr = identifier.toString();
-            const st = cachedStudents.find(s => (s.id && s.id.toString() === idStr) || (s.code && s.code.toString() === idStr));
+            const st = cachedStudents.find(s => s.id === docId);
             if (!st) { alert("تعذر العثور على بيانات الطالب!"); return; }
 
-            document.getElementById('edit-modal-id').value = st.id || st.code;
+            document.getElementById('edit-modal-id').value = st.id;
             document.getElementById('edit-modal-name').value = st.name || '';
             document.getElementById('edit-modal-code').value = st.code || '';
             document.getElementById('edit-modal-grade').value = st.grade || 'الصف الثالث الثانوي';
@@ -1533,42 +1520,47 @@
             if (!navigator.onLine) { alert("⚠️ المنظومة أونلاين فقط!"); return; }
 
             const targetId = document.getElementById('edit-modal-id').value;
-            const stIndex = cachedStudents.findIndex(s => (s.id && s.id.toString() === targetId) || (s.code && s.code.toString() === targetId));
-            
-            if (stIndex === -1) { alert("تعذر العثور على الطالب!"); return; }
+            const st = cachedStudents.find(s => s.id === targetId);
+            if (!st) { alert("تعذر العثور على الطالب!"); return; }
 
-            const st = cachedStudents[stIndex];
-            st.name = document.getElementById('edit-modal-name').value.trim();
-            st.code = toEnglish(document.getElementById('edit-modal-code').value.trim());
-            st.grade = document.getElementById('edit-modal-grade').value;
-            st.center = document.getElementById('edit-modal-center').value;
-            st.phone = toEnglish(document.getElementById('edit-modal-phone').value.trim());
-            st.parentPhone = toEnglish(document.getElementById('edit-modal-parent-phone').value.trim());
+            const btn = document.getElementById('btn-edit-student-save');
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري الحفظ...`;
 
-            await syncStudentUpdates(st);
-            closeEditStudentModal();
-            renderStudentsTable(cachedStudents);
+            try {
+                st.name = document.getElementById('edit-modal-name').value.trim();
+                st.code = toEnglish(document.getElementById('edit-modal-code').value.trim());
+                st.grade = document.getElementById('edit-modal-grade').value;
+                st.center = document.getElementById('edit-modal-center').value;
+                st.phone = toEnglish(document.getElementById('edit-modal-phone').value.trim());
+                st.parentPhone = toEnglish(document.getElementById('edit-modal-parent-phone').value.trim());
 
-            if (currentLoadedStudent && ((currentLoadedStudent.id && currentLoadedStudent.id === st.id) || currentLoadedStudent.code === st.code)) {
-                renderStudentDossier(st);
+                await syncStudentUpdates(st);
+                closeEditStudentModal();
+                alert(`✅ تم تحديث بيانات الطالب (${st.name}) في السيرفر السحابي.`);
+            } catch(err) {
+                alert("تعذر الحفظ: " + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `حفظ التعديلات`;
             }
-            alert(`✅ تم تحديث بيانات الطالب (${st.name}) بنجاح!`);
         }
 
-        async function deleteStudentRecord(identifier) {
+        async function deleteStudentRecord(docId) {
             if (!navigator.onLine) { alert("⚠️ المنظومة أونلاين فقط!"); return; }
-            if (!confirm('حذف هذا الطالب بالكامل من المنظومة؟')) return;
-            const idStr = identifier.toString();
-            const st = cachedStudents.find(s => (s.id && s.id.toString() === idStr) || (s.code && s.code.toString() === idStr));
-            if (db && st && st.id) {
-                await db.collection('students').doc(st.id).delete().catch(() => {});
+            if (!confirm('حذف هذا الطالب نهائياً من السيرفر؟')) return;
+
+            try {
+                if (db) {
+                    await db.collection('students').doc(docId).delete();
+                    alert("✅ تم حذف الطالب من السيرفر بنجاح.");
+                }
+            } catch(err) {
+                alert("تعذر حذف الطالب: " + err.message);
             }
-            cachedStudents = cachedStudents.filter(s => (s.id && s.id.toString() === idStr ? false : s.code.toString() !== idStr));
-            localStorage.setItem('MF_LOCAL_STUDENTS', JSON.stringify(cachedStudents));
-            renderStudentsTable(cachedStudents);
         }
 
-        // ================= تحميل الإكسيل والموافقة الجماعية =================
+        // ================= تحميل الإكسيل =================
         function downloadStudentExcelTemplate() {
             const templateData = [
                 {
@@ -1635,7 +1627,7 @@
                     modal.classList.add('flex');
                 } else {
                     await commitNewStudentsOnly(newStudents);
-                    alert(`✅ تم استيراد (${newStudents.length}) طالب جديد بنجاح!`);
+                    alert(`✅ تم استيراد (${newStudents.length}) طالب جديد ومزامنتها مع السيرفر!`);
                 }
             };
             reader.readAsArrayBuffer(file);
@@ -1656,32 +1648,38 @@
 
             let updatedCount = 0;
 
-            if (shouldReplaceAll) {
+            if (shouldReplaceAll && db) {
+                const batch = db.batch();
                 for (const item of duplicateStudents) {
                     const ex = item.existing;
                     const inc = item.incoming;
 
-                    ex.name = inc.name;
-                    ex.grade = inc.grade;
-                    ex.center = inc.center;
-                    ex.phone = inc.phone;
-                    ex.parentPhone = inc.parentPhone;
-
-                    await syncStudentUpdates(ex);
+                    const ref = db.collection('students').doc(ex.id);
+                    batch.update(ref, {
+                        name: inc.name,
+                        grade: inc.grade,
+                        center: inc.center,
+                        phone: inc.phone,
+                        parentPhone: inc.parentPhone
+                    });
                     updatedCount++;
                 }
+                await batch.commit();
             }
 
             await commitNewStudentsOnly(newStudents);
             closeExcelDuplicateModal();
-            renderStudentsTable(cachedStudents);
 
-            alert(`📊 تم الانتهاء بنجاح:\n✔️ تمت إضافة: ${newStudents.length} طالب جديد\n${shouldReplaceAll ? `🔄 تم تحديث: ${updatedCount} طالب مكرر` : `⏭️ تم تخطي المكررين`}`);
+            alert(`📊 تم الانتهاء بنجاح:\n✔️️ تمت إضافة: ${newStudents.length} طالب جديد إلى السيرفر\n${shouldReplaceAll ? `🔄 تم تحديث: ${updatedCount} طالب مكرر في السيرفر` : `⏭️ تم تخطي المكررين`}`);
         }
 
         async function commitNewStudentsOnly(studentsList) {
+            if (!db || studentsList.length === 0) return;
+
+            const batch = db.batch();
             for (const item of studentsList) {
-                const st = {
+                const ref = db.collection('students').doc();
+                batch.set(ref, {
                     name: item.name,
                     code: item.code,
                     grade: item.grade,
@@ -1692,15 +1690,9 @@
                     examsHistory: [],
                     homeworksHistory: [],
                     createdAt: new Date().toISOString()
-                };
-
-                if (db) {
-                    const ref = await db.collection('students').add(st).catch(() => {});
-                    if (ref) st.id = ref.id;
-                }
-                cachedStudents.unshift(st);
+                });
             }
-            localStorage.setItem('MF_LOCAL_STUDENTS', JSON.stringify(cachedStudents));
+            await batch.commit();
         }
 
         // ================= TAB 5: التقارير =================
