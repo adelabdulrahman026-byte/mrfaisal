@@ -27,7 +27,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     
-    <!-- Firebase SDKs (Auth + Firestore) -->
+    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
@@ -52,7 +52,7 @@
             <i class="fa-solid fa-wifi"></i>
         </div>
         <h2 class="text-xl font-black text-white">المنظومة تعمل بنظام الأونلاين فقط</h2>
-        <p class="text-xs text-slate-400 max-w-sm mt-2 leading-relaxed">تم إيقاف العمل أوفلاين. يرجى التحقق من اتصالك بالإنترنت لمتابعة العمل ومزامنة البيانات مع السيرفر السحابي.</p>
+        <p class="text-xs text-slate-400 max-w-sm mt-2 leading-relaxed">يرجى التحقق من اتصالك بالإنترنت لمتابعة العمل ومزامنة البيانات مع السيرفر السحابي.</p>
         <button onclick="window.location.reload()" class="mt-5 px-6 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold rounded-xl border border-slate-700 transition">
             إعادة المحاولة
         </button>
@@ -66,7 +66,7 @@
                 <i class="fa-solid fa-lock"></i>
             </div>
             <h2 class="text-xl font-black text-white">تسجيل دخول الإدارة</h2>
-            <p class="text-xs text-slate-400 mt-1 mb-6">الحساب محمي عبر Firebase Authentication</p>
+            <p class="text-xs text-slate-400 mt-1 mb-6">الدخول محمي ومؤمن سحابياً</p>
 
             <form onsubmit="handleFirebaseAuthLogin(event)" class="space-y-4 text-right">
                 <div>
@@ -91,7 +91,7 @@
             <div class="flex items-center gap-3 w-full sm:w-auto">
                 <span class="w-3 h-3 rounded-full bg-emerald-400 animate-ping"></span>
                 <div>
-                    <span class="font-bold text-white">إرسال تقارير الدرجات (فارق 15 ثانية لحماية الرقم):</span>
+                    <span class="font-bold text-white">إرسال تقارير الدرجات:</span>
                     <span id="queue-status-text" class="text-slate-300 mr-1">جاري التجهيز...</span>
                 </div>
             </div>
@@ -105,7 +105,7 @@
 
             <div class="flex items-center gap-2 whitespace-nowrap text-[11px] text-amber-300 font-mono">
                 <i class="fa-solid fa-stopwatch"></i>
-                <span id="queue-time-remaining">الوقت المتبقي: 0 ثانية</span>
+                <span id="queue-time-remaining">المتبقي: 0 ثانية</span>
             </div>
         </div>
     </div>
@@ -136,16 +136,16 @@
         </header>
 
         <div class="max-w-7xl mx-auto px-4 sm:px-8 py-6">
-            <!-- Tabs Menu -->
+            <!-- قائمة التبويبات -->
             <div class="flex items-center gap-2 overflow-x-auto pb-3 mb-6 custom-scroll border-b border-slate-800 text-xs">
                 <button onclick="switchTab('student-dossier')" id="tab-btn-student-dossier" class="tab-btn px-4 py-2.5 rounded-xl bg-brand-600 text-white font-black whitespace-nowrap"><i class="fa-solid fa-id-card ml-1.5"></i> كود الطالب وملف المتابعة</button>
-                <button onclick="switchTab('grading')" id="tab-btn-grading" class="tab-btn px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 font-bold whitespace-nowrap"><i class="fa-solid fa-square-poll-vertical ml-1.5"></i> رصد درجات الاختبارات (واتساب فوري)</button>
-                <button onclick="switchTab('homework')" id="tab-btn-homework" class="tab-btn px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 font-bold whitespace-nowrap"><i class="fa-solid fa-book-open ml-1.5"></i> بنك الواجبات (لكل الطلاب)</button>
+                <button onclick="switchTab('grading')" id="tab-btn-grading" class="tab-btn px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 font-bold whitespace-nowrap"><i class="fa-solid fa-square-poll-vertical ml-1.5"></i> رصد درجات الاختبارات وسجل النتائج</button>
+                <button onclick="switchTab('homework')" id="tab-btn-homework" class="tab-btn px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 font-bold whitespace-nowrap"><i class="fa-solid fa-book-open ml-1.5"></i> بنك الواجبات (إدارة وإخفاء/إظهار)</button>
                 <button onclick="switchTab('students')" id="tab-btn-students" class="tab-btn px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 font-bold whitespace-nowrap"><i class="fa-solid fa-users ml-1.5"></i> دليل الطلاب والسناتر</button>
                 <button onclick="switchTab('reports')" id="tab-btn-reports" class="tab-btn px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 font-bold whitespace-nowrap"><i class="fa-solid fa-chart-pie ml-1.5"></i> التقارير والطباعة</button>
             </div>
 
-            <!-- TAB 1: كود الطالب والملف الشامل والحضور -->
+            <!-- TAB 1: ملف المتابعة وكود الطالب -->
             <div id="tab-content-student-dossier" class="tab-sec space-y-6">
                 <div class="glass-panel p-6 rounded-3xl">
                     <h3 class="font-black text-sm text-brand-400 mb-2 flex items-center gap-2">
@@ -187,9 +187,15 @@
                             </div>
                         </div>
 
+                        <!-- كروت الإحصائيات مع تعديل رقم الحصص -->
                         <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4">
-                            <div class="p-3.5 bg-slate-900 rounded-2xl text-center border border-slate-800">
-                                <span class="text-[11px] text-slate-400 block font-bold">إجمالي الحصص المحضورة</span>
+                            <div class="p-3.5 bg-slate-900 rounded-2xl text-center border border-slate-800 relative group">
+                                <div class="flex items-center justify-center gap-1.5">
+                                    <span class="text-[11px] text-slate-400 block font-bold">إجمالي الحصص المحضورة</span>
+                                    <button onclick="setCustomAttendanceCount()" class="text-brand-400 hover:text-brand-300 text-xs p-1" title="تعديل الرقم يدوياً">
+                                        <i class="fa-solid fa-pen"></i>
+                                    </button>
+                                </div>
                                 <span id="dos-stat-att-count" class="text-2xl font-black text-brand-400 font-mono">0</span>
                             </div>
                             <div class="p-3.5 bg-slate-900 rounded-2xl text-center border border-slate-800">
@@ -235,42 +241,74 @@
                 </div>
             </div>
 
-            <!-- TAB 2: رصد درجات الاختبارات -->
+            <!-- TAB 2: رصد الدرجات مع جدول كل الامتحانات وتعديلها -->
             <div id="tab-content-grading" class="tab-sec hidden space-y-6">
-                <div class="glass-panel border border-amber-500/30 p-6 rounded-3xl max-w-2xl">
-                    <h3 class="text-base font-black text-amber-400 flex items-center gap-2 mb-1">
-                        <i class="fa-solid fa-square-poll-vertical"></i> رصد درجات الاختبارات وإشعار ولي الأمر
-                    </h3>
-                    <p class="text-xs text-slate-400 mb-6">يتم تسجيل الدرجة مباشرة في فايرستور، وإرسال تقرير لولي الأمر عبر الواتساب برابط متابعة على <b class="text-amber-300">www.mrfaisal.net</b>.</p>
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <!-- نموذج الرصد -->
+                    <div class="lg:col-span-5 glass-panel border border-amber-500/30 p-6 rounded-3xl h-fit">
+                        <h3 class="text-base font-black text-amber-400 flex items-center gap-2 mb-1">
+                            <i class="fa-solid fa-square-poll-vertical"></i> رصد درجات الاختبارات
+                        </h3>
+                        <p class="text-xs text-slate-400 mb-6">يتم حفظ الدرجة مباشرة وإرسال رسالة الواتساب تلقائياً.</p>
 
-                    <form onsubmit="handleGradeEntrySubmit(event)" class="space-y-4">
-                        <div>
-                            <label class="block text-xs font-bold mb-1 text-slate-300">كود الطالب:</label>
-                            <input type="text" id="grade-input-code" required placeholder="مثال: 101" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white font-mono font-bold focus:border-amber-400 focus:outline-none" oninput="fetchGradingStudentName()">
-                            <p id="grade-student-name-preview" class="text-xs text-amber-400 font-bold mt-1"></p>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold mb-1 text-slate-300">عنوان الاختبار:</label>
-                            <input type="text" id="grade-input-title" required placeholder="مثال: امتحان الحصة الرابعة" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:border-amber-400 focus:outline-none">
-                        </div>
-                        <div class="grid grid-cols-2 gap-4">
+                        <form onsubmit="handleGradeEntrySubmit(event)" class="space-y-4">
                             <div>
-                                <label class="block text-xs font-bold mb-1 text-slate-300">الدرجة المحصلة (تقبل 0.5):</label>
-                                <input type="number" step="any" id="grade-input-score" required placeholder="18.5" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-center font-mono font-bold text-emerald-400 focus:border-amber-400 focus:outline-none">
+                                <label class="block text-xs font-bold mb-1 text-slate-300">كود الطالب:</label>
+                                <input type="text" id="grade-input-code" required placeholder="مثال: 101" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white font-mono font-bold focus:border-amber-400 focus:outline-none" oninput="fetchGradingStudentName()">
+                                <p id="grade-student-name-preview" class="text-xs text-amber-400 font-bold mt-1"></p>
                             </div>
                             <div>
-                                <label class="block text-xs font-bold mb-1 text-slate-300">الدرجة النهائية:</label>
-                                <input type="number" step="any" id="grade-input-max" value="20" required class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-center font-mono font-bold text-white focus:border-amber-400 focus:outline-none">
+                                <label class="block text-xs font-bold mb-1 text-slate-300">عنوان الاختبار:</label>
+                                <input type="text" id="grade-input-title" required placeholder="مثال: امتحان الحصة الرابعة" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:border-amber-400 focus:outline-none">
                             </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-bold mb-1 text-slate-300">الدرجة المحصلة (تقبل 0.5):</label>
+                                    <input type="number" step="any" id="grade-input-score" required placeholder="18.5" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-center font-mono font-bold text-emerald-400 focus:border-amber-400 focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold mb-1 text-slate-300">الدرجة النهائية:</label>
+                                    <input type="number" step="any" id="grade-input-max" value="20" required class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-center font-mono font-bold text-white focus:border-amber-400 focus:outline-none">
+                                </div>
+                            </div>
+                            <button type="submit" id="btn-submit-grade" class="w-full py-3.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black rounded-xl text-xs transition shadow-lg flex items-center justify-center gap-2">
+                                <i class="fa-brands fa-whatsapp text-base"></i> رصد الدرجة وإرسال التقرير فوراً لولي الأمر
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- سجل كل الامتحانات المرصودة للطلاب مع التعديل المباشر -->
+                    <div class="lg:col-span-7 glass-panel p-6 rounded-3xl space-y-4">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-800 pb-4">
+                            <div>
+                                <h3 class="font-black text-sm text-white flex items-center gap-2">
+                                    <i class="fa-solid fa-list-ol text-amber-400"></i> سجل الطلاب المرصود لهم درجات
+                                </h3>
+                                <p class="text-xs text-slate-400 mt-0.5">يمكنك تعديل أي درجة لأي طالب مباشرة من هنا</p>
+                            </div>
+                            <input type="text" id="filter-exams-table-input" oninput="renderRecentGradesTable()" placeholder="ابحث باسم الطالب، الكود، أو الامتحان..." class="p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white w-full sm:w-64 focus:outline-none focus:border-amber-400">
                         </div>
-                        <button type="submit" id="btn-submit-grade" class="w-full py-3.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black rounded-xl text-xs transition shadow-lg flex items-center justify-center gap-2">
-                            <i class="fa-brands fa-whatsapp text-base"></i> رصد الدرجة وإرسال التقرير فوراً لولي الأمر
-                        </button>
-                    </form>
+
+                        <div class="overflow-x-auto custom-scroll max-h-[500px]">
+                            <table class="w-full text-right text-xs">
+                                <thead class="bg-slate-900 text-slate-400 border-b border-slate-800 sticky top-0 z-10">
+                                    <tr>
+                                        <th class="p-3">الكود</th>
+                                        <th class="p-3">اسم الطالب</th>
+                                        <th class="p-3">اسم الاختبار</th>
+                                        <th class="p-3 text-center">الدرجة</th>
+                                        <th class="p-3">التاريخ</th>
+                                        <th class="p-3 text-center">إجراءات</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recent-exams-table-body" class="divide-y divide-slate-800"></tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- TAB 3: بنك الواجبات -->
+            <!-- TAB 3: بنك الواجبات (إخفاء وإظهار) -->
             <div id="tab-content-homework" class="tab-sec hidden space-y-6">
                 <div class="glass-panel p-6 rounded-3xl">
                     <div class="flex justify-between items-center mb-6">
@@ -310,8 +348,8 @@
 
                 <div class="glass-panel p-6 rounded-3xl">
                     <div class="flex items-center justify-between mb-4">
-                        <h3 class="font-black text-sm text-white">الواجبات المنشورة في فايرستور</h3>
-                        <button onclick="loadHomeworks()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-brand-300 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+                        <h3 class="font-black text-sm text-white">الواجبات المنشورة في المنظومة</h3>
+                        <button onclick="loadHomeworks(true)" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-brand-300 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
                             <i class="fa-solid fa-arrows-rotate"></i> تحديث الواجبات
                         </button>
                     </div>
@@ -321,12 +359,12 @@
 
             <!-- TAB 4: دليل الطلاب -->
             <div id="tab-content-students" class="tab-sec hidden space-y-6">
-                <!-- إدارة السناتر -->
+                <!-- السناتر -->
                 <div class="glass-panel border border-brand-500/20 p-5 rounded-3xl">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
                         <div>
                             <h3 class="font-black text-sm text-brand-300"><i class="fa-solid fa-map-location-dot ml-1"></i> السناتر والمقرات الدراسية</h3>
-                            <p class="text-xs text-slate-400">إضافة وتعديل وحذف مقرات الحصص مباشرة في السحابة</p>
+                            <p class="text-xs text-slate-400">إضافة وتعديل وحذف مقرات الحصص مباشرة</p>
                         </div>
                         <button onclick="toggleNewCenterForm()" class="px-3.5 py-2 bg-brand-700 hover:bg-brand-600 text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5">
                             <i class="fa-solid fa-plus"></i> إضافة سنتر جديد
@@ -352,7 +390,7 @@
                                 <i class="fa-solid fa-file-arrow-down"></i> تحميل نموذج فارغ
                             </button>
                         </div>
-                        <p class="text-[11px] text-slate-400">يتم الرفع المباشر لفايرستور ليكون متاحاً لجميع الأجهزة فوراً.</p>
+                        <p class="text-[11px] text-slate-400">يتم الرفع المباشر ليكون متاحاً لجميع الأجهزة فوراً.</p>
                         <input type="file" id="excel-file-selector" accept=".xlsx, .xls, .csv" class="w-full text-xs text-slate-300 bg-slate-900 p-2.5 rounded-xl border border-slate-700 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:bg-brand-700 file:text-white">
                         <button id="btn-excel-import" onclick="handleExcelImport()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 font-bold rounded-xl text-xs text-white transition flex items-center justify-center gap-2">
                             <i class="fa-solid fa-upload"></i> بدء استيراد البيانات للسيرفر
@@ -517,7 +555,7 @@
         </div>
     </div>
 
-    <!-- MODAL: الموافقة الجماعية على الطلاب المكررين -->
+    <!-- MODAL: معالجة الطلاب المكررين -->
     <div id="excel-duplicate-modal" class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md items-center justify-center p-4 hidden">
         <div class="glass-panel p-6 sm:p-8 rounded-3xl max-w-md w-full border border-amber-500/30 space-y-4 shadow-2xl text-center">
             <div class="w-14 h-14 bg-amber-500/20 text-amber-400 rounded-2xl flex items-center justify-center mx-auto text-2xl">
@@ -569,6 +607,11 @@
                 measurementId: "G-FDH118PHCC"
             };
             if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+            
+            // تفعيل الكاش التلقائي لفايربيز لتقليل عدد مرات القراءة وحماية الخطة المجانية
+            firebase.firestore().settings({ cacheSizeBytes: firebase.firestore.CACHE_SIZE_UNLIMITED });
+            firebase.firestore().enablePersistence({ synchronizeTabs: true }).catch(() => {});
+            
             db = firebase.firestore();
             auth = firebase.auth();
         } catch(e) { console.error("Firebase Init Error:", e); }
@@ -594,7 +637,7 @@
                 .replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).trim();
         }
 
-        // ================= حارس الأونلاين فقط =================
+        // حارس الأونلاين
         function checkOnlineStrict() {
             const screen = document.getElementById('offline-screen');
             if (!navigator.onLine) {
@@ -608,7 +651,7 @@
         window.addEventListener('online', checkOnlineStrict);
         window.addEventListener('offline', checkOnlineStrict);
 
-        // ================= AUTHENTICATION =================
+        // المصادقة
         auth.onAuthStateChanged(user => {
             checkOnlineStrict();
             if (user) {
@@ -640,7 +683,7 @@
             try {
                 await auth.signInWithEmailAndPassword(email, pass);
             } catch(error) {
-                errEl.innerText = "بيانات الدخول غير صحيحة، يرجى التأكد من الحساب في فايربيز.";
+                errEl.innerText = "بيانات الدخول غير صحيحة، يرجى التأكد من الحساب.";
                 errEl.classList.remove('hidden');
                 btn.disabled = false;
                 btn.innerHTML = `<i class="fa-solid fa-right-to-bracket"></i> تسجيل الدخول`;
@@ -669,11 +712,12 @@
             if (content) content.classList.remove('hidden');
             if (btn) btn.className = 'tab-btn px-4 py-2.5 rounded-xl bg-brand-600 text-white font-black whitespace-nowrap';
 
+            if (tabId === 'grading') renderRecentGradesTable();
             if (tabId === 'homework') loadHomeworks();
             if (tabId === 'reports') renderReports();
         }
 
-        // ================= DOSSIER & SEARCH =================
+        // ================= ملف الطالب والبحث =================
         function lookupStudent(explicitQuery = null) {
             const rawVal = explicitQuery || document.getElementById('direct-student-code-input').value.trim();
             const candidatesBox = document.getElementById('search-candidates-box');
@@ -742,13 +786,40 @@
             const hwList = st.homeworksHistory || [];
             const examList = st.examsHistory || [];
 
-            document.getElementById('dos-stat-att-count').innerText = attList.length;
+            // إجمالي الحصص: إذا كان هناك رقم يدوي مخصص نستخدمه، وإلا نستخدم طول السجل
+            const attendanceTotal = (st.customAttendanceCount !== undefined && st.customAttendanceCount !== null) ? st.customAttendanceCount : attList.length;
+
+            document.getElementById('dos-stat-att-count').innerText = attendanceTotal;
             document.getElementById('dos-stat-hw-count').innerText = hwList.length;
             document.getElementById('dos-stat-exam-count').innerText = examList.length;
 
             renderDossierList('dos-attendance-list', attList, 'attendance');
             renderDossierList('dos-exams-list', examList, 'exam');
             renderDossierList('dos-homeworks-list', hwList, 'homework');
+        }
+
+        // تعديل رقم الحصص مباشرة برقم مخصص
+        async function setCustomAttendanceCount() {
+            if (!navigator.onLine) { alert("⚠️️ المنظومة أونلاين فقط!"); return; }
+            if (!currentLoadedStudent) return;
+
+            const currentVal = (currentLoadedStudent.customAttendanceCount !== undefined && currentLoadedStudent.customAttendanceCount !== null)
+                ? currentLoadedStudent.customAttendanceCount
+                : (currentLoadedStudent.attendanceHistory || []).length;
+
+            const input = prompt("اكتب إجمالي عدد الحصص المحضورة للطالب:", currentVal);
+            if (input === null) return;
+
+            const newCount = parseInt(toEnglish(input));
+            if (isNaN(newCount) || newCount < 0) {
+                alert("يرجى إدخال رقم صحيح!");
+                return;
+            }
+
+            currentLoadedStudent.customAttendanceCount = newCount;
+            await syncStudentUpdates(currentLoadedStudent);
+            renderStudentDossier(currentLoadedStudent);
+            alert(`✅ تم تحديث عدد الحصص للطالب (${currentLoadedStudent.name}) إلى: ${newCount}`);
         }
 
         function renderDossierList(containerId, list, type) {
@@ -765,8 +836,8 @@
                         <span class="text-[10px] text-slate-400 font-mono">${item.date || ''} ${item.score ? `| الدرجة: <b class="text-amber-400">${item.score}</b>` : ''}</span>
                     </div>
                     <div class="flex items-center gap-1">
-                        <button onclick="editDossierItem('${type}', ${index})" class="p-1 hover:text-amber-400 text-slate-400"><i class="fa-solid fa-pen"></i></button>
-                        <button onclick="deleteDossierItem('${type}', ${index})" class="p-1 hover:text-rose-400 text-slate-400"><i class="fa-solid fa-trash"></i></button>
+                        <button onclick="editDossierItem('${type}', ${index})" class="p-1 hover:text-amber-400 text-slate-400" title="تعديل"><i class="fa-solid fa-pen"></i></button>
+                        <button onclick="deleteDossierItem('${type}', ${index})" class="p-1 hover:text-rose-400 text-slate-400" title="حذف"><i class="fa-solid fa-trash"></i></button>
                     </div>
                 </div>
             `).reverse().join('');
@@ -782,6 +853,9 @@
                 if (!title) return;
                 currentLoadedStudent.attendanceHistory = currentLoadedStudent.attendanceHistory || [];
                 currentLoadedStudent.attendanceHistory.push({ title, date: dateStr });
+                if (currentLoadedStudent.customAttendanceCount !== undefined) {
+                    currentLoadedStudent.customAttendanceCount++;
+                }
             } else if (type === 'homework') {
                 const title = prompt('عنوان الواجب:', 'واجب الحصة');
                 const score = prompt('حالة الواجب / الدرجة:', 'تم التسليم بنجاح');
@@ -806,7 +880,7 @@
             } else if (type === 'exam') {
                 const item = st.examsHistory[index];
                 const newTitle = prompt('تعديل عنوان الامتحان:', item.title);
-                const newScore = prompt('تعديل الدرجة:', item.score);
+                const newScore = prompt('تعديل الدرجة (مثال: 18 / 20):', item.score);
                 if (newTitle) item.title = newTitle;
                 if (newScore) item.score = newScore;
             } else if (type === 'homework') {
@@ -819,50 +893,53 @@
 
             await syncStudentUpdates(st);
             renderStudentDossier(st);
+            if (type === 'exam') renderRecentGradesTable();
         }
 
         async function deleteDossierItem(type, index) {
             if (!navigator.onLine) { alert("⚠️ المنظومة أونلاين فقط!"); return; }
-            if (!confirm('حذف هذا السجل نهائياً من السيرفر؟')) return;
+            if (!confirm('حذف هذا السجل نهائياً؟')) return;
             const st = currentLoadedStudent;
             if (!st) return;
 
-            if (type === 'attendance') st.attendanceHistory.splice(index, 1);
+            if (type === 'attendance') {
+                st.attendanceHistory.splice(index, 1);
+                if (st.customAttendanceCount !== undefined && st.customAttendanceCount > 0) st.customAttendanceCount--;
+            }
             if (type === 'exam') st.examsHistory.splice(index, 1);
             if (type === 'homework') st.homeworksHistory.splice(index, 1);
 
             await syncStudentUpdates(st);
             renderStudentDossier(st);
+            if (type === 'exam') renderRecentGradesTable();
         }
 
         async function syncStudentUpdates(st) {
-            if (!db || !st.id) {
-                alert("⚠️ خطأ: معرّف الطالب غير موجود في فايرستور!");
-                return;
-            }
+            if (!db || !st.id) return;
             try {
                 await db.collection('students').doc(st.id).set(st, { merge: true });
             } catch(e) {
                 console.error("Sync Error:", e);
-                alert("تعذر حفظ التعديلات في السيرفر! يرجى مراجعة الصلاحيات.");
+                alert("تعذر حفظ التعديلات في السيرفر!");
             }
         }
 
         async function markStudentAttendanceDirect() {
-            if (!navigator.onLine) { alert("⚠️ المنظومة أونلاين فقط!"); return; }
+            if (!navigator.onLine) { alert("⚠️️ المنظومة أونلاين فقط!"); return; }
             const st = currentLoadedStudent;
             if (!st) return;
 
             const dateStr = new Date().toLocaleDateString('ar-EG');
             st.attendanceHistory = st.attendanceHistory || [];
             st.attendanceHistory.push({ title: `حضور حصة (${st.center})`, date: dateStr });
+            if (st.customAttendanceCount !== undefined) st.customAttendanceCount++;
             
             await syncStudentUpdates(st);
             renderStudentDossier(st);
-            alert(`✅ تم تسجيل حضور الطالب (${st.name}) في السيرفر بنجاح.`);
+            alert(`✅ تم تسجيل حضور الطالب (${st.name}) بنجاح.`);
         }
 
-        // ================= TAB 2: رصد الدرجات =================
+        // ================= TAB 2: رصد الدرجات وجدول كل الامتحانات =================
         function fetchGradingStudentName() {
             const code = toEnglish(document.getElementById('grade-input-code').value.trim()).toLowerCase();
             const preview = document.getElementById('grade-student-name-preview');
@@ -870,7 +947,7 @@
             if (st) {
                 preview.innerText = `الطالب: ${st.name} (${st.center})`;
             } else {
-                preview.innerText = code ? '⚠️ الطالب غير مسجل في السيرفر!' : '';
+                preview.innerText = code ? '⚠️ الطالب غير مسجل!' : '';
             }
         }
 
@@ -884,11 +961,11 @@
             const max = parseFloat(document.getElementById('grade-input-max').value);
 
             const st = cachedStudents.find(s => toEnglish(s.code).toLowerCase() === code);
-            if (!st) { alert('⚠️ الطالب غير موجود في قاعدة البيانات!'); return; }
+            if (!st) { alert('⚠️ الطالب غير موجود!'); return; }
 
             const btn = document.getElementById('btn-submit-grade');
             btn.disabled = true;
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري التسجيل والمزامنة...`;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري الرصد...`;
 
             try {
                 const scoreFormatted = `${score} / ${max}`;
@@ -899,13 +976,21 @@
                 else if (percentage < 70) badge = "جيد مع إمكانية لتحقيق الأفضل 📈";
                 else if (percentage < 85) badge = "جيد جداً ومتميز ✨";
 
-                const examRecord = { title, score: scoreFormatted, date: new Date().toLocaleDateString('ar-EG') };
+                const examRecord = { 
+                    id: 'EX_' + Date.now(),
+                    title, 
+                    score: scoreFormatted, 
+                    rawScore: score,
+                    maxScore: max,
+                    date: new Date().toLocaleDateString('ar-EG') 
+                };
+                
                 st.examsHistory = st.examsHistory || [];
                 st.examsHistory.push(examRecord);
 
                 await syncStudentUpdates(st);
 
-                const attendanceCount = (st.attendanceHistory || []).length;
+                const attendanceCount = (st.customAttendanceCount !== undefined) ? st.customAttendanceCount : (st.attendanceHistory || []).length;
                 const homeworkCount = (st.homeworksHistory || []).length;
 
                 if (st.parentPhone) {
@@ -932,8 +1017,10 @@
                     enqueueWhatsAppMessage(st.name, st.parentPhone, message);
                 }
 
-                alert(`✅ تم رصد درجة الطالب: ${st.name} (${scoreFormatted}) على السيرفر وإدراج التقرير في الإرسال.`);
+                alert(`✅ تم رصد درجة الطالب: ${st.name} (${scoreFormatted}) بنجاح.`);
                 document.getElementById('grade-input-score').value = '';
+                renderRecentGradesTable();
+                
                 if (currentLoadedStudent && currentLoadedStudent.id === st.id) {
                     renderStudentDossier(st);
                 }
@@ -943,6 +1030,103 @@
             }
         }
 
+        // عرض جدول الامتحانات المرصودة لكل الطلاب والبحث فيها وتعديلها
+        function renderRecentGradesTable() {
+            const tbody = document.getElementById('recent-exams-table-body');
+            if (!tbody) return;
+
+            const filterText = (document.getElementById('filter-exams-table-input')?.value || '').trim().toLowerCase();
+            const filterEn = toEnglish(filterText);
+
+            // تجميع كل الامتحانات المرصودة
+            let allExams = [];
+            cachedStudents.forEach(st => {
+                if (st.examsHistory && Array.isArray(st.examsHistory)) {
+                    st.examsHistory.forEach((ex, idx) => {
+                        allExams.push({
+                            studentId: st.id,
+                            studentName: st.name,
+                            studentCode: st.code,
+                            examIndex: idx,
+                            examTitle: ex.title || 'امتحان',
+                            score: ex.score || '--',
+                            date: ex.date || '--'
+                        });
+                    });
+                }
+            });
+
+            // ترتيب الأحدث أولاً
+            allExams.reverse();
+
+            if (filterText) {
+                allExams = allExams.filter(item => 
+                    item.studentName.toLowerCase().includes(filterText) ||
+                    toEnglish(item.studentCode).toLowerCase().includes(filterEn) ||
+                    item.examTitle.toLowerCase().includes(filterText)
+                );
+            }
+
+            if (allExams.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-slate-500 font-bold">لا يوجد امتحانات مرصودة تطابق البحث.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = allExams.map(item => `
+                <tr class="hover:bg-slate-900/50 transition">
+                    <td class="p-3 font-mono font-bold text-brand-400">#${item.studentCode}</td>
+                    <td class="p-3 font-bold text-white">${item.studentName}</td>
+                    <td class="p-3 text-slate-200">${item.examTitle}</td>
+                    <td class="p-3 text-center font-mono font-bold text-amber-400">${item.score}</td>
+                    <td class="p-3 text-slate-400 font-mono text-[11px]">${item.date}</td>
+                    <td class="p-3 text-center space-x-1.5 space-x-reverse whitespace-nowrap">
+                        <button onclick="editStudentGradeDirect('${item.studentId}', ${item.examIndex})" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-amber-300 rounded font-bold" title="تعديل الدرجة">
+                            <i class="fa-solid fa-pen"></i> تعديل
+                        </button>
+                        <button onclick="deleteStudentGradeDirect('${item.studentId}', ${item.examIndex})" class="px-2 py-1 bg-rose-950/40 hover:bg-rose-900 text-rose-400 rounded" title="حذف الامتحان">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        async function editStudentGradeDirect(studentId, examIndex) {
+            if (!navigator.onLine) { alert("⚠️ المنظومة أونلاين فقط!"); return; }
+            const st = cachedStudents.find(s => s.id === studentId);
+            if (!st || !st.examsHistory || !st.examsHistory[examIndex]) return;
+
+            const exam = st.examsHistory[examIndex];
+            const newTitle = prompt('تعديل اسم الامتحان:', exam.title);
+            if (newTitle === null) return;
+
+            const newScore = prompt('تعديل الدرجة (مثال: 19 / 20):', exam.score);
+            if (newScore === null) return;
+
+            exam.title = newTitle.trim() || exam.title;
+            exam.score = newScore.trim() || exam.score;
+
+            await syncStudentUpdates(st);
+            renderRecentGradesTable();
+            if (currentLoadedStudent && currentLoadedStudent.id === st.id) renderStudentDossier(st);
+            alert(`✅ تم تحديث درجة الطالب: ${st.name} بنجاح.`);
+        }
+
+        async function deleteStudentGradeDirect(studentId, examIndex) {
+            if (!navigator.onLine) { alert("⚠️ المنظومة أونلاين فقط!"); return; }
+            if (!confirm("هل أنت متأكد من حذف هذه الدرجة؟")) return;
+
+            const st = cachedStudents.find(s => s.id === studentId);
+            if (!st || !st.examsHistory) return;
+
+            st.examsHistory.splice(examIndex, 1);
+            await syncStudentUpdates(st);
+            renderRecentGradesTable();
+            if (currentLoadedStudent && currentLoadedStudent.id === st.id) renderStudentDossier(st);
+            alert("✅ تم حذف سجل الامتحان بنجاح.");
+        }
+
+        // إرسال الواتساب
         function enqueueWhatsAppMessage(stName, phone, text) {
             messageQueue.push({
                 id: 'MSG_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
@@ -985,11 +1169,8 @@
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({ phone: nextMsg.phone, message: nextMsg.message })
                     });
-                    if (res.ok) {
-                        nextMsg.status = 'sent';
-                    } else {
-                        nextMsg.status = 'failed';
-                    }
+                    if (res.ok) nextMsg.status = 'sent';
+                    else nextMsg.status = 'failed';
                 } catch(e) {
                     nextMsg.status = 'failed';
                 }
@@ -997,9 +1178,7 @@
                 updateQueueUI();
 
                 const hasMore = messageQueue.some(m => m.status === 'pending');
-                if (hasMore) {
-                    await countdownDelay(15);
-                }
+                if (hasMore) await countdownDelay(15);
             }
 
             isQueueProcessing = false;
@@ -1040,7 +1219,7 @@
             document.getElementById('queue-time-remaining').innerText = `المتبقي: ${pending} (~${mins} د و ${secs} ث)`;
         }
 
-        // ================= TAB 3: بنك الواجبات =================
+        // ================= TAB 3: بنك الواجبات (إخفاء وإظهار) =================
         function addQuestionFieldToBuilder() {
             questionCounter++;
             const qNum = questionCounter;
@@ -1099,54 +1278,56 @@
                 });
             });
 
-            const hwData = { title, grade, questions, createdAt: new Date().toISOString() };
+            // الواجب يكون ظاهر افتراضياً
+            const hwData = { title, grade, questions, isVisible: true, createdAt: new Date().toISOString() };
             const btn = document.getElementById('btn-save-hw');
             btn.disabled = true;
             btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري النشر في السيرفر...`;
 
             try {
-                if (db) {
-                    await db.collection('homeworks').add(hwData);
-                }
-                alert('✅ تم نشر الواجب على السيرفر بنجاح وسيظهر لكافة الأجهزة!');
+                if (db) await db.collection('homeworks').add(hwData);
+                alert('✅ تم نشر الواجب على السيرفر بنجاح!');
                 document.getElementById('hw-new-title').value = '';
-                await loadHomeworks();
+                await loadHomeworks(true);
             } catch(err) {
                 console.error("Save HW Error:", err);
-                alert("حدث خطأ أثناء حفظ الواجب في السيرفر!");
+                alert("حدث خطأ أثناء حفظ الواجب!");
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> حفظ ونشر الواجب على السيرفر`;
             }
         }
 
-        async function loadHomeworks() {
+        async function loadHomeworks(forceServer = false) {
             const box = document.getElementById('homeworks-table-box');
             if (!box) return;
-            box.innerHTML = `<div class="p-6 text-center text-slate-400 text-xs"><i class="fa-solid fa-spinner fa-spin ml-2"></i> جاري مزامنة الواجبات مباشرة من فايرستور...</div>`;
 
-            cachedHomeworks = [];
-            if (db) {
-                try {
-                    const snap = await db.collection('homeworks').get();
-                    snap.forEach(d => {
-                        const data = d.data();
-                        cachedHomeworks.push({
-                            id: d.id,
-                            ...data,
-                            title: data.title || data.hwTitle || data.name || 'واجب تفاعلي',
-                            grade: data.grade || data.targetGrade || 'الكل',
-                            questions: data.questions || data.hwQuestions || []
+            if (cachedHomeworks.length === 0 || forceServer) {
+                box.innerHTML = `<div class="p-6 text-center text-slate-400 text-xs"><i class="fa-solid fa-spinner fa-spin ml-2"></i> جاري مزامنة الواجبات من السيرفر...</div>`;
+                cachedHomeworks = [];
+                if (db) {
+                    try {
+                        const snap = await db.collection('homeworks').get();
+                        snap.forEach(d => {
+                            const data = d.data();
+                            cachedHomeworks.push({
+                                id: d.id,
+                                ...data,
+                                isVisible: data.isVisible !== false, // الافتراضي ظاهر
+                                title: data.title || data.hwTitle || data.name || 'واجب تفاعلي',
+                                grade: data.grade || data.targetGrade || 'الكل',
+                                questions: data.questions || data.hwQuestions || []
+                            });
                         });
-                    });
-                    cachedHomeworks.sort((a,b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
-                } catch(e) {
-                    console.error("Firestore Homeworks Load Error:", e);
+                        cachedHomeworks.sort((a,b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+                    } catch(e) {
+                        console.error("Homeworks Load Error:", e);
+                    }
                 }
             }
 
             if (cachedHomeworks.length === 0) {
-                box.innerHTML = `<p class="text-slate-500 py-6 text-center text-xs">لا توجد واجبات مسجلة في فايرستور حالياً.</p>`;
+                box.innerHTML = `<p class="text-slate-500 py-6 text-center text-xs">لا توجد واجبات مسجلة حالياً.</p>`;
                 return;
             }
 
@@ -1156,16 +1337,23 @@
                         <tr>
                             <th class="p-3">العنوان</th>
                             <th class="p-3">المرحلة</th>
-                            <th class="p-3">عدد الأسئلة</th>
+                            <th class="p-3 text-center">الأسئلة</th>
+                            <th class="p-3 text-center">حالة الظهور للطلاب</th>
                             <th class="p-3 text-center">إجراءات</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-800">
                         ${cachedHomeworks.map(h => `
-                            <tr>
+                            <tr class="hover:bg-slate-900/50 transition">
                                 <td class="p-3 font-bold text-white">${h.title}</td>
                                 <td class="p-3 text-slate-300">${h.grade}</td>
-                                <td class="p-3 font-mono">${(h.questions || []).length}</td>
+                                <td class="p-3 font-mono text-center">${(h.questions || []).length}</td>
+                                <td class="p-3 text-center">
+                                    <button onclick="toggleHomeworkVisibility('${h.id}')" class="px-3 py-1 rounded-full text-[11px] font-bold flex items-center gap-1.5 mx-auto ${h.isVisible ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-slate-800 text-slate-400 border border-slate-700'}">
+                                        <i class="fa-solid ${h.isVisible ? 'fa-eye' : 'fa-eye-slash'}"></i>
+                                        <span>${h.isVisible ? 'ظاهر للطلاب' : 'مخفي حالياً'}</span>
+                                    </button>
+                                </td>
                                 <td class="p-3 text-center">
                                     <button onclick="deleteHomework('${h.id}')" class="text-rose-400 hover:text-rose-300 px-2 py-1"><i class="fa-solid fa-trash"></i></button>
                                 </td>
@@ -1176,16 +1364,34 @@
             `;
         }
 
+        // إخفاء أو إظهار الواجب للطلاب
+        async function toggleHomeworkVisibility(id) {
+            if (!navigator.onLine) { alert("⚠️ المنظومة أونلاين فقط!"); return; }
+            const hw = cachedHomeworks.find(h => h.id === id);
+            if (!hw) return;
+
+            const newStatus = !hw.isVisible;
+            hw.isVisible = newStatus;
+
+            try {
+                if (db) await db.collection('homeworks').doc(id).update({ isVisible: newStatus });
+                loadHomeworks();
+            } catch(e) {
+                alert("تعذر تحديث حالة الواجب: " + e.message);
+            }
+        }
+
         async function deleteHomework(id) {
             if (!navigator.onLine) { alert("⚠️ المنظومة أونلاين فقط!"); return; }
             if (!confirm('حذف هذا الواجب نهائياً من السيرفر؟')) return;
             if (db) {
-                await db.collection('homeworks').doc(id).delete().catch(err => alert("خطأ بالحذف: " + err.message));
-                await loadHomeworks();
+                await db.collection('homeworks').doc(id).delete().catch(err => alert("خطأ: " + err.message));
+                cachedHomeworks = cachedHomeworks.filter(h => h.id !== id);
+                loadHomeworks();
             }
         }
 
-        // ================= TAB 4: السناتر (ربط سحابي لحظي) =================
+        // ================= TAB 4: السناتر =================
         function toggleNewCenterForm() {
             document.getElementById('new-center-form').classList.toggle('hidden');
         }
@@ -1204,21 +1410,15 @@
 
                 populateCenterSelects();
                 renderCentersUI();
-            }, err => {
-                console.error("Centers snapshot error:", err);
-            });
+            }, err => console.error("Centers Error:", err));
         }
 
         function renderCentersUI() {
             document.getElementById('centers-tag-list').innerHTML = cachedCenters.map(c => `
                 <div class="flex items-center gap-2 px-3 py-1.5 bg-slate-900 border border-slate-800 rounded-xl text-slate-300">
                     <span><b class="text-amber-400">${c.name}</b> (${c.day} - ${c.time})</span>
-                    <button type="button" onclick="openEditCenterModal('${c.id || ''}', '${c.name}', '${c.day}', '${c.time}')" class="text-amber-400 hover:text-amber-300 p-0.5" title="تعديل السنتر">
-                        <i class="fa-solid fa-pen-to-square"></i>
-                    </button>
-                    <button type="button" onclick="deleteCenter('${c.id || ''}', '${c.name}')" class="text-rose-400 hover:text-rose-300 p-0.5" title="حذف السنتر">
-                        <i class="fa-solid fa-xmark"></i>
-                    </button>
+                    <button type="button" onclick="openEditCenterModal('${c.id || ''}', '${c.name}', '${c.day}', '${c.time}')" class="text-amber-400 hover:text-amber-300 p-0.5" title="تعديل"><i class="fa-solid fa-pen-to-square"></i></button>
+                    <button type="button" onclick="deleteCenter('${c.id || ''}', '${c.name}')" class="text-rose-400 hover:text-rose-300 p-0.5" title="حذف"><i class="fa-solid fa-xmark"></i></button>
                 </div>
             `).join('');
         }
@@ -1234,11 +1434,11 @@
             const cData = { name, day, time, createdAt: new Date().toISOString() };
             try {
                 if (db) await db.collection('centers').add(cData);
-                alert(`✅ تمت إضافة سنتر: ${name} في السيرفر بنجاح`);
+                alert(`✅ تمت إضافة سنتر: ${name}`);
                 e.target.reset();
                 toggleNewCenterForm();
             } catch(err) {
-                alert("تعذر إضافة السنتر: " + err.message);
+                alert("تعذر الإضافة: " + err.message);
             }
         }
 
@@ -1291,15 +1491,13 @@
                     const batch = db.batch();
                     const affectedStudents = cachedStudents.filter(st => st.center === oldName);
                     affectedStudents.forEach(st => {
-                        if (st.id) {
-                            batch.update(db.collection('students').doc(st.id), { center: newName });
-                        }
+                        if (st.id) batch.update(db.collection('students').doc(st.id), { center: newName });
                     });
                     if (affectedStudents.length > 0) await batch.commit();
                 }
 
                 closeEditCenterModal();
-                alert(`✅ تم تحديث بيانات سنتر: ${newName} في السيرفر بنجاح`);
+                alert(`✅ تم تحديث بيانات سنتر: ${newName}`);
             } catch(err) {
                 alert("تعذر حفظ التعديلات: " + err.message);
             }
@@ -1307,7 +1505,7 @@
 
         async function deleteCenter(id, name) {
             if (!navigator.onLine) { alert("⚠️ المنظومة أونلاين فقط!"); return; }
-            if (!confirm(`هل أنت متأكد من حذف سنتر (${name}) نهائياً من السيرفر؟`)) return;
+            if (!confirm(`هل أنت متأكد من حذف سنتر (${name})؟`)) return;
 
             try {
                 if (db && id) {
@@ -1315,11 +1513,11 @@
                     alert(`✅ تم حذف سنتر (${name}) بنجاح.`);
                 }
             } catch(err) {
-                alert("تعذر حذف السنتر: " + err.message);
+                alert("تعذر الحذف: " + err.message);
             }
         }
 
-        // ================= إدارة الطلاب (ربط سحابي لحظي ومباشر) =================
+        // ================= إدارة الطلاب =================
         function setupStudentsRealtime() {
             if (!db) return;
             if (studentsUnsubscribe) studentsUnsubscribe();
@@ -1340,7 +1538,7 @@
                 }
             }, err => {
                 console.error("Students Listener Error:", err);
-                tbody.innerHTML = `<tr><td colspan="9" class="text-center py-6 text-rose-400 font-bold">تعذر تحميل الطلاب! تحقق من أذونات وقواعد Firebase Firestore.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="9" class="text-center py-6 text-rose-400 font-bold">تعذر تحميل الطلاب! تحقق من أذونات وقواعد الحماية.</td></tr>`;
             });
         }
 
@@ -1357,7 +1555,9 @@
                 return;
             }
 
-            tbody.innerHTML = list.map(s => `
+            tbody.innerHTML = list.map(s => {
+                const attCount = (s.customAttendanceCount !== undefined) ? s.customAttendanceCount : (s.attendanceHistory || []).length;
+                return `
                 <tr class="hover:bg-slate-900/50 transition">
                     <td class="p-3 text-center">
                         <input type="checkbox" value="${s.id}" class="student-select-cb w-4 h-4 rounded bg-slate-900 border-slate-700 text-brand-600 focus:ring-0 cursor-pointer" onchange="updateBulkDeleteButtonUI()">
@@ -1366,7 +1566,7 @@
                     <td class="p-3 font-bold text-white">${s.name}</td>
                     <td class="p-3 text-slate-300">${s.grade}</td>
                     <td class="p-3 text-amber-300">${s.center}</td>
-                    <td class="p-3 font-mono">${(s.attendanceHistory || []).length}</td>
+                    <td class="p-3 font-mono">${attCount}</td>
                     <td class="p-3 font-mono">${(s.homeworksHistory || []).length}</td>
                     <td class="p-3 font-mono text-emerald-400">${s.parentPhone || '--'}</td>
                     <td class="p-3 text-center space-x-2 space-x-reverse whitespace-nowrap">
@@ -1375,7 +1575,7 @@
                         <button onclick="deleteStudentRecord('${s.id}')" class="px-2 py-1 bg-rose-900/40 hover:bg-rose-900 text-rose-400 rounded text-[11px]"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 </tr>
-            `).join('');
+            `}).join('');
         }
 
         function toggleSelectAllStudents(masterCb) {
@@ -1405,11 +1605,11 @@
 
             if (selectedIds.length === 0) return;
 
-            if (!confirm(`هل أنت متأكد تماماً من حذف (${selectedIds.length}) طالب محدد نهائياً من قاعدة بيانات فايرستور؟`)) return;
+            if (!confirm(`هل أنت متأكد تماماً من حذف (${selectedIds.length}) طالب محدد نهائياً؟`)) return;
 
             const bulkBtn = document.getElementById('btn-bulk-delete');
             bulkBtn.disabled = true;
-            bulkBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري الحذف من السيرفر...`;
+            bulkBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري الحذف...`;
 
             try {
                 if (db) {
@@ -1419,10 +1619,10 @@
                     }
                     await batch.commit();
                 }
-                alert(`✅ تم حذف (${selectedIds.length}) طالب بنجاح من كافة الأجهزة!`);
+                alert(`✅ تم حذف (${selectedIds.length}) طالب بنجاح!`);
             } catch (err) {
                 console.error("Bulk delete error:", err);
-                alert("حدث خطأ أثناء تنفيذ الحذف من السيرفر: " + err.message);
+                alert("حدث خطأ أثناء تنفيذ الحذف: " + err.message);
             } finally {
                 bulkBtn.disabled = false;
                 updateBulkDeleteButtonUI();
@@ -1476,11 +1676,21 @@
             btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري الحفظ...`;
 
             try {
-                const newSt = { name, code, grade, center, phone, parentPhone, attendanceHistory: [], examsHistory: [], homeworksHistory: [], createdAt: new Date().toISOString() };
-                if (db) {
-                    await db.collection('students').add(newSt);
-                }
-                alert(`✅ تم إضافة الطالب ${name} إلى السيرفر وسيظهر لكل الأجهزة.`);
+                const newSt = { 
+                    name, 
+                    code, 
+                    grade, 
+                    center, 
+                    phone, 
+                    parentPhone, 
+                    customAttendanceCount: 0,
+                    attendanceHistory: [], 
+                    examsHistory: [], 
+                    homeworksHistory: [], 
+                    createdAt: new Date().toISOString() 
+                };
+                if (db) await db.collection('students').add(newSt);
+                alert(`✅ تم إضافة الطالب ${name} بنجاح.`);
                 e.target.reset();
             } catch(err) {
                 console.error("Add student error:", err);
@@ -1537,7 +1747,7 @@
 
                 await syncStudentUpdates(st);
                 closeEditStudentModal();
-                alert(`✅ تم تحديث بيانات الطالب (${st.name}) في السيرفر السحابي.`);
+                alert(`✅ تم تحديث بيانات الطالب (${st.name}).`);
             } catch(err) {
                 alert("تعذر الحفظ: " + err.message);
             } finally {
@@ -1560,7 +1770,7 @@
             }
         }
 
-        // ================= تحميل الإكسيل =================
+        // ================= استيراد الإكسيل =================
         function downloadStudentExcelTemplate() {
             const templateData = [
                 {
@@ -1605,11 +1815,8 @@
                     const studentObj = { name, code, grade, center, phone, parentPhone };
                     const existing = cachedStudents.find(s => toEnglish(s.code).toLowerCase() === code.toLowerCase());
                     
-                    if (existing) {
-                        duplicateStudents.push({ incoming: studentObj, existing: existing });
-                    } else {
-                        newStudents.push(studentObj);
-                    }
+                    if (existing) duplicateStudents.push({ incoming: studentObj, existing: existing });
+                    else newStudents.push(studentObj);
                 }
 
                 if (newStudents.length === 0 && duplicateStudents.length === 0) {
@@ -1627,7 +1834,7 @@
                     modal.classList.add('flex');
                 } else {
                     await commitNewStudentsOnly(newStudents);
-                    alert(`✅ تم استيراد (${newStudents.length}) طالب جديد ومزامنتها مع السيرفر!`);
+                    alert(`✅ تم استيراد (${newStudents.length}) طالب جديد!`);
                 }
             };
             reader.readAsArrayBuffer(file);
@@ -1669,8 +1876,7 @@
 
             await commitNewStudentsOnly(newStudents);
             closeExcelDuplicateModal();
-
-            alert(`📊 تم الانتهاء بنجاح:\n✔️️ تمت إضافة: ${newStudents.length} طالب جديد إلى السيرفر\n${shouldReplaceAll ? `🔄 تم تحديث: ${updatedCount} طالب مكرر في السيرفر` : `⏭️ تم تخطي المكررين`}`);
+            alert(`📊 تم الانتهاء بنجاح:\n✔ تمت إضافة: ${newStudents.length} طالب جديد\n${shouldReplaceAll ? `🔄 تم تحديث: ${updatedCount} طالب مكرر` : `⏭️ تم تخطي المكررين`}`);
         }
 
         async function commitNewStudentsOnly(studentsList) {
@@ -1686,6 +1892,7 @@
                     center: item.center,
                     phone: item.phone,
                     parentPhone: item.parentPhone,
+                    customAttendanceCount: 0,
                     attendanceHistory: [],
                     examsHistory: [],
                     homeworksHistory: [],
@@ -1711,16 +1918,18 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-800">
-                        ${cachedStudents.map(s => `
+                        ${cachedStudents.map(s => {
+                            const att = (s.customAttendanceCount !== undefined) ? s.customAttendanceCount : (s.attendanceHistory || []).length;
+                            return `
                             <tr>
                                 <td class="p-2 font-mono text-brand-400 font-bold">#${s.code}</td>
                                 <td class="p-2 font-bold text-white">${s.name}</td>
                                 <td class="p-2">${s.center}</td>
-                                <td class="p-2 font-mono">${(s.attendanceHistory || []).length}</td>
+                                <td class="p-2 font-mono">${att}</td>
                                 <td class="p-2 font-mono">${(s.homeworksHistory || []).length}</td>
                                 <td class="p-2 font-mono text-amber-400">${(s.examsHistory || []).length}</td>
                             </tr>
-                        `).join('')}
+                        `}).join('')}
                     </tbody>
                 </table>
             `;
