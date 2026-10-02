@@ -552,7 +552,6 @@
             db = firebase.firestore();
         } catch(e) { console.error("Firebase Init Error:", e); }
 
-        let cachedStudents = [];
         let cachedCenters = [];
         let cachedHomeworks = [];
         let activeStudent = null;
@@ -568,15 +567,13 @@
                 .trim();
         }
 
-        // دالة مطابقة الأكواد بدقة فائقة لمنع مشاكل اختلاف الأنواع
         function isCodeMatch(codeA, codeB) {
             const a = toEnglish(codeA).toLowerCase();
             const b = toEnglish(codeB).toLowerCase();
             if (a === b) return true;
             const aNum = parseInt(a, 10);
             const bNum = parseInt(b, 10);
-            if (!isNaN(aNum) && !isNaN(bNum) && aNum === bNum) return true;
-            return false;
+            return (!isNaN(aNum) && !isNaN(bNum) && aNum === bNum);
         }
 
         function getQRUrl(content) {
@@ -595,7 +592,6 @@
         window.addEventListener('DOMContentLoaded', async () => {
             checkNetworkStatus();
             await loadCenters();
-            await loadStudentsData();
             await loadHomeworks();
 
             const saved = localStorage.getItem('MF_ONLINE_ACTIVE_ST');
@@ -676,12 +672,7 @@
                         const data = d.data();
                         if (data && data.name) cachedCenters.push({ id: d.id, ...data });
                     });
-                } catch(e) { console.error("Centers Error:", e); }
-            }
-
-            if (cachedCenters.length === 0) {
-                const loc = localStorage.getItem('MF_LOCAL_CENTERS');
-                if (loc) cachedCenters = JSON.parse(loc);
+                } catch(e) {}
             }
 
             if (cachedCenters.length === 0) {
@@ -692,8 +683,6 @@
                     { name: 'المنصة الإلكترونية (أونلاين)', day: 'طوال أيام الأسبوع', time: 'متاح دائماً على الموقع' }
                 ];
             }
-
-            localStorage.setItem('MF_LOCAL_CENTERS', JSON.stringify(cachedCenters));
 
             const grid = document.getElementById('dynamic-centers-container');
             if (grid) {
@@ -715,24 +704,7 @@
             }
         }
 
-        // ================= تحميل الطلاب =================
-        async function loadStudentsData() {
-            cachedStudents = [];
-            if (db) {
-                try {
-                    const snap = await db.collection('students').get();
-                    snap.forEach(d => cachedStudents.push({ id: d.id, ...d.data() }));
-                } catch(e) { console.error("Students Data Error:", e); }
-            }
-            if (cachedStudents.length === 0) {
-                const loc = localStorage.getItem('MF_LOCAL_STUDENTS');
-                if (loc) cachedStudents = JSON.parse(loc);
-            } else {
-                localStorage.setItem('MF_LOCAL_STUDENTS', JSON.stringify(cachedStudents));
-            }
-        }
-
-        // ================= تسجيل دخول طالب السنتر (الكود) =================
+        // ================= تسجيل دخول طالب السنتر المباشر والسريع =================
         async function handleCenterLogin(e) {
             e.preventDefault();
             const codeRaw = document.getElementById('login-center-code').value.trim();
@@ -742,46 +714,40 @@
             if (!codeClean) return;
 
             btn.disabled = true;
-            btn.innerText = "جاري التحقق من الكود...";
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري الدخول...`;
 
-            // 1. الفحص الفوري في الذاكرة المحلية أولاً
-            let matched = cachedStudents.find(s => isCodeMatch(s.code, codeClean));
+            let matched = null;
 
-            // 2. إذا لم يُعثر عليه محلياً، نفحص السيرفر بشكل مباشر وموسع
-            if (!matched && db) {
+            if (db) {
                 try {
-                    // فحص الكود كنص
-                    let snap = await db.collection('students').where('code', '==', codeClean).get();
+                    // استعلام مباشر وسريع جداً على الكود فقط كنص
+                    let snap = await db.collection('students').where('code', '==', codeClean).limit(1).get();
                     if (!snap.empty) {
                         matched = { id: snap.docs[0].id, ...snap.docs[0].data() };
                     } else {
-                        // فحص الكود كرقم
+                        // استعلام مباشر على الكود كرقم إذا كان رقمياً
                         const numVal = parseInt(codeClean, 10);
                         if (!isNaN(numVal)) {
-                            snap = await db.collection('students').where('code', '==', numVal).get();
-                            if (!snap.empty) matched = { id: snap.docs[0].id, ...snap.docs[0].data() };
+                            snap = await db.collection('students').where('code', '==', numVal).limit(1).get();
+                            if (!snap.empty) {
+                                matched = { id: snap.docs[0].id, ...snap.docs[0].data() };
+                            }
                         }
                     }
-
-                    // تحديث الكاش المحلي في حال وُجد
-                    if (matched && !cachedStudents.some(s => s.id === matched.id)) {
-                        cachedStudents.unshift(matched);
-                        localStorage.setItem('MF_LOCAL_STUDENTS', JSON.stringify(cachedStudents));
-                    }
                 } catch(err) {
-                    console.error("Login server check error:", err);
+                    console.error("Direct fetch error:", err);
                 }
             }
 
             btn.disabled = false;
             btn.innerText = "دخول المنصة";
 
-            // 3. التحقق النهائي من النتيجة
             if (matched) {
                 activeStudent = matched;
                 localStorage.setItem('MF_ONLINE_ACTIVE_ST', JSON.stringify(activeStudent));
                 closeModal('studentLoginModal');
                 initStudentUI();
+                await loadHomeworks(); // تحديث فوري لواجبات مرحلة الطالب
                 navigateTo('student-portal');
             } else {
                 alert(`⚠️ الكود (${codeRaw}) غير موجود! يرجى التأكد من كودك أو الاستعلام عبر الواتساب.`);
@@ -800,17 +766,16 @@
             if (!phoneClean || !parentPhoneClean) return;
 
             btn.disabled = true;
-            btn.innerText = "جاري التحقق من الأرقام...";
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري الدخول...`;
 
-            let matched = cachedStudents.find(s => 
-                toEnglish(s.phone) === phoneClean && toEnglish(s.parentPhone) === parentPhoneClean
-            );
+            let matched = null;
 
-            if (!matched && db) {
+            if (db) {
                 try {
                     const snap = await db.collection('students')
                         .where('phone', '==', phoneClean)
                         .where('parentPhone', '==', parentPhoneClean)
+                        .limit(1)
                         .get();
                     if (!snap.empty) {
                         matched = { id: snap.docs[0].id, ...snap.docs[0].data() };
@@ -818,7 +783,7 @@
                 } catch(err) {}
             }
 
-            if (!matched) {
+            if (!matched && db) {
                 const autoCode = 'ON_' + phoneClean.slice(-4);
                 matched = {
                     name: `طالب أونلاين (${phoneClean.slice(-4)})`,
@@ -833,46 +798,59 @@
                     createdAt: new Date().toISOString()
                 };
 
-                if (db) {
-                    try {
-                        const ref = await db.collection('students').add(matched);
-                        matched.id = ref.id;
-                    } catch(e) {}
-                }
-
-                cachedStudents.unshift(matched);
-                localStorage.setItem('MF_LOCAL_STUDENTS', JSON.stringify(cachedStudents));
+                try {
+                    const ref = await db.collection('students').add(matched);
+                    matched.id = ref.id;
+                } catch(e) {}
             }
 
             btn.disabled = false;
             btn.innerText = "دخول المنصة";
 
-            activeStudent = matched;
-            localStorage.setItem('MF_ONLINE_ACTIVE_ST', JSON.stringify(activeStudent));
-            closeModal('studentLoginModal');
-            initStudentUI();
-            navigateTo('student-portal');
+            if (matched) {
+                activeStudent = matched;
+                localStorage.setItem('MF_ONLINE_ACTIVE_ST', JSON.stringify(activeStudent));
+                closeModal('studentLoginModal');
+                initStudentUI();
+                await loadHomeworks();
+                navigateTo('student-portal');
+            }
         }
 
-        // ================= ابحث عن كودي =================
-        function filterFindCodeStudents() {
+        // ================= ابحث عن كودي بالاسم =================
+        async function filterFindCodeStudents() {
             const grade = document.getElementById('find-grade-select').value;
             const center = document.getElementById('find-center-select').value;
             const selectEl = document.getElementById('find-student-select');
             document.getElementById('find-code-result-box').classList.add('hidden');
 
-            selectEl.innerHTML = '<option value="">اختر اسمك من هنا</option>';
-            if (!grade || !center) return;
-
-            const filtered = cachedStudents.filter(s => s.grade === grade && s.center === center);
-            if (filtered.length === 0) {
-                selectEl.innerHTML = '<option value="">لا يوجد طلاب مسجلين بهذه المجموعة</option>';
+            selectEl.innerHTML = '<option value="">جاري جلب الأسماء...</option>';
+            if (!grade || !center) {
+                selectEl.innerHTML = '<option value="">اختر المرحلة والسنتر أولاً</option>';
                 return;
             }
 
-            filtered.forEach(s => {
-                selectEl.innerHTML += `<option value="${s.code}">${s.name}</option>`;
-            });
+            if (!db) return;
+
+            try {
+                const snap = await db.collection('students')
+                    .where('grade', '==', grade)
+                    .where('center', '==', center)
+                    .get();
+
+                if (snap.empty) {
+                    selectEl.innerHTML = '<option value="">لا يوجد طلاب مسجلين بهذه المجموعة</option>';
+                    return;
+                }
+
+                selectEl.innerHTML = '<option value="">اختر اسمك من هنا</option>';
+                snap.forEach(doc => {
+                    const data = doc.data();
+                    selectEl.innerHTML += `<option value="${data.code}">${data.name}</option>`;
+                });
+            } catch(e) {
+                selectEl.innerHTML = '<option value="">تعذر جلب الأسماء، يرجى التواصل معنا</option>';
+            }
         }
 
         function revealStudentCodeResult() {
@@ -886,16 +864,12 @@
             }
         }
 
-        function autoLoginWithFoundCode() {
+        async function autoLoginWithFoundCode() {
             const code = toEnglish(document.getElementById('find-student-select').value);
-            const st = cachedStudents.find(s => isCodeMatch(s.code, code));
-            if (st) {
-                activeStudent = st;
-                localStorage.setItem('MF_ONLINE_ACTIVE_ST', JSON.stringify(activeStudent));
-                closeModal('findCodeModal');
-                initStudentUI();
-                navigateTo('student-portal');
-            }
+            if (!code) return;
+            document.getElementById('login-center-code').value = code;
+            closeModal('findCodeModal');
+            document.getElementById('btn-login-center-submit').click();
         }
 
         function initStudentUI() {
@@ -947,25 +921,21 @@
             btn.disabled = true;
             btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري البحث...`;
 
-            let st = cachedStudents.find(s => 
-                isCodeMatch(s.code, cleanVal) || 
-                toEnglish(s.phone) === cleanVal || 
-                toEnglish(s.parentPhone) === cleanVal
-            );
+            let st = null;
 
-            if (!st && db) {
+            if (db) {
                 try {
-                    let snap = await db.collection('students').where('code', '==', cleanVal).get();
+                    let snap = await db.collection('students').where('code', '==', cleanVal).limit(1).get();
                     if (!snap.empty) {
                         st = snap.docs[0].data();
                     } else {
                         const numVal = parseInt(cleanVal, 10);
                         if (!isNaN(numVal)) {
-                            snap = await db.collection('students').where('code', '==', numVal).get();
+                            snap = await db.collection('students').where('code', '==', numVal).limit(1).get();
                             if (!snap.empty) st = snap.docs[0].data();
                         }
                         if (!st) {
-                            snap = await db.collection('students').where('parentPhone', '==', cleanVal).get();
+                            snap = await db.collection('students').where('parentPhone', '==', cleanVal).limit(1).get();
                             if (!snap.empty) st = snap.docs[0].data();
                         }
                     }
@@ -1013,7 +983,7 @@
             `).reverse().join('') : '<p class="text-slate-400 text-center py-3">لا يوجد حضور مسجل بعد.</p>';
         }
 
-        // ================= إدارة الواجبات =================
+        // ================= إدارة الواجبات وعرضها =================
         async function loadHomeworks() {
             cachedHomeworks = [];
             if (db) {
@@ -1021,17 +991,19 @@
                     const snap = await db.collection('homeworks').get();
                     snap.forEach(d => {
                         const data = d.data();
+                        // التحقق من حقل الظهور (إذا كان true أو غير معرف يظهر للطلاب)
                         if (data && data.isVisible !== false) {
-                            cachedHomeworks.push({ id: d.id, ...data });
+                            cachedHomeworks.push({
+                                id: d.id,
+                                ...data,
+                                title: data.title || data.hwTitle || 'واجب دراسي',
+                                grade: (data.grade || data.targetGrade || 'الكل').trim(),
+                                questions: data.questions || data.hwQuestions || []
+                            });
                         }
                     });
-                } catch(e) {}
-            }
-            if (cachedHomeworks.length === 0) {
-                const loc = localStorage.getItem('MF_LOCAL_HOMEWORKS');
-                if (loc) {
-                    const list = JSON.parse(loc);
-                    cachedHomeworks = list.filter(h => h.isVisible !== false);
+                } catch(e) {
+                    console.error("Homeworks fetch error:", e);
                 }
             }
             renderHomeworksGrid();
@@ -1043,8 +1015,14 @@
             if (!grid) return;
 
             let availableHws = cachedHomeworks;
+
+            // مطابقة الواجب بالمرحلة الدراسية للطالب بدقة ومرونة
             if (activeStudent && activeStudent.grade) {
-                availableHws = cachedHomeworks.filter(h => h.grade === 'الكل' || h.grade === activeStudent.grade);
+                const stGrade = activeStudent.grade.trim();
+                availableHws = cachedHomeworks.filter(h => {
+                    const g = (h.grade || '').trim();
+                    return g === 'الكل' || g === 'جميع المراحل الدراسية' || g === stGrade || stGrade.includes(g) || g.includes(stGrade);
+                });
             }
 
             badge.innerText = `${availableHws.length} واجب`;
@@ -1063,7 +1041,7 @@
                         <div class="space-y-1">
                             <div class="flex justify-between items-center text-[10px]">
                                 <span class="text-amber-800 font-black bg-amber-100 px-2 py-0.5 rounded-full">${hw.grade}</span>
-                                <span class="${isSolved ? 'text-emerald-600 font-black' : 'text-slate-500 font-bold'}">${isSolved ? 'تم التسليم ✔️️' : 'متاح للحل'}</span>
+                                <span class="${isSolved ? 'text-emerald-600 font-black' : 'text-slate-500 font-bold'}">${isSolved ? 'تم التسليم ✔' : 'متاح للحل'}</span>
                             </div>
                             <h4 class="font-black text-slate-900 text-base">${hw.title}</h4>
                             <span class="text-xs text-slate-500 font-mono font-bold">${(hw.questions || []).length} أسئلة</span>
@@ -1156,25 +1134,20 @@
                 if (exIdx !== -1) activeStudent.homeworksHistory[exIdx] = hwRecord;
                 else activeStudent.homeworksHistory.push(hwRecord);
 
-                if (db) {
+                if (db && activeStudent.id) {
                     try {
-                        if (activeStudent.id) {
-                            await db.collection('students').doc(activeStudent.id).update({
-                                homeworksHistory: activeStudent.homeworksHistory
-                            });
-                        }
+                        await db.collection('students').doc(activeStudent.id).update({
+                            homeworksHistory: activeStudent.homeworksHistory
+                        });
                     } catch(err) { console.error("Update Error:", err); }
                 }
 
                 localStorage.setItem('MF_ONLINE_ACTIVE_ST', JSON.stringify(activeStudent));
-                const stIdx = cachedStudents.findIndex(s => isCodeMatch(s.code, activeStudent.code));
-                if (stIdx !== -1) cachedStudents[stIdx] = activeStudent;
-                localStorage.setItem('MF_LOCAL_STUDENTS', JSON.stringify(cachedStudents));
 
                 updateStudentQRDisplay(activeStudent, hwRecord);
                 document.getElementById('sp-latest-hw-badge').innerText = `${hwRecord.title} (${hwRecord.score})`;
 
-                // إرسال واتساب لولي الأمر
+                // إرسال تقرير الواجب لولي الأمر
                 if (activeStudent.parentPhone) {
                     let badge = "ممتاز وبطل متألق 🌟👏";
                     if (percentage < 50) badge = "يحتاج إلى مراجعة فورية ومزيد من التركيز ⚠️";
