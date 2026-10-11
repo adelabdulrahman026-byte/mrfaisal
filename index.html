@@ -3,12 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    
-    <!-- منع الكاش للملف على مستوى المتصفح لضمان تحديث الصفحة دائماً -->
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
-
     <title>مستر فيصل | معاً نحو مستقبل أفضل</title>
     
     <!-- Tailwind CSS -->
@@ -556,12 +550,6 @@
             };
             if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
             db = firebase.firestore();
-            
-            // إعدادات تمنع حصر الاستعلام في كاش قديم
-            db.settings({
-                cacheSizeBytes: firebase.firestore.CACHE_SIZE_UNLIMITED,
-                merge: true
-            });
         } catch(e) { console.error("Firebase Init Error:", e); }
 
         let cachedCenters = [];
@@ -679,7 +667,7 @@
             cachedCenters = [];
             if (db) {
                 try {
-                    const snap = await db.collection('centers').get({ source: 'server' }).catch(() => db.collection('centers').get());
+                    const snap = await db.collection('centers').get();
                     snap.forEach(d => {
                         const data = d.data();
                         if (data && data.name) cachedCenters.push({ id: d.id, ...data });
@@ -716,7 +704,7 @@
             }
         }
 
-        // ================= تسجيل دخول طالب السنتر المباشر والسريع من السيرفر مباشرة =================
+        // ================= تسجيل دخول طالب السنتر المباشر والسريع =================
         async function handleCenterLogin(e) {
             e.preventDefault();
             const codeRaw = document.getElementById('login-center-code').value.trim();
@@ -726,36 +714,21 @@
             if (!codeClean) return;
 
             btn.disabled = true;
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري التحقق...`;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري الدخول...`;
 
             let matched = null;
 
             if (db) {
-                // جلب مباشر من السيرفر لتخطي الكاش المحفوظ في المتصفح
-                async function fetchFromServer(field, value) {
-                    try {
-                        return await db.collection('students')
-                            .where(field, '==', value)
-                            .limit(1)
-                            .get({ source: 'server' });
-                    } catch (err) {
-                        return await db.collection('students')
-                            .where(field, '==', value)
-                            .limit(1)
-                            .get();
-                    }
-                }
-
                 try {
-                    // 1. فحص الكود كنص
-                    let snap = await fetchFromServer('code', codeClean);
+                    // استعلام مباشر وسريع جداً على الكود فقط كنص
+                    let snap = await db.collection('students').where('code', '==', codeClean).limit(1).get();
                     if (!snap.empty) {
                         matched = { id: snap.docs[0].id, ...snap.docs[0].data() };
                     } else {
-                        // 2. فحص الكود كرقم إذا تم تخزينه كـ Number
+                        // استعلام مباشر على الكود كرقم إذا كان رقمياً
                         const numVal = parseInt(codeClean, 10);
                         if (!isNaN(numVal)) {
-                            snap = await fetchFromServer('code', numVal);
+                            snap = await db.collection('students').where('code', '==', numVal).limit(1).get();
                             if (!snap.empty) {
                                 matched = { id: snap.docs[0].id, ...snap.docs[0].data() };
                             }
@@ -803,9 +776,7 @@
                         .where('phone', '==', phoneClean)
                         .where('parentPhone', '==', parentPhoneClean)
                         .limit(1)
-                        .get({ source: 'server' })
-                        .catch(() => db.collection('students').where('phone', '==', phoneClean).where('parentPhone', '==', parentPhoneClean).limit(1).get());
-
+                        .get();
                     if (!snap.empty) {
                         matched = { id: snap.docs[0].id, ...snap.docs[0].data() };
                     }
@@ -862,12 +833,10 @@
             if (!db) return;
 
             try {
-                // جلب مباشر من السيرفر لضمان ظهور الطلاب المضافين حديثاً فوراً
                 const snap = await db.collection('students')
                     .where('grade', '==', grade)
                     .where('center', '==', center)
-                    .get({ source: 'server' })
-                    .catch(() => db.collection('students').where('grade', '==', grade).where('center', '==', center).get());
+                    .get();
 
                 if (snap.empty) {
                     selectEl.innerHTML = '<option value="">لا يوجد طلاب مسجلين بهذه المجموعة</option>';
@@ -956,19 +925,17 @@
 
             if (db) {
                 try {
-                    // فحص مباشر من السيرفر
-                    let snap = await db.collection('students').where('code', '==', cleanVal).limit(1).get({ source: 'server' }).catch(() => db.collection('students').where('code', '==', cleanVal).limit(1).get());
-                    
+                    let snap = await db.collection('students').where('code', '==', cleanVal).limit(1).get();
                     if (!snap.empty) {
                         st = snap.docs[0].data();
                     } else {
                         const numVal = parseInt(cleanVal, 10);
                         if (!isNaN(numVal)) {
-                            snap = await db.collection('students').where('code', '==', numVal).limit(1).get({ source: 'server' }).catch(() => db.collection('students').where('code', '==', numVal).limit(1).get());
+                            snap = await db.collection('students').where('code', '==', numVal).limit(1).get();
                             if (!snap.empty) st = snap.docs[0].data();
                         }
                         if (!st) {
-                            snap = await db.collection('students').where('parentPhone', '==', cleanVal).limit(1).get({ source: 'server' }).catch(() => db.collection('students').where('parentPhone', '==', cleanVal).limit(1).get());
+                            snap = await db.collection('students').where('parentPhone', '==', cleanVal).limit(1).get();
                             if (!snap.empty) st = snap.docs[0].data();
                         }
                     }
@@ -1021,9 +988,10 @@
             cachedHomeworks = [];
             if (db) {
                 try {
-                    const snap = await db.collection('homeworks').get({ source: 'server' }).catch(() => db.collection('homeworks').get());
+                    const snap = await db.collection('homeworks').get();
                     snap.forEach(d => {
                         const data = d.data();
+                        // التحقق من حقل الظهور (إذا كان true أو غير معرف يظهر للطلاب)
                         if (data && data.isVisible !== false) {
                             cachedHomeworks.push({
                                 id: d.id,
@@ -1048,6 +1016,7 @@
 
             let availableHws = cachedHomeworks;
 
+            // مطابقة الواجب بالمرحلة الدراسية للطالب بدقة ومرونة
             if (activeStudent && activeStudent.grade) {
                 const stGrade = activeStudent.grade.trim();
                 availableHws = cachedHomeworks.filter(h => {
