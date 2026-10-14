@@ -554,6 +554,8 @@
 
         let cachedCenters = [];
         let cachedHomeworks = [];
+        let homeworksLoadError = null;
+        let homeworksLoadPromise = null;
         let activeStudent = null;
         let activeSolvingHomework = null;
         let currentLoginMode = 'center';
@@ -975,30 +977,87 @@
             `).reverse().join('') : '<p class="text-slate-400 text-center py-3">لا يوجد حضور مسجل بعد.</p>';
         }
 
-        // ================= إدارة الواجبات وعرضها =================
-        async function loadHomeworks() {
-            cachedHomeworks = [];
-            if (db) {
-                try {
-                    const snap = await db.collection('homeworks').get();
-                    snap.forEach(d => {
-                        const data = d.data();
-                        // التحقق من حقل الظهور (إذا كان true أو غير معرف يظهر للطلاب)
-                        if (data && data.isVisible !== false) {
-                            cachedHomeworks.push({
-                                id: d.id,
-                                ...data,
-                                title: data.title || data.hwTitle || 'واجب دراسي',
-                                grade: (data.grade || data.targetGrade || 'الكل').trim(),
-                                questions: data.questions || data.hwQuestions || []
-                            });
-                        }
-                    });
-                } catch(e) {
-                    console.error("Homeworks fetch error:", e);
-                }
+        // ================= تحميل الواجبات ومطابقة المرحلة بشكل موحّد =================
+        function normalizeGrade(value) {
+            let grade = String(value ?? '')
+                .replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d))
+                .replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d))
+                .replace(/[أإآ]/g, 'ا')
+                .replace(/ى/g, 'ي')
+                .replace(/[ـ]/g, '')
+                .replace(/\s+/g, ' ')
+                .trim()
+                .toLowerCase();
+
+            if (!grade || grade === 'الكل' || grade === 'كل' ||
+                grade === 'جميع المراحل الدراسية' || grade === 'كل المراحل' ||
+                grade === 'all' || grade === 'all grades') return 'all';
+
+            // توحيد أشهر صيغ كتابة المراحل حتى لا تختلف بسبب طريقة تسجيل الطالب.
+            if (/ثالث|الثالث|3/.test(grade) && /ثانوي|الثانوي|ثانويه|الثانويه/.test(grade)) return 'third-secondary';
+            if (/ثاني|الثاني|2/.test(grade) && /ثانوي|الثانوي|ثانويه|الثانويه/.test(grade)) return 'second-secondary';
+            if (/اول|الأول|الاول|1/.test(grade) && /ثانوي|الثانوي|ثانويه|الثانويه/.test(grade)) return 'first-secondary';
+
+            return grade;
+        }
+
+        function homeworkMatchesStudent(homeworkGrade, studentGrade) {
+            const hwGrade = normalizeGrade(homeworkGrade);
+            const stGrade = normalizeGrade(studentGrade);
+            return hwGrade === 'all' || (stGrade !== '' && hwGrade === stGrade);
+        }
+
+        async function loadHomeworks(forceServer = true) {
+            if (homeworksLoadPromise) return homeworksLoadPromise;
+
+            const grid = document.getElementById('homeworks-grid-view');
+            if (grid) {
+                grid.innerHTML = '<p class="col-span-2 text-center py-8 text-slate-400 text-xs"><i class="fa-solid fa-spinner fa-spin ml-2"></i> جاري تحميل الواجبات...</p>';
             }
-            renderHomeworksGrid();
+
+            homeworksLoadError = null;
+            homeworksLoadPromise = (async () => {
+                try {
+                    if (!db) throw new Error('Firebase Firestore is not initialized');
+
+                    // قراءة مباشرة من السيرفر لتجنب عرض نسخة قديمة من الكاش على جهاز دون آخر.
+                    const snap = await db.collection('homeworks').get({ source: 'server' });
+                    const freshHomeworks = [];
+
+                    snap.forEach(doc => {
+                        const data = doc.data() || {};
+                        // false فقط تعني مخفي؛ الواجبات القديمة التي لا تحتوي الحقل تظل ظاهرة.
+                        if (data.isVisible === false || data.isVisible === 'false' || data.isVisible === 0) return;
+
+                        const rawGrade = data.grade ?? data.targetGrade ?? data.target_grade ?? 'الكل';
+                        const questions = Array.isArray(data.questions) ? data.questions :
+                            (Array.isArray(data.hwQuestions) ? data.hwQuestions : []);
+
+                        freshHomeworks.push({
+                            ...data,
+                            id: doc.id,
+                            title: String(data.title || data.hwTitle || data.name || 'واجب دراسي'),
+                            grade: String(rawGrade ?? 'الكل').trim() || 'الكل',
+                            questions
+                        });
+                    });
+
+                    cachedHomeworks = freshHomeworks;
+                    cachedHomeworks.sort((a, b) => {
+                        const dateA = String(a.createdAt || '');
+                        const dateB = String(b.createdAt || '');
+                        return dateB.localeCompare(dateA);
+                    });
+                } catch (error) {
+                    homeworksLoadError = error;
+                    console.error('Homeworks server load failed:', error);
+                } finally {
+                    homeworksLoadPromise = null;
+                    renderHomeworksGrid();
+                }
+            })();
+
+            return homeworksLoadPromise;
         }
 
         function renderHomeworksGrid() {
@@ -1006,21 +1065,28 @@
             const badge = document.getElementById('hw-total-count-badge');
             if (!grid) return;
 
-            let availableHws = cachedHomeworks;
-
-            // مطابقة الواجب بالمرحلة الدراسية للطالب بدقة ومرونة
-            if (activeStudent && activeStudent.grade) {
-                const stGrade = activeStudent.grade.trim();
-                availableHws = cachedHomeworks.filter(h => {
-                    const g = (h.grade || '').trim();
-                    return g === 'الكل' || g === 'جميع المراحل الدراسية' || g === stGrade || stGrade.includes(g) || g.includes(stGrade);
-                });
+            if (homeworksLoadError) {
+                if (badge) badge.innerText = 'تعذر التحميل';
+                grid.innerHTML = `
+                    <div class="col-span-2 text-center py-8 px-4 rounded-2xl border border-rose-500/30 bg-rose-500/5">
+                        <p class="text-rose-300 text-sm font-bold mb-2">تعذر الاتصال بالسيرفر لتحميل الواجبات.</p>
+                        <p class="text-slate-400 text-xs mb-4">لم نعتبر هذا عدم وجود واجبات؛ أعد المحاولة للتأكد من وصول البيانات من السيرفر.</p>
+                        <button onclick="loadHomeworks(true)" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold">إعادة تحميل الواجبات</button>
+                    </div>`;
+                return;
             }
 
-            badge.innerText = `${availableHws.length} واجب`;
+            let availableHws = cachedHomeworks;
+            if (activeStudent) {
+                availableHws = cachedHomeworks.filter(hw =>
+                    homeworkMatchesStudent(hw.grade, activeStudent.grade)
+                );
+            }
+
+            if (badge) badge.innerText = `${availableHws.length} واجب`;
 
             if (availableHws.length === 0) {
-                grid.innerHTML = `<p class="col-span-2 text-center py-8 text-slate-400 text-xs">لا توجد واجبات منشورة لمرحلتك حالياً.</p>`;
+                grid.innerHTML = `<p class="col-span-2 text-center py-8 text-slate-400 text-xs">لا توجد واجبات منشورة ومطابقة لمرحلتك حالياً.</p>`;
                 return;
             }
 
