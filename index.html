@@ -594,13 +594,8 @@
             await loadCenters();
             await loadHomeworks();
 
-            const saved = localStorage.getItem('MF_ONLINE_ACTIVE_ST');
-            if (saved) {
-                try {
-                    activeStudent = JSON.parse(saved);
-                    initStudentUI();
-                } catch(e) { localStorage.removeItem('MF_ONLINE_ACTIVE_ST'); }
-            }
+            // لا يتم حفظ جلسة الطالب في المتصفح.
+            // بيانات الطالب تُقرأ من Firestore عند تسجيل الدخول، والجلسة الحالية في الذاكرة فقط.
         });
 
         function navigateTo(viewId) {
@@ -636,7 +631,6 @@
         function handleStudentLogout() {
             if (!confirm('هل تريد بالتأكيد تسجيل الخروج؟')) return;
             activeStudent = null;
-            localStorage.removeItem('MF_ONLINE_ACTIVE_ST');
             document.getElementById('guest-nav-controls').classList.remove('hidden');
             document.getElementById('logged-nav-controls').classList.add('hidden');
             navigateTo('home');
@@ -744,7 +738,6 @@
 
             if (matched) {
                 activeStudent = matched;
-                localStorage.setItem('MF_ONLINE_ACTIVE_ST', JSON.stringify(activeStudent));
                 closeModal('studentLoginModal');
                 initStudentUI();
                 await loadHomeworks(); // تحديث فوري لواجبات مرحلة الطالب
@@ -809,7 +802,6 @@
 
             if (matched) {
                 activeStudent = matched;
-                localStorage.setItem('MF_ONLINE_ACTIVE_ST', JSON.stringify(activeStudent));
                 closeModal('studentLoginModal');
                 initStudentUI();
                 await loadHomeworks();
@@ -1142,7 +1134,6 @@
                     } catch(err) { console.error("Update Error:", err); }
                 }
 
-                localStorage.setItem('MF_ONLINE_ACTIVE_ST', JSON.stringify(activeStudent));
 
                 updateStudentQRDisplay(activeStudent, hwRecord);
                 document.getElementById('sp-latest-hw-badge').innerText = `${hwRecord.title} (${hwRecord.score})`;
