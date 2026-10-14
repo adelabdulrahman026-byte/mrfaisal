@@ -244,37 +244,36 @@
             <!-- TAB 2: رصد الدرجات مع جدول كل الامتحانات وتعديلها -->
             <div id="tab-content-grading" class="tab-sec hidden space-y-6">
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                    <!-- نموذج الرصد -->
-                    <div class="lg:col-span-5 glass-panel border border-amber-500/30 p-6 rounded-3xl h-fit">
+                    <!-- رصد جماعي مبسط حسب السنتر -->
+                    <div class="lg:col-span-5 glass-panel border border-amber-500/30 p-5 rounded-3xl h-fit">
                         <h3 class="text-base font-black text-amber-400 flex items-center gap-2 mb-1">
-                            <i class="fa-solid fa-square-poll-vertical"></i> رصد درجات الاختبارات
+                            <i class="fa-solid fa-clipboard-check"></i> رصد امتحان لمجموعة كاملة
                         </h3>
-                        <p class="text-xs text-slate-400 mb-6">يتم حفظ الدرجة مباشرة وإرسال رسالة الواتساب تلقائياً.</p>
+                        <p class="text-xs text-slate-400 mb-5">اكتب اسم الامتحان، اختار السنتر، وبعدها سجّل درجة كل طالب من القائمة.</p>
 
-                        <form onsubmit="handleGradeEntrySubmit(event)" class="space-y-4">
+                        <div class="space-y-4">
                             <div>
-                                <label class="block text-xs font-bold mb-1 text-slate-300">كود الطالب:</label>
-                                <input type="text" id="grade-input-code" required placeholder="مثال: 101" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white font-mono font-bold focus:border-amber-400 focus:outline-none" oninput="fetchGradingStudentName()">
-                                <p id="grade-student-name-preview" class="text-xs text-amber-400 font-bold mt-1"></p>
+                                <label class="block text-xs font-bold mb-1 text-slate-300">اسم الامتحان:</label>
+                                <input type="text" id="batch-exam-title" placeholder="مثال: امتحان الباب الأول" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white focus:border-amber-400 focus:outline-none" oninput="renderBatchGradingStudents()">
                             </div>
                             <div>
-                                <label class="block text-xs font-bold mb-1 text-slate-300">عنوان الاختبار:</label>
-                                <input type="text" id="grade-input-title" required placeholder="مثال: امتحان الحصة الرابعة" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:border-amber-400 focus:outline-none">
+                                <label class="block text-xs font-bold mb-1 text-slate-300">المجموعة / السنتر:</label>
+                                <select id="batch-exam-center" onchange="renderBatchGradingStudents()" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white focus:border-amber-400 focus:outline-none">
+                                    <option value="">اختر السنتر أولاً</option>
+                                </select>
                             </div>
-                            <div class="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-xs font-bold mb-1 text-slate-300">الدرجة المحصلة (تقبل 0.5):</label>
-                                    <input type="number" step="any" id="grade-input-score" required placeholder="18.5" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-center font-mono font-bold text-emerald-400 focus:border-amber-400 focus:outline-none">
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-bold mb-1 text-slate-300">الدرجة النهائية:</label>
-                                    <input type="number" step="any" id="grade-input-max" value="20" required class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-center font-mono font-bold text-white focus:border-amber-400 focus:outline-none">
-                                </div>
+                            <div>
+                                <label class="block text-xs font-bold mb-1 text-slate-300">الدرجة النهائية لكل الطلاب:</label>
+                                <input type="number" step="any" min="0.5" id="batch-exam-max" value="20" oninput="renderBatchGradingStudents()" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white focus:border-amber-400 focus:outline-none">
                             </div>
-                            <button type="submit" id="btn-submit-grade" class="w-full py-3.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black rounded-xl text-xs transition shadow-lg flex items-center justify-center gap-2">
-                                <i class="fa-brands fa-whatsapp text-base"></i> رصد الدرجة وإرسال التقرير فوراً لولي الأمر
-                            </button>
-                        </form>
+                            <div class="flex items-center justify-between gap-2 p-3 bg-slate-900 rounded-xl border border-slate-800">
+                                <span class="text-xs text-slate-300">عدد الطلاب في المجموعة</span>
+                                <span id="batch-grading-count" class="font-black text-amber-400">0 طالب</span>
+                            </div>
+                            <div id="batch-grading-students" class="space-y-3 max-h-[600px] overflow-y-auto custom-scroll">
+                                <p class="text-xs text-slate-500 text-center py-5">اختار السنتر لعرض الطلاب.</p>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- سجل كل الامتحانات المرصودة للطلاب مع التعديل المباشر -->
@@ -939,6 +938,137 @@
             alert(`✅ تم تسجيل حضور الطالب (${st.name}) بنجاح.`);
         }
 
+        // ================= رصد درجات مجموعة كاملة =================
+        function renderBatchGradingStudents() {
+            const listBox = document.getElementById('batch-grading-students');
+            const centerSelect = document.getElementById('batch-exam-center');
+            const countBox = document.getElementById('batch-grading-count');
+            if (!listBox || !centerSelect || !countBox) return;
+
+            const centerName = centerSelect.value;
+            const maxPreview = document.getElementById('batch-exam-max')?.value || 20;
+            if (!centerName) {
+                countBox.textContent = '0 طالب';
+                listBox.innerHTML = '<p class="text-xs text-slate-500 text-center py-5">اختار السنتر لعرض الطلاب.</p>';
+                return;
+            }
+
+            const students = cachedStudents
+                .filter(st => (st.center || '').trim() === centerName.trim())
+                .sort((a, b) => (a.name || '').localeCompare(b.name || '', 'ar'));
+
+            countBox.textContent = `${students.length} طالب`;
+            if (!students.length) {
+                listBox.innerHTML = '<p class="text-xs text-slate-500 text-center py-5">مفيش طلاب مسجلين في السنتر ده.</p>';
+                return;
+            }
+
+            listBox.innerHTML = students.map(st => {
+                const safeId = String(st.id).replace(/[^a-zA-Z0-9_-]/g, '_');
+                return `
+                    <div id="batch-row-${safeId}" class="p-3 bg-slate-900 rounded-2xl border border-slate-800 space-y-2">
+                        <div class="flex items-start justify-between gap-2">
+                            <div class="min-w-0">
+                                <p class="font-bold text-white text-xs leading-5">${st.name || 'بدون اسم'}</p>
+                                <p class="text-[10px] text-slate-400 font-mono">كود: ${st.code || '--'}</p>
+                            </div>
+                            <span id="batch-status-${safeId}" class="text-[10px] text-slate-500 whitespace-nowrap">لم يُرصد بعد</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <input type="number" step="any" min="0" id="batch-score-${safeId}" placeholder="الدرجة" aria-label="درجة ${st.name || ''}" class="min-w-0 flex-1 w-1/2 p-2.5 rounded-xl bg-slate-950 border border-slate-700 text-center text-sm font-bold text-emerald-400 focus:outline-none focus:border-amber-400">
+                            <span class="text-slate-500 text-xs">/ <span id="batch-max-preview-${safeId}">${maxPreview}</span></span>
+                            <button type="button" onclick="saveBatchStudentGrade('${String(st.id).replace(/'/g, "\\'")}')" id="batch-save-${safeId}" class="px-3 py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 rounded-xl text-[11px] font-black whitespace-nowrap">
+                                <i class="fa-solid fa-floppy-disk ml-1"></i> رصد
+                            </button>
+                        </div>
+                    </div>`;
+            }).join('');
+        }
+
+        async function saveBatchStudentGrade(studentId) {
+            if (!navigator.onLine) { alert('⚠️ المنظومة أونلاين فقط!'); return; }
+
+            const st = cachedStudents.find(student => student.id === studentId);
+            if (!st) { alert('تعذر العثور على بيانات الطالب. حدّث الصفحة وحاول مرة أخرى.'); return; }
+
+            const title = document.getElementById('batch-exam-title').value.trim();
+            const max = parseFloat(document.getElementById('batch-exam-max').value);
+            const safeId = String(st.id).replace(/[^a-zA-Z0-9_-]/g, '_');
+            const scoreInput = document.getElementById(`batch-score-${safeId}`);
+            const status = document.getElementById(`batch-status-${safeId}`);
+            const button = document.getElementById(`batch-save-${safeId}`);
+            const score = parseFloat(scoreInput?.value);
+
+            if (!title) { alert('اكتب اسم الامتحان أولاً.'); document.getElementById('batch-exam-title').focus(); return; }
+            if (!Number.isFinite(max) || max <= 0) { alert('اكتب الدرجة النهائية بشكل صحيح.'); return; }
+            if (!scoreInput || scoreInput.value.trim() === '' || !Number.isFinite(score) || score < 0 || score > max) {
+                alert(`اكتب درجة صحيحة للطالب ${st.name} من 0 إلى ${max}.`);
+                scoreInput?.focus();
+                return;
+            }
+
+            button.disabled = true;
+            button.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+            try {
+                const scoreFormatted = `${score} / ${max}`;
+                const percentage = Math.round((score / max) * 100);
+                let badge = 'ممتاز وبطل متألق 🌟👏';
+                if (percentage < 50) badge = 'يحتاج إلى تركيز ومراجعة فورية ⚠️';
+                else if (percentage < 70) badge = 'جيد مع إمكانية لتحقيق الأفضل 📈';
+                else if (percentage < 85) badge = 'جيد جداً ومتميز ✨';
+
+                st.examsHistory = st.examsHistory || [];
+                st.examsHistory.push({
+                    id: 'EX_' + Date.now() + '_' + String(st.code || ''),
+                    title,
+                    score: scoreFormatted,
+                    rawScore: score,
+                    maxScore: max,
+                    date: new Date().toLocaleDateString('ar-EG')
+                });
+
+                await syncStudentUpdates(st);
+
+                if (st.parentPhone) {
+                    const attendanceCount = st.customAttendanceCount !== undefined ? st.customAttendanceCount : (st.attendanceHistory || []).length;
+                    const homeworkCount = (st.homeworksHistory || []).length;
+                    const message = `✨ *منظومة مستر محمد فيصل التعليمية* ✨
+━━━━━━━━━━━━━━━━━━━━━
+السيد/ة ولي أمر بطلنا: *${st.name}* 🎓
+تحية طيبة وبعد،،
+
+📊 *تقرير نتيجة الاختبار الدوري:*
+📝 *اسم الاختبار:* ${title}
+🎯 *الدرجة المحققة:* *${scoreFormatted}* (${percentage}%)
+🏅 *التقييم:* ${badge}
+
+📈 *مؤشرات الالتزام والمتابعة حتى اليوم:*
+🗓️ *إجمالي الحصص المحضورة:* *${attendanceCount} حصص*
+📚 *الواجبات المنجزة والمراجعة:* *${homeworkCount} واجبات*
+
+━━━━━━━━━━━━━━━━━━━━━
+💡 *لمتابعة درجات ابنكم وسجل الحضور عبر بوابة ولي الأمر:*
+🌐 *https://www.mrfaisal.net*
+
+✨ *معاً نصنع التفوق ونبني القمة دائماً* 🚀`;
+                    enqueueWhatsAppMessage(st.name, st.parentPhone, message);
+                }
+
+                status.textContent = 'تم الرصد ✓';
+                status.className = 'text-[10px] text-emerald-400 font-bold whitespace-nowrap';
+                button.innerHTML = '<i class="fa-solid fa-check ml-1"></i> تم';
+                button.className = 'px-3 py-2.5 bg-emerald-700 text-white rounded-xl text-[11px] font-black whitespace-nowrap';
+                scoreInput.disabled = true;
+                renderRecentGradesTable();
+                if (currentLoadedStudent && currentLoadedStudent.id === st.id) renderStudentDossier(st);
+            } catch (error) {
+                console.error('Batch grade save failed:', error);
+                alert(`تعذر حفظ درجة ${st.name}: ${error.message || error}`);
+                button.disabled = false;
+                button.innerHTML = '<i class="fa-solid fa-floppy-disk ml-1"></i> حاول تاني';
+            }
+        }
+
         // ================= TAB 2: رصد الدرجات وجدول كل الامتحانات =================
         function fetchGradingStudentName() {
             const code = toEnglish(document.getElementById('grade-input-code').value.trim()).toLowerCase();
@@ -1443,13 +1573,15 @@
         }
 
         function populateCenterSelects() {
-            const selects = ['manual-center', 'edit-modal-center'];
+            const selects = ['manual-center', 'edit-modal-center', 'batch-exam-center'];
             selects.forEach(id => {
                 const el = document.getElementById(id);
                 if (el) {
                     const prevVal = el.value;
-                    el.innerHTML = cachedCenters.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+                    const placeholder = id === 'batch-exam-center' ? '<option value="">اختر السنتر / المجموعة</option>' : '';
+                    el.innerHTML = placeholder + cachedCenters.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
                     if (prevVal) el.value = prevVal;
+                    if (id === 'batch-exam-center') renderBatchGradingStudents();
                 }
             });
         }
@@ -1531,6 +1663,7 @@
                 cachedStudents.sort((a,b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
 
                 renderStudentsTable(cachedStudents);
+                renderBatchGradingStudents();
 
                 if (currentLoadedStudent) {
                     const updatedCurrent = cachedStudents.find(s => s.id === currentLoadedStudent.id || toEnglish(s.code) === toEnglish(currentLoadedStudent.code));
