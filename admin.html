@@ -339,9 +339,12 @@
 
                         <div id="homework-questions-container" class="space-y-4 pt-2"></div>
 
-                        <button type="submit" id="btn-save-hw" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-black rounded-xl text-sm transition shadow-lg flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-cloud-arrow-up"></i> حفظ ونشر الواجب على السيرفر
-                        </button>
+                        <div class="flex flex-col sm:flex-row gap-3">
+                            <button type="submit" id="btn-save-hw" class="flex-1 py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-black rounded-xl text-sm transition shadow-lg flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-cloud-arrow-up"></i> حفظ ونشر الواجب على السيرفر
+                            </button>
+                            <button type="button" id="btn-cancel-hw-edit" onclick="cancelHomeworkEdit()" class="hidden px-6 py-3.5 bg-slate-700 hover:bg-slate-600 text-white font-bold rounded-xl text-sm">إلغاء التعديل</button>
+                        </div>
                     </form>
                 </div>
 
@@ -620,6 +623,7 @@
         let cachedHomeworks = [];
         let currentLoadedStudent = null;
         let questionCounter = 0;
+        let editingHomeworkId = null;
 
         let pendingExcelData = null;
         let messageQueue = [];
@@ -1350,85 +1354,161 @@
         }
 
         // ================= TAB 3: بنك الواجبات (إخفاء وإظهار) =================
-        function addQuestionFieldToBuilder() {
+        function addQuestionFieldToBuilder(question = null) {
             questionCounter++;
             const qNum = questionCounter;
             const container = document.getElementById('homework-questions-container');
-
             const card = document.createElement('div');
             card.id = `hw-q-card-${qNum}`;
             card.className = "p-4 bg-slate-900 rounded-2xl border border-slate-800 space-y-3";
+            const opts = Array.isArray(question?.options) ? question.options : ['', '', '', ''];
+            const correct = Number.isInteger(Number(question?.correct)) ? Number(question.correct) : 0;
             card.innerHTML = `
                 <div class="flex justify-between items-center">
-                    <span class="font-bold text-xs text-amber-400">سؤال (${qNum}):</span>
-                    ${qNum > 1 ? `<button type="button" onclick="document.getElementById('hw-q-card-${qNum}').remove()" class="text-xs text-rose-400">حذف</button>` : ''}
+                    <span class="font-bold text-xs text-amber-400">سؤال (${container.children.length + 1}):</span>
+                    <button type="button" onclick="removeHomeworkQuestion(this)" class="text-xs text-rose-400 hover:text-rose-300"><i class="fa-solid fa-trash"></i> حذف السؤال</button>
                 </div>
-                <input type="text" class="q-title w-full p-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs text-white" required placeholder="اكتب نص السؤال هنا...">
-                <div class="grid grid-cols-2 gap-2">
-                    <input type="text" class="q-opt-0 w-full p-2 rounded-lg bg-slate-800 border border-slate-700 text-xs text-white" required placeholder="خيار (أ)">
-                    <input type="text" class="q-opt-1 w-full p-2 rounded-lg bg-slate-800 border border-slate-700 text-xs text-white" required placeholder="خيار (ب)">
-                    <input type="text" class="q-opt-2 w-full p-2 rounded-lg bg-slate-800 border border-slate-700 text-xs text-white" required placeholder="خيار (ج)">
-                    <input type="text" class="q-opt-3 w-full p-2 rounded-lg bg-slate-800 border border-slate-700 text-xs text-white" required placeholder="خيار (د)">
+                <input type="text" class="q-title w-full p-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs text-white" required placeholder="اكتب نص السؤال هنا..." value="${escapeHomeworkAttr(question?.text || '')}">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <input type="text" class="q-opt-0 w-full p-2 rounded-lg bg-slate-800 border border-slate-700 text-xs text-white" required placeholder="خيار (أ)" value="${escapeHomeworkAttr(opts[0] || '')}">
+                    <input type="text" class="q-opt-1 w-full p-2 rounded-lg bg-slate-800 border border-slate-700 text-xs text-white" required placeholder="خيار (ب)" value="${escapeHomeworkAttr(opts[1] || '')}">
+                    <input type="text" class="q-opt-2 w-full p-2 rounded-lg bg-slate-800 border border-slate-700 text-xs text-white" required placeholder="خيار (ج)" value="${escapeHomeworkAttr(opts[2] || '')}">
+                    <input type="text" class="q-opt-3 w-full p-2 rounded-lg bg-slate-800 border border-slate-700 text-xs text-white" required placeholder="خيار (د)" value="${escapeHomeworkAttr(opts[3] || '')}">
                 </div>
-                <div class="flex gap-3 items-center text-xs">
+                <div class="flex flex-wrap gap-3 items-center text-xs">
                     <label class="text-emerald-400 font-bold">الإجابة الصحيحة:</label>
                     <select class="q-ans p-1.5 rounded-lg bg-slate-800 border border-slate-700 text-white font-bold">
-                        <option value="0">خيار (أ)</option>
-                        <option value="1">خيار (ب)</option>
-                        <option value="2">خيار (ج)</option>
-                        <option value="3">خيار (د)</option>
+                        <option value="0" ${correct === 0 ? 'selected' : ''}>خيار (أ)</option>
+                        <option value="1" ${correct === 1 ? 'selected' : ''}>خيار (ب)</option>
+                        <option value="2" ${correct === 2 ? 'selected' : ''}>خيار (ج)</option>
+                        <option value="3" ${correct === 3 ? 'selected' : ''}>خيار (د)</option>
                     </select>
                     <label class="text-amber-400 font-bold mr-auto">الدرجة:</label>
-                    <input type="number" step="any" value="1" class="q-pts p-1.5 rounded-lg bg-slate-800 border border-slate-700 w-16 text-center font-bold text-white">
-                </div>
-            `;
+                    <input type="number" min="0.5" step="any" value="${Number(question?.points) > 0 ? Number(question.points) : 1}" class="q-pts p-1.5 rounded-lg bg-slate-800 border border-slate-700 w-20 text-center font-bold text-white" required>
+                </div>`;
             container.appendChild(card);
+            refreshHomeworkQuestionNumbers();
+        }
+
+        function escapeHomeworkAttr(value) {
+            return String(value ?? '').replace(/&/g, '&amp;').replace(/"/g, '&quot;')
+                .replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function refreshHomeworkQuestionNumbers() {
+            document.querySelectorAll('#homework-questions-container > div').forEach((card, i) => {
+                const label = card.querySelector('span');
+                if (label) label.textContent = `سؤال (${i + 1}):`;
+            });
+        }
+
+        function removeHomeworkQuestion(button) {
+            const cards = document.querySelectorAll('#homework-questions-container > div');
+            if (cards.length <= 1) {
+                alert('لازم يكون في الواجب سؤال واحد على الأقل.');
+                return;
+            }
+            button.closest('#homework-questions-container > div').remove();
+            refreshHomeworkQuestionNumbers();
+        }
+
+        function resetHomeworkBuilder() {
+            editingHomeworkId = null;
+            document.getElementById('hw-new-title').value = '';
+            document.getElementById('hw-new-grade').value = 'الكل';
+            document.getElementById('homework-questions-container').innerHTML = '';
+            questionCounter = 0;
+            addQuestionFieldToBuilder();
+            const btn = document.getElementById('btn-save-hw');
+            btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> حفظ ونشر الواجب على السيرفر`;
+            document.getElementById('btn-cancel-hw-edit').classList.add('hidden');
+        }
+
+        function cancelHomeworkEdit() {
+            resetHomeworkBuilder();
+            document.querySelector('#tab-content-homework h3').textContent = 'إضافة واجب دراسي جديد (لكافة الطلاب)';
+        }
+
+        function editHomework(id) {
+            const hw = cachedHomeworks.find(item => item.id === id);
+            if (!hw) { alert('لم يتم العثور على الواجب. حدّث القائمة وحاول مرة أخرى.'); return; }
+            editingHomeworkId = id;
+            document.getElementById('hw-new-title').value = hw.title || '';
+            document.getElementById('hw-new-grade').value = hw.grade || 'الكل';
+            const container = document.getElementById('homework-questions-container');
+            container.innerHTML = '';
+            questionCounter = 0;
+            (Array.isArray(hw.questions) ? hw.questions : []).forEach(q => addQuestionFieldToBuilder(q));
+            if (!container.children.length) addQuestionFieldToBuilder();
+            document.getElementById('btn-save-hw').innerHTML = `<i class="fa-solid fa-floppy-disk"></i> حفظ تعديلات الواجب`;
+            document.getElementById('btn-cancel-hw-edit').classList.remove('hidden');
+            document.querySelector('#tab-content-homework h3').textContent = 'تعديل الواجب وأسئلته';
+            document.getElementById('hw-new-title').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            document.getElementById('hw-new-title').focus();
         }
 
         async function handleSaveUniversalHomework(e) {
             e.preventDefault();
             if (!navigator.onLine) { alert("⚠️ المنظومة أونلاين فقط!"); return; }
+            if (!db) { alert('الاتصال بقاعدة البيانات غير متاح.'); return; }
 
             const title = document.getElementById('hw-new-title').value.trim();
             const grade = document.getElementById('hw-new-grade').value;
-            const cards = document.querySelectorAll('#homework-questions-container > div');
+            const cards = [...document.querySelectorAll('#homework-questions-container > div')];
+            if (!cards.length) { alert('أضف سؤالاً واحداً على الأقل.'); return; }
 
             const questions = [];
-            cards.forEach(card => {
+            for (const card of cards) {
+                const text = card.querySelector('.q-title').value.trim();
+                const options = [0,1,2,3].map(i => card.querySelector(`.q-opt-${i}`).value.trim());
+                const points = parseFloat(card.querySelector('.q-pts').value);
+                if (!text || options.some(x => !x) || !Number.isFinite(points) || points <= 0) {
+                    alert('تأكد من كتابة نص كل سؤال والاختيارات الأربعة والدرجة بشكل صحيح.');
+                    return;
+                }
                 questions.push({
-                    text: card.querySelector('.q-title').value.trim(),
-                    options: [
-                        card.querySelector('.q-opt-0').value.trim(),
-                        card.querySelector('.q-opt-1').value.trim(),
-                        card.querySelector('.q-opt-2').value.trim(),
-                        card.querySelector('.q-opt-3').value.trim()
-                    ],
-                    correct: parseInt(card.querySelector('.q-ans').value),
-                    points: parseFloat(card.querySelector('.q-pts').value) || 1
+                    text,
+                    options,
+                    correct: parseInt(card.querySelector('.q-ans').value, 10),
+                    points
                 });
-            });
+            }
 
-            // الواجب يكون ظاهر افتراضياً
-            const hwData = { title, grade, questions, isVisible: true, createdAt: new Date().toISOString() };
             const btn = document.getElementById('btn-save-hw');
+            const wasEditing = Boolean(editingHomeworkId);
+            const targetId = editingHomeworkId;
             btn.disabled = true;
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري النشر في السيرفر...`;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري حفظ ${wasEditing ? 'التعديلات' : 'الواجب'}...`;
 
             try {
-                if (db) await db.collection('homeworks').add(hwData);
-                alert('✅ تم نشر الواجب على السيرفر بنجاح!');
-                document.getElementById('hw-new-title').value = '';
+                if (wasEditing) {
+                    const oldHomework = cachedHomeworks.find(h => h.id === targetId);
+                    await db.collection('homeworks').doc(targetId).update({
+                        title, grade, questions,
+                        updatedAt: new Date().toISOString()
+                    });
+                    if (oldHomework) {
+                        Object.assign(oldHomework, { title, grade, questions, updatedAt: new Date().toISOString() });
+                    }
+                    alert('✅ تم حفظ تعديلات الواجب والأسئلة بنجاح.');
+                } else {
+                    const hwData = { title, grade, questions, isVisible: true, createdAt: new Date().toISOString() };
+                    await db.collection('homeworks').add(hwData);
+                    alert('✅ تم نشر الواجب على السيرفر بنجاح!');
+                }
+                resetHomeworkBuilder();
+                document.querySelector('#tab-content-homework h3').textContent = 'إضافة واجب دراسي جديد (لكافة الطلاب)';
                 await loadHomeworks(true);
             } catch(err) {
                 console.error("Save HW Error:", err);
-                alert("حدث خطأ أثناء حفظ الواجب!");
+                alert("حدث خطأ أثناء حفظ الواجب: " + (err.message || err));
             } finally {
                 btn.disabled = false;
-                btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> حفظ ونشر الواجب على السيرفر`;
+                if (!editingHomeworkId) btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> حفظ ونشر الواجب على السيرفر`;
             }
         }
 
-        async function loadHomeworks(forceServer = false) {
+                async function loadHomeworks(forceServer = false) {
             const box = document.getElementById('homeworks-table-box');
             if (!box) return;
 
@@ -1484,8 +1564,9 @@
                                         <span>${h.isVisible ? 'ظاهر للطلاب' : 'مخفي حالياً'}</span>
                                     </button>
                                 </td>
-                                <td class="p-3 text-center">
-                                    <button onclick="deleteHomework('${h.id}')" class="text-rose-400 hover:text-rose-300 px-2 py-1"><i class="fa-solid fa-trash"></i></button>
+                                <td class="p-3 text-center whitespace-nowrap">
+                                    <button onclick="editHomework('${h.id}')" class="text-amber-400 hover:text-amber-300 px-2 py-1" title="تعديل الواجب والأسئلة"><i class="fa-solid fa-pen-to-square"></i> تعديل</button>
+                                    <button onclick="deleteHomework('${h.id}')" class="text-rose-400 hover:text-rose-300 px-2 py-1" title="حذف الواجب"><i class="fa-solid fa-trash"></i></button>
                                 </td>
                             </tr>
                         `).join('')}
