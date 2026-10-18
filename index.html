@@ -591,13 +591,12 @@
             else offlineScreen.classList.remove('hidden');
         }
 
-        window.addEventListener('DOMContentLoaded', async () => {
+        window.addEventListener('DOMContentLoaded', () => {
             checkNetworkStatus();
-            await loadCenters();
-            await loadHomeworks();
 
-            // لا يتم حفظ جلسة الطالب في المتصفح.
-            // بيانات الطالب تُقرأ من Firestore عند تسجيل الدخول، والجلسة الحالية في الذاكرة فقط.
+            // لا نحمّل الواجبات قبل دخول الطالب؛ هذا يمنع تأخير فتح الصفحة.
+            // قراءة المراكز تتم في الخلفية ومن السيرفر فقط.
+            loadCenters().catch(err => console.error('Centers load failed:', err));
         });
 
         function navigateTo(viewId) {
@@ -663,7 +662,7 @@
             cachedCenters = [];
             if (db) {
                 try {
-                    const snap = await db.collection('centers').get();
+                    const snap = await db.collection('centers').get({ source: 'server' });
                     snap.forEach(d => {
                         const data = d.data();
                         if (data && data.name) cachedCenters.push({ id: d.id, ...data });
@@ -703,112 +702,137 @@
         // ================= تسجيل دخول طالب السنتر المباشر والسريع =================
         async function handleCenterLogin(e) {
             e.preventDefault();
+
             const codeRaw = document.getElementById('login-center-code').value.trim();
-            const codeClean = toEnglish(codeRaw);
+            const codeClean = toEnglish(codeRaw).replace(/^#+/, '').trim();
             const btn = document.getElementById('btn-login-center-submit');
 
-            if (!codeClean) return;
+            if (!codeClean || btn.disabled) return;
 
             btn.disabled = true;
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري الدخول...`;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري التحقق من الكود...';
 
             let matched = null;
+            let queryFailed = false;
 
-            if (db) {
-                try {
-                    // استعلام مباشر وسريع جداً على الكود فقط كنص
-                    let snap = await db.collection('students').where('code', '==', codeClean).limit(1).get();
-                    if (!snap.empty) {
-                        matched = { id: snap.docs[0].id, ...snap.docs[0].data() };
-                    } else {
-                        // استعلام مباشر على الكود كرقم إذا كان رقمياً
-                        const numVal = parseInt(codeClean, 10);
-                        if (!isNaN(numVal)) {
-                            snap = await db.collection('students').where('code', '==', numVal).limit(1).get();
-                            if (!snap.empty) {
-                                matched = { id: snap.docs[0].id, ...snap.docs[0].data() };
-                            }
-                        }
+            try {
+                if (!db) throw new Error('Firestore is not initialized');
+
+                const queries = [
+                    db.collection('students')
+                        .where('code', '==', codeClean)
+                        .limit(2)
+                        .get({ source: 'server' })
+                ];
+
+                // أكواد الطلاب الجديدة نصوص. البحث الرقمي الإضافي يدعم السجلات القديمة فقط.
+                if (/^\\d+$/.test(codeClean)) {
+                    const numericCode = Number(codeClean);
+                    if (Number.isSafeInteger(numericCode)) {
+                        queries.push(
+                            db.collection('students')
+                                .where('code', '==', numericCode)
+                                .limit(2)
+                                .get({ source: 'server' })
+                        );
                     }
-                } catch(err) {
-                    console.error("Direct fetch error:", err);
                 }
+
+                const results = await Promise.all(queries);
+                const docsById = new Map();
+                results.forEach(snap => snap.forEach(doc => {
+                    docsById.set(doc.id, { id: doc.id, ...doc.data() });
+                }));
+
+                if (docsById.size > 1) {
+                    throw new Error('DUPLICATE_CODE_MATCH');
+                }
+
+                matched = docsById.size ? [...docsById.values()][0] : null;
+            } catch (err) {
+                queryFailed = true;
+                console.error('Student login server query failed:', err);
+            } finally {
+                btn.disabled = false;
+                btn.innerText = 'دخول المنصة';
             }
 
-            btn.disabled = false;
-            btn.innerText = "دخول المنصة";
-
-            if (matched) {
-                activeStudent = matched;
-                closeModal('studentLoginModal');
-                initStudentUI();
-                await loadHomeworks(); // تحديث فوري لواجبات مرحلة الطالب
-                navigateTo('student-portal');
-            } else {
-                alert(`⚠️ الكود (${codeRaw}) غير موجود! يرجى التأكد من كودك أو الاستعلام عبر الواتساب.`);
+            if (queryFailed) {
+                alert('تعذر التحقق من الكود بسبب مشكلة اتصال بالسيرفر. الكود لم يُعتبر خطأ. حاول مرة أخرى بعد لحظات.');
+                return;
             }
+
+            if (!matched) {
+                alert(`الكود (${codeRaw}) غير موجود في سجلات الطلاب. راجع الكود مع السنتر.`);
+                return;
+            }
+
+            activeStudent = matched;
+            closeModal('studentLoginModal');
+            initStudentUI();
+            navigateTo('student-portal');
+
+            // الدخول لا ينتظر تحميل الواجبات؛ يتم تحميلها مباشرة من السيرفر بعد فتح الحساب.
+            loadHomeworks(true).catch(err => console.error('Homework refresh failed:', err));
         }
 
         // ================= تسجيل دخول طالب الأونلاين =================
         async function handleOnlineLogin(e) {
             e.preventDefault();
+
             const phoneRaw = document.getElementById('login-online-phone').value.trim();
             const parentPhoneRaw = document.getElementById('login-online-parent-phone').value.trim();
             const phoneClean = toEnglish(phoneRaw);
             const parentPhoneClean = toEnglish(parentPhoneRaw);
             const btn = document.getElementById('btn-login-online-submit');
 
-            if (!phoneClean || !parentPhoneClean) return;
+            if (!phoneClean || !parentPhoneClean || btn.disabled) return;
 
             btn.disabled = true;
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري الدخول...`;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري التحقق...';
 
             let matched = null;
+            let queryFailed = false;
 
-            if (db) {
-                try {
-                    const snap = await db.collection('students')
-                        .where('phone', '==', phoneClean)
-                        .where('parentPhone', '==', parentPhoneClean)
-                        .limit(1)
-                        .get();
-                    if (!snap.empty) {
-                        matched = { id: snap.docs[0].id, ...snap.docs[0].data() };
-                    }
-                } catch(err) {}
+            try {
+                if (!db) throw new Error('Firestore is not initialized');
+
+                const snap = await db.collection('students')
+                    .where('phone', '==', phoneClean)
+                    .where('parentPhone', '==', parentPhoneClean)
+                    .limit(2)
+                    .get({ source: 'server' });
+
+                if (snap.size > 1) {
+                    throw new Error('DUPLICATE_PHONE_MATCH');
+                }
+
+                if (!snap.empty) {
+                    matched = { id: snap.docs[0].id, ...snap.docs[0].data() };
+                }
+            } catch (err) {
+                queryFailed = true;
+                console.error('Online student login failed:', err);
+            } finally {
+                btn.disabled = false;
+                btn.innerText = 'دخول المنصة';
             }
 
-            if (!matched && db) {
-                const autoCode = 'ON_' + phoneClean.slice(-4);
-                matched = {
-                    name: `طالب أونلاين (${phoneClean.slice(-4)})`,
-                    code: autoCode,
-                    phone: phoneClean,
-                    parentPhone: parentPhoneClean,
-                    grade: 'الصف الثالث الثانوي',
-                    center: 'المنصة الإلكترونية (أونلاين)',
-                    attendanceHistory: [],
-                    examsHistory: [],
-                    homeworksHistory: [],
-                    createdAt: new Date().toISOString()
-                };
-
-                try {
-                    const ref = await db.collection('students').add(matched);
-                    matched.id = ref.id;
-                } catch(e) {}
+            if (queryFailed) {
+                alert('تعذر الاتصال بالسيرفر للتحقق من البيانات. لم يتم إنشاء حساب جديد، حاول مرة أخرى.');
+                return;
             }
 
-            btn.disabled = false;
-            btn.innerText = "دخول المنصة";
-
-            if (matched) {
-                activeStudent = matched;
-                closeModal('studentLoginModal');
-                initStudentUI();
-                await loadHomeworks();
-                navigateTo('student-portal');
+            if (!matched) {
+                alert('رقم الطالب ورقم ولي الأمر غير متطابقين مع حساب مسجل. تواصل مع الدعم لتسجيل بياناتك بشكل صحيح.');
+                return;
             }
+
+            activeStudent = matched;
+            closeModal('studentLoginModal');
+            initStudentUI();
+            navigateTo('student-portal');
+            loadHomeworks(true).catch(err => console.error('Homework refresh failed:', err));
         }
 
         // ================= ابحث عن كودي بالاسم =================
@@ -830,7 +854,7 @@
                 const snap = await db.collection('students')
                     .where('grade', '==', grade)
                     .where('center', '==', center)
-                    .get();
+                    .get({ source: 'server' });
 
                 if (snap.empty) {
                     selectEl.innerHTML = '<option value="">لا يوجد طلاب مسجلين بهذه المجموعة</option>';
@@ -919,17 +943,17 @@
 
             if (db) {
                 try {
-                    let snap = await db.collection('students').where('code', '==', cleanVal).limit(1).get();
+                    let snap = await db.collection('students').where('code', '==', cleanVal).limit(1).get({ source: 'server' });
                     if (!snap.empty) {
                         st = snap.docs[0].data();
                     } else {
                         const numVal = parseInt(cleanVal, 10);
                         if (!isNaN(numVal)) {
-                            snap = await db.collection('students').where('code', '==', numVal).limit(1).get();
+                            snap = await db.collection('students').where('code', '==', numVal).limit(1).get({ source: 'server' });
                             if (!snap.empty) st = snap.docs[0].data();
                         }
                         if (!st) {
-                            snap = await db.collection('students').where('parentPhone', '==', cleanVal).limit(1).get();
+                            snap = await db.collection('students').where('parentPhone', '==', cleanVal).limit(1).get({ source: 'server' });
                             if (!snap.empty) st = snap.docs[0].data();
                         }
                     }
