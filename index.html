@@ -550,6 +550,9 @@
             };
             if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
             db = firebase.firestore();
+            // Work around unstable Firestore WebChannel streaming on some networks/browsers.
+            // Must be configured before the first Firestore operation. This does NOT enable cache.
+            db.settings({ experimentalForceLongPolling: true });
         } catch(e) { console.error("Firebase Init Error:", e); }
 
         let cachedCenters = [];
@@ -1044,7 +1047,7 @@
                 try {
                     if (!db) throw new Error('Firebase Firestore is not initialized');
 
-                    // قراءة مباشرة من السيرفر لتجنب عرض نسخة قديمة من الكاش على جهاز دون آخر.
+                    // قراءة مباشرة من السيرفر فقط؛ لا نعتمد على الكاش. الاتصال مضبوط على Long Polling لتفادي مشاكل WebChannel.
                     const snap = await db.collection('homeworks').get({ source: 'server' });
                     const freshHomeworks = [];
 
