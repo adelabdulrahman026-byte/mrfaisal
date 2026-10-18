@@ -1078,26 +1078,36 @@
                 .replace(/[أإآ]/g, 'ا')
                 .replace(/ى/g, 'ي')
                 .replace(/[ـ]/g, '')
+                .replace(/[ًٌٍَُِّْ]/g, '')
                 .replace(/\s+/g, ' ')
                 .trim()
                 .toLowerCase();
 
-            if (!grade || grade === 'الكل' || grade === 'كل' ||
-                grade === 'جميع المراحل الدراسية' || grade === 'كل المراحل' ||
-                grade === 'all' || grade === 'all grades') return 'all';
+            if (!grade || /^(الكل|كل|جميع المراحل الدراسية|جميع المراحل|كل المراحل|all|all grades|غير محدد|غير معروف|unknown|n\/a|--)$/.test(grade)) return 'all';
 
-            // توحيد أشهر صيغ كتابة المراحل حتى لا تختلف بسبب طريقة تسجيل الطالب.
-            if (/ثالث|الثالث|3/.test(grade) && /ثانوي|الثانوي|ثانويه|الثانويه/.test(grade)) return 'third-secondary';
-            if (/ثاني|الثاني|2/.test(grade) && /ثانوي|الثانوي|ثانويه|الثانويه/.test(grade)) return 'second-secondary';
-            if (/اول|الأول|الاول|1/.test(grade) && /ثانوي|الثانوي|ثانويه|الثانويه/.test(grade)) return 'first-secondary';
+            // قبول اختلافات الكتابة الشائعة: تالتة/ثالث، تانية/ثاني، أولى/اول.
+            const hasSecondary = /ثانوي|الثانوي|ثانويه|الثانويه|ثانوي عام|بكالوريا/.test(grade);
+            if (hasSecondary && /(ثالث|الثالث|تالت|التالت|3|ثالثه|تالتة)/.test(grade)) return 'third-secondary';
+            if (hasSecondary && /(ثاني|الثاني|تاني|التاني|2|ثانيه|تانية)/.test(grade)) return 'second-secondary';
+            if (hasSecondary && /(اول|الأول|الاول|اولي|اولى|1)/.test(grade)) return 'first-secondary';
+
+            // أسماء المرحلة بدون كلمة ثانوي تظل قابلة للتطابق.
+            if (/^(ثالث|الثالث|تالت|التالت|ثالثه|تالتة)$/.test(grade)) return 'third-secondary';
+            if (/^(ثاني|الثاني|تاني|التاني|ثانيه|تانية)$/.test(grade)) return 'second-secondary';
+            if (/^(اول|الأول|الاول|اولي|اولى)$/.test(grade)) return 'first-secondary';
 
             return grade;
         }
 
         function homeworkMatchesStudent(homeworkGrade, studentGrade) {
             const hwGrade = normalizeGrade(homeworkGrade);
-            const stGrade = normalizeGrade(studentGrade);
-            return hwGrade === 'all' || (stGrade !== '' && hwGrade === stGrade);
+            const stRaw = String(studentGrade ?? '').trim();
+            const stGrade = normalizeGrade(stRaw);
+
+            // الواجب العام يظهر للجميع. إذا لم تكن مرحلة الطالب مسجلة/معروفة،
+            // لا نحجب الواجبات المنشورة بسبب بيانات تسجيل ناقصة.
+            if (hwGrade === 'all' || !stRaw || stGrade === 'all') return true;
+            return hwGrade === stGrade;
         }
 
         async function loadHomeworks(forceServer = true) {
@@ -1169,17 +1179,23 @@
                 return;
             }
 
-            let availableHws = cachedHomeworks;
-            if (activeStudent && !activeStudent.isTemporaryOnline) {
-                availableHws = cachedHomeworks.filter(hw =>
-                    homeworkMatchesStudent(hw.grade, activeStudent.grade)
-                );
-            }
+            // نطابق المرحلة بعد توحيد كتابتها. إذا كانت مرحلة الطالب غير معروفة
+            // فنعرض الواجبات المنشورة بدل إظهار رسالة مضللة بأن القائمة فارغة.
+            const studentGrade = activeStudent ? activeStudent.grade : '';
+            let availableHws = cachedHomeworks.filter(hw =>
+                homeworkMatchesStudent(hw.grade, studentGrade)
+            );
 
             if (badge) badge.innerText = `${availableHws.length} واجب`;
 
             if (availableHws.length === 0) {
-                grid.innerHTML = `<p class="col-span-2 text-center py-8 text-slate-400 text-xs">لا توجد واجبات منشورة ومطابقة لمرحلتك حالياً.</p>`;
+                const totalVisible = cachedHomeworks.length;
+                grid.innerHTML = totalVisible > 0
+                    ? `<div class="col-span-2 text-center py-8 px-4 rounded-2xl border border-amber-400/30 bg-amber-400/5">
+                         <p class="text-amber-300 text-sm font-bold mb-2">الواجبات منشورة، لكن المرحلة المسجلة للطالب لا تطابق مرحلتها.</p>
+                         <p class="text-slate-400 text-xs">المرحلة المسجلة: ${String(studentGrade || 'غير محدد').replace(/[&<>"]/g, '')}. راجع المرحلة في ملف الطالب بلوحة الإدارة أو اجعل الواجب لجميع المراحل.</p>
+                       </div>`
+                    : `<p class="col-span-2 text-center py-8 text-slate-400 text-xs">لا توجد واجبات منشورة حالياً.</p>`;
                 return;
             }
 
