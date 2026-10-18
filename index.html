@@ -470,7 +470,7 @@
 
                 <div class="p-2.5 bg-rose-50 border border-rose-200 rounded-xl text-rose-800 text-[11px] font-bold leading-relaxed text-center">
                     <i class="fa-solid fa-triangle-exclamation text-rose-600 ml-1"></i>
-                    يرجى كتابة رقم الهاتف ورقم ولي الأمر بشكل صحيح لتجنب الحظر من المنصة.
+                    تقدر تدخل برقم هاتف الطالب المسجل. رقم ولي الأمر لا يشترط أن يكون مطابقاً للدخول.
                 </div>
 
                 <button type="submit" id="btn-login-online-submit" class="w-full py-3 bg-[#f59e0b] hover:bg-amber-600 text-slate-950 font-black rounded-xl text-xs transition shadow">
@@ -780,62 +780,111 @@
         }
 
         // ================= تسجيل دخول طالب الأونلاين =================
+        // ينشئ سجلًا دائمًا في students باستخدام رقم الهاتف كمفتاح، دون اشتراط كود طالب.
+        // إذا كان الرقم مسجلًا بالفعل، نعيد استخدام نفس السجل للحفاظ على سجل الواجبات.
         async function handleOnlineLogin(e) {
             e.preventDefault();
 
             const phoneRaw = document.getElementById('login-online-phone').value.trim();
             const parentPhoneRaw = document.getElementById('login-online-parent-phone').value.trim();
-            const phoneClean = toEnglish(phoneRaw);
-            const parentPhoneClean = toEnglish(parentPhoneRaw);
+            const phoneClean = toEnglish(phoneRaw).replace(/[\s()-]/g, '');
+            const parentPhoneClean = toEnglish(parentPhoneRaw).replace(/[\s()-]/g, '');
             const btn = document.getElementById('btn-login-online-submit');
 
-            if (!phoneClean || !parentPhoneClean || btn.disabled) return;
+            if (!phoneClean || !parentPhoneClean || btn.disabled) {
+                if (!phoneClean || !parentPhoneClean) alert('اكتب رقم هاتف الطالب ورقم واتساب ولي الأمر.');
+                return;
+            }
+
+            if (!db) {
+                alert('تعذر الاتصال بقاعدة البيانات. أعد تحميل الصفحة وحاول مرة أخرى.');
+                return;
+            }
 
             btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري التحقق...';
-
-            let matched = null;
-            let queryFailed = false;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري فتح الحساب وحفظه...';
 
             try {
-                if (!db) throw new Error('Firestore is not initialized');
+                let matched = null;
 
+                // أولًا: البحث عن سجل سابق برقم الطالب، دون اشتراط تطابق رقم ولي الأمر.
                 const snap = await db.collection('students')
                     .where('phone', '==', phoneClean)
-                    .where('parentPhone', '==', parentPhoneClean)
                     .limit(2)
                     .get({ source: 'server' });
 
                 if (snap.size > 1) {
-                    throw new Error('DUPLICATE_PHONE_MATCH');
+                    throw new Error('DUPLICATE_STUDENT_PHONE');
                 }
 
                 if (!snap.empty) {
                     matched = { id: snap.docs[0].id, ...snap.docs[0].data() };
+                    // تحديث رقم ولي الأمر مع الحفاظ على الدرجات وسجل الواجبات والبيانات الأخرى.
+                    await db.collection('students').doc(matched.id).set({
+                        phone: phoneClean,
+                        parentPhone: parentPhoneClean,
+                        accountType: matched.accountType || 'online',
+                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    }, { merge: true });
+                    matched.phone = phoneClean;
+                    matched.parentPhone = parentPhoneClean;
+                } else {
+                    // لا يوجد سجل سابق: إنشاء سجل دائم بمعرّف ثابت مشتق من رقم الطالب.
+                    // لا نضع حقل code إطلاقًا؛ تسجيل الأونلاين لا يحتاج إلى كود طالب.
+                    const phoneDigits = phoneClean.replace(/\D/g, '');
+                    if (!phoneDigits) throw new Error('INVALID_PHONE');
+
+                    const studentRef = db.collection('students').doc(`online_${phoneDigits}`);
+                    const existingDoc = await studentRef.get({ source: 'server' });
+
+                    if (existingDoc.exists) {
+                        matched = { id: existingDoc.id, ...existingDoc.data() };
+                        await studentRef.set({
+                            phone: phoneClean,
+                            parentPhone: parentPhoneClean,
+                            accountType: 'online',
+                            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                        }, { merge: true });
+                        matched.phone = phoneClean;
+                        matched.parentPhone = parentPhoneClean;
+                    } else {
+                        const newStudent = {
+                            name: `طالب أونلاين ${phoneClean}`,
+                            phone: phoneClean,
+                            parentPhone: parentPhoneClean,
+                            center: 'المنصة الإلكترونية (أونلاين)',
+                            grade: 'غير محدد',
+                            accountType: 'online',
+                            homeworksHistory: [],
+                            attendanceHistory: [],
+                            examsHistory: [],
+                            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                        };
+
+                        await studentRef.set(newStudent);
+                        matched = { id: studentRef.id, ...newStudent };
+                    }
                 }
+
+                activeStudent = matched;
+                closeModal('studentLoginModal');
+                initStudentUI();
+                navigateTo('student-portal');
+                loadHomeworks(true).catch(err => console.error('Homework refresh failed:', err));
             } catch (err) {
-                queryFailed = true;
-                console.error('Online student login failed:', err);
+                console.error('Online student account save/login failed:', err);
+                if (err && err.message === 'DUPLICATE_STUDENT_PHONE') {
+                    alert('رقم الهاتف مرتبط بأكثر من سجل في قاعدة البيانات. تواصل مع الدعم لتوحيد السجلات.');
+                } else if (err && (err.code === 'permission-denied' || err.code === 'PERMISSION_DENIED')) {
+                    alert('فايرستور رفض حفظ الحساب بسبب الصلاحيات الحالية. لم يتم فتح حساب مؤقت حتى لا يضيع سجل الواجبات؛ يلزم السماح الآمن بإنشاء/تحديث سجل طالب الأونلاين.');
+                } else {
+                    alert('تعذر إنشاء الحساب أو تحميله من فايرستور. تأكد من اتصال الإنترنت وحاول مرة أخرى. لم يتم فتح حساب مؤقت.');
+                }
             } finally {
                 btn.disabled = false;
                 btn.innerText = 'دخول المنصة';
             }
-
-            if (queryFailed) {
-                alert('تعذر الاتصال بالسيرفر للتحقق من البيانات. لم يتم إنشاء حساب جديد، حاول مرة أخرى.');
-                return;
-            }
-
-            if (!matched) {
-                alert('رقم الطالب ورقم ولي الأمر غير متطابقين مع حساب مسجل. تواصل مع الدعم لتسجيل بياناتك بشكل صحيح.');
-                return;
-            }
-
-            activeStudent = matched;
-            closeModal('studentLoginModal');
-            initStudentUI();
-            navigateTo('student-portal');
-            loadHomeworks(true).catch(err => console.error('Homework refresh failed:', err));
         }
 
         // ================= ابحث عن كودي بالاسم =================
@@ -902,7 +951,7 @@
 
             document.getElementById('sp-name').innerText = activeStudent.name || '--';
             document.getElementById('sp-center').innerText = activeStudent.center || '--';
-            document.getElementById('sp-code').innerText = `#${activeStudent.code || '--'}`;
+            document.getElementById('sp-code').innerText = activeStudent.code ? `#${activeStudent.code}` : 'بدون كود';
             document.getElementById('sp-grade-badge').innerText = activeStudent.grade || '--';
 
             const hws = activeStudent.homeworksHistory || [];
@@ -921,7 +970,7 @@
 `منظومة مستر محمد فيصل
 ───────────────
 الاسم: ${st.name || ''}
-الكود: #${st.code || ''}
+الكود: ${st.code || 'طالب أونلاين بدون كود'}
 السنتر: ${st.center || ''}
 المرحلة: ${st.grade || ''}
 آخر واجب: ${latestHw ? latestHw.title : 'لم يحل بعد'}
@@ -1104,7 +1153,7 @@
             }
 
             let availableHws = cachedHomeworks;
-            if (activeStudent) {
+            if (activeStudent && !activeStudent.isTemporaryOnline) {
                 availableHws = cachedHomeworks.filter(hw =>
                     homeworkMatchesStudent(hw.grade, activeStudent.grade)
                 );
@@ -1269,7 +1318,7 @@
 `منظومة مستر محمد فيصل
 ───────────────
 الاسم: ${activeStudent.name || ''}
-الكود: #${activeStudent.code || ''}
+الكود: ${activeStudent.code || 'طالب أونلاين بدون كود'}
 السنتر: ${activeStudent.center || ''}
 المرحلة: ${activeStudent.grade || ''}
 آخر واجب: ${hwRecord.title}
